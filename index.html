@@ -54,20 +54,29 @@ const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSs
 
 async function enviar(){
 
+    const codigo = document.getElementById("codigo").value;
+
+    if(codigo==""){
+        document.getElementById("resultado").innerHTML =
+        "Digite um código.";
+        return;
+    }
+
+    document.getElementById("resultado").innerHTML =
+    "Enviando...";
+
+    // Chamada usando GET
+    const url =
+    URL_API + "?codigo=" + encodeURIComponent(codigo);
+
     try{
 
-        const codigo = document.getElementById("codigo").value;
-
-        const resposta = await fetch(URL_API,{
-            method:"POST",
-            body:new URLSearchParams({
-                codigo:codigo
-            })
-        });
+        const resposta = await fetch(url);
 
         const texto = await resposta.text();
 
-        document.getElementById("resultado").innerHTML = texto;
+        document.getElementById("resultado").innerHTML =
+        texto;
 
     }catch(e){
 
