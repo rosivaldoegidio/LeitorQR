@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Teste API</title>
+
+<style>
+body{
+    font-family:Arial;
+    max-width:500px;
+    margin:40px auto;
+    padding:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    font-size:18px;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    font-size:18px;
+}
+
+#resultado{
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Teste da API</h2>
+
+<input
+id="codigo"
+placeholder="Digite um código">
+
+<button onclick="enviar()">
+Enviar
+</button>
+
+<div id="resultado"></div>
+
+<script>
+
+const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
+
+async function enviar(){
+
+    const codigo =
+    document.getElementById("codigo").value;
+
+    const resposta = await fetch(URL_API,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            codigo:codigo
+        })
+    });
+
+    const json = await resposta.json();
+
+    document.getElementById("resultado").innerHTML =
+    JSON.stringify(json);
+
+}
+
+</script>
+
+</body>
+</html>
