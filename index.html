@@ -60,10 +60,7 @@ async function enviar(){
 
         const resposta = await fetch(URL_API,{
             method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
+            body:new URLSearchParams({
                 codigo:codigo
             })
         });
@@ -72,10 +69,10 @@ async function enviar(){
 
         document.getElementById("resultado").innerHTML = texto;
 
-    }catch(erro){
+    }catch(e){
 
         document.getElementById("resultado").innerHTML =
-        "ERRO: " + erro;
+        "ERRO: " + e;
 
     }
 
