@@ -98,6 +98,22 @@ let html5QrCode = null;
 
 let ultimaLeitura = "";
 
+function confirmarLeitura(){
+
+    // Bip
+    const audio = new Audio(
+      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+    );
+
+    audio.play().catch(()=>{});
+
+    // Vibração
+    if(navigator.vibrate){
+        navigator.vibrate(200);
+    }
+
+}
+
 function abrirCamera(){
 
     if(html5QrCode){
@@ -135,8 +151,12 @@ function abrirCamera(){
 
                 const texto = await resposta.text();
 
-                document.getElementById("resultado").innerHTML =
-                texto;
+document.getElementById("resultado").innerHTML =
+texto;
+
+if(texto.startsWith("OK")){
+    confirmarLeitura();
+}
 
             }catch(e){
 
