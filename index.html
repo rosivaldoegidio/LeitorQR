@@ -131,30 +131,29 @@ function iniciarLeitura(){
         async function(decodedText){
 
             if(!podeLer){
-                return;
-            }
+    return;
+}
 
-            podeLer = false;
+podeLer = false;
 
-            document.getElementById("resultado").innerHTML =
-            "Enviando...";
+// Bip e vibração imediatamente ao reconhecer o QR
+confirmarLeitura();
 
-            try{
+document.getElementById("resultado").innerHTML =
+"Enviando...";
+
+try{
 
                 const resposta = await fetch(
-                    URL_API +
-                    "?codigo=" +
-                    encodeURIComponent(decodedText)
-                );
+    URL_API +
+    "?codigo=" +
+    encodeURIComponent(decodedText)
+);
 
-                const texto = await resposta.text();
+const texto = await resposta.text();
 
-                document.getElementById("resultado").innerHTML =
-                texto;
-
-                if(texto.startsWith("OK")){
-                    confirmarLeitura();
-                }
+document.getElementById("resultado").innerHTML =
+texto;
 
                 // Para a câmera
 await html5QrCode.stop();
