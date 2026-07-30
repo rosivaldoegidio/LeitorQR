@@ -115,6 +115,12 @@ function abrirCamera(){
 
     html5QrCode = new Html5Qrcode("reader");
 
+    iniciarLeitura();
+
+}
+
+function iniciarLeitura(){
+
     html5QrCode.start(
         { facingMode: "environment" },
         {
@@ -124,14 +130,11 @@ function abrirCamera(){
 
         async function(decodedText){
 
-            console.log("QR:", decodedText);
-console.log("podeLer:", podeLer);
-
             if(!podeLer){
-    return;
-}
+                return;
+            }
 
-podeLer = false;
+            podeLer = false;
 
             document.getElementById("resultado").innerHTML =
             "Enviando...";
@@ -146,17 +149,34 @@ podeLer = false;
 
                 const texto = await resposta.text();
 
-document.getElementById("resultado").innerHTML =
-texto;
+                document.getElementById("resultado").innerHTML =
+                texto;
 
-if(texto.startsWith("OK")){
-    confirmarLeitura();
-}
+                if(texto.startsWith("OK")){
+                    confirmarLeitura();
+                }
+
+                // Para a câmera
+                await html5QrCode.stop();
+
+                // Libera nova leitura
+                podeLer = true;
+
+                // Reinicia a câmera
+                iniciarLeitura();
 
             }catch(e){
 
                 document.getElementById("resultado").innerHTML =
                 "ERRO: " + e;
+
+                try{
+                    await html5QrCode.stop();
+                }catch(err){}
+
+                podeLer = true;
+
+                iniciarLeitura();
 
             }
 
@@ -164,6 +184,7 @@ if(texto.startsWith("OK")){
 
     );
 
+}
 }</script>
 
 </body>
