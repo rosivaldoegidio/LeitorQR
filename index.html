@@ -1,15 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">  
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Teste API</title>
+
+<style>
+body{
+    font-family:Arial;
+    max-width:500px;
+    margin:40px auto;
+    padding:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    font-size:18px;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    font-size:18px;
+}
+
+#resultado{
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+<body>
+
+<h2>Teste da API</h2>
+<button onclick="abrirCamera()">
+Abrir câmera
+</button>
+
+<div id="reader"></div>
+
+<div id="resultado"></div>
+
 <script>
 
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
+async function enviar(){
+
+    const codigo = document.getElementById("codigo").value;
+
+    if(codigo==""){
+        document.getElementById("resultado").innerHTML =
+        "Digite um código.";
+        return;
+    }
+
+    document.getElementById("resultado").innerHTML =
+    "Enviando...";
+
+    // Chamada usando GET
+    const url =
+    URL_API + "?codigo=" + encodeURIComponent(codigo);
+
+    try{
+
+        const resposta = await fetch(url);
+
+        const texto = await resposta.text();
+
+        document.getElementById("resultado").innerHTML =
+        texto;
+
+    }catch(e){
+
+        document.getElementById("resultado").innerHTML =
+        "ERRO: " + e;
+
+    }
+
+}
+
+// ===== NOVA FUNÇÃO =====
 let html5QrCode = null;
-let ultimoQr = "";
+
+let podeLer = true;
 
 function confirmarLeitura(){
 
     // Bip
     const audio = new Audio(
-        "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
     );
 
     audio.play().catch(()=>{});
@@ -30,23 +116,20 @@ function abrirCamera(){
     html5QrCode = new Html5Qrcode("reader");
 
     html5QrCode.start(
-
         { facingMode: "environment" },
-
         {
-            fps:10,
-            qrbox:250
+            fps: 10,
+            qrbox: 250
         },
 
-        // QR encontrado
         async function(decodedText){
 
-            // Se ainda é o mesmo QR, ignora
-            if(decodedText === ultimoQr){
-                return;
-            }
+            // Ler o mesmo QR várias vezes
+            if(!podeLer){
+    return;
+}
 
-            ultimoQr = decodedText;
+podeLer = false;
 
             document.getElementById("resultado").innerHTML =
             "Enviando...";
@@ -61,12 +144,12 @@ function abrirCamera(){
 
                 const texto = await resposta.text();
 
-                document.getElementById("resultado").innerHTML =
-                texto;
+document.getElementById("resultado").innerHTML =
+texto;
 
-                if(texto.startsWith("OK")){
-                    confirmarLeitura();
-                }
+if(texto.startsWith("OK")){
+    confirmarLeitura();
+}
 
             }catch(e){
 
@@ -75,19 +158,11 @@ function abrirCamera(){
 
             }
 
-        },
-
-        // Nenhum QR encontrado
-        function(){
-
-            // Quando o QR desaparecer,
-            // libera uma nova leitura
-            ultimoQr = "";
-
         }
 
     );
 
-}
+}</script>
 
-</script>
+</body>
+</html>
