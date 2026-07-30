@@ -94,10 +94,17 @@ async function enviar(){
 }
 
 // ===== NOVA FUNÇÃO =====
+let html5QrCode = null;
+
+let ultimaLeitura = "";
 
 function abrirCamera(){
 
-    const html5QrCode = new Html5Qrcode("reader");
+    if(html5QrCode){
+        return;
+    }
+
+    html5QrCode = new Html5Qrcode("reader");
 
     html5QrCode.start(
         { facingMode: "environment" },
@@ -105,16 +112,44 @@ function abrirCamera(){
             fps: 10,
             qrbox: 250
         },
-        function(decodedText){
+
+        async function(decodedText){
+
+            // Evita ler o mesmo QR várias vezes
+            if(decodedText === ultimaLeitura){
+                return;
+            }
+
+            ultimaLeitura = decodedText;
 
             document.getElementById("resultado").innerHTML =
-            decodedText;
+            "Enviando...";
+
+            try{
+
+                const resposta = await fetch(
+                    URL_API +
+                    "?codigo=" +
+                    encodeURIComponent(decodedText)
+                );
+
+                const texto = await resposta.text();
+
+                document.getElementById("resultado").innerHTML =
+                texto;
+
+            }catch(e){
+
+                document.getElementById("resultado").innerHTML =
+                "ERRO: " + e;
+
+            }
 
         }
+
     );
 
-}
-</script>
+}</script>
 
 </body>
 </html>
