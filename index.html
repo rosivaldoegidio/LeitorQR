@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR">  
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,11 +33,17 @@ button{
 }
 </style>
 
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 </head>
 <body>
 
 <h2>Teste da API</h2>
+<button onclick="abrirCamera()">
+Abrir câmera
+</button>
 
+<div id="reader"></div>
 <input
 id="codigo"
 placeholder="Digite um código">
@@ -87,6 +93,27 @@ async function enviar(){
 
 }
 
+// ===== NOVA FUNÇÃO =====
+
+function abrirCamera(){
+
+    const html5QrCode = new Html5Qrcode("reader");
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        {
+            fps: 10,
+            qrbox: 250
+        },
+        function(decodedText){
+
+            document.getElementById("resultado").innerHTML =
+            decodedText;
+
+        }
+    );
+
+}
 </script>
 
 </body>
