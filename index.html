@@ -91,6 +91,8 @@ let html5QrCode = null;
 
 let podeLer = true;
 
+let temporizadorInatividade = null;
+
 function confirmarLeitura(){
 
     // Bip
@@ -107,6 +109,35 @@ function confirmarLeitura(){
 
 }
 
+function reiniciarTemporizador(){
+
+    clearTimeout(temporizadorInatividade);
+
+    temporizadorInatividade = setTimeout(async function(){
+
+        try{
+
+            if(html5QrCode){
+
+    await html5QrCode.stop();
+
+    html5QrCode.clear();
+
+    html5QrCode = null;
+
+    document.getElementById("reader").innerHTML = "";
+
+}
+
+            document.getElementById("resultado").innerHTML =
+            "Câmera desligada por inatividade.";
+
+        }catch(e){}
+
+    },60000); // 60 segundos
+
+}    
+    
 function abrirCamera(){
 
     if(html5QrCode){
@@ -117,6 +148,8 @@ function abrirCamera(){
 
     iniciarLeitura();
 
+ reiniciarTemporizador();
+    
 }
 
 function iniciarLeitura(){
@@ -138,6 +171,8 @@ podeLer = false;
 
 // Bip e vibração imediatamente ao reconhecer o QR
 confirmarLeitura();
+
+reiniciarTemporizador();            
 
 document.getElementById("resultado").innerHTML =
 "Enviando...";
@@ -164,7 +199,15 @@ podeLer = true;
 // Aguarda 2 segundos antes de reabrir
 setTimeout(function(){
 
-    iniciarLeitura();
+    if(html5QrCode){
+
+        iniciarLeitura();
+
+        reiniciarTemporizador();
+
+    }
+
+},2000);
 
 },2000);
 
@@ -181,7 +224,13 @@ setTimeout(function(){
 
 setTimeout(function(){
 
-    iniciarLeitura();
+    if(html5QrCode){
+
+        iniciarLeitura();
+
+        reiniciarTemporizador();
+
+    }
 
 },2000);
 
