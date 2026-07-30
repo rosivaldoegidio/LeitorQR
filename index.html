@@ -121,9 +121,7 @@ function reiniciarTemporizador(){
 
     await html5QrCode.stop();
 
-    html5QrCode.clear();
-
-    html5QrCode = null;
+       html5QrCode = null;
 
     document.getElementById("reader").innerHTML = "";
 
@@ -199,15 +197,11 @@ podeLer = true;
 // Aguarda 2 segundos antes de reabrir
 setTimeout(function(){
 
-    if(html5QrCode){
-
-        iniciarLeitura();
+           iniciarLeitura();
 
         reiniciarTemporizador();
 
     }
-
-},2000);
 
 },2000);
 
@@ -224,9 +218,7 @@ setTimeout(function(){
 
 setTimeout(function(){
 
-    if(html5QrCode){
-
-        iniciarLeitura();
+           iniciarLeitura();
 
         reiniciarTemporizador();
 
