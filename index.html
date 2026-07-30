@@ -157,13 +157,17 @@ function iniciarLeitura(){
                 }
 
                 // Para a câmera
-                await html5QrCode.stop();
+await html5QrCode.stop();
 
-                // Libera nova leitura
-                podeLer = true;
+// Libera nova leitura
+podeLer = true;
 
-                // Reinicia a câmera
-                iniciarLeitura();
+// Aguarda 1 segundo antes de reabrir
+setTimeout(function(){
+
+    iniciarLeitura();
+
+},2000);
 
             }catch(e){
 
@@ -176,7 +180,11 @@ function iniciarLeitura(){
 
                 podeLer = true;
 
-                iniciarLeitura();
+setTimeout(function(){
+
+    iniciarLeitura();
+
+},2000);
 
             }
 
