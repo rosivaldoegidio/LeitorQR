@@ -89,7 +89,7 @@ async function enviar(){
 // ===== NOVA FUNÇÃO =====
 let html5QrCode = null;
 
-let ultimaLeitura = "";
+let podeLer = true;
 
 function confirmarLeitura(){
 
@@ -124,12 +124,12 @@ function abrirCamera(){
 
         async function(decodedText){
 
-            // Evita ler o mesmo QR várias vezes
-            if(decodedText === ultimaLeitura){
-                return;
-            }
+            // Ler o mesmo QR várias vezes
+            if(!podeLer){
+    return;
+}
 
-            ultimaLeitura = decodedText;
+podeLer = false;
 
             document.getElementById("resultado").innerHTML =
             "Enviando...";
@@ -149,10 +149,18 @@ texto;
 
 if(texto.startsWith("OK")){
     confirmarLeitura();
+
+    setTimeout(function(){
+        podeLer = true;
+    }, 800);
+}else{
+    podeLer = true;
 }
 
             }catch(e){
 
+                podeLer = true;
+                
                 document.getElementById("resultado").innerHTML =
                 "ERRO: " + e;
 
