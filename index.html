@@ -51,12 +51,36 @@ button{
     <img src="logo.png" width="160" alt="Logo">
     <h2>📦 Leitor de Etq. de Caixa</h2>
 </div>
+   
+   <label><b>Setor:</b></label>
 
+<select id="setor" style="width:100%; padding:12px; font-size:18px; margin-bottom:15px;">
+    <option value="">Selecione o setor</option>
+    <option value="Corte">Corte</option>
+    <option value="Costura">Costura</option>
+    <option value="Dobra">Dobra</option>
+    <option value="Pacote">Pacote</option>
+</select>
+   
 <button onclick="abrirCamera()">
 Abrir câmera
 </button>
 
 <div id="reader"></div>
+
+<div id="setores" style="display:none; text-align:center; margin-top:20px;">
+
+    <h3>Selecione o setor</h3>
+
+    <button onclick="enviarSetor('Corte')">Corte</button>
+
+    <button onclick="enviarSetor('Costura')">Costura</button>
+
+    <button onclick="enviarSetor('Dobra')">Dobra</button>
+
+    <button onclick="enviarSetor('Pacote')">Pacote</button>
+
+</div>
 
 <div id="resultado"></div>
 
@@ -106,6 +130,8 @@ let podeLer = true;
 
 let temporizadorInatividade = null;
 
+let codigoLido = "";
+
 function confirmarLeitura(){
 
     // Bip
@@ -151,6 +177,13 @@ function reiniciarTemporizador(){
     
 function abrirCamera(){
 
+    const setor = document.getElementById("setor").value;
+
+    if(setor == ""){
+        alert("Selecione o setor antes de abrir a câmera.");
+        return;
+    }
+
     if(html5QrCode){
         return;
     }
@@ -159,8 +192,8 @@ function abrirCamera(){
 
     iniciarLeitura();
 
- reiniciarTemporizador();
-    
+    reiniciarTemporizador();
+
 }
 
 function iniciarLeitura(){
