@@ -28,7 +28,6 @@ input{
     padding:12px;
     font-size:18px;
 }
-
 button{
     width:100%;
     margin-top:15px;
@@ -213,6 +212,17 @@ function iniciarLeitura(){
 
 podeLer = false;
 
+const setor = document.getElementById("setor").value;
+
+if(setor == ""){
+
+    alert("Selecione o setor.");
+
+    podeLer = true;
+
+    return;
+}
+
 // Bip e vibração imediatamente ao reconhecer o QR
 confirmarLeitura();
 
@@ -223,10 +233,10 @@ document.getElementById("resultado").innerHTML =
 
 try{
 
-                const resposta = await fetch(
+const resposta = await fetch(
     URL_API +
-    "?codigo=" +
-    encodeURIComponent(decodedText)
+    "?codigo=" + encodeURIComponent(decodedText) +
+    "&setor=" + encodeURIComponent(setor)
 );
 
 const texto = await resposta.text();
