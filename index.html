@@ -159,6 +159,20 @@ function confirmarSucesso(){
 
 }
 
+function confirmarErro(){
+
+    const audio = new Audio(
+      "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+    );
+
+    audio.play().catch(()=>{});
+
+    if(navigator.vibrate){
+        navigator.vibrate([150,100,150]);
+    }
+
+}
+   
 function reiniciarTemporizador(){
 
     clearTimeout(temporizadorInatividade);
@@ -275,6 +289,10 @@ if(texto.startsWith("OK")){
     ultimoCodigo = decodedText;
     ultimoHorario = agora;
 
+}else{
+
+    confirmarErro();
+
 }
                 // Para a câmera
 await html5QrCode.stop();
@@ -295,6 +313,8 @@ setTimeout(function(){
 
                 document.getElementById("resultado").innerHTML =
                 "ERRO: " + e;
+   
+   confirmarErro();
 
                 try{
                     await html5QrCode.stop();
