@@ -129,7 +129,9 @@ let podeLer = true;
 
 let temporizadorInatividade = null;
 
-let codigoLido = "";
+// Controle de leitura duplicada
+let ultimoCodigo = "";
+let ultimoHorario = 0;
 
 function confirmarLeitura(){
 
@@ -144,6 +146,16 @@ function confirmarLeitura(){
     if(navigator.vibrate){
         navigator.vibrate(200);
     }
+
+}
+
+function confirmarSucesso(){
+
+    const audio = new Audio(
+      "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
+    );
+
+    audio.play().catch(()=>{});
 
 }
 
@@ -206,11 +218,22 @@ function iniciarLeitura(){
 
         async function(decodedText){
 
-            if(!podeLer){
-    return;
-}
+    // Verifica se é a mesma etiqueta lida há menos de 2 segundos
+    const agora = Date.now();
 
-podeLer = false;
+    if(decodedText === ultimoCodigo && (agora - ultimoHorario) < 2000){
+
+        document.getElementById("resultado").innerHTML =
+        "⚠ Etiqueta já lida. Aguarde 2 segundos.";
+
+        return;
+    }
+
+    if(!podeLer){
+        return;
+    }
+
+    podeLer = false;
 
 const setor = document.getElementById("setor").value;
 
@@ -244,6 +267,15 @@ const texto = await resposta.text();
 document.getElementById("resultado").innerHTML =
 texto;
 
+if(texto.startsWith("OK")){
+
+    confirmarSucesso();
+
+    // Guarda somente após sucesso
+    ultimoCodigo = decodedText;
+    ultimoHorario = agora;
+
+}
                 // Para a câmera
 await html5QrCode.stop();
 
