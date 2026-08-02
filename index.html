@@ -293,10 +293,17 @@ const resposta = await fetch(
 
 const texto = await resposta.text();
 
-document.getElementById("resultado").innerHTML =
-texto;
+if(texto.startsWith("OK|")){
 
-if(texto.startsWith("OK")){
+    const partes = texto.split("|");
+
+    const linha = partes[1];
+    const lote = partes[2];
+
+    document.getElementById("resultado").innerHTML =
+        "✅ Leitura OK!<br><br>" +
+        "📦 Lote: " + lote + "<br>" +
+        "📍 Linha: C" + linha;
 
     confirmarSucesso();
 
@@ -306,6 +313,7 @@ if(texto.startsWith("OK")){
 
 }else{
 
+    document.getElementById("resultado").innerHTML = texto;
     confirmarErro();
 
 }
