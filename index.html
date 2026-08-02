@@ -165,6 +165,41 @@ document.getElementById("loteManual").addEventListener("keypress", async functio
     document.getElementById("resultado").innerHTML =
     "Enviando lote...";
 
+const setor = document.getElementById("setor").value;
+
+const resposta = await fetch(
+    URL_API +
+    "?setor=" + encodeURIComponent(setor) +
+    "&tipo=producao" +
+    "&lote=" + encodeURIComponent(lote)
+);
+
+const texto = await resposta.text();
+
+if(texto.startsWith("OK|")){
+
+    const partes = texto.split("|");
+
+    const linha = partes[1];
+    const lote = partes[2];
+
+    document.getElementById("resultado").innerHTML =
+        "✅ Leitura OK!<br><br>" +
+        "📦 Lote: " + lote + "<br>" +
+        "📍 Linha: C" + linha;
+
+   confirmarSucesso();
+
+this.value = "";
+
+this.focus();
+
+}else{
+
+    document.getElementById("resultado").innerHTML = texto;
+
+}
+   
 });
    
 async function enviar(){
