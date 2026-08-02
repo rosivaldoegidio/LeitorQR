@@ -139,6 +139,15 @@ document.getElementById("tipoCorte").addEventListener("change", function(){
     if(this.value === "producao"){
 
         campoLote.style.display = "block";
+        document.getElementById("loteManual").focus();
+
+    }else if(this.value === "embalagem"){
+
+        campoLote.style.display = "none";
+
+        if(!html5QrCode){
+            abrirCamera();
+        }
 
     }else{
 
