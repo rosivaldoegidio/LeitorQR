@@ -60,7 +60,30 @@ button{
     <option value="Dobra">Dobra</option>
     <option value="Pacote">Pacote</option>
 </select>
-   
+
+<div id="opcaoCorte" style="display:none; margin-bottom:15px;">
+
+    <label><b>Tipo:</b></label>
+
+    <select id="tipoCorte" style="width:100%; padding:12px; font-size:18px;">
+        <option value="">Selecione</option>
+        <option value="producao">Produção</option>
+        <option value="embalagem">Embalagem</option>
+    </select>
+
+</div>
+
+<div id="campoLote" style="display:none; margin-bottom:15px;">
+
+    <label><b>Lote:</b></label>
+
+    <input
+        id="loteManual"
+        type="text"
+        placeholder="Digite o lote">
+
+</div>
+
 <button onclick="abrirCamera()">
 Abrir câmera
 </button>
@@ -86,6 +109,44 @@ Abrir câmera
 <script>
 
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
+
+// Mostra opções extras quando o setor é Corte
+document.getElementById("setor").addEventListener("change", function(){
+
+    const opcaoCorte = document.getElementById("opcaoCorte");
+    const campoLote = document.getElementById("campoLote");
+
+    if(this.value === "Corte"){
+
+        opcaoCorte.style.display = "block";
+
+    }else{
+
+        opcaoCorte.style.display = "none";
+        campoLote.style.display = "none";
+
+        document.getElementById("tipoCorte").value = "";
+        document.getElementById("loteManual").value = "";
+
+    }
+
+});
+
+document.getElementById("tipoCorte").addEventListener("change", function(){
+
+    const campoLote = document.getElementById("campoLote");
+
+    if(this.value === "producao"){
+
+        campoLote.style.display = "block";
+
+    }else{
+
+        campoLote.style.display = "none";
+
+    }
+
+});
 
 async function enviar(){
 
@@ -218,6 +279,32 @@ function reiniciarTemporizador(){
 function abrirCamera(){
 
     const setor = document.getElementById("setor").value;
+
+   if(setor === "Corte"){
+
+    const tipo = document.getElementById("tipoCorte").value;
+
+    if(tipo === ""){
+
+        alert("Selecione Produção ou Embalagem.");
+
+        return;
+
+    }
+
+    if(tipo === "producao"){
+
+        document.getElementById("campoLote").style.display = "block";
+
+        document.getElementById("reader").innerHTML = "";
+        document.getElementById("resultado").innerHTML = "";
+
+        return;
+
+    }
+
+    // Se for Embalagem, continua normalmente e abre a câmera.
+}
 
     if(setor == ""){
         alert("Selecione o setor antes de abrir a câmera.");
