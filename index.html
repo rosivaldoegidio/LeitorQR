@@ -148,6 +148,25 @@ document.getElementById("tipoCorte").addEventListener("change", function(){
 
 });
 
+document.getElementById("loteManual").addEventListener("keypress", async function(e){
+
+    if(e.key !== "Enter"){
+        return;
+    }
+
+    e.preventDefault();
+
+    const lote = this.value.trim();
+
+    if(lote === ""){
+        return;
+    }
+
+    document.getElementById("resultado").innerHTML =
+    "Enviando lote...";
+
+});
+   
 async function enviar(){
 
     const codigo = document.getElementById("codigo").value;
@@ -298,7 +317,7 @@ function abrirCamera(){
 
         document.getElementById("reader").innerHTML = "";
         document.getElementById("resultado").innerHTML = "";
-
+        document.getElementById("loteManual").focus();
         return;
 
     }
