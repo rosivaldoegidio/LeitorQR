@@ -204,7 +204,18 @@ if(texto.startsWith("OK|")){
 
     const linha = partes[1];
     const lote = partes[2];
+   
+const quantidade = prompt("Digite a quantidade produzida:", "1");
 
+if(
+    quantidade === null ||
+    quantidade.trim() === "" ||
+    isNaN(quantidade)
+){
+    document.getElementById("resultado").innerHTML =
+    "Operação cancelada.";
+    return;
+}
     document.getElementById("resultado").innerHTML =
         "✅ Leitura OK!<br><br>" +
         "📦 Lote: " + lote + "<br>" +
