@@ -184,6 +184,18 @@ document.getElementById("loteManual").addEventListener("keypress", async functio
         return;
     }
 
+const quantidade = prompt("Digite a quantidade produzida:", "1");
+
+if(
+    quantidade === null ||
+    quantidade.trim() === "" ||
+    isNaN(quantidade)
+){
+    document.getElementById("resultado").innerHTML =
+    "Operação cancelada.";
+    return;
+}
+   
     document.getElementById("resultado").innerHTML =
     "Enviando lote...";
 
@@ -206,17 +218,6 @@ if(texto.startsWith("OK|")){
     const linha = partes[1];
     const lote = partes[2];
    
-const quantidade = prompt("Digite a quantidade produzida:", "1");
-
-if(
-    quantidade === null ||
-    quantidade.trim() === "" ||
-    isNaN(quantidade)
-){
-    document.getElementById("resultado").innerHTML =
-    "Operação cancelada.";
-    return;
-}
     document.getElementById("resultado").innerHTML =
         "✅ Leitura OK!<br><br>" +
         "📦 Lote: " + lote + "<br>" +
@@ -251,11 +252,13 @@ async function enviar(){
 
     // Chamada usando GET
     const url =
-    URL_API + "?codigo=" + encodeURIComponent(codigo);
+URL_API + "?codigo=" + encodeURIComponent(codigo);
 
-    try{
+try{
 
-        const texto = await resposta.text();
+    const resposta = await fetch(url);
+
+    const texto = await resposta.text();
 
 if(texto.startsWith("OK|")){
 
