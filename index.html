@@ -110,6 +110,12 @@ Abrir câmera
 
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
+const audioLeitura = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+
+const audioSucesso = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+
+const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
 // Mostra opções extras quando o setor é Corte
 document.getElementById("setor").addEventListener("change", async function(){
 
@@ -302,14 +308,11 @@ let ultimoHorario = 0;
 
 function confirmarLeitura(){
 
-    // Bip
-    const audio = new Audio(
-      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-    );
+    audioLeitura.pause();
+    audioLeitura.currentTime = 0;
 
-    audio.play().catch(()=>{});
+    audioLeitura.play().catch(()=>{});
 
-    // Vibração
     if(navigator.vibrate){
         navigator.vibrate(200);
     }
@@ -318,21 +321,19 @@ function confirmarLeitura(){
 
 function confirmarSucesso(){
 
-    const audio = new Audio(
-      "https://actions.google.com/sounds/v1/cartoon/pop.ogg"
-    );
+    audioSucesso.pause();
+    audioSucesso.currentTime = 0;
 
-    audio.play().catch(()=>{});
+    audioSucesso.play().catch(()=>{});
 
 }
 
 function confirmarErro(){
 
-    const audio = new Audio(
-      "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
-    );
+    audioErro.pause();
+    audioErro.currentTime = 0;
 
-    audio.play().catch(()=>{});
+    audioErro.play().catch(()=>{});
 
     if(navigator.vibrate){
         navigator.vibrate([150,100,150]);
