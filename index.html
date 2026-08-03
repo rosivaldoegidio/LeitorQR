@@ -193,7 +193,8 @@ const resposta = await fetch(
     URL_API +
     "?setor=" + encodeURIComponent(setor) +
     "&tipo=producao" +
-    "&lote=" + encodeURIComponent(lote)
+    "&lote=" + encodeURIComponent(lote) +
+    "&quantidade=" + encodeURIComponent(quantidade)
 );
 
 const texto = await resposta.text();
