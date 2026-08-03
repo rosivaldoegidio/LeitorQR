@@ -111,11 +111,12 @@ Abrir câmera
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
 // Mostra opções extras quando o setor é Corte
-document.getElementById("setor").addEventListener("change", function(){
+document.getElementById("setor").addEventListener("change", async function(){
 
     const opcaoCorte = document.getElementById("opcaoCorte");
     const campoLote = document.getElementById("campoLote");
 
+    // Se mudou para Corte ou saiu de Corte
     if(this.value === "Corte"){
 
         opcaoCorte.style.display = "block";
@@ -130,15 +131,26 @@ document.getElementById("setor").addEventListener("change", function(){
 
     }
 
+    // Fechar câmera somente em Corte
+    if(this.value === "Corte"){
+
+        await fecharCamera();
+
+    }
+
 });
 
-document.getElementById("tipoCorte").addEventListener("change", function(){
+document.getElementById("tipoCorte").addEventListener("change", async function(){
 
     const campoLote = document.getElementById("campoLote");
 
     if(this.value === "producao"){
 
+        // Fecha a câmera ao voltar para Produção
+        await fecharCamera();
+
         campoLote.style.display = "block";
+
         document.getElementById("loteManual").focus();
 
     }else if(this.value === "embalagem"){
@@ -153,10 +165,11 @@ document.getElementById("tipoCorte").addEventListener("change", function(){
 
         campoLote.style.display = "none";
 
+        await fecharCamera();
+
     }
 
 });
-
 document.getElementById("loteManual").addEventListener("keypress", async function(e){
 
     if(e.key !== "Enter"){
@@ -338,7 +351,31 @@ function reiniciarTemporizador(){
     },60000); // 60 segundos
 
 }    
-    
+
+async function fecharCamera(){
+
+    if(!html5QrCode){
+        return;
+    }
+
+    try{
+
+        clearTimeout(temporizadorInatividade);
+
+        await html5QrCode.stop();
+
+        await html5QrCode.clear();
+
+    }catch(e){
+        console.log(e);
+    }
+
+    html5QrCode = null;
+
+    document.getElementById("reader").innerHTML = "";
+
+}
+
 function abrirCamera(){
 
     const setor = document.getElementById("setor").value;
