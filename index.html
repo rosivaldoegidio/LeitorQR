@@ -394,6 +394,22 @@ async function fecharCamera(){
 
 function abrirCamera(){
 
+   // Desbloqueia os áudios no iPhone
+audioLeitura.play().then(() => {
+    audioLeitura.pause();
+    audioLeitura.currentTime = 0;
+}).catch(()=>{});
+
+audioSucesso.play().then(() => {
+    audioSucesso.pause();
+    audioSucesso.currentTime = 0;
+}).catch(()=>{});
+
+audioErro.play().then(() => {
+    audioErro.pause();
+    audioErro.currentTime = 0;
+}).catch(()=>{});
+
     const setor = document.getElementById("setor").value;
 
    if(setor === "Corte"){
