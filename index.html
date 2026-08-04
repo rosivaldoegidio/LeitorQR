@@ -123,26 +123,26 @@ document.getElementById("setor").addEventListener("change", async function(){
     const campoLote = document.getElementById("campoLote");
 
     // Se mudou para Corte ou saiu de Corte
-    if(this.value === "Corte"){
+    if(this.value === "Corte" || this.value === "Costura"){
 
-        opcaoCorte.style.display = "block";
+    opcaoCorte.style.display = "block";
 
-    }else{
+}else{
 
-        opcaoCorte.style.display = "none";
-        campoLote.style.display = "none";
+    opcaoCorte.style.display = "none";
+    campoLote.style.display = "none";
 
-        document.getElementById("tipoCorte").value = "";
-        document.getElementById("loteManual").value = "";
+    document.getElementById("tipoCorte").value = "";
+    document.getElementById("loteManual").value = "";
 
-    }
+}
 
     // Fechar câmera somente em Corte
-    if(this.value === "Corte"){
+    if(this.value === "Corte" || this.value === "Costura"){
 
-        await fecharCamera();
+    await fecharCamera();
 
-    }
+}
 
 });
 
