@@ -122,6 +122,8 @@ document.getElementById("setor").addEventListener("change", async function(){
     const opcaoCorte = document.getElementById("opcaoCorte");
     const campoLote = document.getElementById("campoLote");
 
+   await fecharCamera();
+
     // Se mudou para Corte ou saiu de Corte
     if(this.value === "Corte" || this.value === "Costura"){
 
@@ -137,13 +139,18 @@ document.getElementById("setor").addEventListener("change", async function(){
 
 }
 
-    // Fechar câmera somente em Corte
+    // // Fechar câmera ao trocar de setor
     if(this.value === "Corte" || this.value === "Costura"){
 
     await fecharCamera();
 
 }
 
+if(this.value === "Dobra" || this.value === "Pacote"){
+
+    await abrirCamera();
+
+}
 });
 
 document.getElementById("tipoCorte").addEventListener("change", async function(){
@@ -392,7 +399,7 @@ async function fecharCamera(){
 
 }
 
-function abrirCamera(){
+async function abrirCamera(){
 
    // Desbloqueia os áudios no iPhone
 audioLeitura.play().then(() => {
