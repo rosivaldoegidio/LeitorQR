@@ -116,6 +116,8 @@ const audioSucesso = new Audio("https://actions.google.com/sounds/v1/cartoon/pop
 
 const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 
+const audioMeta = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
+
 // Mostra opções extras quando o setor é Corte
 document.getElementById("setor").addEventListener("change", async function(){
 
@@ -347,7 +349,55 @@ function confirmarErro(){
     }
 
 }
-   
+
+function confirmarMeta(){
+
+    audioMeta.pause();
+    audioMeta.currentTime = 0;
+
+    // Toca 3 vezes
+    audioMeta.play().catch(()=>{});
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },300);
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },600);
+
+    if(navigator.vibrate){
+        navigator.vibrate([250,120,250,120,250]);
+    }
+
+}
+
+function confirmarMeta(){
+
+    audioMeta.pause();
+    audioMeta.currentTime = 0;
+
+    // Toca 3 vezes
+    audioMeta.play().catch(()=>{});
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },300);
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },600);
+
+    if(navigator.vibrate){
+        navigator.vibrate([250,120,250,120,250]);
+    }
+
+}
+
 function reiniciarTemporizador(){
 
     clearTimeout(temporizadorInatividade);
