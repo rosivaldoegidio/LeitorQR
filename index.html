@@ -559,9 +559,10 @@ if(texto.startsWith("OK|")){
    if(partes.length >= 4 && partes[3] === "META"){
 
     document.getElementById("resultado").innerHTML =
-        "🎉 <b>FINALIZOU O LOTE COM SUCESSO!</b><br><br>" +
-        "📦 Lote: " + lote + "<br>" +
-        "📍 Linha: C" + linha;
+    "🎉 <b>LOTE FINALIZADO!</b><br><br>" +
+    "✅ Meta de caixas atingida.<br><br>" +
+    "📦 Lote: " + lote + "<br>" +
+    "📍 Linha: C" + linha;
 
     confirmarMeta();
 
