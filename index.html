@@ -531,15 +531,24 @@ if(texto.startsWith("OK|")){
         "📦 Lote: " + lote + "<br>" +
         "📍 Linha: C" + linha;
 
+   if(partes.length >= 4 && partes[3] === "META"){
+
+    confirmarMeta();
+
+}else{
+
     confirmarSucesso();
 
-    // Guarda somente após sucesso
-    ultimoCodigo = decodedText;
-    ultimoHorario = agora;
+}
+
+// Guarda somente após sucesso
+ultimoCodigo = decodedText;
+ultimoHorario = agora;
 
 }else{
 
     document.getElementById("resultado").innerHTML = texto;
+
     confirmarErro();
 
 }
