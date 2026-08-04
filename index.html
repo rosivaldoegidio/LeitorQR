@@ -352,9 +352,24 @@ function confirmarErro(){
 
 function confirmarMeta(){
 
-    alert("FUNÇÃO META CARREGADA");
+    audioMeta.pause();
+    audioMeta.currentTime = 0;
 
-}
+    audioMeta.play().catch(()=>{});
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },300);
+
+    setTimeout(function(){
+        audioMeta.currentTime = 0;
+        audioMeta.play().catch(()=>{});
+    },600);
+
+    if(navigator.vibrate){
+        navigator.vibrate([250,120,250,120,250]);
+    }
 
 }
 
