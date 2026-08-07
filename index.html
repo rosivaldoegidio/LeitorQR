@@ -46,6 +46,67 @@ button{
 </head>
 <body>
 
+<div id="telaSenha" style="
+    position:fixed;
+    inset:0;
+    background:white;
+    z-index:99999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+">
+
+    <div style="
+        width:100%;
+        max-width:350px;
+        text-align:center;
+        font-family:Arial;
+    ">
+
+        <h2>🔐 Acesso ao Leitor</h2>
+
+        <p>Digite a senha para continuar</p>
+
+        <input
+            id="senhaAcesso"
+            type="password"
+            placeholder="Senha"
+            autocomplete="off"
+            style="
+                width:100%;
+                box-sizing:border-box;
+                padding:14px;
+                font-size:18px;
+                text-align:center;
+            "
+        >
+
+        <button
+            onclick="entrarSistema()"
+            style="
+                width:100%;
+                margin-top:15px;
+                padding:14px;
+                font-size:18px;
+            "
+        >
+            ENTRAR
+        </button>
+
+        <div
+            id="erroSenha"
+            style="
+                margin-top:15px;
+                color:red;
+                font-weight:bold;
+            "
+        ></div>
+
+    </div>
+
+</div>
+
 <div style="text-align:center; margin-bottom:15px;">
     <img src="logo.png" width="160" alt="Logo">
     <h2>📦 Leitor de Etq. de Caixa</h2>
@@ -107,6 +168,29 @@ Abrir câmera
 <div id="resultado"></div>
 
 <script>
+
+const SENHA_ACESSO = "PIONG2026@";
+
+function entrarSistema(){
+
+    const senha =
+        document.getElementById("senhaAcesso").value;
+
+    const erro =
+        document.getElementById("erroSenha");
+
+    if(senha === SENHA_ACESSO){
+
+        document.getElementById("telaSenha").style.display = "none";
+
+    }else{
+
+        erro.innerHTML = "❌ Senha incorreta";
+        document.getElementById("senhaAcesso").value = "";
+        document.getElementById("senhaAcesso").focus();
+
+    }
+}
 
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
