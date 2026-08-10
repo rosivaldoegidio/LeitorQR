@@ -202,45 +202,53 @@ const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_sh
 
 const audioMeta = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
 
-// Mostra opções extras quando o setor é Corte
+// Mostra opções extras para Corte, Costura e Dobra
 document.getElementById("setor").addEventListener("change", async function(){
 
     const opcaoCorte = document.getElementById("opcaoCorte");
     const campoLote = document.getElementById("campoLote");
 
-   await fecharCamera();
-
-    // Se mudou para Corte ou saiu de Corte
-    if(this.value === "Corte" || this.value === "Costura" || this.value === "Dobra"){
-
-    opcaoCorte.style.display = "block";
-
-}else{
-
-    opcaoCorte.style.display = "none";
-    campoLote.style.display = "none";
-
-    document.getElementById("tipoCorte").value = "";
-    document.getElementById("loteManual").value = "";
-
-}
-
-    // // Fechar câmera ao trocar de setor
-    if(this.value === "Corte" || this.value === "Costura" || this.value === "Dobra"){
-
+    // Sempre fecha a câmera ao trocar de setor
     await fecharCamera();
 
-}
+    // Corte, Costura e Dobra possuem Etapa
+    if(
+        this.value === "Corte" ||
+        this.value === "Costura" ||
+        this.value === "Dobra"
+    ){
 
-    await fecharCamera();
+        opcaoCorte.style.display = "block";
 
-}
+    }else{
 
-if(this.value === "Dobra" || this.value === "Pacote"){
+        opcaoCorte.style.display = "none";
+        campoLote.style.display = "none";
 
-    await abrirCamera();
+        document.getElementById("tipoCorte").value = "";
+        document.getElementById("loteManual").value = "";
 
-}
+    }
+
+    // Para Corte, Costura e Dobra,
+    // a câmera permanece fechada até escolher a Etapa
+    if(
+        this.value === "Corte" ||
+        this.value === "Costura" ||
+        this.value === "Dobra"
+    ){
+
+        await fecharCamera();
+
+    }
+
+    // Pacote continua abrindo a câmera automaticamente
+    if(this.value === "Pacote"){
+
+        await abrirCamera();
+
+    }
+
 });
 
 document.getElementById("tipoCorte").addEventListener("change", async function(){
