@@ -211,7 +211,7 @@ document.getElementById("setor").addEventListener("change", async function(){
    await fecharCamera();
 
     // Se mudou para Corte ou saiu de Corte
-    if(this.value === "Corte" || this.value === "Costura"){
+    if(this.value === "Corte" || this.value === "Costura" || this.value === "Dobra"){
 
     opcaoCorte.style.display = "block";
 
@@ -226,7 +226,11 @@ document.getElementById("setor").addEventListener("change", async function(){
 }
 
     // // Fechar câmera ao trocar de setor
-    if(this.value === "Corte" || this.value === "Costura"){
+    if(this.value === "Corte" || this.value === "Costura" || this.value === "Dobra"){
+
+    await fecharCamera();
+
+}
 
     await fecharCamera();
 
@@ -528,9 +532,9 @@ audioErro.play().then(() => {
 
     const setor = document.getElementById("setor").value;
 
-   if(setor === "Corte" || setor === "Costura"){
+   if(setor === "Corte" || setor === "Costura" || setor === "Dobra"){
 
-    const tipo = document.getElementById("tipoCorte").value;
+       const tipo = document.getElementById("tipoCorte").value;
 
     if(tipo === ""){
 
