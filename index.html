@@ -194,8 +194,6 @@ function entrarSistema(){
 
 const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
-const audioLeitura = new Audio("./Audio_Leitura_Caixa.wav");
-
 const audioSucesso = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
 
 const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
@@ -413,13 +411,72 @@ let ultimoHorario = 0;
 
 function confirmarLeitura(){
 
-    audioLeitura.pause();
-    audioLeitura.currentTime = 0;
+    try{
 
-    audioLeitura.play().catch(()=>{});
+        const AudioContext =
+            window.AudioContext || window.webkitAudioContext;
+
+        if(!window.audioContext){
+            window.audioContext = new AudioContext();
+        }
+
+        const ctx = window.audioContext;
+
+        if(ctx.state === "suspended"){
+            ctx.resume();
+        }
+
+        // Primeiro tom
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.value = 650;
+
+        gain1.gain.setValueAtTime(0.22, ctx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(
+            0.01,
+            ctx.currentTime + 0.08
+        );
+
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+
+        osc1.start();
+        osc1.stop(ctx.currentTime + 0.08);
+
+
+        // Segundo tom — mais agudo
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+
+        osc2.type = "sine";
+        osc2.frequency.value = 950;
+
+        gain2.gain.setValueAtTime(
+            0.25,
+            ctx.currentTime + 0.07
+        );
+
+        gain2.gain.exponentialRampToValueAtTime(
+            0.01,
+            ctx.currentTime + 0.18
+        );
+
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+
+        osc2.start(ctx.currentTime + 0.07);
+        osc2.stop(ctx.currentTime + 0.18);
+
+    }catch(e){
+
+        console.log("Erro ao emitir bip:", e);
+
+    }
 
     if(navigator.vibrate){
-        navigator.vibrate(200);
+        navigator.vibrate(120);
     }
 
 }
@@ -523,10 +580,6 @@ async function fecharCamera(){
 async function abrirCamera(){
 
    // Desbloqueia os áudios no iPhone
-audioLeitura.play().then(() => {
-    audioLeitura.pause();
-    audioLeitura.currentTime = 0;
-}).catch(()=>{});
 
 audioSucesso.play().then(() => {
     audioSucesso.pause();
