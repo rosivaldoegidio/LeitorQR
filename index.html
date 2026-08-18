@@ -200,7 +200,7 @@ const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_sh
 
 const audioMeta = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
 
-// Mostra opções extras para Corte, Costura e Dobra
+// Mostra opções extras para Corte, Costura, Dobra e Pacote
 document.getElementById("setor").addEventListener("change", async function(){
 
     const opcaoCorte = document.getElementById("opcaoCorte");
@@ -209,11 +209,12 @@ document.getElementById("setor").addEventListener("change", async function(){
     // Sempre fecha a câmera ao trocar de setor
     await fecharCamera();
 
-    // Corte, Costura e Dobra possuem Etapa
+    // Corte, Costura, Dobra e Pacote possuem Etapa
     if(
         this.value === "Corte" ||
         this.value === "Costura" ||
-        this.value === "Dobra"
+        this.value === "Dobra" ||
+        this.value === "Pacote"
     ){
 
         opcaoCorte.style.display = "block";
@@ -228,27 +229,20 @@ document.getElementById("setor").addEventListener("change", async function(){
 
     }
 
-    // Para Corte, Costura e Dobra,
+    // Para Corte, Costura, Dobra e Pacote,
     // a câmera permanece fechada até escolher a Etapa
     if(
         this.value === "Corte" ||
         this.value === "Costura" ||
-        this.value === "Dobra"
+        this.value === "Dobra" ||
+        this.value === "Pacote"
     ){
 
         await fecharCamera();
 
     }
 
-    // Pacote continua abrindo a câmera automaticamente
-    if(this.value === "Pacote"){
-
-        await abrirCamera();
-
-    }
-
 });
-
 document.getElementById("tipoCorte").addEventListener("change", async function(){
 
     const campoLote = document.getElementById("campoLote");
@@ -595,7 +589,12 @@ audioErro.play().then(() => {
 
     const setor = document.getElementById("setor").value;
 
-   if(setor === "Corte" || setor === "Costura" || setor === "Dobra"){
+   if(
+    setor === "Corte" ||
+    setor === "Costura" ||
+    setor === "Dobra" ||
+    setor === "Pacote"
+){
 
        const tipo = document.getElementById("tipoCorte").value;
 
@@ -687,11 +686,22 @@ document.getElementById("resultado").innerHTML =
 
 try{
 
-const resposta = await fetch(
+let urlLeitura =
     URL_API +
     "?codigo=" + encodeURIComponent(decodedText) +
-    "&setor=" + encodeURIComponent(setor)
-);
+    "&setor=" + encodeURIComponent(setor);
+
+// Para Pacote, envia também a etapa selecionada
+if(setor === "Pacote"){
+
+    const tipo = document.getElementById("tipoCorte").value;
+
+    urlLeitura +=
+        "&tipo=" + encodeURIComponent(tipo);
+
+}
+
+const resposta = await fetch(urlLeitura);
 
 const texto = await resposta.text();
 
