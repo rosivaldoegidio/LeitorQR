@@ -8,7 +8,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>PION PLUS - Produção Diária</title>
+<title>Painel de Produção</title>
 
 <style>
 
@@ -18,21 +18,28 @@
 
 *{
     box-sizing:border-box;
-    margin:0;
-    padding:0;
 }
 
 html,
 body{
+    margin:0;
+    padding:0;
     width:100%;
     height:100%;
-    overflow:hidden;
 }
 
 body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#ffffff;
-    color:#ffffff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:#f1f3f6;
+
+    color:#20252b;
+
+    overflow:hidden;
 }
 
 
@@ -41,13 +48,16 @@ body{
 ========================================================= */
 
 .painel{
+
     width:100vw;
     height:100vh;
+
+    padding:14px 18px;
 
     display:flex;
     flex-direction:column;
 
-    background:#ffffff;
+    gap:12px;
 }
 
 
@@ -57,244 +67,290 @@ body{
 
 .cabecalho{
 
-    height:108px;
-    min-height:108px;
+    width:100%;
 
-    background:#0b2345;
+    background:white;
 
-    position:relative;
+    border-radius:12px;
+
+    padding:12px 18px;
 
     display:flex;
+
     align-items:center;
-    justify-content:center;
 
-    border-bottom:3px solid #ffffff;
+    justify-content:space-between;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.08);
+
+    min-height:72px;
 }
 
+.titulo-area{
 
-/* Logo */
+    display:flex;
+    flex-direction:column;
 
-.logo{
-
-    position:absolute;
-
-    left:34px;
-    top:18px;
-
-    font-size:18px;
-    font-weight:800;
-    letter-spacing:.5px;
+    gap:3px;
 }
-
-
-/* Título */
 
 .titulo{
 
-    text-align:center;
-    line-height:1;
-
-}
-
-.titulo-principal{
-
     font-size:28px;
-    font-weight:900;
-    letter-spacing:.3px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
 }
 
-.titulo-setor{
+.subtitulo{
 
-    margin-top:6px;
+    font-size:14px;
 
-    font-size:22px;
-    font-weight:900;
+    color:#6c737c;
+}
+
+.info-data{
+
+    text-align:right;
 }
 
 .data{
 
-    margin-top:5px;
+    font-size:19px;
 
-    font-size:16px;
-    font-weight:900;
+    font-weight:700;
+}
 
-    color:#00e64d;
+.hora{
+
+    font-size:14px;
+
+    color:#6c737c;
+
+    margin-top:3px;
 }
 
 
 /* =========================================================
-   BARRA DE NAVEGAÇÃO
+   BARRA DE SETORES
 ========================================================= */
 
-.navegacao{
-
-    height:40px;
-    min-height:40px;
+.setores{
 
     display:flex;
-    align-items:center;
-    justify-content:center;
 
-    gap:5px;
+    gap:8px;
 
-    background:#ffffff;
+    width:100%;
+
+    overflow:hidden;
 }
 
+.setor{
 
-.botao-setor{
+    flex:1;
 
-    height:23px;
+    border:0;
 
-    min-width:82px;
+    border-radius:8px;
 
-    padding:0 12px;
+    padding:9px 12px;
 
-    border:none;
-    border-radius:2px;
+    background:#dfe3e8;
 
-    background:#0b2345;
+    color:#4b535c;
 
-    color:#ffffff;
+    font-weight:700;
 
-    font-size:9px;
-    font-weight:900;
+    font-size:13px;
 
     cursor:pointer;
 
-    transition:.15s;
+    white-space:nowrap;
 }
 
+.setor.ativo{
 
-.botao-setor:hover{
+    background:#20252b;
 
-    transform:translateY(-1px);
-
-    filter:brightness(1.15);
-}
-
-
-.botao-setor.ativo{
-
-    background:#2989df;
-
-    box-shadow:
-        0 2px 5px rgba(0,0,0,.25);
-}
-
-
-.botao-fullscreen{
-
-    margin-left:5px;
-
-    min-width:96px;
-
-    background:#333333;
+    color:white;
 }
 
 
 /* =========================================================
-   ÁREA DAS INFORMAÇÕES
+   RESUMO
 ========================================================= */
 
-.informacoes{
-
-    height:43%;
-
-    min-height:300px;
+.resumo{
 
     display:grid;
 
     grid-template-columns:
-        15%
-        15%
-        27%
-        25%
-        18%;
+        1fr 1fr 1fr 1fr;
 
-    gap:2px;
+    gap:10px;
+}
 
-    padding:0 8px;
+.resumo-box{
 
-    background:#ffffff;
+    background:white;
+
+    border-radius:10px;
+
+    padding:10px 14px;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.06);
+
+    min-height:58px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.resumo-label{
+
+    font-size:11px;
+
+    color:#7a8189;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+}
+
+.resumo-valor{
+
+    font-size:23px;
+
+    font-weight:800;
+
+    margin-top:2px;
 }
 
 
 /* =========================================================
-   COLUNAS
+   GRADE DOS ITENS
 ========================================================= */
 
-.coluna{
+.itens{
 
-    height:100%;
+    flex:1;
+
+    min-height:0;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5, minmax(0,1fr));
+
+    grid-template-rows:
+        repeat(2, minmax(0,1fr));
+
+    gap:12px;
+}
+
+
+/* =========================================================
+   CARTÃO DO ITEM
+========================================================= */
+
+.card{
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:12px;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.08);
+
+    min-width:0;
+
+    min-height:0;
 
     display:flex;
+
     flex-direction:column;
 
     overflow:hidden;
 }
 
 
-.cab-coluna{
+/* =========================================================
+   CABEÇALHO DO CARD
+========================================================= */
 
-    height:40px;
-    min-height:40px;
+.card-topo{
 
     display:flex;
 
     align-items:center;
-    justify-content:center;
 
-    font-size:13px;
-    font-weight:900;
+    justify-content:space-between;
 
-    text-align:center;
+    gap:8px;
 
-    border-bottom:1px solid rgba(255,255,255,.5);
+    min-height:28px;
 }
 
+.item-numero{
 
-.lista{
+    font-size:15px;
 
-    flex:1;
-
-    display:flex;
-    flex-direction:column;
-
-    padding:5px 10px;
-}
-
-
-.linha{
-
-    flex:1;
-
-    display:grid;
-
-    grid-template-columns:34px 1fr;
-
-    align-items:center;
-
-    font-size:13px;
     font-weight:800;
-
-    white-space:nowrap;
 }
 
-
-.numero{
-
-    text-align:center;
+.status-pequeno{
 
     font-size:10px;
-    font-weight:900;
+
+    font-weight:800;
+
+    padding:4px 7px;
+
+    border-radius:20px;
+
+    background:#eef0f2;
+
+    color:#666;
 }
 
 
-.valor{
+/* =========================================================
+   PRODUTO
+========================================================= */
 
-    text-align:left;
+.produto{
 
-    padding-left:3px;
+    margin-top:5px;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+.lote{
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    color:#737a82;
+
+    white-space:nowrap;
 
     overflow:hidden;
 
@@ -303,402 +359,241 @@ body{
 
 
 /* =========================================================
-   CORES DAS COLUNAS
+   ÁREA DO CÍRCULO
 ========================================================= */
 
-.caixas{
+.grafico{
 
-    background:#5274cf;
-}
+    flex:1;
 
-.caixas .cab-coluna{
+    min-height:0;
 
-    background:#5274cf;
-}
+    display:flex;
 
+    align-items:center;
 
-.meta{
+    justify-content:center;
 
-    background:#218322;
-}
-
-.meta .cab-coluna{
-
-    background:#218322;
-}
-
-
-.produto{
-
-    background:#c79f18;
-}
-
-.produto .cab-coluna{
-
-    background:#c79f18;
-}
-
-
-.lote{
-
-    background:#4d0084;
-}
-
-.lote .cab-coluna{
-
-    background:#4d0084;
-}
-
-
-.pendente{
-
-    background:#80690a;
-}
-
-.pendente .cab-coluna{
-
-    background:#80690a;
-}
-
-
-/* Valores numéricos */
-
-.caixas .valor,
-.meta .valor,
-.pendente .valor{
-
-    text-align:center;
-
-    font-size:14px;
-}
-
-
-.produto .valor,
-.lote .valor{
-
-    font-size:13px;
+    padding:5px 0;
 }
 
 
 /* =========================================================
-   ÁREA DOS VELOCÍMETROS
+   CÍRCULO DE PROGRESSO
 ========================================================= */
+
+.circular{
+
+    position:relative;
+
+    width:min(18vh, 145px);
+
+    height:min(18vh, 145px);
+
+    min-width:105px;
+
+    min-height:105px;
+
+    max-width:145px;
+
+    max-height:145px;
+}
+
+.circular svg{
+
+    width:100%;
+
+    height:100%;
+
+    transform:rotate(-90deg);
+}
+
+.circular circle{
+
+    fill:none;
+
+    stroke-width:10;
+}
+
+.trilha{
+
+    stroke:#e7e9ec;
+}
 
 .progresso{
 
-    flex:1;
+    stroke-linecap:round;
 
-    min-height:0;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(5, 1fr);
-
-    grid-template-rows:
-        repeat(2, 1fr);
-
-    gap:2px;
-
-    padding:4px 8px 8px;
-
-    background:#ffffff;
+    transition:
+        stroke-dashoffset .8s ease;
 }
 
 
 /* =========================================================
-   CARTÃO DE PROGRESSO
+   TEXTO NO CENTRO DO CÍRCULO
 ========================================================= */
 
-.card{
+.circular-centro{
 
-    min-width:0;
-    min-height:0;
+    position:absolute;
 
-    background:#073f4b;
+    inset:0;
 
     display:flex;
+
     flex-direction:column;
 
-    position:relative;
-
-    overflow:hidden;
-
-    border:1px solid #ffffff;
-}
-
-
-/* Cabeçalho do card */
-
-.card-titulo{
-
-    height:35px;
-    min-height:35px;
-
-    background:#4b919f;
-
-    display:flex;
-
     align-items:center;
+
     justify-content:center;
 
     text-align:center;
-
-    font-size:10px;
-    font-weight:900;
-
-    line-height:1.1;
-
-    padding:3px;
 }
-
-
-/* Corpo */
-
-.card-corpo{
-
-    flex:1;
-
-    display:flex;
-    flex-direction:column;
-
-    align-items:center;
-    justify-content:center;
-
-    position:relative;
-
-    padding:3px;
-}
-
-
-/* =========================================================
-   VELOCÍMETRO
-========================================================= */
-
-.velocimetro{
-
-    width:150px;
-    height:78px;
-
-    position:relative;
-
-    margin-top:1px;
-}
-
-
-.arco{
-
-    position:absolute;
-
-    left:8px;
-    top:4px;
-
-    width:134px;
-    height:67px;
-
-    border-radius:134px 134px 0 0;
-
-    background:
-        conic-gradient(
-            from 270deg,
-            #ef2028 0deg 42deg,
-            #ffd400 42deg 78deg,
-            #00b94e 78deg 180deg,
-            transparent 180deg
-        );
-
-    clip-path:
-        polygon(
-            0 100%,
-            0 50%,
-            7% 36%,
-            15% 22%,
-            30% 9%,
-            50% 0,
-            70% 9%,
-            85% 22%,
-            93% 36%,
-            100% 50%,
-            100% 100%
-        );
-}
-
-
-/* Centro branco */
-
-.centro{
-
-    position:absolute;
-
-    left:50%;
-    top:49px;
-
-    width:7px;
-    height:7px;
-
-    margin-left:-3.5px;
-
-    border-radius:50%;
-
-    background:#ffffff;
-}
-
-
-/* Ponteiro */
-
-.ponteiro{
-
-    position:absolute;
-
-    left:50%;
-    top:46px;
-
-    width:3px;
-    height:30px;
-
-    background:#ffffff;
-
-    transform-origin:
-        50% 100%;
-
-    border-radius:3px;
-
-    transform:
-        translateX(-50%)
-        rotate(-55deg);
-}
-
-
-/* Percentual */
 
 .percentual{
 
-    position:absolute;
-
-    left:0;
-    right:0;
-
-    top:29px;
-
-    text-align:center;
-
-    font-size:19px;
+    font-size:28px;
 
     font-weight:900;
 
-    text-shadow:
-        0 1px 2px rgba(0,0,0,.6);
+    line-height:1;
 }
-
-
-/* Quantidade */
 
 .quantidade{
 
-    margin-top:-1px;
+    margin-top:6px;
 
-    font-size:11px;
+    font-size:12px;
 
-    font-weight:900;
+    font-weight:700;
 
-    letter-spacing:.2px;
+    color:#5e666e;
+}
+
+.meta{
+
+    margin-top:2px;
+
+    font-size:10px;
+
+    color:#8a9097;
 }
 
 
 /* =========================================================
-   STATUS
+   RODAPÉ DO CARD
 ========================================================= */
 
-.status{
+.card-bottom{
 
-    height:22px;
-    min-height:22px;
+    text-align:center;
+
+    min-height:35px;
+}
+
+.situacao{
+
+    font-size:12px;
+
+    font-weight:800;
+}
+
+.pendente{
+
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:#747b83;
+}
+
+
+/* =========================================================
+   CORES DOS STATUS
+========================================================= */
+
+.status-baixo{
+
+    color:#c62828;
+}
+
+.status-atencao{
+
+    color:#c17b00;
+}
+
+.status-andamento{
+
+    color:#2767b1;
+}
+
+.status-meta{
+
+    color:#218739;
+}
+
+.status-sem-meta{
+
+    color:#777;
+}
+
+
+/* =========================================================
+   CORES DA BORDA
+========================================================= */
+
+.cor-baixo{
+
+    stroke:#d64545;
+}
+
+.cor-atencao{
+
+    stroke:#e1a62b;
+}
+
+.cor-andamento{
+
+    stroke:#3b82c4;
+}
+
+.cor-meta{
+
+    stroke:#32a852;
+}
+
+.cor-sem-meta{
+
+    stroke:#aeb4ba;
+}
+
+
+/* =========================================================
+   RODAPÉ DO PAINEL
+========================================================= */
+
+.rodape{
+
+    height:20px;
 
     display:flex;
 
+    justify-content:space-between;
+
     align-items:center;
-    justify-content:center;
 
-    font-size:8px;
-    font-weight:900;
+    font-size:10px;
 
-    text-transform:uppercase;
-}
-
-
-/* Cores de status */
-
-.status.baixo{
-
-    background:#ed1c24;
-}
-
-
-.status.atencao{
-
-    background:#e5b400;
-}
-
-
-.status.meta-atingida{
-
-    background:#239de5;
-}
-
-
-.status.sem-meta{
-
-    background:#555555;
+    color:#8a9097;
 }
 
 
 /* =========================================================
-   RESPONSIVIDADE
+   TELAS MENORES
 ========================================================= */
 
-@media(max-width:1000px){
+@media(max-width:1100px){
 
-    .titulo-principal{
-        font-size:24px;
-    }
-
-    .titulo-setor{
-        font-size:19px;
-    }
-
-    .cabecalho{
-        height:95px;
-        min-height:95px;
-    }
-
-    .informacoes{
-        height:40%;
-    }
-
-    .cab-coluna{
-        font-size:11px;
-    }
-
-    .linha{
-        font-size:11px;
-    }
-
-    .valor{
-        font-size:11px !important;
-    }
-
-    .velocimetro{
-        transform:scale(.85);
-        margin-top:-5px;
-        margin-bottom:-5px;
-    }
-
-}
-
-
-@media(max-width:700px){
-
-    html,
     body{
         overflow:auto;
     }
@@ -708,83 +603,84 @@ body{
         min-height:100vh;
     }
 
+    .itens{
+
+        grid-template-columns:
+            repeat(3, minmax(0,1fr));
+
+        grid-template-rows:none;
+
+        flex:none;
+    }
+
+    .card{
+        min-height:300px;
+    }
+}
+
+
+@media(max-width:700px){
+
+    .painel{
+        padding:10px;
+    }
+
     .cabecalho{
-        height:100px;
-        min-height:100px;
+        padding:10px 12px;
     }
 
-    .logo{
-        left:15px;
-        top:15px;
-        font-size:14px;
+    .titulo{
+        font-size:20px;
     }
 
-    .titulo-principal{
-        font-size:21px;
-    }
-
-    .titulo-setor{
-        font-size:18px;
+    .subtitulo{
+        font-size:11px;
     }
 
     .data{
         font-size:14px;
     }
 
-    .navegacao{
-        flex-wrap:wrap;
-        height:auto;
-        min-height:45px;
-        padding:5px;
-    }
-
-    .botao-setor{
-        min-width:70px;
-    }
-
-    .informacoes{
-
-        height:auto;
-
-        min-height:420px;
+    .resumo{
 
         grid-template-columns:
-            repeat(5, minmax(150px,1fr));
-
-        overflow-x:auto;
+            1fr 1fr;
     }
 
-    .progresso{
-
-        min-height:500px;
+    .itens{
 
         grid-template-columns:
-            repeat(2, 1fr);
-
-        grid-template-rows:
-            repeat(5, 1fr);
+            1fr 1fr;
     }
 
+    .card{
+        min-height:280px;
+    }
 }
 
 
-/* =========================================================
-   TELA CHEIA
-========================================================= */
+@media(max-width:450px){
 
-:fullscreen .painel{
+    .cabecalho{
+        min-height:65px;
+    }
 
-    width:100vw;
-    height:100vh;
-}
+    .info-data{
+        display:none;
+    }
 
+    .setor{
+        font-size:11px;
+        padding:8px 6px;
+    }
 
-/* =========================================================
-   IMPRESSÃO / SEGURANÇA VISUAL
-========================================================= */
+    .itens{
+        grid-template-columns:1fr;
+    }
 
-button{
-    font-family:Arial, Helvetica, sans-serif;
+    .card{
+        min-height:280px;
+    }
 }
 
 </style>
@@ -798,28 +694,35 @@ button{
 <div class="painel">
 
 
-    <!-- =================================================
+    <!-- =====================================================
          CABEÇALHO
-    ================================================== -->
+    ====================================================== -->
 
     <header class="cabecalho">
 
-        <div class="logo">
-            PION PLUS
+        <div class="titulo-area">
+
+            <div class="titulo">
+                PAINEL DE PRODUÇÃO
+            </div>
+
+            <div class="subtitulo">
+                Acompanhamento da produção diária
+            </div>
+
         </div>
 
-        <div class="titulo">
 
-            <div class="titulo-principal">
-                PRODUÇÃO DIÁRIA
+        <div class="info-data">
+
+            <div
+                class="data"
+                id="dataAtual">
             </div>
 
-            <div class="titulo-setor">
-                PACOTE
-            </div>
-
-            <div class="data">
-                31/08/2026
+            <div
+                class="hora"
+                id="horaAtual">
             </div>
 
         </div>
@@ -827,833 +730,652 @@ button{
     </header>
 
 
-    <!-- =================================================
-         NAVEGAÇÃO
-    ================================================== -->
 
-    <nav class="navegacao">
+    <!-- =====================================================
+         SETORES
+    ====================================================== -->
 
-        <button class="botao-setor">
-            CORTE
-        </button>
+    <div class="setores">
 
-        <button class="botao-setor">
-            COSTURA
-        </button>
-
-        <button class="botao-setor">
-            DOBRA
-        </button>
-
-        <button class="botao-setor ativo">
+        <button class="setor ativo">
             PACOTE
         </button>
 
-        <button
-            class="botao-setor botao-fullscreen"
-            onclick="telaCheia()">
-
-            ⛶ TELA CHEIA
-
+        <button class="setor">
+            PRODUÇÃO
         </button>
 
-    </nav>
+        <button class="setor">
+            EXPEDIÇÃO
+        </button>
+
+        <button class="setor">
+            ESTOQUE
+        </button>
+
+    </div>
 
 
-    <!-- =================================================
-         INFORMAÇÕES PRINCIPAIS
-    ================================================== -->
 
-    <section class="informacoes">
+    <!-- =====================================================
+         RESUMO
+    ====================================================== -->
 
+    <div class="resumo">
 
-        <!-- TOTAL DE CAIXAS -->
+        <div class="resumo-box">
 
-        <div class="coluna caixas">
-
-            <div class="cab-coluna">
-                📦 &nbsp; TOTAL DE CAIXAS
+            <div class="resumo-label">
+                Meta total
             </div>
 
-            <div class="lista">
-
-                <div class="linha">
-                    <span class="numero">1</span>
-                    <span class="valor">31</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">2</span>
-                    <span class="valor">23</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">3</span>
-                    <span class="valor">10</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">4</span>
-                    <span class="valor">16</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">5</span>
-                    <span class="valor">10</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">6</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">7</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">8</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">9</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">10</span>
-                    <span class="valor"></span>
-                </div>
-
+            <div
+                class="resumo-valor"
+                id="metaTotal">
+                1.000
             </div>
 
         </div>
 
 
-        <!-- META -->
+        <div class="resumo-box">
 
-        <div class="coluna meta">
-
-            <div class="cab-coluna">
-                🎯 &nbsp; META
+            <div class="resumo-label">
+                Produzido
             </div>
 
-            <div class="lista">
-
-                <div class="linha">
-                    <span class="numero">1</span>
-                    <span class="valor">310</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">2</span>
-                    <span class="valor">140</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">3</span>
-                    <span class="valor">50</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">4</span>
-                    <span class="valor">800</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">5</span>
-                    <span class="valor">1.200</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">6</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">7</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">8</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">9</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">10</span>
-                    <span class="valor"></span>
-                </div>
-
+            <div
+                class="resumo-valor"
+                id="produzidoTotal">
+                580
             </div>
 
         </div>
 
 
-        <!-- PRODUTO -->
+        <div class="resumo-box">
 
-        <div class="coluna produto">
-
-            <div class="cab-coluna">
-                🛒 &nbsp; PRODUTO
+            <div class="resumo-label">
+                Pendentes
             </div>
 
-            <div class="lista">
-
-                <div class="linha">
-                    <span class="numero">1</span>
-                    <span class="valor">KC 488267-00</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">2</span>
-                    <span class="valor">KC 489265-00</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">3</span>
-                    <span class="valor">KC 468381-00</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">4</span>
-                    <span class="valor">CC 591049-00</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">5</span>
-                    <span class="valor">CC 598371-00</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">6</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">7</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">8</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">9</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">10</span>
-                    <span class="valor"></span>
-                </div>
-
+            <div
+                class="resumo-valor"
+                id="pendentesTotal">
+                420
             </div>
 
         </div>
 
 
-        <!-- LOTE -->
+        <div class="resumo-box">
 
-        <div class="coluna lote">
-
-            <div class="cab-coluna">
-                🧵 &nbsp; LOTE
+            <div class="resumo-label">
+                Progresso geral
             </div>
 
-            <div class="lista">
-
-                <div class="linha">
-                    <span class="numero">1</span>
-                    <span class="valor">42929 - 001</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">2</span>
-                    <span class="valor">42999 - 001</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">3</span>
-                    <span class="valor">42649 - 001</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">4</span>
-                    <span class="valor">41761 - 001</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">5</span>
-                    <span class="valor">41328 - 001</span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">6</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">7</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">8</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">9</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">10</span>
-                    <span class="valor"></span>
-                </div>
-
+            <div
+                class="resumo-valor"
+                id="progressoTotal">
+                58%
             </div>
 
         </div>
 
+    </div>
 
-        <!-- QTD PENDENTE -->
 
-        <div class="coluna pendente">
 
-            <div class="cab-coluna">
-                ⚠ &nbsp; QTD. PENDENTE
-            </div>
+    <!-- =====================================================
+         ITENS
+    ====================================================== -->
 
-            <div class="lista">
+    <main
+        class="itens"
+        id="listaItens">
+    </main>
 
-                <div class="linha">
-                    <span class="numero">1</span>
-                    <span class="valor">560</span>
-                </div>
 
-                <div class="linha">
-                    <span class="numero">2</span>
-                    <span class="valor">1.002</span>
-                </div>
 
-                <div class="linha">
-                    <span class="numero">3</span>
-                    <span class="valor">50</span>
-                </div>
+    <!-- =====================================================
+         RODAPÉ
+    ====================================================== -->
 
-                <div class="linha">
-                    <span class="numero">4</span>
-                    <span class="valor">802</span>
-                </div>
+    <footer class="rodape">
 
-                <div class="linha">
-                    <span class="numero">5</span>
-                    <span class="valor">1.202</span>
-                </div>
+        <span>
+            Painel de Produção
+        </span>
 
-                <div class="linha">
-                    <span class="numero">6</span>
-                    <span class="valor"></span>
-                </div>
+        <span>
+            Atualização automática
+        </span>
 
-                <div class="linha">
-                    <span class="numero">7</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">8</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">9</span>
-                    <span class="valor"></span>
-                </div>
-
-                <div class="linha">
-                    <span class="numero">10</span>
-                    <span class="valor"></span>
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         VELOCÍMETROS
-    ================================================== -->
-
-    <section class="progresso">
-
-
-        <!-- ITEM 1 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 1
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-2deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        48,4%
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    150 / 310
-                </div>
-
-            </div>
-
-            <div class="status baixo">
-                BAIXO
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 2 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 2
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        0,0%
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    0 / 140
-                </div>
-
-            </div>
-
-            <div class="status baixo">
-                BAIXO
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 3 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 3
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-90%) rotate(55deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        100,0%
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    50 / 50
-                </div>
-
-            </div>
-
-            <div class="status meta-atingida">
-                META ATINGIDA
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 4 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 4
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        0,0%
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    0 / 800
-                </div>
-
-            </div>
-
-            <div class="status baixo">
-                BAIXO
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 5 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 5
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        0,0%
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    0 / 1.200
-                </div>
-
-            </div>
-
-            <div class="status baixo">
-                BAIXO
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 6 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 6
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        —
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    — / —
-                </div>
-
-            </div>
-
-            <div class="status sem-meta">
-                SEM META
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 7 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 7
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        —
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    — / —
-                </div>
-
-            </div>
-
-            <div class="status sem-meta">
-                SEM META
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 8 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 8
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        —
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    — / —
-                </div>
-
-            </div>
-
-            <div class="status sem-meta">
-                SEM META
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 9 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 9
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        —
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    — / —
-                </div>
-
-            </div>
-
-            <div class="status sem-meta">
-                SEM META
-            </div>
-
-        </div>
-
-
-        <!-- ITEM 10 -->
-
-        <div class="card">
-
-            <div class="card-titulo">
-                PROGRESSO 📊<br>
-                ITEM 10
-            </div>
-
-            <div class="card-corpo">
-
-                <div class="velocimetro">
-
-                    <div class="arco"></div>
-
-                    <div
-                        class="ponteiro"
-                        style="transform:translateX(-50%) rotate(-78deg);">
-                    </div>
-
-                    <div class="centro"></div>
-
-                    <div class="percentual">
-                        —
-                    </div>
-
-                </div>
-
-                <div class="quantidade">
-                    — / —
-                </div>
-
-            </div>
-
-            <div class="status sem-meta">
-                SEM META
-            </div>
-
-        </div>
-
-
-    </section>
+    </footer>
 
 
 </div>
 
 
+
 <script>
 
 /* =========================================================
-   TELA CHEIA
+   DADOS DOS ITENS
+
+   POR ENQUANTO ESTÃO COMO TESTE VISUAL.
+
+   Depois vamos ligar esta parte diretamente à sua planilha.
 ========================================================= */
 
-function telaCheia(){
+const dados = [
 
-    const elemento = document.documentElement;
+    {
+        item:1,
+        produto:"Produto 01",
+        lote:"Lote 001",
+        produzido:150,
+        meta:310
+    },
 
-    if(!document.fullscreenElement){
+    {
+        item:2,
+        produto:"Produto 02",
+        lote:"Lote 002",
+        produzido:220,
+        meta:300
+    },
 
-        if(elemento.requestFullscreen){
+    {
+        item:3,
+        produto:"Produto 03",
+        lote:"Lote 003",
+        produzido:80,
+        meta:150
+    },
 
-            elemento.requestFullscreen();
+    {
+        item:4,
+        produto:"Produto 04",
+        lote:"Lote 004",
+        produzido:95,
+        meta:200
+    },
 
-        }else if(elemento.webkitRequestFullscreen){
+    {
+        item:5,
+        produto:"Produto 05",
+        lote:"Lote 005",
+        produzido:35,
+        meta:40
+    },
 
-            elemento.webkitRequestFullscreen();
+    {
+        item:6,
+        produto:"Produto 06",
+        lote:"Lote 006",
+        produzido:0,
+        meta:0
+    },
 
-        }
+    {
+        item:7,
+        produto:"Produto 07",
+        lote:"Lote 007",
+        produzido:0,
+        meta:0
+    },
 
-    }else{
+    {
+        item:8,
+        produto:"Produto 08",
+        lote:"Lote 008",
+        produzido:0,
+        meta:0
+    },
 
-        if(document.exitFullscreen){
+    {
+        item:9,
+        produto:"Produto 09",
+        lote:"Lote 009",
+        produzido:0,
+        meta:0
+    },
 
-            document.exitFullscreen();
+    {
+        item:10,
+        produto:"Produto 10",
+        lote:"Lote 010",
+        produzido:0,
+        meta:0
+    }
 
-        }else if(document.webkitExitFullscreen){
+];
 
-            document.webkitExitFullscreen();
 
-        }
+/* =========================================================
+   FORMATAÇÃO DE NÚMEROS
+========================================================= */
+
+function numero(valor){
+
+    return Number(valor || 0)
+        .toLocaleString("pt-BR");
+
+}
+
+
+/* =========================================================
+   STATUS DO ITEM
+========================================================= */
+
+function calcularStatus(produzido, meta){
+
+    if(!meta || meta <= 0){
+
+        return {
+            texto:"SEM META",
+            classe:"status-sem-meta",
+            cor:"cor-sem-meta"
+        };
 
     }
 
+
+    const percentual =
+        (produzido / meta) * 100;
+
+
+    if(percentual >= 100){
+
+        return {
+            texto:"META ATINGIDA",
+            classe:"status-meta",
+            cor:"cor-meta"
+        };
+
+    }
+
+
+    if(percentual >= 80){
+
+        return {
+            texto:"EM ANDAMENTO",
+            classe:"status-andamento",
+            cor:"cor-andamento"
+        };
+
+    }
+
+
+    if(percentual >= 50){
+
+        return {
+            texto:"ATENÇÃO",
+            classe:"status-atencao",
+            cor:"cor-atencao"
+        };
+
+    }
+
+
+    return {
+
+        texto:"ABAIXO DA META",
+
+        classe:"status-baixo",
+
+        cor:"cor-baixo"
+
+    };
+
 }
+
+
+/* =========================================================
+   CRIA CÍRCULO
+========================================================= */
+
+function criarCirculo(item){
+
+    const produzido =
+        Number(item.produzido || 0);
+
+    const meta =
+        Number(item.meta || 0);
+
+
+    let percentual = 0;
+
+
+    if(meta > 0){
+
+        percentual =
+            (produzido / meta) * 100;
+
+    }
+
+
+    /*
+       Não deixamos a barra passar de 100%.
+    */
+
+    const percentualVisual =
+        Math.min(percentual,100);
+
+
+    const status =
+        calcularStatus(produzido,meta);
+
+
+    const raio = 52;
+
+    const circunferencia =
+        2 * Math.PI * raio;
+
+
+    const deslocamento =
+        circunferencia -
+        (percentualVisual / 100) *
+        circunferencia;
+
+
+    const percentualTexto =
+        meta > 0
+        ? percentual.toFixed(1).replace(".",",") + "%"
+        : "—";
+
+
+    return `
+
+        <div class="circular">
+
+            <svg
+                viewBox="0 0 120 120">
+
+                <circle
+                    class="trilha"
+                    cx="60"
+                    cy="60"
+                    r="${raio}">
+                </circle>
+
+                <circle
+                    class="progresso ${status.cor}"
+                    cx="60"
+                    cy="60"
+                    r="${raio}"
+                    stroke-dasharray="${circunferencia}"
+                    stroke-dashoffset="${deslocamento}">
+                </circle>
+
+            </svg>
+
+
+            <div class="circular-centro">
+
+                <div class="percentual">
+                    ${percentualTexto}
+                </div>
+
+                <div class="quantidade">
+                    ${numero(produzido)} / ${numero(meta)}
+                </div>
+
+                <div class="meta">
+                    produzido / meta
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CRIA CARD
+========================================================= */
+
+function criarCard(item){
+
+    const produzido =
+        Number(item.produzido || 0);
+
+    const meta =
+        Number(item.meta || 0);
+
+
+    const pendente =
+        Math.max(meta - produzido,0);
+
+
+    const status =
+        calcularStatus(produzido,meta);
+
+
+    return `
+
+        <section class="card">
+
+
+            <div class="card-topo">
+
+                <div class="item-numero">
+
+                    ITEM ${item.item}
+
+                </div>
+
+
+                <div class="status-pequeno">
+
+                    ${status.texto}
+
+                </div>
+
+            </div>
+
+
+            <div class="produto">
+
+                ${item.produto}
+
+            </div>
+
+
+            <div class="lote">
+
+                ${item.lote}
+
+            </div>
+
+
+            <div class="grafico">
+
+                ${criarCirculo(item)}
+
+            </div>
+
+
+            <div class="card-bottom">
+
+                <div class="situacao ${status.classe}">
+
+                    ${status.texto}
+
+                </div>
+
+
+                <div class="pendente">
+
+                    Pendente:
+                    ${numero(pendente)}
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CARREGA OS ITENS
+========================================================= */
+
+function carregarPainel(){
+
+    const container =
+        document.getElementById("listaItens");
+
+
+    container.innerHTML =
+        dados.map(criarCard).join("");
+
+
+    atualizarResumo();
+
+}
+
+
+/* =========================================================
+   RESUMO GERAL
+========================================================= */
+
+function atualizarResumo(){
+
+    let metaTotal = 0;
+
+    let produzidoTotal = 0;
+
+
+    dados.forEach(item => {
+
+        metaTotal +=
+            Number(item.meta || 0);
+
+        produzidoTotal +=
+            Number(item.produzido || 0);
+
+    });
+
+
+    const pendentesTotal =
+        Math.max(
+            metaTotal - produzidoTotal,
+            0
+        );
+
+
+    const progresso =
+        metaTotal > 0
+        ? (produzidoTotal / metaTotal) * 100
+        : 0;
+
+
+    document.getElementById(
+        "metaTotal"
+    ).textContent =
+        numero(metaTotal);
+
+
+    document.getElementById(
+        "produzidoTotal"
+    ).textContent =
+        numero(produzidoTotal);
+
+
+    document.getElementById(
+        "pendentesTotal"
+    ).textContent =
+        numero(pendentesTotal);
+
+
+    document.getElementById(
+        "progressoTotal"
+    ).textContent =
+        progresso.toFixed(1)
+        .replace(".",",") + "%";
+
+}
+
+
+/* =========================================================
+   DATA E HORA
+========================================================= */
+
+function atualizarDataHora(){
+
+    const agora =
+        new Date();
+
+
+    const data =
+        agora.toLocaleDateString(
+            "pt-BR",
+            {
+                weekday:"long",
+                day:"2-digit",
+                month:"2-digit",
+                year:"numeric"
+            }
+        );
+
+
+    const hora =
+        agora.toLocaleTimeString(
+            "pt-BR",
+            {
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit"
+            }
+        );
+
+
+    document.getElementById(
+        "dataAtual"
+    ).textContent = data;
+
+
+    document.getElementById(
+        "horaAtual"
+    ).textContent = hora;
+
+}
+
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
+
+carregarPainel();
+
+atualizarDataHora();
+
+
+/* Atualiza o relógio */
+
+setInterval(
+    atualizarDataHora,
+    1000
+);
+
+
+/*
+   Mais tarde podemos colocar aqui
+   a atualização dos dados da planilha.
+
+   Por enquanto não mexemos nisso,
+   para primeiro aprovarmos a aparência.
+*/
 
 </script>
 
