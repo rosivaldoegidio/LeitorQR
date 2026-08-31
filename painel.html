@@ -1,1 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Produção Diária - Costura</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#ffffff;
+}
+
+body{
+    padding:12px;
+}
+
+/* ================================
+   PAINEL PRINCIPAL
+================================ */
+
+.painel{
+    width:100%;
+    max-width:1600px;
+    margin:auto;
+}
+
+/* ================================
+   CABEÇALHO
+================================ */
+
+.cabecalho{
+
+    background:#08213f;
+    color:white;
+
+    text-align:center;
+
+    padding:18px 20px 16px;
+
+    border-radius:4px 4px 0 0;
+
+}
+
+.logo{
+    text-align:left;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.titulo{
+    font-size:42px;
+    font-weight:bold;
+}
+
+.setor{
+    font-size:36px;
+    font-weight:bold;
+    margin-top:4px;
+}
+
+.data{
+    color:#00ff30;
+    font-size:28px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+/* ================================
+   TABELA PRINCIPAL
+================================ */
+
+.tabela{
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1.5fr
+        1.25fr
+        1.25fr
+        1fr;
+
+    gap:6px;
+
+    margin-top:6px;
+}
+
+.coluna{
+    min-width:0;
+}
+
+/* TÍTULOS */
+
+.titulo-coluna{
+
+    color:white;
+
+    text-align:center;
+
+    font-size:20px;
+    font-weight:bold;
+
+    padding:10px 5px;
+
+    min-height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* CORES */
+
+.caixas .titulo-coluna{
+    background:#4776d2;
+}
+
+.meta .titulo-coluna{
+    background:#2d7d22;
+}
+
+.produto .titulo-coluna{
+    background:#c4980b;
+}
+
+.lote .titulo-coluna{
+    background:#40127b;
+}
+
+.pdf .titulo-coluna{
+    background:#ad4671;
+}
+
+.pendente .titulo-coluna{
+    background:#846a08;
+}
+
+/* ================================
+   LINHAS
+================================ */
+
+.linha{
+
+    color:white;
+
+    font-size:24px;
+    font-weight:bold;
+
+    min-height:54px;
+
+    display:flex;
+    align-items:center;
+
+    padding:5px 10px;
+
+}
+
+.caixas .linha{
+    background:#4776d2;
+    justify-content:center;
+}
+
+.meta .linha{
+    background:#2d7d22;
+    justify-content:center;
+}
+
+.produto .linha{
+    background:#c4980b;
+    justify-content:flex-start;
+}
+
+.lote .linha{
+    background:#40127b;
+    justify-content:flex-start;
+}
+
+.pdf .linha{
+    background:#ad4671;
+    justify-content:center;
+}
+
+.pendente .linha{
+    background:#846a08;
+    color:#ffff00;
+    justify-content:center;
+}
+
+/* NUMERAÇÃO */
+
+.numero{
+    width:30px;
+    flex-shrink:0;
+    font-size:16px;
+}
+
+/* ================================
+   PDF
+================================ */
+
+.pdf a{
+
+    color:white;
+
+    text-decoration:underline;
+
+    font-size:22px;
+
+}
+
+/* ================================
+   PROGRESSO
+================================ */
+
+.progresso{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap:10px;
+
+    margin-top:18px;
+
+}
+
+.item{
+
+    background:#0a3c48;
+
+    color:white;
+
+    border-radius:3px;
+
+    overflow:hidden;
+
+}
+
+.item-titulo{
+
+    background:#4a8997;
+
+    text-align:center;
+
+    padding:10px;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+.producao{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    padding:15px 5px;
+
+}
+
+.barra{
+
+    height:18px;
+
+    background:#ffffff;
+
+    margin:0 10px 10px;
+
+    overflow:hidden;
+
+}
+
+.barra-preenchida{
+
+    height:100%;
+
+    width:50%;
+
+    background:#4f8fd0;
+
+}
+
+/* ================================
+   BOTÕES DOS SETORES
+================================ */
+
+.setores{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin:15px 0;
+
+    flex-wrap:wrap;
+
+}
+
+.setores button{
+
+    border:none;
+
+    background:#08213f;
+
+    color:white;
+
+    padding:12px 24px;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+}
+
+.setores button:hover{
+
+    opacity:.85;
+
+}
+
+/* ================================
+   TELA CHEIA
+================================ */
+
+.controles{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-bottom:10px;
+
+}
+
+.controles button{
+
+    border:none;
+
+    background:#333;
+
+    color:white;
+
+    padding:10px 20px;
+
+    border-radius:5px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+}
+
+/* ================================
+   RESPONSIVIDADE
+================================ */
+
+@media(max-width:1000px){
+
+    .titulo{
+        font-size:32px;
+    }
+
+    .setor{
+        font-size:28px;
+    }
+
+    .data{
+        font-size:23px;
+    }
+
+    .titulo-coluna{
+        font-size:16px;
+    }
+
+    .linha{
+        font-size:19px;
+    }
+
+    .producao{
+        font-size:22px;
+    }
+
+}
+
+@media(max-width:700px){
+
+    body{
+        padding:5px;
+    }
+
+    .tabela{
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .progresso{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .titulo{
+        font-size:26px;
+    }
+
+    .setor{
+        font-size:24px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="painel">
+
+    <!-- ==========================
+         CABEÇALHO
+    =========================== -->
+
+    <div class="cabecalho">
+
+        <div class="logo">
+            PION PLUS
+        </div>
+
+        <div class="titulo">
+            PRODUÇÃO DIÁRIA
+        </div>
+
+        <div class="setor">
+            COSTURA
+        </div>
+
+        <div class="data">
+            31/08/2026
+        </div>
+
+    </div>
+
+
+    <!-- ==========================
+         SELEÇÃO DOS SETORES
+    =========================== -->
+
+    <div class="setores">
+
+        <button onclick="mudarSetor('CORTE')">
+            CORTE
+        </button>
+
+        <button onclick="mudarSetor('COSTURA')">
+            COSTURA
+        </button>
+
+        <button onclick="mudarSetor('DOBRA')">
+            DOBRA
+        </button>
+
+        <button onclick="mudarSetor('PACOTE')">
+            PACOTE
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         CONTROLES
+    =========================== -->
+
+    <div class="controles">
+
+        <button onclick="telaCheia()">
+            ⛶ Tela cheia
+        </button>
+
+    </div>
+
+
+    <!-- ==========================
+         DADOS PRINCIPAIS
+    =========================== -->
+
+    <div class="tabela">
+
+        <div class="coluna caixas">
+
+            <div class="titulo-coluna">
+                📦 TOTAL DE CAIXAS
+            </div>
+
+            <div class="linha">
+                <span class="numero">1</span>37
+            </div>
+
+            <div class="linha">
+                <span class="numero">2</span>47
+            </div>
+
+            <div class="linha">
+                <span class="numero">3</span>16
+            </div>
+
+            <div class="linha">
+                <span class="numero">4</span>13
+            </div>
+
+            <div class="linha">
+                <span class="numero">5</span>15
+            </div>
+
+        </div>
+
+
+        <div class="coluna meta">
+
+            <div class="titulo-coluna">
+                🔢 META
+            </div>
+
+            <div class="linha">1.295</div>
+            <div class="linha">280</div>
+            <div class="linha">775</div>
+            <div class="linha">525</div>
+            <div class="linha">525</div>
+
+        </div>
+
+
+        <div class="coluna produto">
+
+            <div class="titulo-coluna">
+                🛒 PRODUTO
+            </div>
+
+            <div class="linha">AE 599990-00</div>
+            <div class="linha">AE 599990-00</div>
+            <div class="linha">CBN 587270-00</div>
+            <div class="linha">AE 599989-00</div>
+            <div class="linha">AE 598813-00</div>
+
+        </div>
+
+
+        <div class="coluna lote">
+
+            <div class="titulo-coluna">
+                📤 LOTE
+            </div>
+
+            <div class="linha">42646 - 001</div>
+            <div class="linha">42999 - 002</div>
+            <div class="linha">41972 - 001</div>
+            <div class="linha">42789 - 001</div>
+            <div class="linha">42061 - 001</div>
+
+        </div>
+
+
+        <div class="coluna pdf">
+
+            <div class="titulo-coluna">
+                📷 FOTO PRODUTO
+            </div>
+
+            <div class="linha">
+                📄 <a href="#">Abrir PDF</a>
+            </div>
+
+            <div class="linha">
+                📄 <a href="#">Abrir PDF</a>
+            </div>
+
+            <div class="linha">
+                📄 <a href="#">Abrir PDF</a>
+            </div>
+
+            <div class="linha">
+                📄 <a href="#">Abrir PDF</a>
+            </div>
+
+            <div class="linha">
+                📄 <a href="#">Abrir PDF</a>
+            </div>
+
+        </div>
+
+
+        <div class="coluna pendente">
+
+            <div class="titulo-coluna">
+                ⚠ QTD. PENDENTE
+            </div>
+
+            <div class="linha">7002</div>
+            <div class="linha">1002</div>
+            <div class="linha">1450</div>
+            <div class="linha">23662</div>
+            <div class="linha">1262</div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================
+         PROGRESSO
+    =========================== -->
+
+    <div class="progresso">
+
+        <div class="item">
+
+            <div class="item-titulo">
+                PROGRESSO 📊<br>
+                ITEM 1
+            </div>
+
+            <div class="producao">
+                <span>/</span>
+                <span>37</span>
+            </div>
+
+            <div class="barra">
+                <div class="barra-preenchida"
+                     style="width:0%">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="item">
+
+            <div class="item-titulo">
+                PROGRESSO 📊<br>
+                ITEM 2
+            </div>
+
+            <div class="producao">
+                <span>/</span>
+                <span>47</span>
+            </div>
+
+            <div class="barra">
+                <div class="barra-preenchida"
+                     style="width:0%">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="item">
+
+            <div class="item-titulo">
+                PROGRESSO 📊<br>
+                ITEM 3
+            </div>
+
+            <div class="producao">
+                <span>11</span>
+                <span>/</span>
+                <span>16</span>
+            </div>
+
+            <div class="barra">
+                <div class="barra-preenchida"
+                     style="width:69%">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="item">
+
+            <div class="item-titulo">
+                PROGRESSO 📊<br>
+                ITEM 4
+            </div>
+
+            <div class="producao">
+                <span>39</span>
+                <span>/</span>
+                <span>13</span>
+            </div>
+
+            <div class="barra">
+                <div class="barra-preenchida"
+                     style="width:100%">
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="item">
+
+            <div class="item-titulo">
+                PROGRESSO 📊<br>
+                ITEM 5
+            </div>
+
+            <div class="producao">
+                <span>/</span>
+                <span>15</span>
+            </div>
+
+            <div class="barra">
+                <div class="barra-preenchida"
+                     style="width:0%">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ================================
+   TROCA DE SETOR
+================================ */
+
+function mudarSetor(setor){
+
+    document.querySelector(".setor").textContent = setor;
+
+}
+
+
+/* ================================
+   TELA CHEIA
+================================ */
+
+function telaCheia(){
+
+    const painel = document.documentElement;
+
+    if(!document.fullscreenElement){
+
+        painel.requestFullscreen();
+
+    }else{
+
+        document.exitFullscreen();
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>
