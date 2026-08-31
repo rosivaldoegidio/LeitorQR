@@ -12,6 +12,10 @@
 
 <style>
 
+/* =========================================================
+   CONFIGURAÇÃO GERAL
+========================================================= */
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -21,92 +25,249 @@
 html,
 body{
     width:100%;
-    min-height:100%;
+    height:100%;
+    overflow:hidden;
     font-family:Arial, Helvetica, sans-serif;
     background:#ffffff;
 }
 
 body{
-    padding:12px;
+    width:100vw;
+    height:100vh;
 }
 
-/* ================================
-   PAINEL PRINCIPAL
-================================ */
+
+/* =========================================================
+   PAINEL
+========================================================= */
 
 .painel{
+
     width:100%;
-    max-width:1600px;
-    margin:auto;
+    height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
 }
 
-/* ================================
+
+/* =========================================================
    CABEÇALHO
-================================ */
+========================================================= */
 
 .cabecalho{
+
+    width:100%;
 
     background:#08213f;
     color:white;
 
     text-align:center;
 
-    padding:18px 20px 16px;
+    padding:1.2vh 2vw 1.5vh;
 
-    border-radius:4px 4px 0 0;
+    flex-shrink:0;
+
+    border-bottom:3px solid #000;
 
 }
+
+
+/* LOGO */
 
 .logo{
+
     text-align:left;
-    font-size:22px;
+
+    font-size:clamp(18px, 1.5vw, 30px);
+
     font-weight:bold;
-    margin-bottom:10px;
+
+    margin-bottom:0.5vh;
+
 }
+
+
+/* TÍTULO */
 
 .titulo{
-    font-size:42px;
+
+    font-size:clamp(28px, 3vw, 58px);
+
     font-weight:bold;
+
+    line-height:1.05;
+
 }
+
+
+/* SETOR */
 
 .setor{
-    font-size:36px;
+
+    font-size:clamp(24px, 2.5vw, 48px);
+
     font-weight:bold;
-    margin-top:4px;
+
+    line-height:1.05;
+
+    margin-top:0.4vh;
+
 }
+
+
+/* DATA */
 
 .data{
+
     color:#00ff30;
-    font-size:28px;
+
+    font-size:clamp(18px, 1.8vw, 34px);
+
     font-weight:bold;
-    margin-top:10px;
+
+    margin-top:0.8vh;
+
 }
 
-/* ================================
-   TABELA PRINCIPAL
-================================ */
+
+/* =========================================================
+   CONTROLES
+========================================================= */
+
+.controles-area{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:0.8vh 1vw;
+
+    flex-shrink:0;
+
+}
+
+
+/* BOTÕES DOS SETORES */
+
+.setores{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+}
+
+
+.setores button{
+
+    border:none;
+
+    background:#08213f;
+
+    color:white;
+
+    padding:0.8vh 1.5vw;
+
+    font-size:clamp(13px, 1vw, 20px);
+
+    font-weight:bold;
+
+    border-radius:4px;
+
+    cursor:pointer;
+
+}
+
+
+.setores button:hover{
+
+    opacity:.85;
+
+}
+
+
+/* BOTÃO TELA CHEIA */
+
+.controles button{
+
+    border:none;
+
+    background:#333;
+
+    color:white;
+
+    padding:0.7vh 1.4vw;
+
+    border-radius:4px;
+
+    font-size:clamp(12px, 0.9vw, 18px);
+
+    cursor:pointer;
+
+}
+
+
+/* =========================================================
+   ÁREA PRINCIPAL
+========================================================= */
 
 .tabela{
+
+    width:100%;
+
     display:grid;
 
     grid-template-columns:
         1fr
         1fr
-        1.5fr
+        1.45fr
         1.25fr
         1.25fr
         1fr;
 
-    gap:6px;
+    gap:4px;
 
-    margin-top:6px;
+    padding:0 0.5vw;
+
+    flex:1;
+
+    min-height:0;
+
 }
+
+
+/* =========================================================
+   COLUNAS
+========================================================= */
 
 .coluna{
+
     min-width:0;
+
+    display:flex;
+
+    flex-direction:column;
+
 }
 
-/* TÍTULOS */
+
+/* =========================================================
+   TÍTULOS DAS COLUNAS
+========================================================= */
 
 .titulo-coluna{
 
@@ -114,17 +275,22 @@ body{
 
     text-align:center;
 
-    font-size:20px;
+    font-size:clamp(14px, 1.25vw, 25px);
+
     font-weight:bold;
 
-    padding:10px 5px;
+    padding:1vh 0.4vw;
 
-    min-height:52px;
+    min-height:6vh;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
 }
+
 
 /* CORES */
 
@@ -152,25 +318,33 @@ body{
     background:#846a08;
 }
 
-/* ================================
+
+/* =========================================================
    LINHAS
-================================ */
+========================================================= */
 
 .linha{
 
     color:white;
 
-    font-size:24px;
+    font-size:clamp(16px, 1.45vw, 30px);
+
     font-weight:bold;
 
-    min-height:54px;
+    flex:1;
+
+    min-height:0;
 
     display:flex;
+
     align-items:center;
 
-    padding:5px 10px;
+    padding:0 0.7vw;
 
 }
+
+
+/* CORES DAS LINHAS */
 
 .caixas .linha{
     background:#4776d2;
@@ -198,22 +372,36 @@ body{
 }
 
 .pendente .linha{
+
     background:#846a08;
+
     color:#ffff00;
+
     justify-content:center;
+
 }
 
-/* NUMERAÇÃO */
+
+/* =========================================================
+   NUMERAÇÃO
+========================================================= */
 
 .numero{
-    width:30px;
+
+    width:2.2vw;
+
+    min-width:25px;
+
     flex-shrink:0;
-    font-size:16px;
+
+    font-size:clamp(13px, 0.9vw, 18px);
+
 }
 
-/* ================================
+
+/* =========================================================
    PDF
-================================ */
+========================================================= */
 
 .pdf a{
 
@@ -221,26 +409,36 @@ body{
 
     text-decoration:underline;
 
-    font-size:22px;
+    font-size:clamp(15px, 1.2vw, 24px);
 
 }
 
-/* ================================
+
+/* =========================================================
    PROGRESSO
-================================ */
+========================================================= */
 
 .progresso{
+
+    width:100%;
 
     display:grid;
 
     grid-template-columns:
         repeat(5, 1fr);
 
-    gap:10px;
+    gap:5px;
 
-    margin-top:18px;
+    padding:0.8vh 0.5vw 1vh;
+
+    flex-shrink:0;
+
+    height:25vh;
 
 }
+
+
+/* ITEM */
 
 .item{
 
@@ -248,11 +446,18 @@ body{
 
     color:white;
 
-    border-radius:3px;
+    border-radius:2px;
 
     overflow:hidden;
 
+    display:flex;
+
+    flex-direction:column;
+
 }
+
+
+/* TÍTULO */
 
 .item-titulo{
 
@@ -260,15 +465,22 @@ body{
 
     text-align:center;
 
-    padding:10px;
+    padding:1vh 0.3vw;
 
-    font-size:18px;
+    font-size:clamp(13px, 1.1vw, 22px);
 
     font-weight:bold;
 
+    line-height:1.1;
+
 }
 
+
+/* PRODUÇÃO */
+
 .producao{
+
+    flex:1;
 
     display:flex;
 
@@ -276,27 +488,33 @@ body{
 
     align-items:center;
 
-    gap:15px;
+    gap:clamp(8px, 1vw, 20px);
 
-    font-size:28px;
+    font-size:clamp(22px, 2vw, 40px);
 
     font-weight:bold;
 
-    padding:15px 5px;
-
 }
+
+
+/* BARRA */
 
 .barra{
 
-    height:18px;
+    height:3vh;
+
+    min-height:14px;
 
     background:#ffffff;
 
-    margin:0 10px 10px;
+    margin:0.5vh 0.5vw 1vh;
 
     overflow:hidden;
 
 }
+
+
+/* PARTE PREENCHIDA */
 
 .barra-preenchida{
 
@@ -308,142 +526,91 @@ body{
 
 }
 
-/* ================================
-   BOTÕES DOS SETORES
-================================ */
 
-.setores{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:10px;
-
-    margin:15px 0;
-
-    flex-wrap:wrap;
-
-}
-
-.setores button{
-
-    border:none;
-
-    background:#08213f;
-
-    color:white;
-
-    padding:12px 24px;
-
-    font-size:17px;
-
-    font-weight:bold;
-
-    border-radius:5px;
-
-    cursor:pointer;
-
-}
-
-.setores button:hover{
-
-    opacity:.85;
-
-}
-
-/* ================================
-   TELA CHEIA
-================================ */
-
-.controles{
-
-    display:flex;
-
-    justify-content:center;
-
-    gap:10px;
-
-    margin-bottom:10px;
-
-}
-
-.controles button{
-
-    border:none;
-
-    background:#333;
-
-    color:white;
-
-    padding:10px 20px;
-
-    border-radius:5px;
-
-    font-size:16px;
-
-    cursor:pointer;
-
-}
-
-/* ================================
+/* =========================================================
    RESPONSIVIDADE
-================================ */
+========================================================= */
 
-@media(max-width:1000px){
+@media(max-width:900px){
 
-    .titulo{
-        font-size:32px;
-    }
-
-    .setor{
-        font-size:28px;
-    }
-
-    .data{
-        font-size:23px;
-    }
-
-    .titulo-coluna{
-        font-size:16px;
-    }
-
-    .linha{
-        font-size:19px;
-    }
-
-    .producao{
-        font-size:22px;
-    }
-
-}
-
-@media(max-width:700px){
-
+    html,
     body{
-        padding:5px;
+
+        overflow:auto;
+
     }
+
+
+    .painel{
+
+        height:auto;
+
+        min-height:100vh;
+
+    }
+
 
     .tabela{
 
         grid-template-columns:
             repeat(2, 1fr);
 
+        flex:none;
+
     }
 
+
+    .linha{
+
+        min-height:55px;
+
+    }
+
+
     .progresso{
+
+        height:auto;
 
         grid-template-columns:
             1fr;
 
     }
 
-    .titulo{
-        font-size:26px;
+
+    .item{
+
+        min-height:130px;
+
     }
 
-    .setor{
-        font-size:24px;
+}
+
+
+/* =========================================================
+   TELA MUITO PEQUENA
+========================================================= */
+
+@media(max-width:500px){
+
+    .tabela{
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .setores button{
+
+        padding:8px 12px;
+
+    }
+
+
+    .controles-area{
+
+        flex-direction:column;
+
     }
 
 }
@@ -452,13 +619,16 @@ body{
 
 </head>
 
+
 <body>
+
 
 <div class="painel">
 
-    <!-- ==========================
+
+    <!-- =====================================================
          CABEÇALHO
-    =========================== -->
+    ====================================================== -->
 
     <div class="cabecalho">
 
@@ -481,49 +651,54 @@ body{
     </div>
 
 
-    <!-- ==========================
-         SELEÇÃO DOS SETORES
-    =========================== -->
-
-    <div class="setores">
-
-        <button onclick="mudarSetor('CORTE')">
-            CORTE
-        </button>
-
-        <button onclick="mudarSetor('COSTURA')">
-            COSTURA
-        </button>
-
-        <button onclick="mudarSetor('DOBRA')">
-            DOBRA
-        </button>
-
-        <button onclick="mudarSetor('PACOTE')">
-            PACOTE
-        </button>
-
-    </div>
-
-
-    <!-- ==========================
+    <!-- =====================================================
          CONTROLES
-    =========================== -->
+    ====================================================== -->
 
-    <div class="controles">
+    <div class="controles-area">
 
-        <button onclick="telaCheia()">
-            ⛶ Tela cheia
-        </button>
+
+        <div class="setores">
+
+            <button onclick="mudarSetor('CORTE')">
+                CORTE
+            </button>
+
+            <button onclick="mudarSetor('COSTURA')">
+                COSTURA
+            </button>
+
+            <button onclick="mudarSetor('DOBRA')">
+                DOBRA
+            </button>
+
+            <button onclick="mudarSetor('PACOTE')">
+                PACOTE
+            </button>
+
+        </div>
+
+
+        <div class="controles">
+
+            <button onclick="telaCheia()">
+                ⛶ Tela cheia
+            </button>
+
+        </div>
+
 
     </div>
 
 
-    <!-- ==========================
+    <!-- =====================================================
          DADOS PRINCIPAIS
-    =========================== -->
+    ====================================================== -->
 
     <div class="tabela">
+
+
+        <!-- TOTAL DE CAIXAS -->
 
         <div class="coluna caixas">
 
@@ -554,20 +729,38 @@ body{
         </div>
 
 
+        <!-- META -->
+
         <div class="coluna meta">
 
             <div class="titulo-coluna">
                 🔢 META
             </div>
 
-            <div class="linha">1.295</div>
-            <div class="linha">280</div>
-            <div class="linha">775</div>
-            <div class="linha">525</div>
-            <div class="linha">525</div>
+            <div class="linha">
+                1.295
+            </div>
+
+            <div class="linha">
+                280
+            </div>
+
+            <div class="linha">
+                775
+            </div>
+
+            <div class="linha">
+                525
+            </div>
+
+            <div class="linha">
+                525
+            </div>
 
         </div>
 
+
+        <!-- PRODUTO -->
 
         <div class="coluna produto">
 
@@ -575,14 +768,30 @@ body{
                 🛒 PRODUTO
             </div>
 
-            <div class="linha">AE 599990-00</div>
-            <div class="linha">AE 599990-00</div>
-            <div class="linha">CBN 587270-00</div>
-            <div class="linha">AE 599989-00</div>
-            <div class="linha">AE 598813-00</div>
+            <div class="linha">
+                AE 599990-00
+            </div>
+
+            <div class="linha">
+                AE 599990-00
+            </div>
+
+            <div class="linha">
+                CBN 587270-00
+            </div>
+
+            <div class="linha">
+                AE 599989-00
+            </div>
+
+            <div class="linha">
+                AE 598813-00
+            </div>
 
         </div>
 
+
+        <!-- LOTE -->
 
         <div class="coluna lote">
 
@@ -590,14 +799,30 @@ body{
                 📤 LOTE
             </div>
 
-            <div class="linha">42646 - 001</div>
-            <div class="linha">42999 - 002</div>
-            <div class="linha">41972 - 001</div>
-            <div class="linha">42789 - 001</div>
-            <div class="linha">42061 - 001</div>
+            <div class="linha">
+                42646 - 001
+            </div>
+
+            <div class="linha">
+                42999 - 002
+            </div>
+
+            <div class="linha">
+                41972 - 001
+            </div>
+
+            <div class="linha">
+                42789 - 001
+            </div>
+
+            <div class="linha">
+                42061 - 001
+            </div>
 
         </div>
 
+
+        <!-- FOTO / PDF -->
 
         <div class="coluna pdf">
 
@@ -628,28 +853,48 @@ body{
         </div>
 
 
+        <!-- QUANTIDADE PENDENTE -->
+
         <div class="coluna pendente">
 
             <div class="titulo-coluna">
                 ⚠ QTD. PENDENTE
             </div>
 
-            <div class="linha">7002</div>
-            <div class="linha">1002</div>
-            <div class="linha">1450</div>
-            <div class="linha">23662</div>
-            <div class="linha">1262</div>
+            <div class="linha">
+                7002
+            </div>
+
+            <div class="linha">
+                1002
+            </div>
+
+            <div class="linha">
+                1450
+            </div>
+
+            <div class="linha">
+                23662
+            </div>
+
+            <div class="linha">
+                1262
+            </div>
 
         </div>
+
 
     </div>
 
 
-    <!-- ==========================
+    <!-- =====================================================
          PROGRESSO
-    =========================== -->
+    ====================================================== -->
 
     <div class="progresso">
+
+
+        <!-- ITEM 1 -->
 
         <div class="item">
 
@@ -659,18 +904,24 @@ body{
             </div>
 
             <div class="producao">
+
                 <span>/</span>
                 <span>37</span>
+
             </div>
 
             <div class="barra">
+
                 <div class="barra-preenchida"
                      style="width:0%">
                 </div>
+
             </div>
 
         </div>
 
+
+        <!-- ITEM 2 -->
 
         <div class="item">
 
@@ -680,18 +931,24 @@ body{
             </div>
 
             <div class="producao">
+
                 <span>/</span>
                 <span>47</span>
+
             </div>
 
             <div class="barra">
+
                 <div class="barra-preenchida"
                      style="width:0%">
                 </div>
+
             </div>
 
         </div>
 
+
+        <!-- ITEM 3 -->
 
         <div class="item">
 
@@ -701,19 +958,25 @@ body{
             </div>
 
             <div class="producao">
+
                 <span>11</span>
                 <span>/</span>
                 <span>16</span>
+
             </div>
 
             <div class="barra">
+
                 <div class="barra-preenchida"
                      style="width:69%">
                 </div>
+
             </div>
 
         </div>
 
+
+        <!-- ITEM 4 -->
 
         <div class="item">
 
@@ -723,19 +986,25 @@ body{
             </div>
 
             <div class="producao">
+
                 <span>39</span>
                 <span>/</span>
                 <span>13</span>
+
             </div>
 
             <div class="barra">
+
                 <div class="barra-preenchida"
                      style="width:100%">
                 </div>
+
             </div>
 
         </div>
 
+
+        <!-- ITEM 5 -->
 
         <div class="item">
 
@@ -745,28 +1014,34 @@ body{
             </div>
 
             <div class="producao">
+
                 <span>/</span>
                 <span>15</span>
+
             </div>
 
             <div class="barra">
+
                 <div class="barra-preenchida"
                      style="width:0%">
                 </div>
+
             </div>
 
         </div>
 
+
     </div>
+
 
 </div>
 
 
 <script>
 
-/* ================================
-   TROCA DE SETOR
-================================ */
+/* =========================================================
+   TROCAR SETOR
+========================================================= */
 
 function mudarSetor(setor){
 
@@ -775,17 +1050,15 @@ function mudarSetor(setor){
 }
 
 
-/* ================================
+/* =========================================================
    TELA CHEIA
-================================ */
+========================================================= */
 
 function telaCheia(){
 
-    const painel = document.documentElement;
-
     if(!document.fullscreenElement){
 
-        painel.requestFullscreen();
+        document.documentElement.requestFullscreen();
 
     }else{
 
@@ -796,6 +1069,7 @@ function telaCheia(){
 }
 
 </script>
+
 
 </body>
 
