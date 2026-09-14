@@ -8,7 +8,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Painel de Produção</title>
+<title>Painel de Produção - Pacote</title>
 
 <style>
 
@@ -25,7 +25,7 @@ body{
     margin:0;
     padding:0;
     width:100%;
-    height:100%;
+    min-height:100%;
 }
 
 body{
@@ -35,16 +35,22 @@ body{
         Helvetica,
         sans-serif;
 
-    background:#f1f3f6;
+    background:
+        linear-gradient(
+            135deg,
+            #031b36 0%,
+            #05284b 50%,
+            #03172d 100%
+        );
 
-    color:#20252b;
+    color:#ffffff;
 
     overflow:hidden;
 }
 
 
 /* =========================================================
-   PAINEL PRINCIPAL
+   PAINEL
 ========================================================= */
 
 .painel{
@@ -52,12 +58,13 @@ body{
     width:100vw;
     height:100vh;
 
-    padding:14px 18px;
+    padding:14px 22px 10px;
 
     display:flex;
     flex-direction:column;
 
-    gap:12px;
+    gap:10px;
+
 }
 
 
@@ -67,13 +74,7 @@ body{
 
 .cabecalho{
 
-    width:100%;
-
-    background:white;
-
-    border-radius:12px;
-
-    padding:12px 18px;
+    min-height:86px;
 
     display:flex;
 
@@ -81,101 +82,244 @@ body{
 
     justify-content:space-between;
 
-    box-shadow:
-        0 2px 8px rgba(0,0,0,.08);
+    border-bottom:
+        1px solid
+        rgba(43,145,220,.45);
 
-    min-height:72px;
+    padding:0 10px 10px;
+
 }
 
-.titulo-area{
+
+/* =========================================================
+   IDENTIFICAÇÃO
+========================================================= */
+
+.identificacao{
 
     display:flex;
-    flex-direction:column;
 
-    gap:3px;
+    align-items:center;
+
+    gap:22px;
+
+    min-width:0;
+
 }
 
-.titulo{
+
+/* LOGO */
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    white-space:nowrap;
+
+}
+
+.logo-simbolo{
+
+    width:42px;
+    height:42px;
+
+    border-radius:9px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1688e8,
+            #0757a4
+        );
+
+    font-size:23px;
+
+    box-shadow:
+        0 4px 14px
+        rgba(0,120,230,.25);
+
+}
+
+.logo-texto{
 
     font-size:28px;
 
     font-weight:800;
 
-    letter-spacing:.5px;
+    letter-spacing:-1px;
+
+}
+
+.logo-texto span{
+
+    color:#29a4ff;
+
+}
+
+
+/* SEPARADOR */
+
+.separador{
+
+    width:1px;
+
+    height:58px;
+
+    background:
+        rgba(255,255,255,.25);
+
+}
+
+
+/* TÍTULO */
+
+.titulo-area{
+
+    min-width:0;
+
+}
+
+.titulo{
+
+    font-size:30px;
+
+    font-weight:900;
+
+    letter-spacing:.3px;
+
+    white-space:nowrap;
+
 }
 
 .subtitulo{
 
-    font-size:14px;
+    margin-top:4px;
 
-    color:#6c737c;
-}
-
-.info-data{
-
-    text-align:right;
-}
-
-.data{
-
-    font-size:19px;
+    font-size:17px;
 
     font-weight:700;
-}
 
-.hora{
+    color:#8fc9f5;
 
-    font-size:14px;
-
-    color:#6c737c;
-
-    margin-top:3px;
 }
 
 
 /* =========================================================
-   BARRA DE SETORES
+   DATA / HORA / ONLINE
 ========================================================= */
 
-.setores{
+.informacoes{
 
     display:flex;
 
-    gap:8px;
+    align-items:center;
 
-    width:100%;
+    gap:20px;
 
-    overflow:hidden;
+    white-space:nowrap;
+
 }
 
-.setor{
+.info-data{
 
-    flex:1;
+    display:flex;
 
-    border:0;
+    flex-direction:column;
 
-    border-radius:8px;
+    align-items:flex-end;
 
-    padding:9px 12px;
+}
 
-    background:#dfe3e8;
+.data{
 
-    color:#4b535c;
+    font-size:17px;
 
-    font-weight:700;
+    font-weight:800;
+
+}
+
+.dia{
+
+    margin-top:2px;
+
+    font-size:11px;
+
+    color:#8fa7bd;
+
+}
+
+.info-hora{
+
+    padding-left:18px;
+
+    border-left:
+        1px solid
+        rgba(255,255,255,.25);
+
+}
+
+.hora{
+
+    font-size:18px;
+
+    font-weight:800;
+
+}
+
+.hora-label{
+
+    margin-top:2px;
+
+    font-size:10px;
+
+    color:#8fa7bd;
+
+}
+
+.online{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding-left:16px;
+
+    border-left:
+        1px solid
+        rgba(255,255,255,.25);
+
+    color:#21df83;
 
     font-size:13px;
 
-    cursor:pointer;
+    font-weight:900;
 
-    white-space:nowrap;
 }
 
-.setor.ativo{
+.online-ponto{
 
-    background:#20252b;
+    width:13px;
+    height:13px;
 
-    color:white;
+    border-radius:50%;
+
+    background:#21df83;
+
+    box-shadow:
+        0 0 12px
+        rgba(33,223,131,.75);
+
 }
 
 
@@ -188,54 +332,144 @@ body{
     display:grid;
 
     grid-template-columns:
-        1fr 1fr 1fr 1fr;
+        repeat(4, minmax(0,1fr));
 
-    gap:10px;
+    gap:12px;
+
+    min-height:82px;
+
 }
 
 .resumo-box{
 
-    background:white;
+    position:relative;
 
-    border-radius:10px;
+    overflow:hidden;
 
-    padding:10px 14px;
+    border-radius:12px;
 
-    box-shadow:
-        0 2px 7px rgba(0,0,0,.06);
+    border:
+        1px solid
+        rgba(62,157,224,.35);
 
-    min-height:58px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5,46,82,.96),
+            rgba(4,32,59,.96)
+        );
+
+    padding:10px 17px;
 
     display:flex;
 
     flex-direction:column;
 
     justify-content:center;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,0,0,.15);
+
+}
+
+.resumo-box::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:70px;
+    height:70px;
+
+    right:-25px;
+    top:-25px;
+
+    border-radius:50%;
+
+    background:
+        rgba(34,146,231,.08);
+
 }
 
 .resumo-label{
 
     font-size:11px;
 
-    color:#7a8189;
+    color:#8eabc4;
+
+    font-weight:800;
+
+    letter-spacing:.7px;
 
     text-transform:uppercase;
 
-    letter-spacing:.5px;
 }
 
 .resumo-valor{
 
-    font-size:23px;
-
-    font-weight:800;
-
     margin-top:2px;
+
+    font-size:27px;
+
+    font-weight:900;
+
+    letter-spacing:.2px;
+
+}
+
+.resumo-unidade{
+
+    font-size:10px;
+
+    color:#7893ab;
+
 }
 
 
 /* =========================================================
-   GRADE DOS ITENS
+   BARRA DE PROGRESSO GERAL
+========================================================= */
+
+.barra-geral{
+
+    width:100%;
+
+    height:7px;
+
+    margin-top:6px;
+
+    border-radius:10px;
+
+    background:#123d64;
+
+    overflow:hidden;
+
+}
+
+.barra-geral-preenchida{
+
+    width:62.3%;
+
+    height:100%;
+
+    border-radius:10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #18bb72,
+            #20df86
+        );
+
+    transition:
+        width .7s ease;
+
+}
+
+
+/* =========================================================
+   ÁREA DOS ITENS
 ========================================================= */
 
 .itens{
@@ -247,44 +481,71 @@ body{
     display:grid;
 
     grid-template-columns:
-        repeat(5, minmax(0,1fr));
+        repeat(5,minmax(0,1fr));
 
     grid-template-rows:
-        repeat(2, minmax(0,1fr));
+        repeat(2,minmax(0,1fr));
 
-    gap:12px;
+    gap:10px;
+
 }
 
 
 /* =========================================================
-   CARTÃO DO ITEM
+   CARD
 ========================================================= */
 
 .card{
 
-    background:white;
-
-    border-radius:14px;
-
-    padding:12px;
-
-    box-shadow:
-        0 3px 10px rgba(0,0,0,.08);
+    position:relative;
 
     min-width:0;
-
     min-height:0;
+
+    overflow:hidden;
 
     display:flex;
 
     flex-direction:column;
 
-    overflow:hidden;
+    border-radius:13px;
+
+    border:
+        1px solid
+        rgba(47,143,211,.38);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5,43,76,.98),
+            rgba(3,29,53,.98)
+        );
+
+    box-shadow:
+        0 4px 13px
+        rgba(0,0,0,.18);
+
+    padding:10px 12px;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+.card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 7px 20px
+        rgba(0,0,0,.25);
+
 }
 
 
 /* =========================================================
-   CABEÇALHO DO CARD
+   TOPO CARD
 ========================================================= */
 
 .card-topo{
@@ -295,71 +556,43 @@ body{
 
     justify-content:space-between;
 
-    gap:8px;
+    gap:5px;
 
-    min-height:28px;
+    min-height:27px;
+
 }
 
 .item-numero{
 
-    font-size:15px;
+    font-size:17px;
 
-    font-weight:800;
+    font-weight:900;
+
 }
 
 .status-pequeno{
 
-    font-size:10px;
+    max-width:125px;
 
-    font-weight:800;
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
 
     padding:4px 7px;
 
     border-radius:20px;
 
-    background:#eef0f2;
+    font-size:9px;
 
-    color:#666;
+    font-weight:900;
+
 }
 
 
 /* =========================================================
-   PRODUTO
-========================================================= */
-
-.produto{
-
-    margin-top:5px;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-}
-
-.lote{
-
-    margin-top:2px;
-
-    font-size:11px;
-
-    color:#737a82;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-}
-
-
-/* =========================================================
-   ÁREA DO CÍRCULO
+   GRÁFICO
 ========================================================= */
 
 .grafico{
@@ -374,38 +607,46 @@ body{
 
     justify-content:center;
 
-    padding:5px 0;
+    padding:2px 0;
+
 }
 
 
 /* =========================================================
-   CÍRCULO DE PROGRESSO
+   VELOCÍMETRO
 ========================================================= */
 
 .circular{
 
     position:relative;
 
-    width:min(18vh, 145px);
+    width:min(
+        19vh,
+        145px
+    );
 
-    height:min(18vh, 145px);
+    height:min(
+        19vh,
+        145px
+    );
 
-    min-width:105px;
+    min-width:95px;
 
-    min-height:105px;
+    min-height:95px;
 
     max-width:145px;
 
     max-height:145px;
+
 }
 
 .circular svg{
 
     width:100%;
-
     height:100%;
 
     transform:rotate(-90deg);
+
 }
 
 .circular circle{
@@ -413,11 +654,13 @@ body{
     fill:none;
 
     stroke-width:10;
+
 }
 
 .trilha{
 
-    stroke:#e7e9ec;
+    stroke:#284968;
+
 }
 
 .progresso{
@@ -426,11 +669,12 @@ body{
 
     transition:
         stroke-dashoffset .8s ease;
+
 }
 
 
 /* =========================================================
-   TEXTO NO CENTRO DO CÍRCULO
+   TEXTO CENTRAL
 ========================================================= */
 
 .circular-centro{
@@ -448,133 +692,129 @@ body{
     justify-content:center;
 
     text-align:center;
+
 }
 
 .percentual{
 
-    font-size:28px;
+    font-size:25px;
 
     font-weight:900;
 
     line-height:1;
+
 }
 
 .quantidade{
 
-    margin-top:6px;
+    margin-top:5px;
 
-    font-size:12px;
+    font-size:11px;
 
-    font-weight:700;
+    font-weight:800;
 
-    color:#5e666e;
+    color:#e5f0f8;
+
 }
 
 .meta{
 
     margin-top:2px;
 
-    font-size:10px;
+    font-size:8px;
 
-    color:#8a9097;
+    color:#7592aa;
+
 }
 
 
 /* =========================================================
-   RODAPÉ DO CARD
+   INFORMAÇÕES DO PRODUTO
+========================================================= */
+
+.produto-area{
+
+    border-top:
+        1px solid
+        rgba(77,143,188,.22);
+
+    padding-top:6px;
+
+    min-height:39px;
+
+}
+
+.produto{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.produto-icone{
+
+    color:#8bc9f5;
+
+    font-size:13px;
+
+}
+
+.lote{
+
+    margin-top:3px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    font-size:11px;
+
+    color:#9bb4c9;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.lote-icone{
+
+    color:#8bc9f5;
+
+}
+
+
+/* =========================================================
+   PENDENTE
 ========================================================= */
 
 .card-bottom{
 
-    text-align:center;
+    margin-top:6px;
 
-    min-height:35px;
-}
+    padding:6px 9px;
 
-.situacao{
+    border-radius:9px;
 
-    font-size:12px;
-
-    font-weight:800;
-}
-
-.pendente{
-
-    margin-top:3px;
-
-    font-size:10px;
-
-    color:#747b83;
-}
-
-
-/* =========================================================
-   CORES DOS STATUS
-========================================================= */
-
-.status-baixo{
-
-    color:#c62828;
-}
-
-.status-atencao{
-
-    color:#c17b00;
-}
-
-.status-andamento{
-
-    color:#2767b1;
-}
-
-.status-meta{
-
-    color:#218739;
-}
-
-.status-sem-meta{
-
-    color:#777;
-}
-
-
-/* =========================================================
-   CORES DA BORDA
-========================================================= */
-
-.cor-baixo{
-
-    stroke:#d64545;
-}
-
-.cor-atencao{
-
-    stroke:#e1a62b;
-}
-
-.cor-andamento{
-
-    stroke:#3b82c4;
-}
-
-.cor-meta{
-
-    stroke:#32a852;
-}
-
-.cor-sem-meta{
-
-    stroke:#aeb4ba;
-}
-
-
-/* =========================================================
-   RODAPÉ DO PAINEL
-========================================================= */
-
-.rodape{
-
-    height:20px;
+    background:
+        rgba(11,69,113,.42);
 
     display:flex;
 
@@ -584,7 +824,194 @@ body{
 
     font-size:10px;
 
-    color:#8a9097;
+}
+
+.pendente-label{
+
+    color:#a9c0d3;
+
+}
+
+.pendente-valor{
+
+    font-size:13px;
+
+    font-weight:900;
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-baixo{
+
+    color:#ff5b5b;
+
+}
+
+.status-atencao{
+
+    color:#ffc331;
+
+}
+
+.status-andamento{
+
+    color:#3da9ff;
+
+}
+
+.status-meta{
+
+    color:#20df83;
+
+}
+
+.status-sem-meta{
+
+    color:#8d9baa;
+
+}
+
+
+/* =========================================================
+   FUNDOS DOS STATUS
+========================================================= */
+
+.fundo-baixo{
+
+    background:
+        rgba(225,40,40,.88);
+
+    color:#fff;
+
+}
+
+.fundo-atencao{
+
+    background:
+        rgba(205,143,0,.90);
+
+    color:#fff;
+
+}
+
+.fundo-andamento{
+
+    background:
+        rgba(0,105,205,.88);
+
+    color:#fff;
+
+}
+
+.fundo-meta{
+
+    background:
+        rgba(0,150,75,.88);
+
+    color:#fff;
+
+}
+
+.fundo-sem-meta{
+
+    background:
+        rgba(87,103,119,.85);
+
+    color:#fff;
+
+}
+
+
+/* =========================================================
+   CORES DO CÍRCULO
+========================================================= */
+
+.cor-baixo{
+
+    stroke:#ff4141;
+
+}
+
+.cor-atencao{
+
+    stroke:#ffba16;
+
+}
+
+.cor-andamento{
+
+    stroke:#189cff;
+
+}
+
+.cor-meta{
+
+    stroke:#20df83;
+
+}
+
+.cor-sem-meta{
+
+    stroke:#52677b;
+
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.rodape{
+
+    height:19px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 4px;
+
+    color:#6f8ca5;
+
+    font-size:9px;
+
+}
+
+.rodape-esquerda{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+}
+
+.rodape-ponto{
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#20df83;
+
+}
+
+.rodape-direita{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
 }
 
 
@@ -592,95 +1019,211 @@ body{
    TELAS MENORES
 ========================================================= */
 
-@media(max-width:1100px){
+@media(max-width:1200px){
 
     body{
         overflow:auto;
     }
 
     .painel{
+
         height:auto;
+
         min-height:100vh;
+
     }
 
     .itens{
 
         grid-template-columns:
-            repeat(3, minmax(0,1fr));
+            repeat(3,minmax(0,1fr));
 
         grid-template-rows:none;
 
-        flex:none;
     }
 
     .card{
-        min-height:300px;
-    }
-}
 
+        min-height:310px;
 
-@media(max-width:700px){
-
-    .painel{
-        padding:10px;
     }
 
     .cabecalho{
-        padding:10px 12px;
+
+        min-height:auto;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET / CELULAR
+========================================================= */
+
+@media(max-width:800px){
+
+    .painel{
+
+        padding:10px;
+
+        gap:9px;
+
+    }
+
+    .cabecalho{
+
+        padding-bottom:8px;
+
+    }
+
+    .logo{
+
+        display:none;
+
+    }
+
+    .separador{
+
+        display:none;
+
     }
 
     .titulo{
-        font-size:20px;
+
+        font-size:21px;
+
     }
 
     .subtitulo{
-        font-size:11px;
+
+        font-size:13px;
+
     }
 
-    .data{
-        font-size:14px;
+    .informacoes{
+
+        gap:10px;
+
+    }
+
+    .online{
+
+        padding-left:8px;
+
     }
 
     .resumo{
 
         grid-template-columns:
             1fr 1fr;
+
     }
 
     .itens{
 
         grid-template-columns:
             1fr 1fr;
+
     }
 
     .card{
+
         min-height:280px;
+
     }
+
 }
 
 
-@media(max-width:450px){
+/* =========================================================
+   CELULAR PEQUENO
+========================================================= */
+
+@media(max-width:500px){
+
+    body{
+
+        overflow:auto;
+
+    }
 
     .cabecalho{
-        min-height:65px;
+
+        align-items:flex-start;
+
     }
 
-    .info-data{
+    .informacoes{
+
         display:none;
+
     }
 
-    .setor{
-        font-size:11px;
-        padding:8px 6px;
+    .titulo{
+
+        font-size:20px;
+
+    }
+
+    .subtitulo{
+
+        font-size:12px;
+
+    }
+
+    .resumo{
+
+        gap:7px;
+
+    }
+
+    .resumo-box{
+
+        min-height:68px;
+
+        padding:8px 11px;
+
+    }
+
+    .resumo-valor{
+
+        font-size:20px;
+
     }
 
     .itens{
-        grid-template-columns:1fr;
+
+        grid-template-columns:
+            1fr;
+
     }
 
     .card{
-        min-height:280px;
+
+        min-height:300px;
+
     }
+
+    .rodape{
+
+        height:auto;
+
+        min-height:25px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MODO TELA CHEIA
+========================================================= */
+
+:fullscreen .painel{
+
+    padding:15px 25px 10px;
+
 }
 
 </style>
@@ -700,60 +1243,88 @@ body{
 
     <header class="cabecalho">
 
-        <div class="titulo-area">
 
-            <div class="titulo">
-                PAINEL DE PRODUÇÃO
+        <div class="identificacao">
+
+
+            <div class="logo">
+
+                <div class="logo-simbolo">
+                    📦
+                </div>
+
+                <div class="logo-texto">
+                    PION <span>PLUS</span>
+                </div>
+
             </div>
 
-            <div class="subtitulo">
-                Acompanhamento da produção diária
+
+            <div class="separador"></div>
+
+
+            <div class="titulo-area">
+
+                <div class="titulo">
+                    PAINEL DE PRODUÇÃO
+                </div>
+
+                <div class="subtitulo">
+                    📦 PACOTE
+                </div>
+
             </div>
+
 
         </div>
 
 
-        <div class="info-data">
 
-            <div
-                class="data"
-                id="dataAtual">
+        <div class="informacoes">
+
+
+            <div class="info-data">
+
+                <div
+                    class="data"
+                    id="dataAtual">
+                </div>
+
+                <div
+                    class="dia"
+                    id="diaAtual">
+                </div>
+
             </div>
 
-            <div
-                class="hora"
-                id="horaAtual">
+
+            <div class="info-hora">
+
+                <div
+                    class="hora"
+                    id="horaAtual">
+                </div>
+
+                <div class="hora-label">
+                    Atualizado agora
+                </div>
+
             </div>
+
+
+            <div class="online">
+
+                <span class="online-ponto"></span>
+
+                ONLINE
+
+            </div>
+
 
         </div>
+
 
     </header>
-
-
-
-    <!-- =====================================================
-         SETORES
-    ====================================================== -->
-
-    <div class="setores">
-
-        <button class="setor ativo">
-            PACOTE
-        </button>
-
-        <button class="setor">
-            PRODUÇÃO
-        </button>
-
-        <button class="setor">
-            EXPEDIÇÃO
-        </button>
-
-        <button class="setor">
-            ESTOQUE
-        </button>
-
-    </div>
 
 
 
@@ -761,7 +1332,8 @@ body{
          RESUMO
     ====================================================== -->
 
-    <div class="resumo">
+    <section class="resumo">
+
 
         <div class="resumo-box">
 
@@ -772,10 +1344,15 @@ body{
             <div
                 class="resumo-valor"
                 id="metaTotal">
-                1.000
+                3.500
+            </div>
+
+            <div class="resumo-unidade">
+                caixas
             </div>
 
         </div>
+
 
 
         <div class="resumo-box">
@@ -787,25 +1364,35 @@ body{
             <div
                 class="resumo-valor"
                 id="produzidoTotal">
-                580
+                2.180
+            </div>
+
+            <div class="resumo-unidade">
+                caixas
             </div>
 
         </div>
+
 
 
         <div class="resumo-box">
 
             <div class="resumo-label">
-                Pendentes
+                Pendente
             </div>
 
             <div
                 class="resumo-valor"
                 id="pendentesTotal">
-                420
+                1.320
+            </div>
+
+            <div class="resumo-unidade">
+                caixas
             </div>
 
         </div>
+
 
 
         <div class="resumo-box">
@@ -817,12 +1404,22 @@ body{
             <div
                 class="resumo-valor"
                 id="progressoTotal">
-                58%
+                62,3%
+            </div>
+
+            <div class="barra-geral">
+
+                <div
+                    class="barra-geral-preenchida"
+                    id="barraGeral">
+                </div>
+
             </div>
 
         </div>
 
-    </div>
+
+    </section>
 
 
 
@@ -843,13 +1440,28 @@ body{
 
     <footer class="rodape">
 
-        <span>
-            Painel de Produção
-        </span>
 
-        <span>
-            Atualização automática
-        </span>
+        <div class="rodape-esquerda">
+
+            <span class="rodape-ponto"></span>
+
+            <span>
+                Painel de Produção — Pacote
+            </span>
+
+        </div>
+
+
+        <div class="rodape-direita">
+
+            <span>↻</span>
+
+            <span>
+                Atualização automática a cada 15 segundos
+            </span>
+
+        </div>
+
 
     </footer>
 
@@ -861,11 +1473,13 @@ body{
 <script>
 
 /* =========================================================
-   DADOS DOS ITENS
+   DADOS DE TESTE
 
-   POR ENQUANTO ESTÃO COMO TESTE VISUAL.
+   ATENÇÃO:
+   Estes dados são apenas para testar o visual.
 
-   Depois vamos ligar esta parte diretamente à sua planilha.
+   Na próxima etapa serão substituídos pelos dados
+   reais da planilha.
 ========================================================= */
 
 const dados = [
@@ -874,31 +1488,31 @@ const dados = [
         item:1,
         produto:"Produto 01",
         lote:"Lote 001",
-        produzido:150,
-        meta:310
+        produzido:350,
+        meta:350
     },
 
     {
         item:2,
         produto:"Produto 02",
         lote:"Lote 002",
-        produzido:220,
-        meta:300
+        produzido:273,
+        meta:350
     },
 
     {
         item:3,
         produto:"Produto 03",
         lote:"Lote 003",
-        produzido:80,
-        meta:150
+        produzido:104,
+        meta:160
     },
 
     {
         item:4,
         produto:"Produto 04",
         lote:"Lote 004",
-        produzido:95,
+        produzido:84,
         meta:200
     },
 
@@ -906,32 +1520,32 @@ const dados = [
         item:5,
         produto:"Produto 05",
         lote:"Lote 005",
-        produzido:35,
-        meta:40
+        produzido:364,
+        meta:400
     },
 
     {
         item:6,
         produto:"Produto 06",
         lote:"Lote 006",
-        produzido:0,
-        meta:0
+        produzido:116,
+        meta:200
     },
 
     {
         item:7,
         produto:"Produto 07",
         lote:"Lote 007",
-        produzido:0,
-        meta:0
+        produzido:170,
+        meta:200
     },
 
     {
         item:8,
         produto:"Produto 08",
         lote:"Lote 008",
-        produzido:0,
-        meta:0
+        produzido:45,
+        meta:150
     },
 
     {
@@ -966,7 +1580,7 @@ function numero(valor){
 
 
 /* =========================================================
-   STATUS DO ITEM
+   STATUS
 ========================================================= */
 
 function calcularStatus(produzido, meta){
@@ -974,9 +1588,15 @@ function calcularStatus(produzido, meta){
     if(!meta || meta <= 0){
 
         return {
+
             texto:"SEM META",
+
             classe:"status-sem-meta",
+
+            fundo:"fundo-sem-meta",
+
             cor:"cor-sem-meta"
+
         };
 
     }
@@ -989,9 +1609,15 @@ function calcularStatus(produzido, meta){
     if(percentual >= 100){
 
         return {
+
             texto:"META ATINGIDA",
+
             classe:"status-meta",
+
+            fundo:"fundo-meta",
+
             cor:"cor-meta"
+
         };
 
     }
@@ -1000,9 +1626,15 @@ function calcularStatus(produzido, meta){
     if(percentual >= 80){
 
         return {
+
             texto:"EM ANDAMENTO",
+
             classe:"status-andamento",
+
+            fundo:"fundo-andamento",
+
             cor:"cor-andamento"
+
         };
 
     }
@@ -1011,9 +1643,15 @@ function calcularStatus(produzido, meta){
     if(percentual >= 50){
 
         return {
+
             texto:"ATENÇÃO",
+
             classe:"status-atencao",
+
+            fundo:"fundo-atencao",
+
             cor:"cor-atencao"
+
         };
 
     }
@@ -1025,6 +1663,8 @@ function calcularStatus(produzido, meta){
 
         classe:"status-baixo",
 
+        fundo:"fundo-baixo",
+
         cor:"cor-baixo"
 
     };
@@ -1033,7 +1673,7 @@ function calcularStatus(produzido, meta){
 
 
 /* =========================================================
-   CRIA CÍRCULO
+   CÍRCULO / VELOCÍMETRO
 ========================================================= */
 
 function criarCirculo(item){
@@ -1056,19 +1696,19 @@ function criarCirculo(item){
     }
 
 
-    /*
-       Não deixamos a barra passar de 100%.
-    */
-
     const percentualVisual =
         Math.min(percentual,100);
 
 
     const status =
-        calcularStatus(produzido,meta);
+        calcularStatus(
+            produzido,
+            meta
+        );
 
 
     const raio = 52;
+
 
     const circunferencia =
         2 * Math.PI * raio;
@@ -1076,14 +1716,22 @@ function criarCirculo(item){
 
     const deslocamento =
         circunferencia -
-        (percentualVisual / 100) *
+        (
+            percentualVisual /
+            100
+        ) *
         circunferencia;
 
 
     const percentualTexto =
         meta > 0
-        ? percentual.toFixed(1).replace(".",",") + "%"
-        : "—";
+        ?
+        percentual
+            .toFixed(0)
+            .replace(".",",")
+            + "%"
+        :
+        "0%";
 
 
     return `
@@ -1094,19 +1742,35 @@ function criarCirculo(item){
                 viewBox="0 0 120 120">
 
                 <circle
+
                     class="trilha"
+
                     cx="60"
                     cy="60"
                     r="${raio}">
+
                 </circle>
 
+
                 <circle
-                    class="progresso ${status.cor}"
+
+                    class="
+                        progresso
+                        ${status.cor}
+                    "
+
                     cx="60"
                     cy="60"
                     r="${raio}"
-                    stroke-dasharray="${circunferencia}"
-                    stroke-dashoffset="${deslocamento}">
+
+                    stroke-dasharray="
+                        ${circunferencia}
+                    "
+
+                    stroke-dashoffset="
+                        ${deslocamento}
+                    ">
+
                 </circle>
 
             </svg>
@@ -1114,19 +1778,32 @@ function criarCirculo(item){
 
             <div class="circular-centro">
 
+
                 <div class="percentual">
+
                     ${percentualTexto}
+
                 </div>
+
 
                 <div class="quantidade">
-                    ${numero(produzido)} / ${numero(meta)}
+
+                    ${numero(produzido)}
+                    /
+                    ${numero(meta)}
+
                 </div>
+
 
                 <div class="meta">
+
                     produzido / meta
+
                 </div>
 
+
             </div>
+
 
         </div>
 
@@ -1136,7 +1813,7 @@ function criarCirculo(item){
 
 
 /* =========================================================
-   CRIA CARD
+   CARD
 ========================================================= */
 
 function criarCard(item){
@@ -1149,11 +1826,17 @@ function criarCard(item){
 
 
     const pendente =
-        Math.max(meta - produzido,0);
+        Math.max(
+            meta - produzido,
+            0
+        );
 
 
     const status =
-        calcularStatus(produzido,meta);
+        calcularStatus(
+            produzido,
+            meta
+        );
 
 
     return `
@@ -1163,34 +1846,28 @@ function criarCard(item){
 
             <div class="card-topo">
 
+
                 <div class="item-numero">
 
-                    ITEM ${item.item}
+                    ITEM ${String(item.item).padStart(2,"0")}
 
                 </div>
 
 
-                <div class="status-pequeno">
+                <div
+                    class="
+                        status-pequeno
+                        ${status.fundo}
+                    "
+                >
 
                     ${status.texto}
 
                 </div>
 
-            </div>
-
-
-            <div class="produto">
-
-                ${item.produto}
 
             </div>
 
-
-            <div class="lote">
-
-                ${item.lote}
-
-            </div>
 
 
             <div class="grafico">
@@ -1200,21 +1877,54 @@ function criarCard(item){
             </div>
 
 
+
+            <div class="produto-area">
+
+
+                <div class="produto">
+
+                    <span class="produto-icone">
+                        ◈
+                    </span>
+
+                    <span>
+                        ${item.produto}
+                    </span>
+
+                </div>
+
+
+                <div class="lote">
+
+                    <span class="lote-icone">
+                        ◇
+                    </span>
+
+                    <span>
+                        ${item.lote}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
             <div class="card-bottom">
 
-                <div class="situacao ${status.classe}">
 
-                    ${status.texto}
+                <span class="pendente-label">
+                    Pendente
+                </span>
 
-                </div>
 
+                <span class="pendente-valor">
 
-                <div class="pendente">
-
-                    Pendente:
                     ${numero(pendente)}
 
-                </div>
+                </span>
+
 
             </div>
 
@@ -1227,17 +1937,21 @@ function criarCard(item){
 
 
 /* =========================================================
-   CARREGA OS ITENS
+   CARREGA PAINEL
 ========================================================= */
 
 function carregarPainel(){
 
     const container =
-        document.getElementById("listaItens");
+        document.getElementById(
+            "listaItens"
+        );
 
 
     container.innerHTML =
-        dados.map(criarCard).join("");
+        dados
+            .map(criarCard)
+            .join("");
 
 
     atualizarResumo();
@@ -1269,15 +1983,21 @@ function atualizarResumo(){
 
     const pendentesTotal =
         Math.max(
-            metaTotal - produzidoTotal,
+            metaTotal -
+            produzidoTotal,
             0
         );
 
 
     const progresso =
         metaTotal > 0
-        ? (produzidoTotal / metaTotal) * 100
-        : 0;
+        ?
+        (
+            produzidoTotal /
+            metaTotal
+        ) * 100
+        :
+        0;
 
 
     document.getElementById(
@@ -1301,14 +2021,25 @@ function atualizarResumo(){
     document.getElementById(
         "progressoTotal"
     ).textContent =
-        progresso.toFixed(1)
-        .replace(".",",") + "%";
+        progresso
+            .toFixed(1)
+            .replace(".",",")
+            + "%";
+
+
+    document.getElementById(
+        "barraGeral"
+    ).style.width =
+        Math.min(
+            progresso,
+            100
+        ) + "%";
 
 }
 
 
 /* =========================================================
-   DATA E HORA
+   DATA
 ========================================================= */
 
 function atualizarDataHora(){
@@ -1321,10 +2052,18 @@ function atualizarDataHora(){
         agora.toLocaleDateString(
             "pt-BR",
             {
-                weekday:"long",
                 day:"2-digit",
                 month:"2-digit",
                 year:"numeric"
+            }
+        );
+
+
+    const dia =
+        agora.toLocaleDateString(
+            "pt-BR",
+            {
+                weekday:"long"
             }
         );
 
@@ -1342,12 +2081,20 @@ function atualizarDataHora(){
 
     document.getElementById(
         "dataAtual"
-    ).textContent = data;
+    ).textContent =
+        data;
+
+
+    document.getElementById(
+        "diaAtual"
+    ).textContent =
+        dia;
 
 
     document.getElementById(
         "horaAtual"
-    ).textContent = hora;
+    ).textContent =
+        hora;
 
 }
 
@@ -1361,7 +2108,9 @@ carregarPainel();
 atualizarDataHora();
 
 
-/* Atualiza o relógio */
+/* =========================================================
+   RELÓGIO
+========================================================= */
 
 setInterval(
     atualizarDataHora,
@@ -1369,13 +2118,14 @@ setInterval(
 );
 
 
-/*
-   Mais tarde podemos colocar aqui
-   a atualização dos dados da planilha.
+/* =========================================================
+   FUTURA ATUALIZAÇÃO DA PLANILHA
 
-   Por enquanto não mexemos nisso,
-   para primeiro aprovarmos a aparência.
-*/
+   NÃO ALTERAR AINDA.
+
+   Na próxima etapa vamos substituir esta parte
+   pela comunicação segura com o Apps Script.
+========================================================= */
 
 </script>
 
