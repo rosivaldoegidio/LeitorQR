@@ -1488,7 +1488,23 @@ let dados = [];
 
 
 /* =========================================================
-   FORMATAÇÃO DE NÚMEROS
+   TRATAMENTO E CONVERSÃO DE NÚMEROS DA PLANILHA
+========================================================= */
+
+function parseNumero(valor) {
+    if (typeof valor === "number") return valor;
+    if (!valor) return 0;
+    
+    // Remove pontos de milhar e substitui vírgula decimal se existir
+    let texto = String(valor).replace(/\./g, "").replace(",", ".");
+    let num = Number(texto);
+    
+    return isNaN(num) ? 0 : num;
+}
+
+
+/* =========================================================
+   FORMATAÇÃO DE NÚMEROS PARA EXIBIÇÃO BRASILEIRA
 ========================================================= */
 
 function numero(valor){
@@ -1998,11 +2014,14 @@ async function carregarDadosReais(){
 
 
         /* -----------------------------------------
-           RECEBE OS DADOS REAIS
+           RECEBE E CONVERTE OS DADOS REAIS
         ----------------------------------------- */
 
-        dados =
-            resultado.itens || [];
+        dados = (resultado.itens || []).map(item => ({
+            ...item,
+            produzido: parseNumero(item.produzido),
+            meta: parseNumero(item.meta)
+        }));
 
 
         /* -----------------------------------------
