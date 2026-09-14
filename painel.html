@@ -1312,7 +1312,7 @@ body{
             </div>
 
 
-            <div class="online">
+            <div class="online" id="statusOnline">
 
                 <span class="online-ponto"></span>
 
@@ -1479,38 +1479,114 @@ body{
 const URL_API =
     "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
+const SETOR_PAINEL = "PACOTE";
+
+const INTERVALO_ATUALIZACAO = 15000;
+
 
 /* =========================================================
-   DADOS REAIS
+   DADOS
 ========================================================= */
 
 let dados = [];
 
+let carregando = false;
+
 
 /* =========================================================
-   TRATAMENTO E CONVERSÃO DE NÚMEROS DA PLANILHA
+   TRATAMENTO DE NÚMEROS
 ========================================================= */
 
-function parseNumero(valor) {
-    if (typeof valor === "number") return valor;
-    if (!valor) return 0;
-    
-    // Remove pontos de milhar e substitui vírgula decimal se existir
-    let texto = String(valor).replace(/\./g, "").replace(",", ".");
-    let num = Number(texto);
-    
-    return isNaN(num) ? 0 : num;
+function parseNumero(valor){
+
+    if(typeof valor === "number"){
+
+        return isFinite(valor)
+            ? valor
+            : 0;
+
+    }
+
+    if(valor === null || valor === undefined){
+
+        return 0;
+
+    }
+
+    let texto =
+        String(valor)
+            .trim();
+
+    if(!texto){
+
+        return 0;
+
+    }
+
+    /*
+       Trata formatos:
+
+       1234
+       1.234
+       1.234,56
+       1234,56
+    */
+
+    if(
+        texto.includes(",")
+    ){
+
+        texto =
+            texto
+                .replace(/\./g,"")
+                .replace(",", ".");
+
+    }
+
+    const numeroConvertido =
+        Number(texto);
+
+    return isNaN(numeroConvertido)
+        ? 0
+        : numeroConvertido;
+
 }
 
 
 /* =========================================================
-   FORMATAÇÃO DE NÚMEROS PARA EXIBIÇÃO BRASILEIRA
+   FORMATAÇÃO
 ========================================================= */
 
 function numero(valor){
 
     return Number(valor || 0)
-        .toLocaleString("pt-BR");
+        .toLocaleString(
+            "pt-BR",
+            {
+                maximumFractionDigits:2
+            }
+        );
+
+}
+
+
+/* =========================================================
+   ESCAPA TEXTO HTML
+========================================================= */
+
+function escaparHtml(valor){
+
+    return String(
+        valor === null ||
+        valor === undefined
+            ? ""
+            : valor
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -1519,7 +1595,10 @@ function numero(valor){
    STATUS
 ========================================================= */
 
-function calcularStatus(produzido, meta){
+function calcularStatus(
+    produzido,
+    meta
+){
 
     if(!meta || meta <= 0){
 
@@ -1609,16 +1688,20 @@ function calcularStatus(produzido, meta){
 
 
 /* =========================================================
-   CÍRCULO / VELOCÍMETRO
+   CÍRCULO
 ========================================================= */
 
 function criarCirculo(item){
 
     const produzido =
-        Number(item.produzido || 0);
+        parseNumero(
+            item.produzido
+        );
 
     const meta =
-        Number(item.meta || 0);
+        parseNumero(
+            item.meta
+        );
 
 
     let percentual = 0;
@@ -1627,13 +1710,22 @@ function criarCirculo(item){
     if(meta > 0){
 
         percentual =
-            (produzido / meta) * 100;
+            (
+                produzido /
+                meta
+            ) * 100;
 
     }
 
 
     const percentualVisual =
-        Math.min(percentual,100);
+        Math.min(
+            Math.max(
+                percentual,
+                0
+            ),
+            100
+        );
 
 
     const status =
@@ -1647,7 +1739,9 @@ function criarCirculo(item){
 
 
     const circunferencia =
-        2 * Math.PI * raio;
+        2 *
+        Math.PI *
+        raio;
 
 
     const deslocamento =
@@ -1678,42 +1772,29 @@ function criarCirculo(item){
                 viewBox="0 0 120 120">
 
                 <circle
-
                     class="trilha"
-
                     cx="60"
                     cy="60"
                     r="${raio}">
-
                 </circle>
 
 
                 <circle
-
                     class="
                         progresso
                         ${status.cor}
                     "
-
                     cx="60"
                     cy="60"
                     r="${raio}"
-
-                    stroke-dasharray="
-                        ${circunferencia}
-                    "
-
-                    stroke-dashoffset="
-                        ${deslocamento}
-                    ">
-
+                    stroke-dasharray="${circunferencia}"
+                    stroke-dashoffset="${deslocamento}">
                 </circle>
 
             </svg>
 
 
             <div class="circular-centro">
-
 
                 <div class="percentual">
 
@@ -1737,9 +1818,7 @@ function criarCirculo(item){
 
                 </div>
 
-
             </div>
-
 
         </div>
 
@@ -1755,15 +1834,20 @@ function criarCirculo(item){
 function criarCard(item){
 
     const produzido =
-        Number(item.produzido || 0);
+        parseNumero(
+            item.produzido
+        );
 
     const meta =
-        Number(item.meta || 0);
+        parseNumero(
+            item.meta
+        );
 
 
     const pendente =
         Math.max(
-            meta - produzido,
+            meta -
+            produzido,
             0
         );
 
@@ -1775,17 +1859,37 @@ function criarCard(item){
         );
 
 
+    const numeroItem =
+        String(
+            item.item || ""
+        )
+        .padStart(
+            2,
+            "0"
+        );
+
+
+    const produto =
+        escaparHtml(
+            item.produto || "—"
+        );
+
+
+    const lote =
+        escaparHtml(
+            item.lote || "—"
+        );
+
+
     return `
 
         <section class="card">
 
-
             <div class="card-topo">
-
 
                 <div class="item-numero">
 
-                    ITEM ${String(item.item).padStart(2,"0")}
+                    ITEM ${numeroItem}
 
                 </div>
 
@@ -1801,9 +1905,7 @@ function criarCard(item){
 
                 </div>
 
-
             </div>
-
 
 
             <div class="grafico">
@@ -1813,9 +1915,7 @@ function criarCard(item){
             </div>
 
 
-
             <div class="produto-area">
-
 
                 <div class="produto">
 
@@ -1824,7 +1924,7 @@ function criarCard(item){
                     </span>
 
                     <span>
-                        ${item.produto || "—"}
+                        ${produto}
                     </span>
 
                 </div>
@@ -1837,18 +1937,15 @@ function criarCard(item){
                     </span>
 
                     <span>
-                        ${item.lote || "—"}
+                        ${lote}
                     </span>
 
                 </div>
 
-
             </div>
 
 
-
             <div class="card-bottom">
-
 
                 <span class="pendente-label">
                     Pendente
@@ -1861,13 +1958,123 @@ function criarCard(item){
 
                 </span>
 
-
             </div>
-
 
         </section>
 
     `;
+
+}
+
+
+/* =========================================================
+   GARANTE OS 10 ITENS
+========================================================= */
+
+function normalizarItens(itensRecebidos){
+
+    const mapa = new Map();
+
+
+    (Array.isArray(itensRecebidos)
+        ? itensRecebidos
+        : []
+    ).forEach(item => {
+
+        const numeroItem =
+            parseInt(
+                item.item,
+                10
+            );
+
+
+        if(
+            numeroItem >= 1 &&
+            numeroItem <= 10
+        ){
+
+            mapa.set(
+                numeroItem,
+                {
+
+                    item:numeroItem,
+
+                    produto:
+                        item.produto || "",
+
+                    lote:
+                        item.lote || "",
+
+                    produzido:
+                        parseNumero(
+                            item.produzido
+                        ),
+
+                    meta:
+                        parseNumero(
+                            item.meta
+                        ),
+
+                    pendente:
+                        parseNumero(
+                            item.pendente
+                        ),
+
+                    percentual:
+                        parseNumero(
+                            item.percentual
+                        )
+
+                }
+            );
+
+        }
+
+    });
+
+
+    const resultado = [];
+
+
+    for(
+        let i = 1;
+        i <= 10;
+        i++
+    ){
+
+        if(mapa.has(i)){
+
+            resultado.push(
+                mapa.get(i)
+            );
+
+        }
+        else{
+
+            resultado.push({
+
+                item:i,
+
+                produto:"",
+
+                lote:"",
+
+                produzido:0,
+
+                meta:0,
+
+                pendente:0,
+
+                percentual:0
+
+            });
+
+        }
+
+    }
+
+
+    return resultado;
 
 }
 
@@ -1884,9 +2091,27 @@ function carregarPainel(){
         );
 
 
+    if(!container){
+
+        return;
+
+    }
+
+
+    /*
+       IMPORTANTE:
+
+       Sempre renderiza 10 cards.
+       Assim um item vazio da planilha
+       não faz o painel ficar com apenas
+       9, 8, 7 etc.
+    */
+
     container.innerHTML =
         dados
-            .map(criarCard)
+            .map(
+                criarCard
+            )
             .join("");
 
 
@@ -1899,7 +2124,9 @@ function carregarPainel(){
    RESUMO GERAL
 ========================================================= */
 
-function atualizarResumo(){
+function atualizarResumo(
+    resumoServidor = null
+){
 
     let metaTotal = 0;
 
@@ -1909,12 +2136,55 @@ function atualizarResumo(){
     dados.forEach(item => {
 
         metaTotal +=
-            Number(item.meta || 0);
+            parseNumero(
+                item.meta
+            );
 
         produzidoTotal +=
-            Number(item.produzido || 0);
+            parseNumero(
+                item.produzido
+            );
 
     });
+
+
+    /*
+       Se o Apps Script enviou o resumo,
+       usamos o resumo oficial retornado
+       pela função obterDadosPainel().
+    */
+
+    if(
+        resumoServidor &&
+        typeof resumoServidor === "object"
+    ){
+
+        if(
+            resumoServidor.metaTotal !==
+            undefined
+        ){
+
+            metaTotal =
+                parseNumero(
+                    resumoServidor.metaTotal
+                );
+
+        }
+
+
+        if(
+            resumoServidor.produzidoTotal !==
+            undefined
+        ){
+
+            produzidoTotal =
+                parseNumero(
+                    resumoServidor.produzidoTotal
+                );
+
+        }
+
+    }
 
 
     const pendentesTotal =
@@ -1925,15 +2195,18 @@ function atualizarResumo(){
         );
 
 
-    const progresso =
-        metaTotal > 0
-        ?
-        (
-            produzidoTotal /
-            metaTotal
-        ) * 100
-        :
-        0;
+    let progresso = 0;
+
+
+    if(metaTotal > 0){
+
+        progresso =
+            (
+                produzidoTotal /
+                metaTotal
+            ) * 100;
+
+    }
 
 
     document.getElementById(
@@ -1967,9 +2240,53 @@ function atualizarResumo(){
         "barraGeral"
     ).style.width =
         Math.min(
-            progresso,
+            Math.max(
+                progresso,
+                0
+            ),
             100
-        ) + "%";
+        )
+        + "%";
+
+}
+
+
+/* =========================================================
+   STATUS ONLINE
+========================================================= */
+
+function definirOnline(){
+
+    const elemento =
+        document.getElementById(
+            "statusOnline"
+        );
+
+
+    elemento.innerHTML =
+        '<span class="online-ponto"></span> ONLINE';
+
+
+    elemento.style.color =
+        "#21df83";
+
+}
+
+
+function definirOffline(){
+
+    const elemento =
+        document.getElementById(
+            "statusOnline"
+        );
+
+
+    elemento.innerHTML =
+        '<span class="online-ponto"></span> OFFLINE';
+
+
+    elemento.style.color =
+        "#ff5b5b";
 
 }
 
@@ -1980,12 +2297,46 @@ function atualizarResumo(){
 
 async function carregarDadosReais(){
 
+    /*
+       Evita duas requisições simultâneas
+       caso a internet esteja lenta.
+    */
+
+    if(carregando){
+
+        return;
+
+    }
+
+
+    carregando = true;
+
+
     try{
+
+        const url =
+            URL_API +
+            "?painel=" +
+            encodeURIComponent(
+                SETOR_PAINEL
+            ) +
+            "&_=" +
+            Date.now();
+
+
+        console.log(
+            "Consultando painel:",
+            url
+        );
+
 
         const resposta =
             await fetch(
-                URL_API +
-                "?painel=PACOTE"
+                url,
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
             );
 
 
@@ -2003,37 +2354,59 @@ async function carregarDadosReais(){
             await resposta.json();
 
 
-        if(!resultado.sucesso){
+        console.log(
+            "Resposta do Apps Script:",
+            resultado
+        );
+
+
+        if(
+            !resultado ||
+            resultado.sucesso !== true
+        ){
 
             throw new Error(
-                resultado.erro ||
-                "Erro ao carregar painel."
+                resultado &&
+                resultado.erro
+                ?
+                resultado.erro
+                :
+                "Resposta inválida do Apps Script."
             );
 
         }
 
 
-        /* -----------------------------------------
-           RECEBE E CONVERTE OS DADOS REAIS
-        ----------------------------------------- */
+        /*
+           NORMALIZA OS 10 ITENS
+        */
 
-        dados = (resultado.itens || []).map(item => ({
-            ...item,
-            produzido: parseNumero(item.produzido),
-            meta: parseNumero(item.meta)
-        }));
+        dados =
+            normalizarItens(
+                resultado.itens
+            );
 
 
-        /* -----------------------------------------
-           ATUALIZA OS CARDS
-        ----------------------------------------- */
+        /*
+           RENDERIZA
+        */
 
         carregarPainel();
 
 
-        /* -----------------------------------------
-           ATUALIZA A DATA DO PAINEL
-        ----------------------------------------- */
+        /*
+           ATUALIZA RESUMO COM OS DADOS
+           OFICIAIS DO SERVIDOR
+        */
+
+        atualizarResumo(
+            resultado.resumo
+        );
+
+
+        /*
+           DATA DO PAINEL
+        */
 
         if(resultado.data){
 
@@ -2045,15 +2418,32 @@ async function carregarDadosReais(){
         }
 
 
-        /* -----------------------------------------
+        /*
+           ATUALIZAÇÃO DO SERVIDOR
+        */
+
+        if(
+            resultado.atualizacao
+        ){
+
+            const label =
+                document.querySelector(
+                    ".hora-label"
+                );
+
+
+            label.textContent =
+                "Servidor: " +
+                resultado.atualizacao;
+
+        }
+
+
+        /*
            ONLINE
-        ----------------------------------------- */
+        */
 
-        document.querySelector(
-            ".online"
-        ).innerHTML =
-
-            '<span class="online-ponto"></span> ONLINE';
+        definirOnline();
 
 
     }
@@ -2065,11 +2455,12 @@ async function carregarDadosReais(){
         );
 
 
-        document.querySelector(
-            ".online"
-        ).innerHTML =
+        definirOffline();
 
-            '<span class="online-ponto"></span> OFFLINE';
+    }
+    finally{
+
+        carregando = false;
 
     }
 
@@ -2077,7 +2468,7 @@ async function carregarDadosReais(){
 
 
 /* =========================================================
-   DATA E HORA
+   DATA E HORA LOCAL
 ========================================================= */
 
 function atualizarDataHora(){
@@ -2141,9 +2532,16 @@ function atualizarDataHora(){
    INICIALIZAÇÃO
 ========================================================= */
 
-atualizarDataHora();
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
 
-carregarDadosReais();
+        atualizarDataHora();
+
+        carregarDadosReais();
+
+    }
+);
 
 
 /* =========================================================
@@ -2157,12 +2555,12 @@ setInterval(
 
 
 /* =========================================================
-   ATUALIZAÇÃO AUTOMÁTICA DOS DADOS
+   ATUALIZAÇÃO AUTOMÁTICA
 ========================================================= */
 
 setInterval(
     carregarDadosReais,
-    15000
+    INTERVALO_ATUALIZACAO
 );
 
 </script>
