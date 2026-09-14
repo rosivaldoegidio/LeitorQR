@@ -449,7 +449,7 @@ body{
 
 .barra-geral-preenchida{
 
-    width:62.3%;
+    width:0%;
 
     height:100%;
 
@@ -1344,7 +1344,7 @@ body{
             <div
                 class="resumo-valor"
                 id="metaTotal">
-                3.500
+                0
             </div>
 
             <div class="resumo-unidade">
@@ -1364,7 +1364,7 @@ body{
             <div
                 class="resumo-valor"
                 id="produzidoTotal">
-                2.180
+                0
             </div>
 
             <div class="resumo-unidade">
@@ -1384,7 +1384,7 @@ body{
             <div
                 class="resumo-valor"
                 id="pendentesTotal">
-                1.320
+                0
             </div>
 
             <div class="resumo-unidade">
@@ -1404,7 +1404,7 @@ body{
             <div
                 class="resumo-valor"
                 id="progressoTotal">
-                62,3%
+                0,0%
             </div>
 
             <div class="barra-geral">
@@ -1473,98 +1473,18 @@ body{
 <script>
 
 /* =========================================================
-   DADOS DE TESTE
-
-   ATENÇÃO:
-   Estes dados são apenas para testar o visual.
-
-   Na próxima etapa serão substituídos pelos dados
-   reais da planilha.
+   CONFIGURAÇÃO DO APPS SCRIPT
 ========================================================= */
 
-const dados = [
+const URL_API =
+    "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
-    {
-        item:1,
-        produto:"Produto 01",
-        lote:"Lote 001",
-        produzido:350,
-        meta:350
-    },
 
-    {
-        item:2,
-        produto:"Produto 02",
-        lote:"Lote 002",
-        produzido:273,
-        meta:350
-    },
+/* =========================================================
+   DADOS REAIS
+========================================================= */
 
-    {
-        item:3,
-        produto:"Produto 03",
-        lote:"Lote 003",
-        produzido:104,
-        meta:160
-    },
-
-    {
-        item:4,
-        produto:"Produto 04",
-        lote:"Lote 004",
-        produzido:84,
-        meta:200
-    },
-
-    {
-        item:5,
-        produto:"Produto 05",
-        lote:"Lote 005",
-        produzido:364,
-        meta:400
-    },
-
-    {
-        item:6,
-        produto:"Produto 06",
-        lote:"Lote 006",
-        produzido:116,
-        meta:200
-    },
-
-    {
-        item:7,
-        produto:"Produto 07",
-        lote:"Lote 007",
-        produzido:170,
-        meta:200
-    },
-
-    {
-        item:8,
-        produto:"Produto 08",
-        lote:"Lote 008",
-        produzido:45,
-        meta:150
-    },
-
-    {
-        item:9,
-        produto:"Produto 09",
-        lote:"Lote 009",
-        produzido:0,
-        meta:0
-    },
-
-    {
-        item:10,
-        produto:"Produto 10",
-        lote:"Lote 010",
-        produzido:0,
-        meta:0
-    }
-
-];
+let dados = [];
 
 
 /* =========================================================
@@ -1888,7 +1808,7 @@ function criarCard(item){
                     </span>
 
                     <span>
-                        ${item.produto}
+                        ${item.produto || "—"}
                     </span>
 
                 </div>
@@ -1901,7 +1821,7 @@ function criarCard(item){
                     </span>
 
                     <span>
-                        ${item.lote}
+                        ${item.lote || "—"}
                     </span>
 
                 </div>
@@ -2039,7 +1959,106 @@ function atualizarResumo(){
 
 
 /* =========================================================
-   DATA
+   CARREGAR DADOS REAIS DO APPS SCRIPT
+========================================================= */
+
+async function carregarDadosReais(){
+
+    try{
+
+        const resposta =
+            await fetch(
+                URL_API +
+                "?painel=PACOTE"
+            );
+
+
+        if(!resposta.ok){
+
+            throw new Error(
+                "Erro HTTP: " +
+                resposta.status
+            );
+
+        }
+
+
+        const resultado =
+            await resposta.json();
+
+
+        if(!resultado.sucesso){
+
+            throw new Error(
+                resultado.erro ||
+                "Erro ao carregar painel."
+            );
+
+        }
+
+
+        /* -----------------------------------------
+           RECEBE OS DADOS REAIS
+        ----------------------------------------- */
+
+        dados =
+            resultado.itens || [];
+
+
+        /* -----------------------------------------
+           ATUALIZA OS CARDS
+        ----------------------------------------- */
+
+        carregarPainel();
+
+
+        /* -----------------------------------------
+           ATUALIZA A DATA DO PAINEL
+        ----------------------------------------- */
+
+        if(resultado.data){
+
+            document.getElementById(
+                "dataAtual"
+            ).textContent =
+                resultado.data;
+
+        }
+
+
+        /* -----------------------------------------
+           ONLINE
+        ----------------------------------------- */
+
+        document.querySelector(
+            ".online"
+        ).innerHTML =
+
+            '<span class="online-ponto"></span> ONLINE';
+
+
+    }
+    catch(erro){
+
+        console.error(
+            "Erro ao carregar painel:",
+            erro
+        );
+
+
+        document.querySelector(
+            ".online"
+        ).innerHTML =
+
+            '<span class="online-ponto"></span> OFFLINE';
+
+    }
+
+}
+
+
+/* =========================================================
+   DATA E HORA
 ========================================================= */
 
 function atualizarDataHora(){
@@ -2103,9 +2122,9 @@ function atualizarDataHora(){
    INICIALIZAÇÃO
 ========================================================= */
 
-carregarPainel();
-
 atualizarDataHora();
+
+carregarDadosReais();
 
 
 /* =========================================================
@@ -2119,13 +2138,13 @@ setInterval(
 
 
 /* =========================================================
-   FUTURA ATUALIZAÇÃO DA PLANILHA
-
-   NÃO ALTERAR AINDA.
-
-   Na próxima etapa vamos substituir esta parte
-   pela comunicação segura com o Apps Script.
+   ATUALIZAÇÃO AUTOMÁTICA DOS DADOS
 ========================================================= */
+
+setInterval(
+    carregarDadosReais,
+    15000
+);
 
 </script>
 
