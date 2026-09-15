@@ -3,2568 +3,1882 @@
 
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-<title>Painel de Produção - Pacote</title>
+  <title>Painel de Produção - Pacote</title>
 
-<style>
+  <style>
 
-/* =========================================================
-   CONFIGURAÇÃO GERAL
-========================================================= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-*{
-    box-sizing:border-box;
-}
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #08111c;
+      color: #ffffff;
+    }
 
-html,
-body{
-    margin:0;
-    padding:0;
-    width:100%;
-    min-height:100%;
-}
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-body{
+    #painel {
+      width: 100vw;
+      height: 100vh;
+      padding: 1.2vh 1.2vw;
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+      display: flex;
+      flex-direction: column;
 
-    background:
+      background:
+        radial-gradient(
+          circle at top center,
+          #14273b 0%,
+          #0b1623 45%,
+          #08111c 100%
+        );
+    }
+
+    .cabecalho {
+      height: 11vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 1.5vw;
+
+      border-radius: 18px;
+
+      background:
         linear-gradient(
-            135deg,
-            #031b36 0%,
-            #05284b 50%,
-            #03172d 100%
+          135deg,
+          #122338,
+          #0c1827
         );
 
-    color:#ffffff;
-
-    overflow:hidden;
-}
-
-
-/* =========================================================
-   PAINEL
-========================================================= */
-
-.painel{
-
-    width:100vw;
-    height:100vh;
-
-    padding:14px 22px 10px;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:10px;
-
-}
-
-
-/* =========================================================
-   CABEÇALHO
-========================================================= */
-
-.cabecalho{
-
-    min-height:86px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    border-bottom:
+      border:
         1px solid
-        rgba(43,145,220,.45);
+        rgba(255,255,255,0.08);
 
-    padding:0 10px 10px;
+      box-shadow:
+        0 8px 30px
+        rgba(0,0,0,0.30);
 
-}
+      flex-shrink: 0;
+    }
 
+    .titulo-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-/* =========================================================
-   IDENTIFICAÇÃO
-========================================================= */
+    .titulo {
+      font-size: clamp(
+        30px,
+        3.2vw,
+        62px
+      );
 
-.identificacao{
+      font-weight: 900;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
 
-    display:flex;
+    .subtitulo {
+      margin-top: 8px;
 
-    align-items:center;
+      font-size: clamp(
+        14px,
+        1.15vw,
+        23px
+      );
 
-    gap:22px;
+      color: #91a8bd;
+      font-weight: 600;
+    }
 
-    min-width:0;
+    .data-area {
+      text-align: right;
 
-}
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
 
+      gap: 5px;
+    }
 
-/* LOGO */
+    .data-label {
+      font-size: clamp(
+        12px,
+        0.9vw,
+        18px
+      );
 
-.logo{
+      color: #71889d;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
 
-    display:flex;
+    .data {
+      font-size: clamp(
+        20px,
+        1.7vw,
+        34px
+      );
 
-    align-items:center;
+      font-weight: 900;
+    }
 
-    gap:8px;
+    .resumo {
+      height: 15vh;
 
-    white-space:nowrap;
+      margin-top: 1.2vh;
 
-}
+      display: grid;
+      grid-template-columns:
+        repeat(4, 1fr);
 
-.logo-simbolo{
+      gap: 1vw;
 
-    width:42px;
-    height:42px;
+      flex-shrink: 0;
+    }
 
-    border-radius:9px;
+    .resumo-card {
+      min-width: 0;
 
-    display:flex;
+      border-radius: 18px;
 
-    align-items:center;
-    justify-content:center;
+      padding: 1.1vh 1vw;
 
-    background:
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+
+      background:
         linear-gradient(
-            135deg,
-            #1688e8,
-            #0757a4
+          145deg,
+          #14283d,
+          #0d1c2c
         );
 
-    font-size:23px;
-
-    box-shadow:
-        0 4px 14px
-        rgba(0,120,230,.25);
-
-}
-
-.logo-texto{
-
-    font-size:28px;
-
-    font-weight:800;
-
-    letter-spacing:-1px;
-
-}
-
-.logo-texto span{
-
-    color:#29a4ff;
-
-}
-
-
-/* SEPARADOR */
-
-.separador{
-
-    width:1px;
-
-    height:58px;
-
-    background:
-        rgba(255,255,255,.25);
-
-}
-
-
-/* TÍTULO */
-
-.titulo-area{
-
-    min-width:0;
-
-}
-
-.titulo{
-
-    font-size:30px;
-
-    font-weight:900;
-
-    letter-spacing:.3px;
-
-    white-space:nowrap;
-
-}
-
-.subtitulo{
-
-    margin-top:4px;
-
-    font-size:17px;
-
-    font-weight:700;
-
-    color:#8fc9f5;
-
-}
-
-
-/* =========================================================
-   DATA / HORA / ONLINE
-========================================================= */
-
-.informacoes{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-    white-space:nowrap;
-
-}
-
-.info-data{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:flex-end;
-
-}
-
-.data{
-
-    font-size:17px;
-
-    font-weight:800;
-
-}
-
-.dia{
-
-    margin-top:2px;
-
-    font-size:11px;
-
-    color:#8fa7bd;
-
-}
-
-.info-hora{
-
-    padding-left:18px;
-
-    border-left:
+      border:
         1px solid
-        rgba(255,255,255,.25);
+        rgba(255,255,255,0.08);
 
-}
+      box-shadow:
+        0 7px 22px
+        rgba(0,0,0,0.24);
+    }
 
-.hora{
+    .resumo-label {
+      font-size: clamp(
+        12px,
+        0.95vw,
+        20px
+      );
 
-    font-size:18px;
+      color: #91a8bd;
 
-    font-weight:800;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.7px;
+    }
 
-}
+    .resumo-valor {
+      margin-top: 8px;
 
-.hora-label{
+      font-size: clamp(
+        27px,
+        2.5vw,
+        48px
+      );
 
-    margin-top:2px;
+      font-weight: 900;
+      line-height: 1;
+    }
 
-    font-size:10px;
+    .resumo-card.progresso
+    .resumo-valor {
+      font-size: clamp(
+        27px,
+        2.3vw,
+        46px
+      );
+    }
 
-    color:#8fa7bd;
+    #itens {
+      flex: 1;
+      min-height: 0;
 
-}
+      margin-top: 1.2vh;
 
-.online{
+      display: grid;
 
-    display:flex;
+      grid-template-columns:
+        repeat(5, 1fr);
 
-    align-items:center;
+      grid-template-rows:
+        repeat(2, 1fr);
 
-    gap:8px;
+      gap: 0.9vw;
 
-    padding-left:16px;
+      overflow: hidden;
+    }
 
-    border-left:
-        1px solid
-        rgba(255,255,255,.25);
+    .card {
+      min-width: 0;
+      min-height: 0;
 
-    color:#21df83;
+      position: relative;
 
-    font-size:13px;
+      display: flex;
+      flex-direction: column;
 
-    font-weight:900;
+      padding:
+        1.1vh 0.9vw;
 
-}
+      border-radius: 17px;
 
-.online-ponto{
-
-    width:13px;
-    height:13px;
-
-    border-radius:50%;
-
-    background:#21df83;
-
-    box-shadow:
-        0 0 12px
-        rgba(33,223,131,.75);
-
-}
-
-
-/* =========================================================
-   RESUMO
-========================================================= */
-
-.resumo{
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0,1fr));
-
-    gap:12px;
-
-    min-height:82px;
-
-}
-
-.resumo-box{
-
-    position:relative;
-
-    overflow:hidden;
-
-    border-radius:12px;
-
-    border:
-        1px solid
-        rgba(62,157,224,.35);
-
-    background:
+      background:
         linear-gradient(
-            135deg,
-            rgba(5,46,82,.96),
-            rgba(4,32,59,.96)
+          145deg,
+          #13263a,
+          #0c1a29
         );
 
-    padding:10px 17px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    box-shadow:
-        0 4px 15px
-        rgba(0,0,0,.15);
-
-}
-
-.resumo-box::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:70px;
-    height:70px;
-
-    right:-25px;
-    top:-25px;
-
-    border-radius:50%;
-
-    background:
-        rgba(34,146,231,.08);
-
-}
-
-.resumo-label{
-
-    font-size:11px;
-
-    color:#8eabc4;
-
-    font-weight:800;
-
-    letter-spacing:.7px;
-
-    text-transform:uppercase;
-
-}
-
-.resumo-valor{
-
-    margin-top:2px;
-
-    font-size:27px;
-
-    font-weight:900;
-
-    letter-spacing:.2px;
-
-}
-
-.resumo-unidade{
-
-    font-size:10px;
-
-    color:#7893ab;
-
-}
-
-
-/* =========================================================
-   BARRA DE PROGRESSO GERAL
-========================================================= */
-
-.barra-geral{
-
-    width:100%;
-
-    height:7px;
-
-    margin-top:6px;
-
-    border-radius:10px;
-
-    background:#123d64;
-
-    overflow:hidden;
-
-}
-
-.barra-geral-preenchida{
-
-    width:0%;
-
-    height:100%;
-
-    border-radius:10px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #18bb72,
-            #20df86
-        );
-
-    transition:
-        width .7s ease;
-
-}
-
-
-/* =========================================================
-   ÁREA DOS ITENS
-========================================================= */
-
-.itens{
-
-    flex:1;
-
-    min-height:0;
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(5,minmax(0,1fr));
-
-    grid-template-rows:
-        repeat(2,minmax(0,1fr));
-
-    gap:10px;
-
-}
-
-
-/* =========================================================
-   CARD
-========================================================= */
-
-.card{
-
-    position:relative;
-
-    min-width:0;
-    min-height:0;
-
-    overflow:hidden;
-
-    display:flex;
-
-    flex-direction:column;
-
-    border-radius:13px;
-
-    border:
+      border:
         1px solid
-        rgba(47,143,211,.38);
+        rgba(255,255,255,0.09);
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(5,43,76,.98),
-            rgba(3,29,53,.98)
+      box-shadow:
+        0 8px 25px
+        rgba(0,0,0,0.28);
+
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+
+      position: absolute;
+
+      top: 0;
+      left: 0;
+      right: 0;
+
+      height: 5px;
+
+      background: #39556d;
+    }
+
+    .card.concluido::before {
+      background: #3bd17f;
+    }
+
+    .card.andamento::before {
+      background: #f2b84b;
+    }
+
+    .card.atrasado::before {
+      background: #e95d67;
+    }
+
+    .card-topo {
+      display: flex;
+
+      justify-content: space-between;
+      align-items: center;
+
+      gap: 8px;
+
+      flex-shrink: 0;
+    }
+
+    .numero {
+      width: 2.1vw;
+      min-width: 30px;
+
+      height: 2.1vw;
+      min-height: 30px;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background: #213c55;
+
+      font-size: clamp(
+        13px,
+        1vw,
+        21px
+      );
+
+      font-weight: 900;
+    }
+
+    .status {
+      padding:
+        5px 10px;
+
+      border-radius: 20px;
+
+      background: #23394d;
+
+      color: #9db0c2;
+
+      font-size: clamp(
+        9px,
+        0.68vw,
+        14px
+      );
+
+      font-weight: 900;
+
+      text-transform: uppercase;
+
+      white-space: nowrap;
+    }
+
+    .concluido .status {
+      background: rgba(59,209,127,0.15);
+      color: #5ee695;
+    }
+
+    .andamento .status {
+      background: rgba(242,184,75,0.15);
+      color: #f7c665;
+    }
+
+    .atrasado .status {
+      background: rgba(233,93,103,0.15);
+      color: #f07881;
+    }
+
+    .produto {
+      margin-top: 0.9vh;
+
+      min-height: 3.4vh;
+
+      font-size: clamp(
+        16px,
+        1.15vw,
+        25px
+      );
+
+      line-height: 1.05;
+
+      font-weight: 900;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+    .produto.vazio {
+      color: #53697d;
+      font-weight: 700;
+    }
+
+    .lote {
+      margin-top: 4px;
+
+      font-size: clamp(
+        11px,
+        0.72vw,
+        15px
+      );
+
+      color: #839aae;
+      font-weight: 700;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+    .conteudo-card {
+      flex: 1;
+      min-height: 0;
+
+      margin-top: 0.8vh;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 0.8vw;
+    }
+
+    .circulo-area {
+      width: 6.2vw;
+      min-width: 65px;
+
+      aspect-ratio: 1 / 1;
+
+      position: relative;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circulo {
+      width: 100%;
+      height: 100%;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      position: relative;
+
+      background:
+        conic-gradient(
+          #506b82 0deg,
+          #506b82 0deg,
+          #1a2b3b 0deg,
+          #1a2b3b 360deg
         );
+    }
 
-    box-shadow:
-        0 4px 13px
-        rgba(0,0,0,.18);
+    .circulo::after {
+      content: "";
 
-    padding:10px 12px;
+      position: absolute;
 
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
+      width: 72%;
+      height: 72%;
 
-}
+      border-radius: 50%;
 
-.card:hover{
+      background: #0e1e2d;
 
-    transform:translateY(-2px);
+      box-shadow:
+        inset 0 0 10px
+        rgba(0,0,0,0.35);
+    }
 
-    box-shadow:
-        0 7px 20px
-        rgba(0,0,0,.25);
+    .percentual {
+      position: relative;
 
-}
+      z-index: 2;
 
+      font-size: clamp(
+        16px,
+        1.2vw,
+        25px
+      );
 
-/* =========================================================
-   TOPO CARD
-========================================================= */
+      font-weight: 900;
+    }
 
-.card-topo{
+    .numeros {
+      flex: 1;
+      min-width: 0;
 
-    display:flex;
+      display: flex;
 
-    align-items:center;
+      flex-direction: column;
 
-    justify-content:space-between;
+      justify-content: center;
 
-    gap:5px;
+      gap: 0.7vh;
+    }
 
-    min-height:27px;
+    .linha-numero {
+      display: flex;
 
-}
+      align-items: baseline;
 
-.item-numero{
+      justify-content: space-between;
 
-    font-size:17px;
+      gap: 5px;
+    }
 
-    font-weight:900;
+    .linha-label {
+      font-size: clamp(
+        10px,
+        0.67vw,
+        14px
+      );
 
-}
+      color: #7890a4;
 
-.status-pequeno{
+      font-weight: 800;
 
-    max-width:125px;
+      text-transform: uppercase;
+    }
 
-    overflow:hidden;
+    .linha-valor {
+      font-size: clamp(
+        16px,
+        1.18vw,
+        25px
+      );
 
-    text-overflow:ellipsis;
+      font-weight: 900;
 
-    white-space:nowrap;
+      white-space: nowrap;
+    }
 
-    padding:4px 7px;
+    .barra-container {
+      margin-top: 0.6vh;
 
-    border-radius:20px;
+      height: 7px;
 
-    font-size:9px;
+      width: 100%;
 
-    font-weight:900;
+      border-radius: 10px;
 
-}
+      overflow: hidden;
 
+      background: #1d3041;
 
-/* =========================================================
-   GRÁFICO
-========================================================= */
+      flex-shrink: 0;
+    }
 
-.grafico{
+    .barra {
+      height: 100%;
 
-    flex:1;
+      width: 0%;
 
-    min-height:0;
+      border-radius: 10px;
 
-    display:flex;
+      transition:
+        width 0.7s ease;
+    }
 
-    align-items:center;
+    .rodape {
+      height: 3.2vh;
 
-    justify-content:center;
+      margin-top: 0.6vh;
 
-    padding:2px 0;
+      display: flex;
 
-}
+      align-items: center;
 
+      justify-content: space-between;
 
-/* =========================================================
-   VELOCÍMETRO
-========================================================= */
+      color: #536b7f;
 
-.circular{
+      font-size: clamp(
+        9px,
+        0.65vw,
+        13px
+      );
 
-    position:relative;
+      font-weight: 700;
 
-    width:min(
-        19vh,
-        145px
-    );
+      flex-shrink: 0;
+    }
 
-    height:min(
-        19vh,
-        145px
-    );
+    #statusApi {
+      display: flex;
 
-    min-width:95px;
+      align-items: center;
 
-    min-height:95px;
+      gap: 7px;
+    }
 
-    max-width:145px;
+    #statusBolinha {
+      width: 8px;
+      height: 8px;
 
-    max-height:145px;
+      border-radius: 50%;
 
-}
+      background: #e95d67;
+    }
 
-.circular svg{
+    #statusBolinha.ok {
+      background: #3bd17f;
+    }
 
-    width:100%;
-    height:100%;
+    #statusBolinha.carregando {
+      background: #f2b84b;
+    }
 
-    transform:rotate(-90deg);
+    #erro {
+      position: fixed;
 
-}
+      inset: 0;
 
-.circular circle{
+      display: none;
 
-    fill:none;
+      align-items: center;
+      justify-content: center;
 
-    stroke-width:10;
+      background:
+        rgba(5,12,20,0.96);
 
-}
+      z-index: 100;
+    }
 
-.trilha{
+    #erro.visivel {
+      display: flex;
+    }
 
-    stroke:#284968;
+    .erro-box {
+      width: min(
+        700px,
+        85vw
+      );
 
-}
+      padding: 40px;
 
-.progresso{
+      border-radius: 20px;
 
-    stroke-linecap:round;
+      text-align: center;
 
-    transition:
-        stroke-dashoffset .8s ease;
+      background: #122337;
 
-}
-
-
-/* =========================================================
-   TEXTO CENTRAL
-========================================================= */
-
-.circular-centro{
-
-    position:absolute;
-
-    inset:0;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-}
-
-.percentual{
-
-    font-size:25px;
-
-    font-weight:900;
-
-    line-height:1;
-
-}
-
-.quantidade{
-
-    margin-top:5px;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    color:#e5f0f8;
-
-}
-
-.meta{
-
-    margin-top:2px;
-
-    font-size:8px;
-
-    color:#7592aa;
-
-}
-
-
-/* =========================================================
-   INFORMAÇÕES DO PRODUTO
-========================================================= */
-
-.produto-area{
-
-    border-top:
+      border:
         1px solid
-        rgba(77,143,188,.22);
-
-    padding-top:6px;
-
-    min-height:39px;
-
-}
-
-.produto{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:7px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-}
-
-.produto-icone{
-
-    color:#8bc9f5;
-
-    font-size:13px;
-
-}
-
-.lote{
-
-    margin-top:3px;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:7px;
-
-    font-size:11px;
-
-    color:#9bb4c9;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-}
-
-.lote-icone{
-
-    color:#8bc9f5;
-
-}
-
-
-/* =========================================================
-   PENDENTE
-========================================================= */
-
-.card-bottom{
-
-    margin-top:6px;
-
-    padding:6px 9px;
-
-    border-radius:9px;
-
-    background:
-        rgba(11,69,113,.42);
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    font-size:10px;
-
-}
-
-.pendente-label{
-
-    color:#a9c0d3;
-
-}
-
-.pendente-valor{
-
-    font-size:13px;
-
-    font-weight:900;
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status-baixo{
-
-    color:#ff5b5b;
-
-}
-
-.status-atencao{
-
-    color:#ffc331;
-
-}
-
-.status-andamento{
-
-    color:#3da9ff;
-
-}
-
-.status-meta{
-
-    color:#20df83;
-
-}
-
-.status-sem-meta{
-
-    color:#8d9baa;
-
-}
-
-
-/* =========================================================
-   FUNDOS DOS STATUS
-========================================================= */
-
-.fundo-baixo{
-
-    background:
-        rgba(225,40,40,.88);
-
-    color:#fff;
-
-}
-
-.fundo-atencao{
-
-    background:
-        rgba(205,143,0,.90);
-
-    color:#fff;
-
-}
-
-.fundo-andamento{
-
-    background:
-        rgba(0,105,205,.88);
-
-    color:#fff;
-
-}
-
-.fundo-meta{
-
-    background:
-        rgba(0,150,75,.88);
-
-    color:#fff;
-
-}
-
-.fundo-sem-meta{
-
-    background:
-        rgba(87,103,119,.85);
-
-    color:#fff;
-
-}
-
-
-/* =========================================================
-   CORES DO CÍRCULO
-========================================================= */
-
-.cor-baixo{
-
-    stroke:#ff4141;
-
-}
-
-.cor-atencao{
-
-    stroke:#ffba16;
-
-}
-
-.cor-andamento{
-
-    stroke:#189cff;
-
-}
-
-.cor-meta{
-
-    stroke:#20df83;
-
-}
-
-.cor-sem-meta{
-
-    stroke:#52677b;
-
-}
-
-
-/* =========================================================
-   RODAPÉ
-========================================================= */
-
-.rodape{
-
-    height:19px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:0 4px;
-
-    color:#6f8ca5;
-
-    font-size:9px;
-
-}
-
-.rodape-esquerda{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:7px;
-
-}
-
-.rodape-ponto{
-
-    width:7px;
-    height:7px;
-
-    border-radius:50%;
-
-    background:#20df83;
-
-}
-
-.rodape-direita{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:6px;
-
-}
-
-
-/* =========================================================
-   TELAS MENORES
-========================================================= */
-
-@media(max-width:1200px){
-
-    body{
-        overflow:auto;
+        rgba(255,255,255,0.1);
+
+      box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.5);
     }
 
-    .painel{
+    .erro-titulo {
+      font-size: 30px;
 
-        height:auto;
+      font-weight: 900;
 
-        min-height:100vh;
-
+      margin-bottom: 15px;
     }
 
-    .itens{
+    .erro-texto {
+      color: #9aafc1;
 
-        grid-template-columns:
-            repeat(3,minmax(0,1fr));
+      line-height: 1.5;
 
-        grid-template-rows:none;
-
+      font-size: 17px;
     }
 
-    .card{
-
-        min-height:310px;
-
-    }
-
-    .cabecalho{
-
-        min-height:auto;
-
-    }
-
-}
-
-
-/* =========================================================
-   TABLET / CELULAR
-========================================================= */
-
-@media(max-width:800px){
-
-    .painel{
-
-        padding:10px;
-
-        gap:9px;
-
-    }
-
-    .cabecalho{
-
-        padding-bottom:8px;
-
-    }
-
-    .logo{
-
-        display:none;
-
-    }
-
-    .separador{
-
-        display:none;
-
-    }
-
-    .titulo{
-
-        font-size:21px;
-
-    }
-
-    .subtitulo{
-
-        font-size:13px;
-
-    }
-
-    .informacoes{
-
-        gap:10px;
-
-    }
-
-    .online{
-
-        padding-left:8px;
-
-    }
-
-    .resumo{
-
-        grid-template-columns:
-            1fr 1fr;
-
-    }
-
-    .itens{
-
-        grid-template-columns:
-            1fr 1fr;
-
-    }
-
-    .card{
-
-        min-height:280px;
-
-    }
-
-}
-
-
-/* =========================================================
-   CELULAR PEQUENO
-========================================================= */
-
-@media(max-width:500px){
-
-    body{
-
-        overflow:auto;
-
-    }
-
-    .cabecalho{
-
-        align-items:flex-start;
-
-    }
-
-    .informacoes{
-
-        display:none;
-
-    }
-
-    .titulo{
-
-        font-size:20px;
-
-    }
-
-    .subtitulo{
-
-        font-size:12px;
-
-    }
-
-    .resumo{
-
-        gap:7px;
-
-    }
-
-    .resumo-box{
-
-        min-height:68px;
-
-        padding:8px 11px;
-
-    }
-
-    .resumo-valor{
-
-        font-size:20px;
-
-    }
-
-    .itens{
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-    .card{
-
-        min-height:300px;
-
-    }
-
-    .rodape{
-
-        height:auto;
-
-        min-height:25px;
-
-    }
-
-}
-
-
-/* =========================================================
-   MODO TELA CHEIA
-========================================================= */
-
-:fullscreen .painel{
-
-    padding:15px 25px 10px;
-
-}
-
-</style>
+  </style>
 
 </head>
 
-
 <body>
 
-
-<div class="painel">
-
-
-    <!-- =====================================================
-         CABEÇALHO
-    ====================================================== -->
+  <div id="painel">
 
     <header class="cabecalho">
 
+      <div class="titulo-area">
 
-        <div class="identificacao">
-
-
-            <div class="logo">
-
-                <div class="logo-simbolo">
-                    📦
-                </div>
-
-                <div class="logo-texto">
-                    PION <span>PLUS</span>
-                </div>
-
-            </div>
-
-
-            <div class="separador"></div>
-
-
-            <div class="titulo-area">
-
-                <div class="titulo">
-                    PAINEL DE PRODUÇÃO
-                </div>
-
-                <div class="subtitulo">
-                    📦 PACOTE
-                </div>
-
-            </div>
-
-
+        <div class="titulo">
+          PACOTE
         </div>
 
-
-
-        <div class="informacoes">
-
-
-            <div class="info-data">
-
-                <div
-                    class="data"
-                    id="dataAtual">
-                </div>
-
-                <div
-                    class="dia"
-                    id="diaAtual">
-                </div>
-
-            </div>
-
-
-            <div class="info-hora">
-
-                <div
-                    class="hora"
-                    id="horaAtual">
-                </div>
-
-                <div class="hora-label">
-                    Atualizado agora
-                </div>
-
-            </div>
-
-
-            <div class="online" id="statusOnline">
-
-                <span class="online-ponto"></span>
-
-                ONLINE
-
-            </div>
-
-
+        <div class="subtitulo">
+          Painel de Produção
         </div>
 
+      </div>
+
+      <div class="data-area">
+
+        <div class="data-label">
+          Data do painel
+        </div>
+
+        <div
+          id="dataPainel"
+          class="data"
+        >
+          --
+        </div>
+
+      </div>
 
     </header>
 
-
-
-    <!-- =====================================================
-         RESUMO
-    ====================================================== -->
-
     <section class="resumo">
 
+      <div class="resumo-card">
 
-        <div class="resumo-box">
-
-            <div class="resumo-label">
-                Meta total
-            </div>
-
-            <div
-                class="resumo-valor"
-                id="metaTotal">
-                0
-            </div>
-
-            <div class="resumo-unidade">
-                caixas
-            </div>
-
+        <div class="resumo-label">
+          Meta total
         </div>
 
-
-
-        <div class="resumo-box">
-
-            <div class="resumo-label">
-                Produzido
-            </div>
-
-            <div
-                class="resumo-valor"
-                id="produzidoTotal">
-                0
-            </div>
-
-            <div class="resumo-unidade">
-                caixas
-            </div>
-
+        <div
+          id="metaTotal"
+          class="resumo-valor"
+        >
+          0
         </div>
 
+      </div>
 
+      <div class="resumo-card">
 
-        <div class="resumo-box">
-
-            <div class="resumo-label">
-                Pendente
-            </div>
-
-            <div
-                class="resumo-valor"
-                id="pendentesTotal">
-                0
-            </div>
-
-            <div class="resumo-unidade">
-                caixas
-            </div>
-
+        <div class="resumo-label">
+          Produzido
         </div>
 
-
-
-        <div class="resumo-box">
-
-            <div class="resumo-label">
-                Progresso geral
-            </div>
-
-            <div
-                class="resumo-valor"
-                id="progressoTotal">
-                0,0%
-            </div>
-
-            <div class="barra-geral">
-
-                <div
-                    class="barra-geral-preenchida"
-                    id="barraGeral">
-                </div>
-
-            </div>
-
+        <div
+          id="produzidoTotal"
+          class="resumo-valor"
+        >
+          0
         </div>
 
+      </div>
+
+      <div class="resumo-card">
+
+        <div class="resumo-label">
+          Pendente
+        </div>
+
+        <div
+          id="pendenteTotal"
+          class="resumo-valor"
+        >
+          0
+        </div>
+
+      </div>
+
+      <div class="resumo-card progresso">
+
+        <div class="resumo-label">
+          Progresso geral
+        </div>
+
+        <div
+          id="progressoGeral"
+          class="resumo-valor"
+        >
+          0%
+        </div>
+
+      </div>
 
     </section>
 
-
-
-    <!-- =====================================================
-         ITENS
-    ====================================================== -->
-
-    <main
-        class="itens"
-        id="listaItens">
-    </main>
-
-
-
-    <!-- =====================================================
-         RODAPÉ
-    ====================================================== -->
+    <main id="itens"></main>
 
     <footer class="rodape">
 
+      <div id="statusApi">
 
-        <div class="rodape-esquerda">
+        <span
+          id="statusBolinha"
+          class="carregando"
+        ></span>
 
-            <span class="rodape-ponto"></span>
+        <span id="statusTexto">
+          Carregando dados...
+        </span>
 
-            <span>
-                Painel de Produção — Pacote
-            </span>
+      </div>
 
-        </div>
-
-
-        <div class="rodape-direita">
-
-            <span>↻</span>
-
-            <span>
-                Atualização automática a cada 15 segundos
-            </span>
-
-        </div>
-
+      <div id="ultimaAtualizacao">
+        --
+      </div>
 
     </footer>
 
+  </div>
 
-</div>
+  <div id="erro">
 
+    <div class="erro-box">
 
+      <div class="erro-titulo">
+        Não foi possível carregar o painel
+      </div>
 
-<script>
+      <div
+        id="erroTexto"
+        class="erro-texto"
+      >
+        Aguardando conexão com o servidor...
+      </div>
 
-/* =========================================================
-   CONFIGURAÇÃO DO APPS SCRIPT
-========================================================= */
+    </div>
 
-const URL_API =
-    "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
+  </div>
 
-const SETOR_PAINEL = "PACOTE";
+  <script>
 
-const INTERVALO_ATUALIZACAO = 15000;
+    // ==========================================================
+    // CONFIGURAÇÃO
+    // ==========================================================
 
+    const URL_API =
+      "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
-/* =========================================================
-   DADOS
-========================================================= */
+    const SETOR =
+      "PACOTE";
 
-let dados = [];
+    const INTERVALO_MS =
+      15000;
 
-let carregando = false;
+    const TEMPO_LIMITE_MS =
+      12000;
 
 
-/* =========================================================
-   TRATAMENTO DE NÚMEROS
-========================================================= */
+    // ==========================================================
+    // ELEMENTOS
+    // ==========================================================
 
-function parseNumero(valor){
+    const elementos = {
 
-    if(typeof valor === "number"){
+      itens:
+        document.getElementById(
+          "itens"
+        ),
 
-        return isFinite(valor)
-            ? valor
-            : 0;
+      data:
+        document.getElementById(
+          "dataPainel"
+        ),
 
-    }
+      metaTotal:
+        document.getElementById(
+          "metaTotal"
+        ),
 
-    if(valor === null || valor === undefined){
+      produzidoTotal:
+        document.getElementById(
+          "produzidoTotal"
+        ),
 
-        return 0;
+      pendenteTotal:
+        document.getElementById(
+          "pendenteTotal"
+        ),
 
-    }
+      progressoGeral:
+        document.getElementById(
+          "progressoGeral"
+        ),
 
-    let texto =
-        String(valor)
-            .trim();
+      statusBolinha:
+        document.getElementById(
+          "statusBolinha"
+        ),
 
-    if(!texto){
+      statusTexto:
+        document.getElementById(
+          "statusTexto"
+        ),
 
-        return 0;
+      ultimaAtualizacao:
+        document.getElementById(
+          "ultimaAtualizacao"
+        ),
 
-    }
+      erro:
+        document.getElementById(
+          "erro"
+        ),
 
-    /*
-       Trata formatos:
-
-       1234
-       1.234
-       1.234,56
-       1234,56
-    */
-
-    if(
-        texto.includes(",")
-    ){
-
-        texto =
-            texto
-                .replace(/\./g,"")
-                .replace(",", ".");
-
-    }
-
-    const numeroConvertido =
-        Number(texto);
-
-    return isNaN(numeroConvertido)
-        ? 0
-        : numeroConvertido;
-
-}
-
-
-/* =========================================================
-   FORMATAÇÃO
-========================================================= */
-
-function numero(valor){
-
-    return Number(valor || 0)
-        .toLocaleString(
-            "pt-BR",
-            {
-                maximumFractionDigits:2
-            }
-        );
-
-}
-
-
-/* =========================================================
-   ESCAPA TEXTO HTML
-========================================================= */
-
-function escaparHtml(valor){
-
-    return String(
-        valor === null ||
-        valor === undefined
-            ? ""
-            : valor
-    )
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-function calcularStatus(
-    produzido,
-    meta
-){
-
-    if(!meta || meta <= 0){
-
-        return {
-
-            texto:"SEM META",
-
-            classe:"status-sem-meta",
-
-            fundo:"fundo-sem-meta",
-
-            cor:"cor-sem-meta"
-
-        };
-
-    }
-
-
-    const percentual =
-        (produzido / meta) * 100;
-
-
-    if(percentual >= 100){
-
-        return {
-
-            texto:"META ATINGIDA",
-
-            classe:"status-meta",
-
-            fundo:"fundo-meta",
-
-            cor:"cor-meta"
-
-        };
-
-    }
-
-
-    if(percentual >= 80){
-
-        return {
-
-            texto:"EM ANDAMENTO",
-
-            classe:"status-andamento",
-
-            fundo:"fundo-andamento",
-
-            cor:"cor-andamento"
-
-        };
-
-    }
-
-
-    if(percentual >= 50){
-
-        return {
-
-            texto:"ATENÇÃO",
-
-            classe:"status-atencao",
-
-            fundo:"fundo-atencao",
-
-            cor:"cor-atencao"
-
-        };
-
-    }
-
-
-    return {
-
-        texto:"ABAIXO DA META",
-
-        classe:"status-baixo",
-
-        fundo:"fundo-baixo",
-
-        cor:"cor-baixo"
+      erroTexto:
+        document.getElementById(
+          "erroTexto"
+        )
 
     };
 
-}
+
+    // ==========================================================
+    // FORMATAÇÃO DE NÚMEROS
+    // ==========================================================
+
+    function formatarNumero(
+      valor
+    ) {
+
+      const numero =
+        Number(valor) || 0;
+
+      return numero.toLocaleString(
+        "pt-BR",
+        {
+          maximumFractionDigits: 2
+        }
+      );
+    }
 
 
-/* =========================================================
-   CÍRCULO
-========================================================= */
+    // ==========================================================
+    // FORMATA PERCENTUAL
+    // ==========================================================
 
-function criarCirculo(item){
+    function formatarPercentual(
+      valor
+    ) {
 
-    const produzido =
-        parseNumero(
-            item.produzido
+      let numero =
+        Number(valor) || 0;
+
+      if (
+        !isFinite(numero)
+      ) {
+        numero = 0;
+      }
+
+      return numero.toLocaleString(
+        "pt-BR",
+        {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 1
+        }
+      ) + "%";
+    }
+
+
+    // ==========================================================
+    // LIMITA PERCENTUAL VISUAL
+    // ==========================================================
+
+    function limitarPercentual(
+      valor
+    ) {
+
+      let numero =
+        Number(valor) || 0;
+
+      if (
+        numero < 0
+      ) {
+        numero = 0;
+      }
+
+      if (
+        numero > 100
+      ) {
+        numero = 100;
+      }
+
+      return numero;
+    }
+
+
+    // ==========================================================
+    // ESCAPA HTML
+    // ==========================================================
+
+    function escaparHTML(
+      valor
+    ) {
+
+      return String(
+        valor ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
         );
-
-    const meta =
-        parseNumero(
-            item.meta
-        );
+    }
 
 
-    let percentual = 0;
+    // ==========================================================
+    // DETERMINA STATUS
+    // ==========================================================
 
+    function determinarStatus(
+      item
+    ) {
 
-    if(meta > 0){
+      const meta =
+        Number(item.meta) || 0;
 
-        percentual =
-            (
-                produzido /
-                meta
-            ) * 100;
+      const produzido =
+        Number(item.produzido) || 0;
+
+      if (
+        meta <= 0
+      ) {
+
+        return {
+          classe: "",
+          texto: "SEM META"
+        };
+
+      }
+
+      if (
+        produzido >= meta
+      ) {
+
+        return {
+          classe: "concluido",
+          texto: "CONCLUÍDO"
+        };
+
+      }
+
+      if (
+        produzido > 0
+      ) {
+
+        return {
+          classe: "andamento",
+          texto: "EM PRODUÇÃO"
+        };
+
+      }
+
+      return {
+        classe: "atrasado",
+        texto: "AGUARDANDO"
+      };
 
     }
 
 
-    const percentualVisual =
-        Math.min(
-            Math.max(
-                percentual,
-                0
-            ),
-            100
+    // ==========================================================
+    // CRIA CARD
+    // ==========================================================
+
+    function criarCard(
+      item,
+      indice
+    ) {
+
+      item =
+        item || {};
+
+      const numero =
+        Number(
+          item.item
+        ) || (
+          indice + 1
         );
 
+      const produto =
+        String(
+          item.produto || ""
+        ).trim();
 
-    const status =
-        calcularStatus(
-            produzido,
-            meta
+      const lote =
+        String(
+          item.lote || ""
+        ).trim();
+
+      const meta =
+        Number(
+          item.meta
+        ) || 0;
+
+      const produzido =
+        Number(
+          item.produzido
+        ) || 0;
+
+      const pendente =
+        Math.max(
+          Number(
+            item.pendente
+          ) || (
+            meta -
+            produzido
+          ),
+          0
         );
 
+      const percentual =
+        Number(
+          item.percentual
+        ) || (
+          meta > 0
+            ? (
+                produzido /
+                meta
+              ) * 100
+            : 0
+        );
 
-    const raio = 52;
+      const percentualVisual =
+        limitarPercentual(
+          percentual
+        );
 
+      const status =
+        determinarStatus(
+          item
+        );
 
-    const circunferencia =
-        2 *
-        Math.PI *
-        raio;
+      const produtoHTML =
+        produto !== ""
+          ? escaparHTML(
+              produto
+            )
+          : "Aguardando item";
 
+      const loteHTML =
+        lote !== ""
+          ? "Lote: " +
+            escaparHTML(
+              lote
+            )
+          : "Lote: --";
 
-    const deslocamento =
-        circunferencia -
-        (
-            percentualVisual /
-            100
-        ) *
-        circunferencia;
+      const classeProduto =
+        produto !== ""
+          ? ""
+          : "vazio";
 
+      const graus =
+        percentualVisual *
+        3.6;
 
-    const percentualTexto =
-        meta > 0
-        ?
-        percentual
-            .toFixed(0)
-            .replace(".",",")
-            + "%"
-        :
-        "0%";
+      let corStatus =
+        "#506b82";
 
+      if (
+        status.classe ===
+        "concluido"
+      ) {
 
-    return `
+        corStatus =
+          "#3bd17f";
 
-        <div class="circular">
+      } else if (
+        status.classe ===
+        "andamento"
+      ) {
 
-            <svg
-                viewBox="0 0 120 120">
+        corStatus =
+          "#f2b84b";
 
-                <circle
-                    class="trilha"
-                    cx="60"
-                    cy="60"
-                    r="${raio}">
-                </circle>
+      } else if (
+        status.classe ===
+        "atrasado"
+      ) {
 
+        corStatus =
+          "#e95d67";
+      }
 
-                <circle
-                    class="
-                        progresso
-                        ${status.cor}
-                    "
-                    cx="60"
-                    cy="60"
-                    r="${raio}"
-                    stroke-dasharray="${circunferencia}"
-                    stroke-dashoffset="${deslocamento}">
-                </circle>
+      const card =
+        document.createElement(
+          "article"
+        );
 
-            </svg>
+      card.className =
+        "card " +
+        status.classe;
 
+      card.innerHTML = `
 
-            <div class="circular-centro">
+        <div class="card-topo">
 
-                <div class="percentual">
+          <div class="numero">
+            ${numero}
+          </div>
 
-                    ${percentualTexto}
-
-                </div>
-
-
-                <div class="quantidade">
-
-                    ${numero(produzido)}
-                    /
-                    ${numero(meta)}
-
-                </div>
-
-
-                <div class="meta">
-
-                    produzido / meta
-
-                </div>
-
-            </div>
+          <div class="status">
+            ${status.texto}
+          </div>
 
         </div>
 
-    `;
+        <div
+          class="produto ${classeProduto}"
+          title="${produtoHTML}"
+        >
+          ${produtoHTML}
+        </div>
 
-}
+        <div
+          class="lote"
+          title="${loteHTML}"
+        >
+          ${loteHTML}
+        </div>
+
+        <div class="conteudo-card">
+
+          <div class="circulo-area">
+
+            <div
+              class="circulo"
+              style="
+                background:
+                conic-gradient(
+                  ${corStatus}
+                  0deg
+                  ${graus}deg,
+                  #1a2b3b
+                  ${graus}deg
+                  360deg
+                );
+              "
+            >
+
+              <div class="percentual">
+                ${formatarPercentual(percentual)}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="numeros">
+
+            <div class="linha-numero">
+
+              <span class="linha-label">
+                Produzido
+              </span>
+
+              <span class="linha-valor">
+                ${formatarNumero(produzido)}
+              </span>
+
+            </div>
+
+            <div class="linha-numero">
+
+              <span class="linha-label">
+                Meta
+              </span>
+
+              <span class="linha-valor">
+                ${formatarNumero(meta)}
+              </span>
+
+            </div>
+
+            <div class="linha-numero">
+
+              <span class="linha-label">
+                Pendente
+              </span>
+
+              <span class="linha-valor">
+                ${formatarNumero(pendente)}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="barra-container">
+
+          <div
+            class="barra"
+            style="
+              width: ${percentualVisual}%;
+              background: ${corStatus};
+            "
+          ></div>
+
+        </div>
+
+      `;
+
+      return card;
+    }
 
 
-/* =========================================================
-   CARD
-========================================================= */
+    // ==========================================================
+    // GARANTE OS 10 ITENS
+    // ==========================================================
 
-function criarCard(item){
+    function normalizarItens(
+      itensRecebidos
+    ) {
 
-    const produzido =
-        parseNumero(
-            item.produzido
-        );
-
-    const meta =
-        parseNumero(
-            item.meta
-        );
-
-
-    const pendente =
-        Math.max(
-            meta -
-            produzido,
-            0
-        );
-
-
-    const status =
-        calcularStatus(
-            produzido,
-            meta
-        );
-
-
-    const numeroItem =
-        String(
-            item.item || ""
+      const lista =
+        Array.isArray(
+          itensRecebidos
         )
-        .padStart(
-            2,
-            "0"
-        );
+          ? itensRecebidos
+          : [];
 
+      const resultado = [];
 
-    const produto =
-        escaparHtml(
-            item.produto || "—"
-        );
-
-
-    const lote =
-        escaparHtml(
-            item.lote || "—"
-        );
-
-
-    return `
-
-        <section class="card">
-
-            <div class="card-topo">
-
-                <div class="item-numero">
-
-                    ITEM ${numeroItem}
-
-                </div>
-
-
-                <div
-                    class="
-                        status-pequeno
-                        ${status.fundo}
-                    "
-                >
-
-                    ${status.texto}
-
-                </div>
-
-            </div>
-
-
-            <div class="grafico">
-
-                ${criarCirculo(item)}
-
-            </div>
-
-
-            <div class="produto-area">
-
-                <div class="produto">
-
-                    <span class="produto-icone">
-                        ◈
-                    </span>
-
-                    <span>
-                        ${produto}
-                    </span>
-
-                </div>
-
-
-                <div class="lote">
-
-                    <span class="lote-icone">
-                        ◇
-                    </span>
-
-                    <span>
-                        ${lote}
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="card-bottom">
-
-                <span class="pendente-label">
-                    Pendente
-                </span>
-
-
-                <span class="pendente-valor">
-
-                    ${numero(pendente)}
-
-                </span>
-
-            </div>
-
-        </section>
-
-    `;
-
-}
-
-
-/* =========================================================
-   GARANTE OS 10 ITENS
-========================================================= */
-
-function normalizarItens(itensRecebidos){
-
-    const mapa = new Map();
-
-
-    (Array.isArray(itensRecebidos)
-        ? itensRecebidos
-        : []
-    ).forEach(item => {
-
-        const numeroItem =
-            parseInt(
-                item.item,
-                10
-            );
-
-
-        if(
-            numeroItem >= 1 &&
-            numeroItem <= 10
-        ){
-
-            mapa.set(
-                numeroItem,
-                {
-
-                    item:numeroItem,
-
-                    produto:
-                        item.produto || "",
-
-                    lote:
-                        item.lote || "",
-
-                    produzido:
-                        parseNumero(
-                            item.produzido
-                        ),
-
-                    meta:
-                        parseNumero(
-                            item.meta
-                        ),
-
-                    pendente:
-                        parseNumero(
-                            item.pendente
-                        ),
-
-                    percentual:
-                        parseNumero(
-                            item.percentual
-                        )
-
-                }
-            );
-
-        }
-
-    });
-
-
-    const resultado = [];
-
-
-    for(
-        let i = 1;
-        i <= 10;
+      for (
+        let i = 0;
+        i < 10;
         i++
-    ){
+      ) {
 
-        if(mapa.has(i)){
+        const item =
+          lista[i] || {};
 
-            resultado.push(
-                mapa.get(i)
-            );
+        resultado.push({
 
-        }
-        else{
+          item:
+            Number(
+              item.item
+            ) || (
+              i + 1
+            ),
 
-            resultado.push({
+          produto:
+            item.produto || "",
 
-                item:i,
+          lote:
+            item.lote || "",
 
-                produto:"",
+          produzido:
+            Number(
+              item.produzido
+            ) || 0,
 
-                lote:"",
+          meta:
+            Number(
+              item.meta
+            ) || 0,
 
-                produzido:0,
+          pendente:
+            Number(
+              item.pendente
+            ) || 0,
 
-                meta:0,
+          percentual:
+            Number(
+              item.percentual
+            ) || 0
 
-                pendente:0,
+        });
 
-                percentual:0
+      }
 
-            });
-
-        }
-
+      return resultado;
     }
 
 
-    return resultado;
+    // ==========================================================
+    // DESENHA OS 10 CARDS
+    // ==========================================================
 
-}
+    function renderizarItens(
+      itens
+    ) {
 
-
-/* =========================================================
-   CARREGA PAINEL
-========================================================= */
-
-function carregarPainel(){
-
-    const container =
-        document.getElementById(
-            "listaItens"
+      const lista =
+        normalizarItens(
+          itens
         );
 
+      const fragmento =
+        document.createDocumentFragment();
 
-    if(!container){
+      lista.forEach(
+        function(
+          item,
+          indice
+        ) {
 
-        return;
-
-    }
-
-
-    /*
-       IMPORTANTE:
-
-       Sempre renderiza 10 cards.
-       Assim um item vazio da planilha
-       não faz o painel ficar com apenas
-       9, 8, 7 etc.
-    */
-
-    container.innerHTML =
-        dados
-            .map(
-                criarCard
+          fragmento.appendChild(
+            criarCard(
+              item,
+              indice
             )
-            .join("");
-
-
-    atualizarResumo();
-
-}
-
-
-/* =========================================================
-   RESUMO GERAL
-========================================================= */
-
-function atualizarResumo(
-    resumoServidor = null
-){
-
-    let metaTotal = 0;
-
-    let produzidoTotal = 0;
-
-
-    dados.forEach(item => {
-
-        metaTotal +=
-            parseNumero(
-                item.meta
-            );
-
-        produzidoTotal +=
-            parseNumero(
-                item.produzido
-            );
-
-    });
-
-
-    /*
-       Se o Apps Script enviou o resumo,
-       usamos o resumo oficial retornado
-       pela função obterDadosPainel().
-    */
-
-    if(
-        resumoServidor &&
-        typeof resumoServidor === "object"
-    ){
-
-        if(
-            resumoServidor.metaTotal !==
-            undefined
-        ){
-
-            metaTotal =
-                parseNumero(
-                    resumoServidor.metaTotal
-                );
+          );
 
         }
+      );
 
+      elementos.itens.innerHTML = "";
 
-        if(
-            resumoServidor.produzidoTotal !==
-            undefined
-        ){
-
-            produzidoTotal =
-                parseNumero(
-                    resumoServidor.produzidoTotal
-                );
-
-        }
-
+      elementos.itens.appendChild(
+        fragmento
+      );
     }
 
 
-    const pendentesTotal =
-        Math.max(
+    // ==========================================================
+    // ATUALIZA RESUMO
+    // ==========================================================
+
+    function renderizarResumo(
+      resumo,
+      itens
+    ) {
+
+      resumo =
+        resumo || {};
+
+      let metaTotal =
+        Number(
+          resumo.metaTotal
+        );
+
+      let produzidoTotal =
+        Number(
+          resumo.produzidoTotal
+        );
+
+      let pendenteTotal =
+        Number(
+          resumo.pendenteTotal
+        );
+
+      let progressoGeral =
+        Number(
+          resumo.progressoGeral
+        );
+
+      if (
+        !isFinite(metaTotal)
+      ) {
+
+        metaTotal = 0;
+
+        itens.forEach(
+          function(item) {
+
+            metaTotal +=
+              Number(
+                item.meta
+              ) || 0;
+
+          }
+        );
+      }
+
+      if (
+        !isFinite(produzidoTotal)
+      ) {
+
+        produzidoTotal = 0;
+
+        itens.forEach(
+          function(item) {
+
+            produzidoTotal +=
+              Number(
+                item.produzido
+              ) || 0;
+
+          }
+        );
+      }
+
+      if (
+        !isFinite(pendenteTotal)
+      ) {
+
+        pendenteTotal =
+          Math.max(
             metaTotal -
             produzidoTotal,
             0
-        );
+          );
+      }
 
+      if (
+        !isFinite(progressoGeral)
+      ) {
 
-    let progresso = 0;
-
-
-    if(metaTotal > 0){
-
-        progresso =
-            (
+        progressoGeral =
+          metaTotal > 0
+            ? (
                 produzidoTotal /
                 metaTotal
-            ) * 100;
+              ) * 100
+            : 0;
+      }
 
+      elementos.metaTotal.textContent =
+        formatarNumero(
+          metaTotal
+        );
+
+      elementos.produzidoTotal.textContent =
+        formatarNumero(
+          produzidoTotal
+        );
+
+      elementos.pendenteTotal.textContent =
+        formatarNumero(
+          pendenteTotal
+        );
+
+      elementos.progressoGeral.textContent =
+        formatarPercentual(
+          progressoGeral
+        );
     }
 
 
-    document.getElementById(
-        "metaTotal"
-    ).textContent =
-        numero(metaTotal);
+    // ==========================================================
+    // STATUS DE CONEXÃO
+    // ==========================================================
 
+    function definirStatus(
+      tipo,
+      texto
+    ) {
 
-    document.getElementById(
-        "produzidoTotal"
-    ).textContent =
-        numero(produzidoTotal);
+      elementos.statusBolinha.className =
+        "";
 
+      if (
+        tipo === "ok"
+      ) {
 
-    document.getElementById(
-        "pendentesTotal"
-    ).textContent =
-        numero(pendentesTotal);
-
-
-    document.getElementById(
-        "progressoTotal"
-    ).textContent =
-        progresso
-            .toFixed(1)
-            .replace(".",",")
-            + "%";
-
-
-    document.getElementById(
-        "barraGeral"
-    ).style.width =
-        Math.min(
-            Math.max(
-                progresso,
-                0
-            ),
-            100
-        )
-        + "%";
-
-}
-
-
-/* =========================================================
-   STATUS ONLINE
-========================================================= */
-
-function definirOnline(){
-
-    const elemento =
-        document.getElementById(
-            "statusOnline"
+        elementos.statusBolinha.classList.add(
+          "ok"
         );
 
+      }
 
-    elemento.innerHTML =
-        '<span class="online-ponto"></span> ONLINE';
+      if (
+        tipo === "carregando"
+      ) {
 
-
-    elemento.style.color =
-        "#21df83";
-
-}
-
-
-function definirOffline(){
-
-    const elemento =
-        document.getElementById(
-            "statusOnline"
+        elementos.statusBolinha.classList.add(
+          "carregando"
         );
 
+      }
 
-    elemento.innerHTML =
-        '<span class="online-ponto"></span> OFFLINE';
-
-
-    elemento.style.color =
-        "#ff5b5b";
-
-}
-
-
-/* =========================================================
-   CARREGAR DADOS REAIS DO APPS SCRIPT
-========================================================= */
-
-async function carregarDadosReais(){
-
-    /*
-       Evita duas requisições simultâneas
-       caso a internet esteja lenta.
-    */
-
-    if(carregando){
-
-        return;
-
+      elementos.statusTexto.textContent =
+        texto;
     }
 
 
-    carregando = true;
+    // ==========================================================
+    // MOSTRA ERRO
+    // ==========================================================
+
+    function mostrarErro(
+      mensagem
+    ) {
+
+      elementos.erroTexto.textContent =
+        mensagem;
+
+      elementos.erro.classList.add(
+        "visivel"
+      );
+    }
 
 
-    try{
+    // ==========================================================
+    // ESCONDE ERRO
+    // ==========================================================
 
-        const url =
-            URL_API +
-            "?painel=" +
-            encodeURIComponent(
-                SETOR_PAINEL
-            ) +
-            "&_=" +
-            Date.now();
+    function esconderErro() {
+
+      elementos.erro.classList.remove(
+        "visivel"
+      );
+    }
 
 
-        console.log(
-            "Consultando painel:",
-            url
+    // ==========================================================
+    // PROCESSA DADOS RECEBIDOS
+    // ==========================================================
+
+    function processarDados(
+      resultado
+    ) {
+
+      if (
+        !resultado ||
+        resultado.sucesso !== true
+      ) {
+
+        throw new Error(
+          resultado &&
+          resultado.erro
+            ? resultado.erro
+            : "Resposta inválida da API"
+        );
+      }
+
+      const itens =
+        normalizarItens(
+          resultado.itens
         );
 
+      renderizarItens(
+        itens
+      );
 
-        const resposta =
-            await fetch(
-                url,
-                {
-                    method:"GET",
-                    cache:"no-store"
-                }
-            );
+      renderizarResumo(
+        resultado.resumo,
+        itens
+      );
 
+      elementos.data.textContent =
+        resultado.data ||
+        "--";
 
-        if(!resposta.ok){
-
-            throw new Error(
-                "Erro HTTP: " +
-                resposta.status
-            );
-
-        }
-
-
-        const resultado =
-            await resposta.json();
-
-
-        console.log(
-            "Resposta do Apps Script:",
-            resultado
-        );
-
-
-        if(
-            !resultado ||
-            resultado.sucesso !== true
-        ){
-
-            throw new Error(
-                resultado &&
-                resultado.erro
-                ?
-                resultado.erro
-                :
-                "Resposta inválida do Apps Script."
-            );
-
-        }
-
-
-        /*
-           NORMALIZA OS 10 ITENS
-        */
-
-        dados =
-            normalizarItens(
-                resultado.itens
-            );
-
-
-        /*
-           RENDERIZA
-        */
-
-        carregarPainel();
-
-
-        /*
-           ATUALIZA RESUMO COM OS DADOS
-           OFICIAIS DO SERVIDOR
-        */
-
-        atualizarResumo(
-            resultado.resumo
-        );
-
-
-        /*
-           DATA DO PAINEL
-        */
-
-        if(resultado.data){
-
-            document.getElementById(
-                "dataAtual"
-            ).textContent =
-                resultado.data;
-
-        }
-
-
-        /*
-           ATUALIZAÇÃO DO SERVIDOR
-        */
-
-        if(
+      elementos.ultimaAtualizacao.textContent =
+        resultado.atualizacao
+          ? "Atualizado: " +
             resultado.atualizacao
-        ){
+          : "Atualizado agora";
 
-            const label =
-                document.querySelector(
-                    ".hora-label"
-                );
+      definirStatus(
+        "ok",
+        "Conectado • dados atualizados"
+      );
+
+      esconderErro();
+    }
 
 
-            label.textContent =
-                "Servidor: " +
-                resultado.atualizacao;
+    // ==========================================================
+    // CARREGA DADOS VIA JSONP
+    // ==========================================================
 
+    function carregarDadosReais() {
+
+      definirStatus(
+        "carregando",
+        "Atualizando dados..."
+      );
+
+      const callbackName =
+        "__pacoteCallback_" +
+        Date.now() +
+        "_" +
+        Math.floor(
+          Math.random() * 100000
+        );
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+      let finalizado = false;
+
+      const timeout =
+        setTimeout(
+          function() {
+
+            finalizar(
+              new Error(
+                "Tempo limite ao consultar o servidor."
+              )
+            );
+
+          },
+          TEMPO_LIMITE_MS
+        );
+
+
+      function limpar() {
+
+        clearTimeout(
+          timeout
+        );
+
+        script.remove();
+
+        try {
+
+          delete window[
+            callbackName
+          ];
+
+        } catch (erro) {
+
+          window[
+            callbackName
+          ] = undefined;
+        }
+      }
+
+
+      function finalizar(
+        erro
+      ) {
+
+        if (
+          finalizado
+        ) {
+          return;
         }
 
+        finalizado = true;
 
-        /*
-           ONLINE
-        */
+        limpar();
 
-        definirOnline();
+        if (
+          erro
+        ) {
 
-
-    }
-    catch(erro){
-
-        console.error(
+          console.error(
             "Erro ao carregar painel:",
             erro
-        );
+          );
+
+          definirStatus(
+            "",
+            "Erro de conexão • tentando novamente"
+          );
+
+          mostrarErro(
+            "Não foi possível atualizar os dados. " +
+            "O painel tentará novamente automaticamente."
+          );
+
+          setTimeout(
+            esconderErro,
+            3000
+          );
+        }
+      }
 
 
-        definirOffline();
+      window[
+        callbackName
+      ] =
+        function(
+          resultado
+        ) {
 
+          if (
+            finalizado
+          ) {
+            return;
+          }
+
+          finalizado = true;
+
+          limpar();
+
+          try {
+
+            processarDados(
+              resultado
+            );
+
+          } catch (
+            erro
+          ) {
+
+            console.error(
+              "Erro ao processar dados:",
+              erro
+            );
+
+            definirStatus(
+              "",
+              "Erro de conexão • tentando novamente"
+            );
+
+            mostrarErro(
+              erro.message ||
+              "Resposta inválida da API."
+            );
+
+            setTimeout(
+              esconderErro,
+              3000
+            );
+          }
+
+        };
+
+
+      script.async = true;
+
+      script.onerror =
+        function() {
+
+          finalizar(
+            new Error(
+              "Não foi possível acessar a API."
+            )
+          );
+
+        };
+
+
+      script.src =
+        URL_API +
+        "?painel=" +
+        encodeURIComponent(
+          SETOR
+        ) +
+        "&callback=" +
+        encodeURIComponent(
+          callbackName
+        ) +
+        "&_=" +
+        Date.now();
+
+      document.body.appendChild(
+        script
+      );
     }
-    finally{
-
-        carregando = false;
-
-    }
-
-}
 
 
-/* =========================================================
-   DATA E HORA LOCAL
-========================================================= */
+    // ==========================================================
+    // INICIALIZAÇÃO
+    // ==========================================================
 
-function atualizarDataHora(){
-
-    const agora =
-        new Date();
-
-
-    const data =
-        agora.toLocaleDateString(
-            "pt-BR",
-            {
-                day:"2-digit",
-                month:"2-digit",
-                year:"numeric"
-            }
-        );
-
-
-    const dia =
-        agora.toLocaleDateString(
-            "pt-BR",
-            {
-                weekday:"long"
-            }
-        );
-
-
-    const hora =
-        agora.toLocaleTimeString(
-            "pt-BR",
-            {
-                hour:"2-digit",
-                minute:"2-digit",
-                second:"2-digit"
-            }
-        );
-
-
-    document.getElementById(
-        "dataAtual"
-    ).textContent =
-        data;
-
-
-    document.getElementById(
-        "diaAtual"
-    ).textContent =
-        dia;
-
-
-    document.getElementById(
-        "horaAtual"
-    ).textContent =
-        hora;
-
-}
-
-
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        atualizarDataHora();
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
 
         carregarDadosReais();
 
-    }
-);
+        setInterval(
+          carregarDadosReais,
+          INTERVALO_MS
+        );
 
+      }
+    );
 
-/* =========================================================
-   RELÓGIO
-========================================================= */
-
-setInterval(
-    atualizarDataHora,
-    1000
-);
-
-
-/* =========================================================
-   ATUALIZAÇÃO AUTOMÁTICA
-========================================================= */
-
-setInterval(
-    carregarDadosReais,
-    INTERVALO_ATUALIZACAO
-);
-
-</script>
-
+  </script>
 
 </body>
 
