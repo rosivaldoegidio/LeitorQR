@@ -10,578 +10,607 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Painel de Produção - Pacote</title>
+  <title>PACOTE • Painel de Produção</title>
 
   <style>
 
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     html,
     body {
       width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #08111c;
-      color: #ffffff;
+      min-height: 100%;
     }
 
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #painel {
-      width: 100vw;
-      height: 100vh;
-      padding: 1.2vh 1.2vw;
-
-      display: flex;
-      flex-direction: column;
-
-      background:
-        radial-gradient(
-          circle at top center,
-          #14273b 0%,
-          #0b1623 45%,
-          #08111c 100%
-        );
-    }
-
-    .cabecalho {
-      height: 11vh;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      padding: 0 1.5vw;
-
-      border-radius: 18px;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
       background:
         linear-gradient(
           135deg,
-          #122338,
-          #0c1827
+          #07111f 0%,
+          #0b1c31 50%,
+          #102944 100%
         );
 
-      border:
-        1px solid
-        rgba(255,255,255,0.08);
+      color: #ffffff;
 
-      box-shadow:
-        0 8px 30px
-        rgba(0,0,0,0.30);
+      min-height: 100vh;
 
-      flex-shrink: 0;
+      overflow-x: hidden;
     }
+
+
+    /* =========================================================
+       CONTAINER PRINCIPAL
+       ========================================================= */
+
+    .painel {
+      width: 100%;
+      min-height: 100vh;
+
+      padding:
+        22px
+        24px
+        80px
+        24px;
+    }
+
+
+    /* =========================================================
+       CABEÇALHO
+       ========================================================= */
+
+    .cabecalho {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
+
+      margin-bottom: 22px;
+    }
+
 
     .titulo-area {
       display: flex;
+
       flex-direction: column;
-      justify-content: center;
-    }
-
-    .titulo {
-      font-size: clamp(
-        30px,
-        3.2vw,
-        62px
-      );
-
-      font-weight: 900;
-      letter-spacing: 1px;
-      line-height: 1;
-    }
-
-    .subtitulo {
-      margin-top: 8px;
-
-      font-size: clamp(
-        14px,
-        1.15vw,
-        23px
-      );
-
-      color: #91a8bd;
-      font-weight: 600;
-    }
-
-    .data-area {
-      text-align: right;
-
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
 
       gap: 5px;
     }
 
-    .data-label {
-      font-size: clamp(
-        12px,
-        0.9vw,
-        18px
-      );
 
-      color: #71889d;
-      text-transform: uppercase;
-      font-weight: 700;
+    .titulo {
+
+      font-size: 30px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+
+      color: #ffffff;
     }
 
-    .data {
-      font-size: clamp(
-        20px,
-        1.7vw,
-        34px
-      );
 
-      font-weight: 900;
+    .subtitulo {
+
+      font-size: 14px;
+
+      color: #9fb2c9;
+
+      font-weight: 500;
     }
 
-    .resumo {
-      height: 15vh;
 
-      margin-top: 1.2vh;
+    .data-area {
 
-      display: grid;
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 1vw;
-
-      flex-shrink: 0;
-    }
-
-    .resumo-card {
-      min-width: 0;
-
-      border-radius: 18px;
-
-      padding: 1.1vh 1vw;
+      text-align: right;
 
       display: flex;
+
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
 
-      text-align: center;
-
-      background:
-        linear-gradient(
-          145deg,
-          #14283d,
-          #0d1c2c
-        );
-
-      border:
-        1px solid
-        rgba(255,255,255,0.08);
-
-      box-shadow:
-        0 7px 22px
-        rgba(0,0,0,0.24);
+      gap: 4px;
     }
 
-    .resumo-label {
-      font-size: clamp(
-        12px,
-        0.95vw,
-        20px
-      );
 
-      color: #91a8bd;
+    .data-label {
+
+      font-size: 11px;
+
+      color: #7890aa;
 
       text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.7px;
+
+      letter-spacing: 1px;
     }
 
-    .resumo-valor {
-      margin-top: 8px;
 
-      font-size: clamp(
-        27px,
-        2.5vw,
-        48px
-      );
+    .data-valor {
 
-      font-weight: 900;
-      line-height: 1;
+      font-size: 20px;
+
+      font-weight: 700;
+
+      color: #ffffff;
     }
 
-    .resumo-card.progresso
-    .resumo-valor {
-      font-size: clamp(
-        27px,
-        2.3vw,
-        46px
-      );
-    }
 
-    #itens {
-      flex: 1;
-      min-height: 0;
+    /* =========================================================
+       RESUMO
+       ========================================================= */
 
-      margin-top: 1.2vh;
+    .resumo {
 
       display: grid;
 
       grid-template-columns:
-        repeat(5, 1fr);
+        repeat(4, minmax(0, 1fr));
 
-      grid-template-rows:
-        repeat(2, 1fr);
+      gap: 14px;
 
-      gap: 0.9vw;
-
-      overflow: hidden;
+      margin-bottom: 22px;
     }
 
-    .card {
-      min-width: 0;
-      min-height: 0;
+
+    .resumo-card {
 
       position: relative;
 
-      display: flex;
-      flex-direction: column;
-
-      padding:
-        1.1vh 0.9vw;
-
-      border-radius: 17px;
-
       background:
-        linear-gradient(
-          145deg,
-          #13263a,
-          #0c1a29
-        );
+        rgba(18, 39, 64, 0.92);
 
       border:
         1px solid
-        rgba(255,255,255,0.09);
+        rgba(110, 151, 195, 0.18);
 
-      box-shadow:
-        0 8px 25px
-        rgba(0,0,0,0.28);
+      border-radius: 14px;
+
+      padding: 18px 20px;
+
+      min-height: 108px;
 
       overflow: hidden;
+
+      box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.18);
     }
 
-    .card::before {
+
+    .resumo-card::after {
+
       content: "";
 
       position: absolute;
 
-      top: 0;
-      left: 0;
-      right: 0;
+      right: -25px;
 
-      height: 5px;
+      bottom: -35px;
 
-      background: #39556d;
+      width: 90px;
+
+      height: 90px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(60, 145, 220, 0.07);
     }
 
-    .card.concluido::before {
-      background: #3bd17f;
+
+    .resumo-label {
+
+      color: #8fa6be;
+
+      font-size: 12px;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.8px;
+
+      margin-bottom: 8px;
     }
 
-    .card.andamento::before {
-      background: #f2b84b;
+
+    .resumo-valor {
+
+      color: #ffffff;
+
+      font-size: 30px;
+
+      font-weight: 800;
+
+      line-height: 1;
     }
 
-    .card.atrasado::before {
-      background: #e95d67;
+
+    .resumo-percentual {
+
+      color: #63d391;
+
+      font-size: 30px;
+
+      font-weight: 800;
+
+      line-height: 1;
     }
+
+
+    /* =========================================================
+       ÁREA DOS ITENS
+       ========================================================= */
+
+    .itens {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 16px;
+    }
+
+
+    /* =========================================================
+       CARD DE PRODUÇÃO
+       ========================================================= */
+
+    .card-item {
+
+      position: relative;
+
+      background:
+        rgba(13, 31, 52, 0.96);
+
+      border:
+        1px solid
+        rgba(101, 140, 180, 0.20);
+
+      border-radius: 16px;
+
+      padding: 18px;
+
+      min-height: 210px;
+
+      box-shadow:
+        0 12px 28px
+        rgba(0, 0, 0, 0.20);
+
+      overflow: hidden;
+    }
+
+
+    .card-item:hover {
+
+      border-color:
+        rgba(101, 170, 225, 0.35);
+    }
+
 
     .card-topo {
+
       display: flex;
 
+      align-items: flex-start;
+
       justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 14px;
+    }
+
+
+    .numero-item {
+
+      display: flex;
+
       align-items: center;
 
-      gap: 8px;
+      justify-content: center;
+
+      width: 42px;
+
+      height: 42px;
+
+      border-radius: 10px;
+
+      background:
+        #173655;
+
+      color: #ffffff;
+
+      font-size: 17px;
+
+      font-weight: 800;
 
       flex-shrink: 0;
     }
 
-    .numero {
-      width: 2.1vw;
-      min-width: 30px;
 
-      height: 2.1vw;
-      min-height: 30px;
+    .informacoes {
 
-      border-radius: 50%;
+      flex: 1;
 
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      background: #213c55;
-
-      font-size: clamp(
-        13px,
-        1vw,
-        21px
-      );
-
-      font-weight: 900;
+      min-width: 0;
     }
 
+
+    .produto {
+
+      color: #ffffff;
+
+      font-size: 17px;
+
+      font-weight: 800;
+
+      line-height: 1.25;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      margin-bottom: 5px;
+    }
+
+
+    .lote {
+
+      color: #8098b2;
+
+      font-size: 12px;
+
+      white-space: nowrap;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+
+
+    /* =========================================================
+       STATUS
+       ========================================================= */
+
     .status {
-      padding:
-        5px 10px;
 
-      border-radius: 20px;
+      display: inline-flex;
 
-      background: #23394d;
+      align-items: center;
 
-      color: #9db0c2;
+      gap: 6px;
 
-      font-size: clamp(
-        9px,
-        0.68vw,
-        14px
-      );
+      border-radius: 30px;
 
-      font-weight: 900;
+      padding: 6px 10px;
+
+      font-size: 10px;
+
+      font-weight: 800;
 
       text-transform: uppercase;
 
-      white-space: nowrap;
-    }
-
-    .concluido .status {
-      background: rgba(59,209,127,0.15);
-      color: #5ee695;
-    }
-
-    .andamento .status {
-      background: rgba(242,184,75,0.15);
-      color: #f7c665;
-    }
-
-    .atrasado .status {
-      background: rgba(233,93,103,0.15);
-      color: #f07881;
-    }
-
-    .produto {
-      margin-top: 0.9vh;
-
-      min-height: 3.4vh;
-
-      font-size: clamp(
-        16px,
-        1.15vw,
-        25px
-      );
-
-      line-height: 1.05;
-
-      font-weight: 900;
+      letter-spacing: 0.5px;
 
       white-space: nowrap;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
     }
 
-    .produto.vazio {
-      color: #53697d;
-      font-weight: 700;
+
+    .status::before {
+
+      content: "";
+
+      width: 7px;
+
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: currentColor;
     }
 
-    .lote {
-      margin-top: 4px;
 
-      font-size: clamp(
-        11px,
-        0.72vw,
-        15px
-      );
+    .status-ok {
 
-      color: #839aae;
-      font-weight: 700;
+      color: #63d391;
 
-      white-space: nowrap;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
+      background:
+        rgba(72, 202, 128, 0.10);
     }
 
-    .conteudo-card {
-      flex: 1;
-      min-height: 0;
 
-      margin-top: 0.8vh;
+    .status-andamento {
+
+      color: #55b7ff;
+
+      background:
+        rgba(55, 166, 255, 0.10);
+    }
+
+
+    .status-pendente {
+
+      color: #ffbd61;
+
+      background:
+        rgba(255, 189, 97, 0.10);
+    }
+
+
+    .status-finalizado {
+
+      color: #9ee7ba;
+
+      background:
+        rgba(94, 211, 139, 0.12);
+    }
+
+
+    /* =========================================================
+       CORPO DO CARD
+       ========================================================= */
+
+    .card-corpo {
 
       display: flex;
 
       align-items: center;
 
-      gap: 0.8vw;
+      gap: 22px;
     }
 
-    .circulo-area {
-      width: 6.2vw;
-      min-width: 65px;
 
-      aspect-ratio: 1 / 1;
+    .progresso-circulo {
 
-      position: relative;
+      width: 105px;
 
-      display: flex;
+      height: 105px;
 
-      align-items: center;
-      justify-content: center;
-    }
-
-    .circulo {
-      width: 100%;
-      height: 100%;
+      flex-shrink: 0;
 
       border-radius: 50%;
 
       display: flex;
 
       align-items: center;
+
       justify-content: center;
 
       position: relative;
 
       background:
         conic-gradient(
-          #506b82 0deg,
-          #506b82 0deg,
-          #1a2b3b 0deg,
-          #1a2b3b 360deg
+          #42b6ff 0deg,
+          #42b6ff var(--progresso-graus, 0deg),
+          #203b58 var(--progresso-graus, 0deg),
+          #203b58 360deg
         );
     }
 
-    .circulo::after {
+
+    .progresso-circulo::before {
+
       content: "";
 
       position: absolute;
 
-      width: 72%;
-      height: 72%;
+      inset: 8px;
 
       border-radius: 50%;
 
-      background: #0e1e2d;
-
-      box-shadow:
-        inset 0 0 10px
-        rgba(0,0,0,0.35);
+      background:
+        #0d1f34;
     }
 
-    .percentual {
+
+    .progresso-centro {
+
       position: relative;
 
-      z-index: 2;
+      z-index: 1;
 
-      font-size: clamp(
-        16px,
-        1.2vw,
-        25px
-      );
-
-      font-weight: 900;
+      text-align: center;
     }
 
-    .numeros {
-      flex: 1;
-      min-width: 0;
 
-      display: flex;
+    .progresso-numero {
 
-      flex-direction: column;
-
-      justify-content: center;
-
-      gap: 0.7vh;
-    }
-
-    .linha-numero {
-      display: flex;
-
-      align-items: baseline;
-
-      justify-content: space-between;
-
-      gap: 5px;
-    }
-
-    .linha-label {
-      font-size: clamp(
-        10px,
-        0.67vw,
-        14px
-      );
-
-      color: #7890a4;
+      font-size: 22px;
 
       font-weight: 800;
+
+      color: #ffffff;
+
+      line-height: 1;
+    }
+
+
+    .progresso-texto {
+
+      margin-top: 4px;
+
+      font-size: 9px;
+
+      color: #8198b1;
 
       text-transform: uppercase;
     }
 
-    .linha-valor {
-      font-size: clamp(
-        16px,
-        1.18vw,
-        25px
-      );
 
-      font-weight: 900;
+    .numeros {
 
-      white-space: nowrap;
+      flex: 1;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 10px;
     }
 
-    .barra-container {
-      margin-top: 0.6vh;
 
-      height: 7px;
+    .numero-bloco {
 
-      width: 100%;
-
-      border-radius: 10px;
-
-      overflow: hidden;
-
-      background: #1d3041;
-
-      flex-shrink: 0;
+      min-width: 0;
     }
 
-    .barra {
-      height: 100%;
 
-      width: 0%;
+    .numero-label {
 
-      border-radius: 10px;
+      font-size: 10px;
 
-      transition:
-        width 0.7s ease;
+      color: #728aa4;
+
+      text-transform: uppercase;
+
+      letter-spacing: 0.4px;
+
+      margin-bottom: 5px;
     }
 
-    .rodape {
-      height: 3.2vh;
 
-      margin-top: 0.6vh;
+    .numero-valor {
+
+      font-size: 22px;
+
+      font-weight: 800;
+
+      color: #ffffff;
+    }
+
+
+    .numero-valor.pendente {
+
+      color: #ffbd61;
+    }
+
+
+    /* =========================================================
+       BARRA DE PROGRESSO
+       ========================================================= */
+
+    .barra-area {
+
+      margin-top: 18px;
+    }
+
+
+    .barra-topo {
 
       display: flex;
 
@@ -589,45 +618,171 @@
 
       justify-content: space-between;
 
-      color: #536b7f;
-
-      font-size: clamp(
-        9px,
-        0.65vw,
-        13px
-      );
-
-      font-weight: 700;
-
-      flex-shrink: 0;
+      margin-bottom: 7px;
     }
 
-    #statusApi {
+
+    .barra-label {
+
+      font-size: 10px;
+
+      color: #728aa4;
+
+      text-transform: uppercase;
+    }
+
+
+    .barra-percentual {
+
+      font-size: 11px;
+
+      color: #9db2c8;
+
+      font-weight: 700;
+    }
+
+
+    .barra {
+
+      width: 100%;
+
+      height: 7px;
+
+      border-radius: 20px;
+
+      background:
+        #1b334e;
+
+      overflow: hidden;
+    }
+
+
+    .barra-preenchida {
+
+      height: 100%;
+
+      width: 0%;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          90deg,
+          #2f9eea,
+          #63d391
+        );
+
+      transition:
+        width 0.5s ease;
+    }
+
+
+    /* =========================================================
+       RODAPÉ
+       ========================================================= */
+
+    .rodape {
+
+      position: fixed;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: 0;
+
+      height: 42px;
+
+      padding:
+        0 22px;
+
       display: flex;
 
       align-items: center;
 
-      gap: 7px;
+      justify-content: space-between;
+
+      gap: 15px;
+
+      background:
+        rgba(5, 16, 29, 0.96);
+
+      border-top:
+        1px solid
+        rgba(107, 145, 181, 0.14);
+
+      z-index: 20;
     }
 
-    #statusBolinha {
+
+    .api-status {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      color: #8fa6be;
+
+      font-size: 11px;
+    }
+
+
+    .api-status-ponto {
+
       width: 8px;
+
       height: 8px;
 
       border-radius: 50%;
 
-      background: #e95d67;
+      background: #8998a8;
+
+      box-shadow:
+        0 0 8px
+        rgba(137, 152, 168, 0.35);
     }
 
-    #statusBolinha.ok {
-      background: #3bd17f;
+
+    .api-status.ok
+    .api-status-ponto {
+
+      background: #54d786;
+
+      box-shadow:
+        0 0 9px
+        rgba(84, 215, 134, 0.65);
     }
 
-    #statusBolinha.carregando {
-      background: #f2b84b;
+
+    .api-status.carregando
+    .api-status-ponto {
+
+      background: #55b7ff;
+
+      box-shadow:
+        0 0 9px
+        rgba(85, 183, 255, 0.60);
     }
 
-    #erro {
+
+    .ultima-atualizacao {
+
+      color: #71879e;
+
+      font-size: 10px;
+
+      text-align: right;
+    }
+
+
+    /* =========================================================
+       OVERLAY DE ERRO
+       ========================================================= */
+
+    #erroOverlay {
+
       position: fixed;
 
       inset: 0;
@@ -635,64 +790,311 @@
       display: none;
 
       align-items: center;
+
       justify-content: center;
 
       background:
-        rgba(5,12,20,0.96);
+        rgba(3, 11, 20, 0.88);
+
+      backdrop-filter:
+        blur(5px);
 
       z-index: 100;
     }
 
-    #erro.visivel {
+
+    #erroOverlay.visivel {
+
       display: flex;
     }
 
-    .erro-box {
+
+    .erro-caixa {
+
       width: min(
-        700px,
-        85vw
+        480px,
+        calc(100% - 40px)
       );
 
-      padding: 40px;
-
-      border-radius: 20px;
+      padding: 30px;
 
       text-align: center;
 
-      background: #122337;
+      border-radius: 18px;
+
+      background:
+        #10253c;
 
       border:
         1px solid
-        rgba(255,255,255,0.1);
+        rgba(255, 100, 100, 0.25);
 
       box-shadow:
-        0 20px 60px
-        rgba(0,0,0,0.5);
+        0 25px 60px
+        rgba(0, 0, 0, 0.40);
     }
+
+
+    .erro-icone {
+
+      width: 54px;
+
+      height: 54px;
+
+      margin:
+        0 auto
+        16px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background:
+        rgba(255, 85, 85, 0.12);
+
+      color: #ff7373;
+
+      font-size: 27px;
+
+      font-weight: 800;
+    }
+
 
     .erro-titulo {
-      font-size: 30px;
 
-      font-weight: 900;
+      color: #ffffff;
 
-      margin-bottom: 15px;
+      font-size: 20px;
+
+      font-weight: 800;
+
+      margin-bottom: 9px;
     }
 
-    .erro-texto {
-      color: #9aafc1;
+
+    .erro-mensagem {
+
+      color: #9aafc4;
+
+      font-size: 13px;
 
       line-height: 1.5;
+    }
 
-      font-size: 17px;
+
+    /* =========================================================
+       RESPONSIVO
+       ========================================================= */
+
+    @media (max-width: 900px) {
+
+      .resumo {
+
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .itens {
+
+        grid-template-columns:
+          1fr;
+      }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+      .painel {
+
+        padding:
+          16px
+          14px
+          70px
+          14px;
+      }
+
+
+      .cabecalho {
+
+        align-items: flex-start;
+      }
+
+
+      .titulo {
+
+        font-size: 24px;
+      }
+
+
+      .data-valor {
+
+        font-size: 15px;
+      }
+
+
+      .resumo {
+
+        gap: 9px;
+      }
+
+
+      .resumo-card {
+
+        padding: 14px;
+
+        min-height: 92px;
+      }
+
+
+      .resumo-valor,
+      .resumo-percentual {
+
+        font-size: 24px;
+      }
+
+
+      .card-item {
+
+        padding: 14px;
+      }
+
+
+      .card-corpo {
+
+        gap: 14px;
+      }
+
+
+      .progresso-circulo {
+
+        width: 88px;
+
+        height: 88px;
+      }
+
+
+      .progresso-circulo::before {
+
+        inset: 7px;
+      }
+
+
+      .progresso-numero {
+
+        font-size: 18px;
+      }
+
+
+      .numeros {
+
+        gap: 7px;
+      }
+
+
+      .numero-valor {
+
+        font-size: 18px;
+      }
+
+
+      .rodape {
+
+        padding:
+          0 12px;
+      }
+
+    }
+
+
+    @media (max-width: 420px) {
+
+      .cabecalho {
+
+        flex-direction: column;
+      }
+
+
+      .data-area {
+
+        text-align: left;
+      }
+
+
+      .resumo {
+
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+
+      .card-topo {
+
+        flex-wrap: wrap;
+      }
+
+
+      .card-corpo {
+
+        align-items: flex-start;
+      }
+
+
+      .progresso-circulo {
+
+        width: 78px;
+
+        height: 78px;
+      }
+
+
+      .numeros {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .numero-bloco {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        border-bottom:
+          1px solid
+          rgba(112, 145, 176, 0.10);
+
+        padding-bottom: 5px;
+      }
+
+
+      .numero-label {
+
+        margin-bottom: 0;
+      }
+
     }
 
   </style>
 
 </head>
 
+
 <body>
 
-  <div id="painel">
+  <main class="painel">
+
+
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
 
     <header class="cabecalho">
 
@@ -708,15 +1110,16 @@
 
       </div>
 
+
       <div class="data-area">
 
         <div class="data-label">
-          Data do painel
+          Data da produção
         </div>
 
         <div
+          class="data-valor"
           id="dataPainel"
-          class="data"
         >
           --
         </div>
@@ -725,7 +1128,13 @@
 
     </header>
 
+
+    <!-- =====================================================
+         RESUMO
+         ===================================================== -->
+
     <section class="resumo">
+
 
       <div class="resumo-card">
 
@@ -734,13 +1143,14 @@
         </div>
 
         <div
-          id="metaTotal"
           class="resumo-valor"
+          id="metaTotal"
         >
           0
         </div>
 
       </div>
+
 
       <div class="resumo-card">
 
@@ -749,13 +1159,14 @@
         </div>
 
         <div
-          id="produzidoTotal"
           class="resumo-valor"
+          id="produzidoTotal"
         >
           0
         </div>
 
       </div>
+
 
       <div class="resumo-card">
 
@@ -764,104 +1175,142 @@
         </div>
 
         <div
-          id="pendenteTotal"
           class="resumo-valor"
+          id="pendenteTotal"
         >
           0
         </div>
 
       </div>
 
-      <div class="resumo-card progresso">
+
+      <div class="resumo-card">
 
         <div class="resumo-label">
           Progresso geral
         </div>
 
         <div
+          class="resumo-percentual"
           id="progressoGeral"
-          class="resumo-valor"
         >
           0%
         </div>
 
       </div>
 
+
     </section>
 
-    <main id="itens"></main>
 
-    <footer class="rodape">
+    <!-- =====================================================
+         ITENS
+         ===================================================== -->
 
-      <div id="statusApi">
+    <section
+      class="itens"
+      id="listaItens"
+    >
 
-        <span
-          id="statusBolinha"
-          class="carregando"
-        ></span>
+      <!-- Os 10 cards são criados pelo JavaScript -->
 
-        <span id="statusTexto">
-          Carregando dados...
-        </span>
+    </section>
 
+
+  </main>
+
+
+  <!-- =======================================================
+       RODAPÉ
+       ======================================================= -->
+
+  <footer class="rodape">
+
+    <div
+      class="api-status"
+      id="apiStatus"
+    >
+
+      <span
+        class="api-status-ponto"
+      ></span>
+
+      <span id="apiStatusTexto">
+        Aguardando conexão...
+      </span>
+
+    </div>
+
+
+    <div
+      class="ultima-atualizacao"
+      id="ultimaAtualizacao"
+    >
+      Atualizado: --
+    </div>
+
+  </footer>
+
+
+  <!-- =======================================================
+       OVERLAY DE ERRO
+       ======================================================= -->
+
+  <div
+    id="erroOverlay"
+  >
+
+    <div class="erro-caixa">
+
+      <div class="erro-icone">
+        !
       </div>
-
-      <div id="ultimaAtualizacao">
-        --
-      </div>
-
-    </footer>
-
-  </div>
-
-  <div id="erro">
-
-    <div class="erro-box">
 
       <div class="erro-titulo">
         Não foi possível carregar o painel
       </div>
 
       <div
-        id="erroTexto"
-        class="erro-texto"
+        class="erro-mensagem"
+        id="erroMensagem"
       >
-        Aguardando conexão com o servidor...
+        Não foi possível atualizar os dados.
+        O painel tentará novamente automaticamente.
       </div>
 
     </div>
 
   </div>
 
+
+  <!-- =======================================================
+       JAVASCRIPT
+       ======================================================= -->
+
   <script>
 
-    // ==========================================================
-    // CONFIGURAÇÃO
-    // ==========================================================
+
+    /* =======================================================
+       CONFIGURAÇÃO
+       ======================================================= */
 
     const URL_API =
       "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
+
     const SETOR =
       "PACOTE";
+
 
     const INTERVALO_MS =
       15000;
 
-    const TEMPO_LIMITE_MS =
-      12000;
 
-
-    // ==========================================================
-    // ELEMENTOS
-    // ==========================================================
+    /* =======================================================
+       ELEMENTOS DA TELA
+       ======================================================= */
 
     const elementos = {
-
-      itens:
-        document.getElementById(
-          "itens"
-        ),
 
       data:
         document.getElementById(
@@ -888,14 +1337,19 @@
           "progressoGeral"
         ),
 
-      statusBolinha:
+      listaItens:
         document.getElementById(
-          "statusBolinha"
+          "listaItens"
         ),
 
-      statusTexto:
+      apiStatus:
         document.getElementById(
-          "statusTexto"
+          "apiStatus"
+        ),
+
+      apiStatusTexto:
+        document.getElementById(
+          "apiStatusTexto"
         ),
 
       ultimaAtualizacao:
@@ -903,100 +1357,78 @@
           "ultimaAtualizacao"
         ),
 
-      erro:
+      erroOverlay:
         document.getElementById(
-          "erro"
+          "erroOverlay"
         ),
 
-      erroTexto:
+      erroMensagem:
         document.getElementById(
-          "erroTexto"
+          "erroMensagem"
         )
 
     };
 
 
-    // ==========================================================
-    // FORMATAÇÃO DE NÚMEROS
-    // ==========================================================
+    /* =======================================================
+       CONTROLE DE CARREGAMENTO
+       ======================================================= */
 
-    function formatarNumero(
-      valor
-    ) {
+    let carregamentoEmAndamento =
+      false;
+
+
+    /* =======================================================
+       FORMATAÇÃO DE NÚMEROS
+       ======================================================= */
+
+    function formatarNumero(valor) {
 
       const numero =
         Number(valor) || 0;
 
       return numero.toLocaleString(
-        "pt-BR",
-        {
-          maximumFractionDigits: 2
-        }
+        "pt-BR"
       );
+
     }
 
 
-    // ==========================================================
-    // FORMATA PERCENTUAL
-    // ==========================================================
+    function formatarPercentual(valor) {
 
-    function formatarPercentual(
-      valor
-    ) {
-
-      let numero =
+      const numero =
         Number(valor) || 0;
 
-      if (
-        !isFinite(numero)
-      ) {
-        numero = 0;
-      }
-
-      return numero.toLocaleString(
-        "pt-BR",
-        {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 1
-        }
+      return (
+        Math.round(numero * 10) / 10
+      ).toLocaleString(
+        "pt-BR"
       ) + "%";
+
     }
 
 
-    // ==========================================================
-    // LIMITA PERCENTUAL VISUAL
-    // ==========================================================
+    function limitarPercentual(valor) {
 
-    function limitarPercentual(
-      valor
-    ) {
-
-      let numero =
+      const numero =
         Number(valor) || 0;
 
-      if (
-        numero < 0
-      ) {
-        numero = 0;
-      }
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          numero
+        )
+      );
 
-      if (
-        numero > 100
-      ) {
-        numero = 100;
-      }
-
-      return numero;
     }
 
 
-    // ==========================================================
-    // ESCAPA HTML
-    // ==========================================================
+    /* =======================================================
+       SEGURANÇA HTML
+       ======================================================= */
 
-    function escaparHTML(
-      valor
-    ) {
+    function escaparHTML(valor) {
 
       return String(
         valor ?? ""
@@ -1021,424 +1453,458 @@
           /'/g,
           "&#039;"
         );
+
     }
 
 
-    // ==========================================================
-    // DETERMINA STATUS
-    // ==========================================================
+    /* =======================================================
+       DETERMINA STATUS
+       ======================================================= */
 
     function determinarStatus(
-      item
+      produzido,
+      meta,
+      percentual
     ) {
 
-      const meta =
-        Number(item.meta) || 0;
+      const prod =
+        Number(produzido) || 0;
 
-      const produzido =
-        Number(item.produzido) || 0;
+      const alvo =
+        Number(meta) || 0;
+
+      const progresso =
+        Number(percentual) || 0;
+
 
       if (
-        meta <= 0
+        alvo > 0 &&
+        prod >= alvo
       ) {
 
         return {
-          classe: "",
-          texto: "SEM META"
+          classe: "status-finalizado",
+          texto: "Finalizado"
         };
 
       }
 
+
       if (
-        produzido >= meta
+        progresso > 0
       ) {
 
         return {
-          classe: "concluido",
-          texto: "CONCLUÍDO"
+          classe: "status-andamento",
+          texto: "Em andamento"
         };
 
       }
 
-      if (
-        produzido > 0
-      ) {
-
-        return {
-          classe: "andamento",
-          texto: "EM PRODUÇÃO"
-        };
-
-      }
 
       return {
-        classe: "atrasado",
-        texto: "AGUARDANDO"
+        classe: "status-pendente",
+        texto: "Pendente"
       };
 
     }
 
 
-    // ==========================================================
-    // CRIA CARD
-    // ==========================================================
+    /* =======================================================
+       CRIA CARD
+       ======================================================= */
 
     function criarCard(
       item,
       indice
     ) {
 
-      item =
-        item || {};
-
       const numero =
-        Number(
-          item.item
-        ) || (
-          indice + 1
-        );
+        item.numero ??
+        item.id ??
+        (indice + 1);
+
 
       const produto =
-        String(
-          item.produto || ""
-        ).trim();
+        item.produto ||
+        "--";
+
 
       const lote =
-        String(
-          item.lote || ""
-        ).trim();
+        item.lote ||
+        "--";
+
 
       const meta =
-        Number(
-          item.meta
-        ) || 0;
+        Number(item.meta) || 0;
+
 
       const produzido =
-        Number(
-          item.produzido
-        ) || 0;
+        Number(item.produzido) || 0;
+
 
       const pendente =
+        Number(item.pendente) ||
         Math.max(
-          Number(
-            item.pendente
-          ) || (
-            meta -
-            produzido
-          ),
+          meta - produzido,
           0
         );
 
-      const percentual =
-        Number(
-          item.percentual
-        ) || (
+
+      let percentual =
+        Number(item.progresso);
+
+
+      if (
+        !Number.isFinite(percentual)
+      ) {
+
+        percentual =
           meta > 0
             ? (
                 produzido /
                 meta
               ) * 100
-            : 0
-        );
+            : 0;
 
-      const percentualVisual =
+      }
+
+
+      percentual =
         limitarPercentual(
           percentual
         );
 
+
       const status =
         determinarStatus(
-          item
+          produzido,
+          meta,
+          percentual
         );
 
-      const produtoHTML =
-        produto !== ""
-          ? escaparHTML(
-              produto
-            )
-          : "Aguardando item";
-
-      const loteHTML =
-        lote !== ""
-          ? "Lote: " +
-            escaparHTML(
-              lote
-            )
-          : "Lote: --";
-
-      const classeProduto =
-        produto !== ""
-          ? ""
-          : "vazio";
 
       const graus =
-        percentualVisual *
-        3.6;
+        (
+          percentual /
+          100
+        ) * 360;
 
-      let corStatus =
-        "#506b82";
-
-      if (
-        status.classe ===
-        "concluido"
-      ) {
-
-        corStatus =
-          "#3bd17f";
-
-      } else if (
-        status.classe ===
-        "andamento"
-      ) {
-
-        corStatus =
-          "#f2b84b";
-
-      } else if (
-        status.classe ===
-        "atrasado"
-      ) {
-
-        corStatus =
-          "#e95d67";
-      }
 
       const card =
         document.createElement(
           "article"
         );
 
+
       card.className =
-        "card " +
-        status.classe;
+        "card-item";
+
 
       card.innerHTML = `
 
         <div class="card-topo">
 
-          <div class="numero">
-            ${numero}
+          <div
+            class="numero-item"
+          >
+            ${escaparHTML(numero)}
           </div>
 
-          <div class="status">
+
+          <div class="informacoes">
+
+            <div
+              class="produto"
+              title="${escaparHTML(produto)}"
+            >
+              ${escaparHTML(produto)}
+            </div>
+
+            <div
+              class="lote"
+              title="${escaparHTML(lote)}"
+            >
+              Lote: ${escaparHTML(lote)}
+            </div>
+
+          </div>
+
+
+          <div
+            class="status ${status.classe}"
+          >
             ${status.texto}
           </div>
 
         </div>
 
-        <div
-          class="produto ${classeProduto}"
-          title="${produtoHTML}"
-        >
-          ${produtoHTML}
-        </div>
 
-        <div
-          class="lote"
-          title="${loteHTML}"
-        >
-          ${loteHTML}
-        </div>
+        <div class="card-corpo">
 
-        <div class="conteudo-card">
 
-          <div class="circulo-area">
+          <div
+            class="progresso-circulo"
+            style="--progresso-graus: ${graus}deg;"
+          >
 
             <div
-              class="circulo"
-              style="
-                background:
-                conic-gradient(
-                  ${corStatus}
-                  0deg
-                  ${graus}deg,
-                  #1a2b3b
-                  ${graus}deg
-                  360deg
-                );
-              "
+              class="progresso-centro"
             >
 
-              <div class="percentual">
-                ${formatarPercentual(percentual)}
+              <div
+                class="progresso-numero"
+              >
+                ${Math.round(percentual)}%
+              </div>
+
+              <div
+                class="progresso-texto"
+              >
+                progresso
               </div>
 
             </div>
 
           </div>
 
+
           <div class="numeros">
 
-            <div class="linha-numero">
 
-              <span class="linha-label">
+            <div class="numero-bloco">
+
+              <div
+                class="numero-label"
+              >
                 Produzido
-              </span>
+              </div>
 
-              <span class="linha-valor">
+              <div
+                class="numero-valor"
+              >
                 ${formatarNumero(produzido)}
-              </span>
+              </div>
 
             </div>
 
-            <div class="linha-numero">
 
-              <span class="linha-label">
+            <div class="numero-bloco">
+
+              <div
+                class="numero-label"
+              >
                 Meta
-              </span>
+              </div>
 
-              <span class="linha-valor">
+              <div
+                class="numero-valor"
+              >
                 ${formatarNumero(meta)}
-              </span>
+              </div>
 
             </div>
 
-            <div class="linha-numero">
 
-              <span class="linha-label">
+            <div class="numero-bloco">
+
+              <div
+                class="numero-label"
+              >
                 Pendente
-              </span>
+              </div>
 
-              <span class="linha-valor">
+              <div
+                class="numero-valor pendente"
+              >
                 ${formatarNumero(pendente)}
-              </span>
+              </div>
 
             </div>
+
+
+          </div>
+
+
+        </div>
+
+
+        <div class="barra-area">
+
+          <div class="barra-topo">
+
+            <span
+              class="barra-label"
+            >
+              Progresso
+            </span>
+
+            <span
+              class="barra-percentual"
+            >
+              ${formatarPercentual(percentual)}
+            </span>
+
+          </div>
+
+
+          <div class="barra">
+
+            <div
+              class="barra-preenchida"
+              style="width: ${percentual}%"
+            ></div>
 
           </div>
 
         </div>
 
-        <div class="barra-container">
-
-          <div
-            class="barra"
-            style="
-              width: ${percentualVisual}%;
-              background: ${corStatus};
-            "
-          ></div>
-
-        </div>
-
       `;
 
+
       return card;
+
     }
 
 
-    // ==========================================================
-    // GARANTE OS 10 ITENS
-    // ==========================================================
+    /* =======================================================
+       NORMALIZA ITENS
+       ======================================================= */
 
     function normalizarItens(
-      itensRecebidos
+      itens
     ) {
 
-      const lista =
-        Array.isArray(
-          itensRecebidos
-        )
-          ? itensRecebidos
-          : [];
-
-      const resultado = [];
-
-      for (
-        let i = 0;
-        i < 10;
-        i++
+      if (
+        !Array.isArray(itens)
       ) {
 
-        const item =
-          lista[i] || {};
-
-        resultado.push({
-
-          item:
-            Number(
-              item.item
-            ) || (
-              i + 1
-            ),
-
-          produto:
-            item.produto || "",
-
-          lote:
-            item.lote || "",
-
-          produzido:
-            Number(
-              item.produzido
-            ) || 0,
-
-          meta:
-            Number(
-              item.meta
-            ) || 0,
-
-          pendente:
-            Number(
-              item.pendente
-            ) || 0,
-
-          percentual:
-            Number(
-              item.percentual
-            ) || 0
-
-        });
+        return [];
 
       }
 
-      return resultado;
+
+      return itens.map(
+        function(item, indice) {
+
+          return {
+
+            numero:
+              item.numero ??
+              item.id ??
+              item.item ??
+              (indice + 1),
+
+            produto:
+              item.produto ??
+              item.nome ??
+              "",
+
+            lote:
+              item.lote ??
+              "",
+
+            meta:
+              Number(
+                item.meta ??
+                0
+              ),
+
+            produzido:
+              Number(
+                item.produzido ??
+                item.producao ??
+                0
+              ),
+
+            pendente:
+              Number(
+                item.pendente ??
+                0
+              ),
+
+            progresso:
+              Number(
+                item.progresso ??
+                item.percentual ??
+                0
+              )
+
+          };
+
+        }
+      );
+
     }
 
 
-    // ==========================================================
-    // DESENHA OS 10 CARDS
-    // ==========================================================
+    /* =======================================================
+       RENDERIZA ITENS
+       ======================================================= */
 
     function renderizarItens(
       itens
     ) {
 
-      const lista =
-        normalizarItens(
-          itens
+      elementos.listaItens.innerHTML =
+        "";
+
+
+      const quantidade =
+        Math.max(
+          itens.length,
+          10
         );
 
-      const fragmento =
-        document.createDocumentFragment();
 
-      lista.forEach(
-        function(
-          item,
-          indice
-        ) {
+      for (
+        let i = 0;
+        i < quantidade;
+        i++
+      ) {
 
-          fragmento.appendChild(
-            criarCard(
-              item,
-              indice
-            )
-          );
+        const item =
+          itens[i] || {
 
-        }
-      );
+            numero:
+              i + 1,
 
-      elementos.itens.innerHTML = "";
+            produto:
+              "--",
 
-      elementos.itens.appendChild(
-        fragmento
-      );
+            lote:
+              "--",
+
+            meta:
+              0,
+
+            produzido:
+              0,
+
+            pendente:
+              0,
+
+            progresso:
+              0
+
+          };
+
+
+        elementos.listaItens.appendChild(
+          criarCard(
+            item,
+            i
+          )
+        );
+
+      }
+
     }
 
 
-    // ==========================================================
-    // ATUALIZA RESUMO
-    // ==========================================================
+    /* =======================================================
+       RENDERIZA RESUMO
+       ======================================================= */
 
     function renderizarResumo(
       resumo,
@@ -1448,64 +1914,79 @@
       resumo =
         resumo || {};
 
+
       let metaTotal =
         Number(
           resumo.metaTotal
         );
+
 
       let produzidoTotal =
         Number(
           resumo.produzidoTotal
         );
 
+
       let pendenteTotal =
         Number(
           resumo.pendenteTotal
         );
+
 
       let progressoGeral =
         Number(
           resumo.progressoGeral
         );
 
+
       if (
-        !isFinite(metaTotal)
+        !Number.isFinite(metaTotal)
       ) {
 
-        metaTotal = 0;
+        metaTotal =
+          itens.reduce(
+            function(total, item) {
 
-        itens.forEach(
-          function(item) {
+              return (
+                total +
+                (
+                  Number(item.meta) ||
+                  0
+                )
+              );
 
-            metaTotal +=
-              Number(
-                item.meta
-              ) || 0;
+            },
+            0
+          );
 
-          }
-        );
       }
 
+
       if (
-        !isFinite(produzidoTotal)
+        !Number.isFinite(produzidoTotal)
       ) {
 
-        produzidoTotal = 0;
+        produzidoTotal =
+          itens.reduce(
+            function(total, item) {
 
-        itens.forEach(
-          function(item) {
+              return (
+                total +
+                (
+                  Number(item.produzido) ||
+                  0
+                )
+              );
 
-            produzidoTotal +=
-              Number(
-                item.produzido
-              ) || 0;
+            },
+            0
+          );
 
-          }
-        );
       }
 
+
       if (
-        !isFinite(pendenteTotal)
+        !Number.isFinite(pendenteTotal)
       ) {
 
         pendenteTotal =
@@ -1514,10 +1995,12 @@
             produzidoTotal,
             0
           );
+
       }
 
+
       if (
-        !isFinite(progressoGeral)
+        !Number.isFinite(progressoGeral)
       ) {
 
         progressoGeral =
@@ -1527,348 +2010,475 @@
                 metaTotal
               ) * 100
             : 0;
+
       }
+
+
+      progressoGeral =
+        limitarPercentual(
+          progressoGeral
+        );
+
 
       elementos.metaTotal.textContent =
         formatarNumero(
           metaTotal
         );
 
+
       elementos.produzidoTotal.textContent =
         formatarNumero(
           produzidoTotal
         );
+
 
       elementos.pendenteTotal.textContent =
         formatarNumero(
           pendenteTotal
         );
 
+
       elementos.progressoGeral.textContent =
         formatarPercentual(
           progressoGeral
         );
+
     }
 
 
-    // ==========================================================
-    // STATUS DE CONEXÃO
-    // ==========================================================
+    /* =======================================================
+       STATUS DA API
+       ======================================================= */
 
     function definirStatus(
-      tipo,
+      classe,
       texto
     ) {
 
-      elementos.statusBolinha.className =
-        "";
+      elementos.apiStatus.className =
+        "api-status " +
+        classe;
 
-      if (
-        tipo === "ok"
-      ) {
 
-        elementos.statusBolinha.classList.add(
-          "ok"
-        );
-
-      }
-
-      if (
-        tipo === "carregando"
-      ) {
-
-        elementos.statusBolinha.classList.add(
-          "carregando"
-        );
-
-      }
-
-      elementos.statusTexto.textContent =
+      elementos.apiStatusTexto.textContent =
         texto;
+
     }
 
 
-    // ==========================================================
-    // MOSTRA ERRO
-    // ==========================================================
+    /* =======================================================
+       ERRO
+       ======================================================= */
 
     function mostrarErro(
       mensagem
     ) {
 
-      elementos.erroTexto.textContent =
+      elementos.erroMensagem.textContent =
         mensagem;
 
-      elementos.erro.classList.add(
+
+      elementos.erroOverlay.classList.add(
         "visivel"
       );
+
     }
 
-
-    // ==========================================================
-    // ESCONDE ERRO
-    // ==========================================================
 
     function esconderErro() {
 
-      elementos.erro.classList.remove(
+      elementos.erroOverlay.classList.remove(
         "visivel"
       );
+
     }
 
 
-    // ==========================================================
-    // PROCESSA DADOS RECEBIDOS
-    // ==========================================================
-
-    function processarDados(
-      resultado
-    ) {
-
-      if (
-        !resultado ||
-        resultado.sucesso !== true
-      ) {
-
-        throw new Error(
-          resultado &&
-          resultado.erro
-            ? resultado.erro
-            : "Resposta inválida da API"
-        );
-      }
-
-      const itens =
-        normalizarItens(
-          resultado.itens
-        );
-
-      renderizarItens(
-        itens
-      );
-
-      renderizarResumo(
-        resultado.resumo,
-        itens
-      );
-
-      elementos.data.textContent =
-        resultado.data ||
-        "--";
-
-      elementos.ultimaAtualizacao.textContent =
-        resultado.atualizacao
-          ? "Atualizado: " +
-            resultado.atualizacao
-          : "Atualizado agora";
-
-      definirStatus(
-        "ok",
-        "Conectado • dados atualizados"
-      );
-
-      esconderErro();
-    }
-
-
-    // ==========================================================
-    // CARREGA DADOS VIA JSONP
-    // ==========================================================
+    /* =======================================================
+       CARREGAMENTO JSONP
+       ======================================================= */
 
     function carregarDadosReais() {
+
+      /*
+       * Evita duas consultas simultâneas.
+       */
+
+      if (
+        carregamentoEmAndamento
+      ) {
+
+        return;
+
+      }
+
+
+      carregamentoEmAndamento =
+        true;
+
 
       definirStatus(
         "carregando",
         "Atualizando dados..."
       );
 
-      const callbackName =
-        "__pacoteCallback_" +
+
+      /*
+       * Nome exclusivo da função de callback.
+       */
+
+      const callback =
+        "receberDadosPainel_" +
         Date.now() +
         "_" +
-        Math.floor(
-          Math.random() * 100000
-        );
+        Math.random()
+          .toString(36)
+          .slice(2);
+
+
+      /*
+       * Cria o elemento <script>.
+       *
+       * O JSONP utiliza uma requisição
+       * de script em vez de fetch().
+       */
 
       const script =
         document.createElement(
           "script"
         );
 
-      let finalizado = false;
 
-      const timeout =
+      let finalizado =
+        false;
+
+
+      /*
+       * Timeout de segurança.
+       */
+
+      const timeoutId =
         setTimeout(
           function() {
 
-            finalizar(
-              new Error(
-                "Tempo limite ao consultar o servidor."
-              )
+            finalizarErro(
+              "O servidor demorou para responder. " +
+              "Tentando novamente automaticamente."
             );
 
           },
-          TEMPO_LIMITE_MS
+          10000
         );
 
+
+      /*
+       * Limpeza da chamada.
+       */
 
       function limpar() {
 
         clearTimeout(
-          timeout
+          timeoutId
         );
 
-        script.remove();
 
-        try {
+        delete window[
+          callback
+        ];
 
-          delete window[
-            callbackName
-          ];
 
-        } catch (erro) {
+        if (
+          script.parentNode
+        ) {
 
-          window[
-            callbackName
-          ] = undefined;
+          script.parentNode.removeChild(
+            script
+          );
+
         }
+
+
+        carregamentoEmAndamento =
+          false;
+
       }
 
 
-      function finalizar(
-        erro
+      /*
+       * Tratamento de erro.
+
+       */
+
+      function finalizarErro(
+        mensagem
       ) {
 
         if (
           finalizado
         ) {
+
           return;
+
         }
 
-        finalizado = true;
+
+        finalizado =
+          true;
+
+
+        console.error(
+          mensagem
+        );
+
+
+        definirStatus(
+          "",
+          "Erro de conexão • tentando novamente"
+        );
+
+
+        mostrarErro(
+          mensagem
+        );
+
+
+        setTimeout(
+          esconderErro,
+          3000
+        );
+
 
         limpar();
 
-        if (
-          erro
-        ) {
-
-          console.error(
-            "Erro ao carregar painel:",
-            erro
-          );
-
-          definirStatus(
-            "",
-            "Erro de conexão • tentando novamente"
-          );
-
-          mostrarErro(
-            "Não foi possível atualizar os dados. " +
-            "O painel tentará novamente automaticamente."
-          );
-
-          setTimeout(
-            esconderErro,
-            3000
-          );
-        }
       }
 
 
-      window[
-        callbackName
-      ] =
-        function(
-          resultado
-        ) {
+      /*
+       * CALLBACK JSONP.
+       */
+
+      window[callback] =
+        function(resultado) {
+
 
           if (
             finalizado
           ) {
+
             return;
+
           }
 
-          finalizado = true;
 
-          limpar();
+          finalizado =
+            true;
+
 
           try {
 
-            processarDados(
-              resultado
+
+            /*
+             * Verifica se o Apps Script
+             * respondeu corretamente.
+             */
+
+            if (
+              !resultado ||
+              resultado.sucesso !== true
+            ) {
+
+              throw new Error(
+                resultado &&
+                resultado.erro
+                  ? resultado.erro
+                  : "Resposta inválida da API"
+              );
+
+            }
+
+
+            /*
+             * Normaliza os itens recebidos.
+             */
+
+            const itens =
+              normalizarItens(
+                resultado.itens
+              );
+
+
+            /*
+             * Atualiza os cards.
+             */
+
+            renderizarItens(
+              itens
             );
+
+
+            /*
+             * Atualiza o resumo.
+             */
+
+            renderizarResumo(
+              resultado.resumo,
+              itens
+            );
+
+
+            /*
+             * Atualiza a data.
+             */
+
+            elementos.data.textContent =
+              resultado.data ||
+              "--";
+
+
+            /*
+             * Atualiza o horário.
+             */
+
+            elementos.ultimaAtualizacao.textContent =
+              resultado.atualizacao
+                ? "Atualizado: " +
+                  resultado.atualizacao
+                : "Atualizado agora";
+
+
+            /*
+             * Conexão funcionando.
+             */
+
+            definirStatus(
+              "ok",
+              "Conectado • dados atualizados"
+            );
+
+
+            /*
+             * Esconde eventual erro
+             * anterior.
+             */
+
+            esconderErro();
+
 
           } catch (
             erro
           ) {
 
+
             console.error(
-              "Erro ao processar dados:",
+              "Erro nos dados do painel:",
               erro
             );
+
 
             definirStatus(
               "",
               "Erro de conexão • tentando novamente"
             );
 
+
             mostrarErro(
-              erro.message ||
-              "Resposta inválida da API."
+              "Não foi possível atualizar os dados. " +
+              "O painel tentará novamente automaticamente."
             );
+
 
             setTimeout(
               esconderErro,
               3000
             );
+
+
+          } finally {
+
+
+            limpar();
+
           }
 
         };
 
 
-      script.async = true;
+      /*
+       * Erro de carregamento do script.
+       */
 
       script.onerror =
         function() {
 
-          finalizar(
-            new Error(
-              "Não foi possível acessar a API."
-            )
+          finalizarErro(
+            "Não foi possível conectar ao servidor. " +
+            "Tentando novamente automaticamente."
           );
 
         };
 
 
-      script.src =
+      /*
+       * Monta a URL do Apps Script.
+       */
+
+      const separador =
+        URL_API.indexOf("?") >= 0
+          ? "&"
+          : "?";
+
+
+      const url =
         URL_API +
-        "?painel=" +
-        encodeURIComponent(
-          SETOR
-        ) +
+        separador +
+        "painel=PACOTE" +
         "&callback=" +
         encodeURIComponent(
-          callbackName
+          callback
         ) +
         "&_=" +
         Date.now();
 
-      document.body.appendChild(
+
+      /*
+       * Define o endereço do script.
+       */
+
+      script.src =
+        url;
+
+
+      /*
+       * Inicia a requisição JSONP.
+       */
+
+      document.head.appendChild(
         script
       );
+
     }
 
 
-    // ==========================================================
-    // INICIALIZAÇÃO
-    // ==========================================================
+    /* =======================================================
+       INICIALIZAÇÃO
+       ======================================================= */
 
     document.addEventListener(
       "DOMContentLoaded",
       function() {
 
+
+        /*
+         * Primeira atualização imediatamente.
+         */
+
         carregarDadosReais();
+
+
+        /*
+         * Atualização automática
+         * a cada 15 segundos.
+         */
 
         setInterval(
           carregarDadosReais,
@@ -1878,7 +2488,9 @@
       }
     );
 
+
   </script>
+
 
 </body>
 
