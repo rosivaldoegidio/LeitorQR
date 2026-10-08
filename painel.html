@@ -1,2496 +1,1718 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html> <html lang="pt-BR">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta name="viewport" content="width=device-width, initial-scale=1.0"
 
-  <title>PACOTE • Painel de Produção</title>
+<title>PACOTE • Painel de Produção</title>
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+{
 
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-    }
+box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+html, body { width: 100%; min-height: 100%; }
 
-      background:
-        linear-gradient(
-          135deg,
-          #07111f 0%,
-          #0b1c31 50%,
-          #102944 100%
-        );
+body { font-family: Arial, Helvetica, sans-serif;
 
-      color: #ffffff;
+background: linear-gradient( 135deg, #07111f 0%, #0b1c31 50%, #102944 100% );
 
-      min-height: 100vh;
+color: #ffffff;
 
-      overflow-x: hidden;
-    }
+min-height: 100vh;
 
+overflow-x: hidden; }
 
-    /* =========================================================
-       CONTAINER PRINCIPAL
-       ========================================================= */
+/* ========================================================= CONTAINER PRINCIPAL ========================================================= */
 
-    .painel {
-      width: 100%;
-      min-height: 100vh;
+.painel { width: 100%; min-height: 100vh;
 
-      padding:
-        22px
-        24px
-        80px
-        24px;
-    }
+padding: 22px 24px 80px 24px; }
 
+/* ========================================================= CABEÇALHO ========================================================= */
 
-    /* =========================================================
-       CABEÇALHO
-       ========================================================= */
+.cabecalho {
 
-    .cabecalho {
+display: flex;
 
-      display: flex;
+align-items: center;
 
-      align-items: center;
+justify-content: space-between;
 
-      justify-content: space-between;
+gap: 20px;
 
-      gap: 20px;
+margin-bottom: 22px; }
 
-      margin-bottom: 22px;
-    }
+.titulo-area { display: flex;
 
+flex-direction: column;
 
-    .titulo-area {
-      display: flex;
+gap: 7px; }
 
-      flex-direction: column;
+.titulo-linha {
 
-      gap: 5px;
-    }
+display: flex;
 
+align-items: center;
 
-    .titulo {
+gap: 12px; }
 
-      font-size: 30px;
+.titulo {
 
-      font-weight: 800;
+font-size: 30px;
 
-      letter-spacing: 1px;
+font-weight: 800;
 
-      color: #ffffff;
-    }
+letter-spacing: 1px;
 
+color: #ffffff; }
 
-    .subtitulo {
+.indicador-painel {
 
-      font-size: 14px;
+display: inline-flex;
 
-      color: #9fb2c9;
+align-items: center;
 
-      font-weight: 500;
-    }
+gap: 6px;
 
+padding: 6px 10px;
 
-    .data-area {
+border-radius: 20px;
 
-      text-align: right;
+background: rgba(66, 182, 255, 0.10);
 
-      display: flex;
+border: 1px solid rgba(66, 182, 255, 0.20);
 
-      flex-direction: column;
+color: #55b7ff;
 
-      gap: 4px;
-    }
+font-size: 10px;
 
+font-weight: 800;
 
-    .data-label {
+text-transform: uppercase;
 
-      font-size: 11px;
+letter-spacing: 0.6px; }
 
-      color: #7890aa;
+.indicador-painel::before {
 
-      text-transform: uppercase;
+content: "";
 
-      letter-spacing: 1px;
-    }
+width: 7px;
 
+height: 7px;
 
-    .data-valor {
+border-radius: 50%;
 
-      font-size: 20px;
+background: currentColor;
 
-      font-weight: 700;
+box-shadow: 0 0 8px currentColor; }
 
-      color: #ffffff;
-    }
+.subtitulo {
 
+font-size: 14px;
 
-    /* =========================================================
-       RESUMO
-       ========================================================= */
+color: #9fb2c9;
 
-    .resumo {
+font-weight: 500; }
 
-      display: grid;
+.data-area {
 
-      grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+text-align: right;
 
-      gap: 14px;
+display: flex;
 
-      margin-bottom: 22px;
-    }
+flex-direction: column;
 
+gap: 4px; }
 
-    .resumo-card {
+.data-label {
 
-      position: relative;
+font-size: 11px;
 
-      background:
-        rgba(18, 39, 64, 0.92);
+color: #7890aa;
 
-      border:
-        1px solid
-        rgba(110, 151, 195, 0.18);
+text-transform: uppercase;
 
-      border-radius: 14px;
+letter-spacing: 1px; }
 
-      padding: 18px 20px;
+.data-valor {
 
-      min-height: 108px;
+font-size: 20px;
 
-      overflow: hidden;
+font-weight: 700;
 
-      box-shadow:
-        0 10px 25px
-        rgba(0, 0, 0, 0.18);
-    }
+color: #ffffff; }
 
+/* ========================================================= RESUMO ========================================================= */
 
-    .resumo-card::after {
+.resumo {
 
-      content: "";
+display: grid;
 
-      position: absolute;
+grid-template-columns: repeat(4, minmax(0, 1fr));
 
-      right: -25px;
+gap: 14px;
 
-      bottom: -35px;
+margin-bottom: 22px; }
 
-      width: 90px;
+.resumo-card {
 
-      height: 90px;
+position: relative;
 
-      border-radius: 50%;
+background: rgba(18, 39, 64, 0.92);
 
-      background:
-        rgba(60, 145, 220, 0.07);
-    }
+border: 1px solid rgba(110, 151, 195, 0.18);
 
+border-radius: 14px;
 
-    .resumo-label {
+padding: 18px 20px;
 
-      color: #8fa6be;
+min-height: 108px;
 
-      font-size: 12px;
+overflow: hidden;
 
-      text-transform: uppercase;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18); }
 
-      letter-spacing: 0.8px;
+.resumo-card::after {
 
-      margin-bottom: 8px;
-    }
+content: "";
 
+position: absolute;
 
-    .resumo-valor {
+right: -25px;
 
-      color: #ffffff;
+bottom: -35px;
 
-      font-size: 30px;
+width: 90px;
 
-      font-weight: 800;
+height: 90px;
 
-      line-height: 1;
-    }
+border-radius: 50%;
 
+background: rgba(60, 145, 220, 0.07); }
 
-    .resumo-percentual {
+.resumo-label {
 
-      color: #63d391;
+color: #8fa6be;
 
-      font-size: 30px;
+font-size: 12px;
 
-      font-weight: 800;
+text-transform: uppercase;
 
-      line-height: 1;
-    }
+letter-spacing: 0.8px;
 
+margin-bottom: 8px; }
 
-    /* =========================================================
-       ÁREA DOS ITENS
-       ========================================================= */
+.resumo-valor {
 
-    .itens {
+color: #ffffff;
 
-      display: grid;
+font-size: 30px;
 
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+font-weight: 800;
 
-      gap: 16px;
-    }
+line-height: 1; }
 
+.resumo-percentual {
 
-    /* =========================================================
-       CARD DE PRODUÇÃO
-       ========================================================= */
+color: #63d391;
 
-    .card-item {
+font-size: 30px;
 
-      position: relative;
+font-weight: 800;
 
-      background:
-        rgba(13, 31, 52, 0.96);
+line-height: 1; }
 
-      border:
-        1px solid
-        rgba(101, 140, 180, 0.20);
+/* ========================================================= ÁREA DOS ITENS ========================================================= */
 
-      border-radius: 16px;
+.itens {
 
-      padding: 18px;
+display: grid;
 
-      min-height: 210px;
+grid-template-columns: repeat(2, minmax(0, 1fr));
 
-      box-shadow:
-        0 12px 28px
-        rgba(0, 0, 0, 0.20);
+gap: 16px; }
 
-      overflow: hidden;
-    }
+/* ========================================================= CARD DE PRODUÇÃO ========================================================= */
 
+.card-item {
 
-    .card-item:hover {
+position: relative;
 
-      border-color:
-        rgba(101, 170, 225, 0.35);
-    }
+background: rgba(13, 31, 52, 0.96);
 
+border: 1px solid rgba(101, 140, 180, 0.20);
 
-    .card-topo {
+border-radius: 16px;
 
-      display: flex;
+padding: 18px;
 
-      align-items: flex-start;
+min-height: 210px;
 
-      justify-content: space-between;
+box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
 
-      gap: 15px;
+overflow: hidden; }
 
-      margin-bottom: 14px;
-    }
+.card-item:hover {
 
+border-color: rgba(101, 170, 225, 0.35); }
 
-    .numero-item {
+.card-topo {
 
-      display: flex;
+display: flex;
 
-      align-items: center;
+align-items: flex-start;
 
-      justify-content: center;
+justify-content: space-between;
 
-      width: 42px;
+gap: 15px;
 
-      height: 42px;
+margin-bottom: 14px; }
 
-      border-radius: 10px;
+.numero-item {
 
-      background:
-        #173655;
+display: flex;
 
-      color: #ffffff;
+align-items: center;
 
-      font-size: 17px;
+justify-content: center;
 
-      font-weight: 800;
+width: 42px;
 
-      flex-shrink: 0;
-    }
+height: 42px;
 
+border-radius: 10px;
 
-    .informacoes {
+background: #173655;
 
-      flex: 1;
+color: #ffffff;
 
-      min-width: 0;
-    }
+font-size: 17px;
 
+font-weight: 800;
 
-    .produto {
+flex-shrink: 0; }
 
-      color: #ffffff;
+.informacoes {
 
-      font-size: 17px;
+flex: 1;
 
-      font-weight: 800;
+min-width: 0; }
 
-      line-height: 1.25;
+.produto {
 
-      white-space: nowrap;
+color: #ffffff;
 
-      overflow: hidden;
+font-size: 17px;
 
-      text-overflow: ellipsis;
+font-weight: 800;
 
-      margin-bottom: 5px;
-    }
+line-height: 1.25;
 
+white-space: nowrap;
 
-    .lote {
+overflow: hidden;
 
-      color: #8098b2;
+text-overflow: ellipsis;
 
-      font-size: 12px;
+margin-bottom: 5px; }
 
-      white-space: nowrap;
+.lote {
 
-      overflow: hidden;
+color: #8098b2;
 
-      text-overflow: ellipsis;
-    }
+font-size: 12px;
 
+white-space: nowrap;
 
-    /* =========================================================
-       STATUS
-       ========================================================= */
+overflow: hidden;
 
-    .status {
+text-overflow: ellipsis; }
 
-      display: inline-flex;
+/* ========================================================= STATUS ========================================================= */
 
-      align-items: center;
+.status {
 
-      gap: 6px;
+display: inline-flex;
 
-      border-radius: 30px;
+align-items: center;
 
-      padding: 6px 10px;
+gap: 6px;
 
-      font-size: 10px;
+border-radius: 30px;
 
-      font-weight: 800;
+padding: 6px 10px;
 
-      text-transform: uppercase;
+font-size: 10px;
 
-      letter-spacing: 0.5px;
+font-weight: 800;
 
-      white-space: nowrap;
-    }
+text-transform: uppercase;
 
+letter-spacing: 0.5px;
 
-    .status::before {
+white-space: nowrap; }
 
-      content: "";
+.status::before {
 
-      width: 7px;
+content: "";
 
-      height: 7px;
+width: 7px;
 
-      border-radius: 50%;
+height: 7px;
 
-      background: currentColor;
-    }
+border-radius: 50%;
 
+background: currentColor; }
 
-    .status-ok {
+.status-ok {
 
-      color: #63d391;
+color: #63d391;
 
-      background:
-        rgba(72, 202, 128, 0.10);
-    }
+background: rgba(72, 202, 128, 0.10); }
 
+.status-andamento {
 
-    .status-andamento {
+color: #55b7ff;
 
-      color: #55b7ff;
+background: rgba(55, 166, 255, 0.10); }
 
-      background:
-        rgba(55, 166, 255, 0.10);
-    }
+.status-pendente {
 
+color: #ffbd61;
 
-    .status-pendente {
+background: rgba(255, 189, 97, 0.10); }
 
-      color: #ffbd61;
+.status-finalizado {
 
-      background:
-        rgba(255, 189, 97, 0.10);
-    }
+color: #9ee7ba;
 
+background: rgba(94, 211, 139, 0.12); }
 
-    .status-finalizado {
+/* ========================================================= CORPO DO CARD ========================================================= */
 
-      color: #9ee7ba;
+.card-corpo {
 
-      background:
-        rgba(94, 211, 139, 0.12);
-    }
+display: flex;
 
+align-items: center;
 
-    /* =========================================================
-       CORPO DO CARD
-       ========================================================= */
+gap: 22px; }
 
-    .card-corpo {
+.progresso-circulo {
 
-      display: flex;
+width: 105px;
 
-      align-items: center;
+height: 105px;
 
-      gap: 22px;
-    }
+flex-shrink: 0;
 
+border-radius: 50%;
 
-    .progresso-circulo {
+display: flex;
 
-      width: 105px;
+align-items: center;
 
-      height: 105px;
+justify-content: center;
 
-      flex-shrink: 0;
+position: relative;
 
-      border-radius: 50%;
+background: conic-gradient( #42b6ff 0deg, #42b6ff var(--progresso-graus, 0deg), #203b58 var(--progresso-graus, 0deg), #203b58 360deg ); }
 
-      display: flex;
+.progresso-circulo::before {
 
-      align-items: center;
+content: "";
 
-      justify-content: center;
+position: absolute;
 
-      position: relative;
+inset: 8px;
 
-      background:
-        conic-gradient(
-          #42b6ff 0deg,
-          #42b6ff var(--progresso-graus, 0deg),
-          #203b58 var(--progresso-graus, 0deg),
-          #203b58 360deg
-        );
-    }
+border-radius: 50%;
 
+background: #0d1f34; }
 
-    .progresso-circulo::before {
+.progresso-centro {
 
-      content: "";
+position: relative;
 
-      position: absolute;
+z-index: 1;
 
-      inset: 8px;
+text-align: center; }
 
-      border-radius: 50%;
+.progresso-numero {
 
-      background:
-        #0d1f34;
-    }
+font-size: 22px;
 
+font-weight: 800;
 
-    .progresso-centro {
+color: #ffffff;
 
-      position: relative;
+line-height: 1; }
 
-      z-index: 1;
+.progresso-texto {
 
-      text-align: center;
-    }
+margin-top: 4px;
 
+font-size: 9px;
 
-    .progresso-numero {
+color: #8198b1;
 
-      font-size: 22px;
+text-transform: uppercase; }
 
-      font-weight: 800;
+.numeros {
 
-      color: #ffffff;
+flex: 1;
 
-      line-height: 1;
-    }
+display: grid;
 
+grid-template-columns: repeat(3, minmax(0, 1fr));
 
-    .progresso-texto {
+gap: 10px; }
 
-      margin-top: 4px;
+.numero-bloco {
 
-      font-size: 9px;
+min-width: 0; }
 
-      color: #8198b1;
+.numero-label {
 
-      text-transform: uppercase;
-    }
+font-size: 10px;
 
+color: #728aa4;
 
-    .numeros {
+text-transform: uppercase;
 
-      flex: 1;
+letter-spacing: 0.4px;
 
-      display: grid;
+margin-bottom: 5px; }
 
-      grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+.numero-valor {
 
-      gap: 10px;
-    }
+font-size: 22px;
 
+font-weight: 800;
 
-    .numero-bloco {
+color: #ffffff; }
 
-      min-width: 0;
-    }
+.numero-valor.pendente {
 
+color: #ffbd61; }
 
-    .numero-label {
+/* ========================================================= BARRA DE PROGRESSO ========================================================= */
 
-      font-size: 10px;
+.barra-area {
 
-      color: #728aa4;
+margin-top: 18px; }
 
-      text-transform: uppercase;
+.barra-topo {
 
-      letter-spacing: 0.4px;
+display: flex;
 
-      margin-bottom: 5px;
-    }
+align-items: center;
 
+justify-content: space-between;
 
-    .numero-valor {
+margin-bottom: 7px; }
 
-      font-size: 22px;
+.barra-label {
 
-      font-weight: 800;
+font-size: 10px;
 
-      color: #ffffff;
-    }
+color: #728aa4;
 
+text-transform: uppercase; }
 
-    .numero-valor.pendente {
+.barra-percentual {
 
-      color: #ffbd61;
-    }
+font-size: 11px;
 
+color: #9db2c8;
 
-    /* =========================================================
-       BARRA DE PROGRESSO
-       ========================================================= */
+font-weight: 700; }
 
-    .barra-area {
+.barra {
 
-      margin-top: 18px;
-    }
+width: 100%;
 
+height: 7px;
 
-    .barra-topo {
+border-radius: 20px;
 
-      display: flex;
+background: #1b334e;
 
-      align-items: center;
+overflow: hidden; }
 
-      justify-content: space-between;
+.barra-preenchida {
 
-      margin-bottom: 7px;
-    }
+height: 100%;
 
+width: 0%;
 
-    .barra-label {
+border-radius: inherit;
 
-      font-size: 10px;
+background: linear-gradient( 90deg, #2f9eea, #63d391 );
 
-      color: #728aa4;
+transition: width 0.5s ease; }
 
-      text-transform: uppercase;
-    }
+/* ========================================================= RODAPÉ ========================================================= */
 
+.rodape {
 
-    .barra-percentual {
+position: fixed;
 
-      font-size: 11px;
+left: 0;
 
-      color: #9db2c8;
+right: 0;
 
-      font-weight: 700;
-    }
+bottom: 0;
 
+height: 42px;
 
-    .barra {
+padding: 0 22px;
 
-      width: 100%;
+display: flex;
 
-      height: 7px;
+align-items: center;
 
-      border-radius: 20px;
+justify-content: space-between;
 
-      background:
-        #1b334e;
+gap: 15px;
 
-      overflow: hidden;
-    }
+background: rgba(5, 16, 29, 0.96);
 
+border-top: 1px solid rgba(107, 145, 181, 0.14);
 
-    .barra-preenchida {
+z-index: 20; }
 
-      height: 100%;
+.api-status {
 
-      width: 0%;
+display: flex;
 
-      border-radius: inherit;
+align-items: center;
 
-      background:
-        linear-gradient(
-          90deg,
-          #2f9eea,
-          #63d391
-        );
+gap: 8px;
 
-      transition:
-        width 0.5s ease;
-    }
+color: #8fa6be;
 
+font-size: 11px; }
 
-    /* =========================================================
-       RODAPÉ
-       ========================================================= */
+.api-status-ponto {
 
-    .rodape {
+width: 8px;
 
-      position: fixed;
+height: 8px;
 
-      left: 0;
+border-radius: 50%;
 
-      right: 0;
+background: #8998a8;
 
-      bottom: 0;
+box-shadow: 0 0 8px rgba(137, 152, 168, 0.35); }
 
-      height: 42px;
+.api-status.ok .api-status-ponto {
 
-      padding:
-        0 22px;
+background: #54d786;
 
-      display: flex;
+box-shadow: 0 0 9px rgba(84, 215, 134, 0.65); }
 
-      align-items: center;
+.api-status.carregando .api-status-ponto {
 
-      justify-content: space-between;
+background: #55b7ff;
 
-      gap: 15px;
+box-shadow: 0 0 9px rgba(85, 183, 255, 0.60); }
 
-      background:
-        rgba(5, 16, 29, 0.96);
+.ultima-atualizacao {
 
-      border-top:
-        1px solid
-        rgba(107, 145, 181, 0.14);
+color: #71879e;
 
-      z-index: 20;
-    }
+font-size: 10px;
 
+text-align: right; }
 
-    .api-status {
+/* ========================================================= OVERLAY DE ERRO ========================================================= */
 
-      display: flex;
+#erroOverlay {
 
-      align-items: center;
+position: fixed;
 
-      gap: 8px;
+inset: 0;
 
-      color: #8fa6be;
+display: none;
 
-      font-size: 11px;
-    }
+align-items: center;
 
+justify-content: center;
 
-    .api-status-ponto {
+background: rgba(3, 11, 20, 0.88);
 
-      width: 8px;
+backdrop-filter: blur(5px);
 
-      height: 8px;
+z-index: 100; }
 
-      border-radius: 50%;
+#erroOverlay.visivel {
 
-      background: #8998a8;
+display: flex; }
 
-      box-shadow:
-        0 0 8px
-        rgba(137, 152, 168, 0.35);
-    }
+.erro-caixa {
 
+width: min( 480px, calc(100% - 40px) );
 
-    .api-status.ok
-    .api-status-ponto {
+padding: 30px;
 
-      background: #54d786;
+text-align: center;
 
-      box-shadow:
-        0 0 9px
-        rgba(84, 215, 134, 0.65);
-    }
+border-radius: 18px;
 
+background: #10253c;
 
-    .api-status.carregando
-    .api-status-ponto {
+border: 1px solid rgba(255, 100, 100, 0.25);
 
-      background: #55b7ff;
+box-shadow: 0 25px 60px rgba(0, 0, 0, 0.40); }
 
-      box-shadow:
-        0 0 9px
-        rgba(85, 183, 255, 0.60);
-    }
+.erro-icone {
 
+width: 54px;
 
-    .ultima-atualizacao {
+height: 54px;
 
-      color: #71879e;
+margin: 0 auto 16px;
 
-      font-size: 10px;
+display: flex;
 
-      text-align: right;
-    }
+align-items: center;
 
+justify-content: center;
 
-    /* =========================================================
-       OVERLAY DE ERRO
-       ========================================================= */
+border-radius: 50%;
 
-    #erroOverlay {
+background: rgba(255, 85, 85, 0.12);
 
-      position: fixed;
+color: #ff7373;
 
-      inset: 0;
+font-size: 27px;
 
-      display: none;
+font-weight: 800; }
 
-      align-items: center;
+.erro-titulo {
 
-      justify-content: center;
+color: #ffffff;
 
-      background:
-        rgba(3, 11, 20, 0.88);
+font-size: 20px;
 
-      backdrop-filter:
-        blur(5px);
+font-weight: 800;
 
-      z-index: 100;
-    }
+margin-bottom: 9px; }
 
+.erro-mensagem {
 
-    #erroOverlay.visivel {
+color: #9aafc4;
 
-      display: flex;
-    }
+font-size: 13px;
 
+line-height: 1.5; }
 
-    .erro-caixa {
+/* ========================================================= ANIMAÇÃO DE TROCA DE PAINEL ========================================================= */
 
-      width: min(
-        480px,
-        calc(100% - 40px)
-      );
+.conteudo-painel {
 
-      padding: 30px;
+opacity: 1;
 
-      text-align: center;
+transform: translateX(0);
 
-      border-radius: 18px;
+transition: opacity 0.45s ease, transform 0.45s ease; }
 
-      background:
-        #10253c;
+.conteudo-painel.trocando {
 
-      border:
-        1px solid
-        rgba(255, 100, 100, 0.25);
+opacity: 0;
 
-      box-shadow:
-        0 25px 60px
-        rgba(0, 0, 0, 0.40);
-    }
+transform: translateX(18px); }
 
+/* ========================================================= RESPONSIVO ========================================================= */
 
-    .erro-icone {
+@media (max-width: 900px) {
 
-      width: 54px;
+.resumo {
 
-      height: 54px;
+grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-      margin:
-        0 auto
-        16px;
+.itens {
 
-      display: flex;
+grid-template-columns: 1fr; }
 
-      align-items: center;
+}
 
-      justify-content: center;
+@media (max-width: 600px) {
 
-      border-radius: 50%;
+.painel {
 
-      background:
-        rgba(255, 85, 85, 0.12);
+padding: 16px 14px 70px 14px; }
 
-      color: #ff7373;
+.cabecalho {
 
-      font-size: 27px;
+align-items: flex-start; }
 
-      font-weight: 800;
-    }
+.titulo {
 
+font-size: 24px; }
 
-    .erro-titulo {
+.indicador-painel {
 
-      color: #ffffff;
+font-size: 9px; }
 
-      font-size: 20px;
+.data-valor {
 
-      font-weight: 800;
+font-size: 15px; }
 
-      margin-bottom: 9px;
-    }
+.resumo {
 
+gap: 9px; }
 
-    .erro-mensagem {
+.resumo-card {
 
-      color: #9aafc4;
+padding: 14px;
 
-      font-size: 13px;
+min-height: 92px; }
 
-      line-height: 1.5;
-    }
+.resumo-valor, .resumo-percentual {
 
+font-size: 24px; }
 
-    /* =========================================================
-       RESPONSIVO
-       ========================================================= */
+.card-item {
 
-    @media (max-width: 900px) {
+padding: 14px; }
 
-      .resumo {
+.card-corpo {
 
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
+gap: 14px; }
 
-      .itens {
+.progresso-circulo {
 
-        grid-template-columns:
-          1fr;
-      }
+width: 88px;
 
-    }
+height: 88px; }
 
+.progresso-circulo::before {
 
-    @media (max-width: 600px) {
+inset: 7px; }
 
-      .painel {
+.progresso-numero {
 
-        padding:
-          16px
-          14px
-          70px
-          14px;
-      }
+font-size: 18px; }
 
+.numeros {
 
-      .cabecalho {
+gap: 7px; }
 
-        align-items: flex-start;
-      }
+.numero-valor {
 
+font-size: 18px; }
 
-      .titulo {
+.rodape {
 
-        font-size: 24px;
-      }
+padding: 0 12px; }
 
+}
 
-      .data-valor {
+@media (max-width: 420px) {
 
-        font-size: 15px;
-      }
+.cabecalho {
 
+flex-direction: column; }
 
-      .resumo {
+.data-area {
 
-        gap: 9px;
-      }
+text-align: left; }
 
+.titulo-linha {
 
-      .resumo-card {
+flex-wrap: wrap; }
 
-        padding: 14px;
+.resumo {
 
-        min-height: 92px;
-      }
+grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
+.card-topo {
 
-      .resumo-valor,
-      .resumo-percentual {
+flex-wrap: wrap; }
 
-        font-size: 24px;
-      }
+.card-corpo {
 
+align-items: flex-start; }
 
-      .card-item {
+.progresso-circulo {
 
-        padding: 14px;
-      }
+width: 78px;
 
+height: 78px; }
 
-      .card-corpo {
+.numeros {
 
-        gap: 14px;
-      }
+grid-template-columns: 1fr; }
 
+.numero-bloco {
 
-      .progresso-circulo {
+display: flex;
 
-        width: 88px;
+align-items: center;
 
-        height: 88px;
-      }
+justify-content: space-between;
 
+border-bottom: 1px solid rgba(112, 145, 176, 0.10);
 
-      .progresso-circulo::before {
+padding-bottom: 5px; }
 
-        inset: 7px;
-      }
+.numero-label {
 
+margin-bottom: 0; }
 
-      .progresso-numero {
+}
 
-        font-size: 18px;
-      }
-
-
-      .numeros {
-
-        gap: 7px;
-      }
-
-
-      .numero-valor {
-
-        font-size: 18px;
-      }
-
-
-      .rodape {
-
-        padding:
-          0 12px;
-      }
-
-    }
-
-
-    @media (max-width: 420px) {
-
-      .cabecalho {
-
-        flex-direction: column;
-      }
-
-
-      .data-area {
-
-        text-align: left;
-      }
-
-
-      .resumo {
-
-        grid-template-columns:
-          repeat(2, minmax(0, 1fr));
-      }
-
-
-      .card-topo {
-
-        flex-wrap: wrap;
-      }
-
-
-      .card-corpo {
-
-        align-items: flex-start;
-      }
-
-
-      .progresso-circulo {
-
-        width: 78px;
-
-        height: 78px;
-      }
-
-
-      .numeros {
-
-        grid-template-columns:
-          1fr;
-      }
-
-
-      .numero-bloco {
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        border-bottom:
-          1px solid
-          rgba(112, 145, 176, 0.10);
-
-        padding-bottom: 5px;
-      }
-
-
-      .numero-label {
-
-        margin-bottom: 0;
-      }
-
-    }
-
-  </style>
+</style>
 
 </head>
 
-
 <body>
 
-  <main class="painel">
+<main class="painel">
 
+<div class="conteudo-painel" id="conteudoPainel"
 
-    <!-- =====================================================
-         CABEÇALHO
-         ===================================================== -->
+<!-- ===================================================== CABEÇALHO ===================================================== -->
 
-    <header class="cabecalho">
+<header class="cabecalho">
 
-      <div class="titulo-area">
+<div class="titulo-area">
 
-        <div class="titulo">
-          PACOTE
-        </div>
+<div class="titulo-linha">
 
-        <div class="subtitulo">
-          Painel de Produção
-        </div>
+<div class="titulo" id="tituloPainel" > PACOTE </div>
 
-      </div>
+<div class="indicador-painel" id="indicadorPainel" > Painel atual </div>
 
+</div>
 
-      <div class="data-area">
+<div class="subtitulo"> Painel de Produção </div>
 
-        <div class="data-label">
-          Data da produção
-        </div>
+</div>
 
-        <div
-          class="data-valor"
-          id="dataPainel"
-        >
-          --
-        </div>
+<div class="data-area">
 
-      </div>
+<div class="data-label"> Data da produção </div>
 
-    </header>
+<div class="data-valor" id="dataPainel" > -- </div>
 
+</div>
 
-    <!-- =====================================================
-         RESUMO
-         ===================================================== -->
+</header>
 
-    <section class="resumo">
+<!-- ===================================================== RESUMO ===================================================== -->
 
+<section class="resumo">
 
-      <div class="resumo-card">
+<div class="resumo-card">
 
-        <div class="resumo-label">
-          Meta total
-        </div>
+<div class="resumo-label"> Meta total </div>
 
-        <div
-          class="resumo-valor"
-          id="metaTotal"
-        >
-          0
-        </div>
+<div class="resumo-valor" id="metaTotal" > 0 </div>
 
-      </div>
+</div>
 
+<div class="resumo-card">
 
-      <div class="resumo-card">
+<div class="resumo-label"> Produzido </div>
 
-        <div class="resumo-label">
-          Produzido
-        </div>
+<div class="resumo-valor" id="produzidoTotal" > 0 </div>
 
-        <div
-          class="resumo-valor"
-          id="produzidoTotal"
-        >
-          0
-        </div>
+</div>
 
-      </div>
+<div class="resumo-card">
 
+<div class="resumo-label"> Pendente </div>
 
-      <div class="resumo-card">
+<div class="resumo-valor" id="pendenteTotal" > 0 </div>
 
-        <div class="resumo-label">
-          Pendente
-        </div>
+</div>
 
-        <div
-          class="resumo-valor"
-          id="pendenteTotal"
-        >
-          0
-        </div>
+<div class="resumo-card">
 
-      </div>
+<div class="resumo-label"> Progresso geral </div>
 
+<div class="resumo-percentual" id="progressoGeral" > 0% </div>
 
-      <div class="resumo-card">
+</div>
 
-        <div class="resumo-label">
-          Progresso geral
-        </div>
+</section>
 
-        <div
-          class="resumo-percentual"
-          id="progressoGeral"
-        >
-          0%
-        </div>
+<!-- ===================================================== ITENS ===================================================== -->
 
-      </div>
+<section class="itens" id="listaItens" >
 
+</section>
 
-    </section>
+</div>
 
+</main>
 
-    <!-- =====================================================
-         ITENS
-         ===================================================== -->
+<!-- ======================================================= RODAPÉ ======================================================= -->
 
-    <section
-      class="itens"
-      id="listaItens"
-    >
+<footer class="rodape">
 
-      <!-- Os 10 cards são criados pelo JavaScript -->
+<div class="api-status" id="apiStatus"
 
-    </section>
+<span class="api-status-ponto" ></span>
 
+<span id="apiStatusTexto"> Aguardando conexão... </span>
 
-  </main>
+</div>
 
+<div class="ultima-atualizacao" id="ultimaAtualizacao"
 
-  <!-- =======================================================
-       RODAPÉ
-       ======================================================= -->
+Atualizado: -- </div>
 
-  <footer class="rodape">
+</footer>
 
-    <div
-      class="api-status"
-      id="apiStatus"
-    >
+<!-- ======================================================= OVERLAY DE ERRO ======================================================= -->
 
-      <span
-        class="api-status-ponto"
-      ></span>
+<div id="erroOverlay"
 
-      <span id="apiStatusTexto">
-        Aguardando conexão...
-      </span>
+<div class="erro-caixa">
 
-    </div>
+<div class="erro-icone"> ! </div>
 
+<div class="erro-titulo"> Não foi possível carregar o painel </div>
 
-    <div
-      class="ultima-atualizacao"
-      id="ultimaAtualizacao"
-    >
-      Atualizado: --
-    </div>
+<div class="erro-mensagem" id="erroMensagem" > Não foi possível atualizar os dados. O painel tentará novamente automaticamente. </div>
 
-  </footer>
+</div>
 
+</div>
 
-  <!-- =======================================================
-       OVERLAY DE ERRO
-       ======================================================= -->
+<script>
 
-  <div
-    id="erroOverlay"
-  >
+/* ======================================================= CONFIGURAÇÃO ======================================================= */
 
-    <div class="erro-caixa">
+const URL_API = "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
 
-      <div class="erro-icone">
-        !
-      </div>
+/* * Painéis que serão exibidos. * * O primeiro mantém o painel atual. * O segundo consulta painel=DOBRA. */
 
-      <div class="erro-titulo">
-        Não foi possível carregar o painel
-      </div>
+const PAINEIS = [
 
-      <div
-        class="erro-mensagem"
-        id="erroMensagem"
-      >
-        Não foi possível atualizar os dados.
-        O painel tentará novamente automaticamente.
-      </div>
+{ chave: "PACOTE", titulo: "PACOTE", indicador: "Painel atual" },
 
-    </div>
+{ chave: "DOBRA", titulo: "PAINEL DOBRA", indicador: "Painel Dobra" }
 
-  </div>
+];
 
+/* * Tempo entre as trocas de tela. * * 10000 = 10 segundos. */
 
-  <!-- =======================================================
-       JAVASCRIPT
-       ======================================================= -->
+const INTERVALOALTERNANCIAMS = 10000;
 
-  <script>
+/* * Atualização dos dados. * * Mantém os 15 segundos do código original. */
 
+const INTERVALOATUALIZACAOMS = 15000;
 
-    /* =======================================================
-       CONFIGURAÇÃO
-       ======================================================= */
+/* * Tempo máximo de espera de cada consulta. */
 
-    const URL_API =
-      "https://script.google.com/macros/s/AKfycbzaPKDfmkvKfBjANAulitSsJQaxDTzuzwRx0Vl147be4Z33V-CDtv8zRuo7iOx2JKpL/exec";
+const TIMEOUTAPIMS = 10000;
 
+/* ======================================================= ELEMENTOS DA TELA ======================================================= */
 
-    const SETOR =
-      "PACOTE";
+const elementos = {
 
+titulo: document.getElementById( "tituloPainel" ),
 
-    const INTERVALO_MS =
-      15000;
+indicador: document.getElementById( "indicadorPainel" ),
 
+data: document.getElementById( "dataPainel" ),
 
-    /* =======================================================
-       ELEMENTOS DA TELA
-       ======================================================= */
+metaTotal: document.getElementById( "metaTotal" ),
 
-    const elementos = {
+produzidoTotal: document.getElementById( "produzidoTotal" ),
 
-      data:
-        document.getElementById(
-          "dataPainel"
-        ),
+pendenteTotal: document.getElementById( "pendenteTotal" ),
 
-      metaTotal:
-        document.getElementById(
-          "metaTotal"
-        ),
+progressoGeral: document.getElementById( "progressoGeral" ),
 
-      produzidoTotal:
-        document.getElementById(
-          "produzidoTotal"
-        ),
+listaItens: document.getElementById( "listaItens" ),
 
-      pendenteTotal:
-        document.getElementById(
-          "pendenteTotal"
-        ),
+conteudo: document.getElementById( "conteudoPainel" ),
 
-      progressoGeral:
-        document.getElementById(
-          "progressoGeral"
-        ),
+apiStatus: document.getElementById( "apiStatus" ),
 
-      listaItens:
-        document.getElementById(
-          "listaItens"
-        ),
+apiStatusTexto: document.getElementById( "apiStatusTexto" ),
 
-      apiStatus:
-        document.getElementById(
-          "apiStatus"
-        ),
+ultimaAtualizacao: document.getElementById( "ultimaAtualizacao" ),
 
-      apiStatusTexto:
-        document.getElementById(
-          "apiStatusTexto"
-        ),
+erroOverlay: document.getElementById( "erroOverlay" ),
 
-      ultimaAtualizacao:
-        document.getElementById(
-          "ultimaAtualizacao"
-        ),
+erroMensagem: document.getElementById( "erroMensagem" )
 
-      erroOverlay:
-        document.getElementById(
-          "erroOverlay"
-        ),
+};
 
-      erroMensagem:
-        document.getElementById(
-          "erroMensagem"
-        )
+/* ======================================================= ESTADO DOS PAINÉIS ======================================================= */
 
-    };
+const dadosPaineis = {
 
+PACOTE: null,
 
-    /* =======================================================
-       CONTROLE DE CARREGAMENTO
-       ======================================================= */
+DOBRA: null
 
-    let carregamentoEmAndamento =
-      false;
+};
 
+let indicePainelAtual = 0;
 
-    /* =======================================================
-       FORMATAÇÃO DE NÚMEROS
-       ======================================================= */
+let carregamentoEmAndamento = false;
 
-    function formatarNumero(valor) {
+/* ======================================================= FORMATAÇÃO DE NÚMEROS ======================================================= */
 
-      const numero =
-        Number(valor) || 0;
+function formatarNumero(valor) {
 
-      return numero.toLocaleString(
-        "pt-BR"
-      );
+const numero = Number(valor) || 0;
 
-    }
+return numero.toLocaleString( "pt-BR" );
 
+}
 
-    function formatarPercentual(valor) {
+function formatarPercentual(valor) {
 
-      const numero =
-        Number(valor) || 0;
+const numero = Number(valor) || 0;
 
-      return (
-        Math.round(numero * 10) / 10
-      ).toLocaleString(
-        "pt-BR"
-      ) + "%";
+return ( Math.round(numero * 10) / 10 ).toLocaleString( "pt-BR" ) + "%";
 
-    }
+}
 
+function limitarPercentual(valor) {
 
-    function limitarPercentual(valor) {
+const numero = Number(valor) || 0;
 
-      const numero =
-        Number(valor) || 0;
+return Math.max( 0, Math.min( 100, numero ) );
 
-      return Math.max(
-        0,
-        Math.min(
-          100,
-          numero
-        )
-      );
+}
 
-    }
+/* ======================================================= SEGURANÇA HTML ======================================================= */
 
+function escaparHTML(valor) {
 
-    /* =======================================================
-       SEGURANÇA HTML
-       ======================================================= */
+return String( valor ?? "" ) .replace( /&/g, "&" ) .replace( /</g, "<" ) .replace( />/g, ">" ) .replace( /"/g, """ ) .replace( /'/g, "'" );
 
-    function escaparHTML(valor) {
+}
 
-      return String(
-        valor ?? ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+/* ======================================================= DETERMINA STATUS ======================================================= */
 
-    }
+function determinarStatus( produzido, meta, percentual ) {
 
+const prod = Number(produzido) || 0;
 
-    /* =======================================================
-       DETERMINA STATUS
-       ======================================================= */
+const alvo = Number(meta) || 0;
 
-    function determinarStatus(
-      produzido,
-      meta,
-      percentual
-    ) {
+const progresso = Number(percentual) || 0;
 
-      const prod =
-        Number(produzido) || 0;
+if ( alvo > 0 && prod >= alvo ) {
 
-      const alvo =
-        Number(meta) || 0;
+return {
 
-      const progresso =
-        Number(percentual) || 0;
+classe: "status-finalizado",
 
+texto: "Finalizado"
 
-      if (
-        alvo > 0 &&
-        prod >= alvo
-      ) {
+};
 
-        return {
-          classe: "status-finalizado",
-          texto: "Finalizado"
-        };
+}
 
-      }
+if ( progresso > 0 ) {
 
+return {
 
-      if (
-        progresso > 0
-      ) {
+classe: "status-andamento",
 
-        return {
-          classe: "status-andamento",
-          texto: "Em andamento"
-        };
+texto: "Em andamento"
 
-      }
+};
 
+}
 
-      return {
-        classe: "status-pendente",
-        texto: "Pendente"
-      };
+return {
 
-    }
+classe: "status-pendente",
 
+texto: "Pendente"
 
-    /* =======================================================
-       CRIA CARD
-       ======================================================= */
+};
 
-    function criarCard(
-      item,
-      indice
-    ) {
+}
 
-      const numero =
-        item.numero ??
-        item.id ??
-        (indice + 1);
+/* ======================================================= CRIA CARD ======================================================= */
 
+function criarCard( item, indice ) {
 
-      const produto =
-        item.produto ||
-        "--";
+const numero = item.numero ?? item.id ?? (indice + 1);
 
+const produto = item.produto || "--";
 
-      const lote =
-        item.lote ||
-        "--";
+const lote = item.lote || "--";
 
+const meta = Number(item.meta) || 0;
 
-      const meta =
-        Number(item.meta) || 0;
+const produzido = Number(item.produzido) || 0;
 
+const pendente = Number(item.pendente) || Math.max( meta - produzido, 0 );
 
-      const produzido =
-        Number(item.produzido) || 0;
+let percentual = Number(item.progresso);
 
+if ( !Number.isFinite(percentual) ) {
 
-      const pendente =
-        Number(item.pendente) ||
-        Math.max(
-          meta - produzido,
-          0
-        );
+percentual = meta > 0 ? ( produzido / meta ) * 100 : 0;
 
+}
 
-      let percentual =
-        Number(item.progresso);
+percentual = limitarPercentual( percentual );
 
+const status = determinarStatus( produzido, meta, percentual );
 
-      if (
-        !Number.isFinite(percentual)
-      ) {
+const graus = ( percentual / 100 ) * 360;
 
-        percentual =
-          meta > 0
-            ? (
-                produzido /
-                meta
-              ) * 100
-            : 0;
+const card = document.createElement( "article" );
 
-      }
+card.className = "card-item";
 
+card.innerHTML = `
 
-      percentual =
-        limitarPercentual(
-          percentual
-        );
+<div class="card-topo">
 
+<div class="numero-item" > ${escaparHTML(numero)} </div>
 
-      const status =
-        determinarStatus(
-          produzido,
-          meta,
-          percentual
-        );
+<div class="informacoes">
 
+<div class="produto" title="${escaparHTML(produto)}" > ${escaparHTML(produto)} </div>
 
-      const graus =
-        (
-          percentual /
-          100
-        ) * 360;
+<div class="lote" title="${escaparHTML(lote)}" > Lote: ${escaparHTML(lote)} </div>
 
+</div>
 
-      const card =
-        document.createElement(
-          "article"
-        );
+<div class="status ${status.classe}" > ${status.texto} </div>
 
+</div>
 
-      card.className =
-        "card-item";
+<div class="card-corpo">
 
+<div class="progresso-circulo" style="--progresso-graus: ${graus}deg;" >
 
-      card.innerHTML = `
+<div class="progresso-centro" >
 
-        <div class="card-topo">
+<div class="progresso-numero" > ${Math.round(percentual)}% </div>
 
-          <div
-            class="numero-item"
-          >
-            ${escaparHTML(numero)}
-          </div>
+<div class="progresso-texto" > progresso </div>
 
+</div>
 
-          <div class="informacoes">
+</div>
 
-            <div
-              class="produto"
-              title="${escaparHTML(produto)}"
-            >
-              ${escaparHTML(produto)}
-            </div>
+<div class="numeros">
 
-            <div
-              class="lote"
-              title="${escaparHTML(lote)}"
-            >
-              Lote: ${escaparHTML(lote)}
-            </div>
+<div class="numero-bloco">
 
-          </div>
+<div class="numero-label" > Produzido </div>
 
+<div class="numero-valor" > ${formatarNumero(produzido)} </div>
 
-          <div
-            class="status ${status.classe}"
-          >
-            ${status.texto}
-          </div>
+</div>
 
-        </div>
+<div class="numero-bloco">
 
+<div class="numero-label" > Meta </div>
 
-        <div class="card-corpo">
+<div class="numero-valor" > ${formatarNumero(meta)} </div>
 
+</div>
 
-          <div
-            class="progresso-circulo"
-            style="--progresso-graus: ${graus}deg;"
-          >
+<div class="numero-bloco">
 
-            <div
-              class="progresso-centro"
-            >
+<div class="numero-label" > Pendente </div>
 
-              <div
-                class="progresso-numero"
-              >
-                ${Math.round(percentual)}%
-              </div>
+<div class="numero-valor pendente" > ${formatarNumero(pendente)} </div>
 
-              <div
-                class="progresso-texto"
-              >
-                progresso
-              </div>
+</div>
 
-            </div>
+</div>
 
-          </div>
+</div>
 
+<div class="barra-area">
 
-          <div class="numeros">
+<div class="barra-topo">
 
+<span class="barra-label" > Progresso </span>
 
-            <div class="numero-bloco">
+<span class="barra-percentual" > ${formatarPercentual(percentual)} </span>
 
-              <div
-                class="numero-label"
-              >
-                Produzido
-              </div>
+</div>
 
-              <div
-                class="numero-valor"
-              >
-                ${formatarNumero(produzido)}
-              </div>
+<div class="barra">
 
-            </div>
+<div class="barra-preenchida" style="width: ${percentual}%" ></div>
 
+</div>
 
-            <div class="numero-bloco">
+</div>
 
-              <div
-                class="numero-label"
-              >
-                Meta
-              </div>
+`;
 
-              <div
-                class="numero-valor"
-              >
-                ${formatarNumero(meta)}
-              </div>
+return card;
 
-            </div>
+}
 
+/* ======================================================= NORMALIZA ITENS ======================================================= */
 
-            <div class="numero-bloco">
+function normalizarItens( itens ) {
 
-              <div
-                class="numero-label"
-              >
-                Pendente
-              </div>
+if ( !Array.isArray(itens) ) {
 
-              <div
-                class="numero-valor pendente"
-              >
-                ${formatarNumero(pendente)}
-              </div>
+return [];
 
-            </div>
+}
 
+return itens.map( function(item, indice) {
 
-          </div>
+return {
 
+numero: item.numero ?? item.id ?? item.item ?? (indice + 1),
 
-        </div>
+produto: item.produto ?? item.nome ?? "",
 
+lote: item.lote ?? "",
 
-        <div class="barra-area">
+meta: Number( item.meta ?? 0 ),
 
-          <div class="barra-topo">
+produzido: Number( item.produzido ?? item.producao ?? 0 ),
 
-            <span
-              class="barra-label"
-            >
-              Progresso
-            </span>
+pendente: Number( item.pendente ?? 0 ),
 
-            <span
-              class="barra-percentual"
-            >
-              ${formatarPercentual(percentual)}
-            </span>
+progresso: Number( item.progresso ?? item.percentual ?? 0 )
 
-          </div>
+};
 
+} );
 
-          <div class="barra">
+}
 
-            <div
-              class="barra-preenchida"
-              style="width: ${percentual}%"
-            ></div>
+/* ======================================================= CALCULA RESUMO ======================================================= */
 
-          </div>
+function calcularResumo( resumo, itens ) {
 
-        </div>
+resumo = resumo || {};
 
-      `;
+let metaTotal = Number( resumo.metaTotal );
 
+let produzidoTotal = Number( resumo.produzidoTotal );
 
-      return card;
+let pendenteTotal = Number( resumo.pendenteTotal );
 
-    }
+let progressoGeral = Number( resumo.progressoGeral );
 
+if ( !Number.isFinite(metaTotal) ) {
 
-    /* =======================================================
-       NORMALIZA ITENS
-       ======================================================= */
+metaTotal = itens.reduce( function(total, item) {
 
-    function normalizarItens(
-      itens
-    ) {
+return ( total + ( Number(item.meta) || 0 ) );
 
-      if (
-        !Array.isArray(itens)
-      ) {
+}, 0 );
 
-        return [];
+}
 
-      }
+if ( !Number.isFinite(produzidoTotal) ) {
 
+produzidoTotal = itens.reduce( function(total, item) {
 
-      return itens.map(
-        function(item, indice) {
+return ( total + ( Number(item.produzido) || 0 ) );
 
-          return {
+}, 0 );
 
-            numero:
-              item.numero ??
-              item.id ??
-              item.item ??
-              (indice + 1),
+}
 
-            produto:
-              item.produto ??
-              item.nome ??
-              "",
+if ( !Number.isFinite(pendenteTotal) ) {
 
-            lote:
-              item.lote ??
-              "",
+pendenteTotal = Math.max( metaTotal - produzidoTotal, 0 );
 
-            meta:
-              Number(
-                item.meta ??
-                0
-              ),
+}
 
-            produzido:
-              Number(
-                item.produzido ??
-                item.producao ??
-                0
-              ),
+if ( !Number.isFinite(progressoGeral) ) {
 
-            pendente:
-              Number(
-                item.pendente ??
-                0
-              ),
+progressoGeral = metaTotal > 0 ? ( produzidoTotal / metaTotal ) * 100 : 0;
 
-            progresso:
-              Number(
-                item.progresso ??
-                item.percentual ??
-                0
-              )
+}
 
-          };
+return {
 
-        }
-      );
+metaTotal: metaTotal,
 
-    }
+produzidoTotal: produzidoTotal,
 
+pendenteTotal: pendenteTotal,
 
-    /* =======================================================
-       RENDERIZA ITENS
-       ======================================================= */
+progressoGeral: limitarPercentual( progressoGeral )
 
-    function renderizarItens(
-      itens
-    ) {
+};
 
-      elementos.listaItens.innerHTML =
-        "";
+}
 
+/* ======================================================= PREPARA DADOS RECEBIDOS ======================================================= */
 
-      const quantidade =
-        Math.max(
-          itens.length,
-          10
-        );
+function prepararDados( resultado ) {
 
+const itens = normalizarItens( resultado.itens );
 
-      for (
-        let i = 0;
-        i < quantidade;
-        i++
-      ) {
+const resumo = calcularResumo( resultado.resumo, itens );
 
-        const item =
-          itens[i] || {
+return {
 
-            numero:
-              i + 1,
+itens: itens,
 
-            produto:
-              "--",
+resumo: resumo,
 
-            lote:
-              "--",
+data: resultado.data || "--",
 
-            meta:
-              0,
+atualizacao: resultado.atualizacao || "Atualizado agora"
 
-            produzido:
-              0,
+};
 
-            pendente:
-              0,
+}
 
-            progresso:
-              0
+/* ======================================================= RENDERIZA PAINEL ======================================================= */
 
-          };
+function renderizarPainel( chave ) {
 
+const dados = dadosPaineis[ chave ];
 
-        elementos.listaItens.appendChild(
-          criarCard(
-            item,
-            i
-          )
-        );
+if (!dados) {
 
-      }
+return;
 
-    }
+}
 
+const configuracao = PAINEIS.find( function(painel) {
 
-    /* =======================================================
-       RENDERIZA RESUMO
-       ======================================================= */
+return painel.chave === chave;
 
-    function renderizarResumo(
-      resumo,
-      itens
-    ) {
+} );
 
-      resumo =
-        resumo || {};
+if (!configuracao) {
 
+return;
 
-      let metaTotal =
-        Number(
-          resumo.metaTotal
-        );
+}
 
+/* * Cabeçalho */
 
-      let produzidoTotal =
-        Number(
-          resumo.produzidoTotal
-        );
+elementos.titulo.textContent = configuracao.titulo;
 
+elementos.indicador.textContent = configuracao.indicador;
 
-      let pendenteTotal =
-        Number(
-          resumo.pendenteTotal
-        );
+/* * Data */
 
+elementos.data.textContent = dados.data;
 
-      let progressoGeral =
-        Number(
-          resumo.progressoGeral
-        );
+/* * Resumo */
 
+elementos.metaTotal.textContent = formatarNumero( dados.resumo.metaTotal );
 
-      if (
-        !Number.isFinite(metaTotal)
-      ) {
+elementos.produzidoTotal.textContent = formatarNumero( dados.resumo.produzidoTotal );
 
-        metaTotal =
-          itens.reduce(
-            function(total, item) {
+elementos.pendenteTotal.textContent = formatarNumero( dados.resumo.pendenteTotal );
 
-              return (
-                total +
-                (
-                  Number(item.meta) ||
-                  0
-                )
-              );
+elementos.progressoGeral.textContent = formatarPercentual( dados.resumo.progressoGeral );
 
-            },
-            0
-          );
+/* * Cards */
 
-      }
+elementos.listaItens.innerHTML = "";
 
+const quantidade = Math.max( dados.itens.length, 10 );
 
-      if (
-        !Number.isFinite(produzidoTotal)
-      ) {
+for ( let i = 0; i < quantidade; i++ ) {
 
-        produzidoTotal =
-          itens.reduce(
-            function(total, item) {
+const item = dados.itens[i] || {
 
-              return (
-                total +
-                (
-                  Number(item.produzido) ||
-                  0
-                )
-              );
+numero: i + 1,
 
-            },
-            0
-          );
+produto: "--",
 
-      }
+lote: "--",
 
+meta: 0,
 
-      if (
-        !Number.isFinite(pendenteTotal)
-      ) {
+produzido: 0,
 
-        pendenteTotal =
-          Math.max(
-            metaTotal -
-            produzidoTotal,
-            0
-          );
+pendente: 0,
 
-      }
+progresso: 0
 
+};
 
-      if (
-        !Number.isFinite(progressoGeral)
-      ) {
+elementos.listaItens.appendChild( criarCard( item, i ) );
 
-        progressoGeral =
-          metaTotal > 0
-            ? (
-                produzidoTotal /
-                metaTotal
-              ) * 100
-            : 0;
+}
 
-      }
+/* * Última atualização */
 
+elementos.ultimaAtualizacao.textContent = dados.atualizacao ? "Atualizado: " + dados.atualizacao : "Atualizado agora";
 
-      progressoGeral =
-        limitarPercentual(
-          progressoGeral
-        );
+}
 
+/* ======================================================= STATUS DA API ======================================================= */
 
-      elementos.metaTotal.textContent =
-        formatarNumero(
-          metaTotal
-        );
+function definirStatus( classe, texto ) {
 
+elementos.apiStatus.className = "api-status " + classe;
 
-      elementos.produzidoTotal.textContent =
-        formatarNumero(
-          produzidoTotal
-        );
+elementos.apiStatusTexto.textContent = texto;
 
+}
 
-      elementos.pendenteTotal.textContent =
-        formatarNumero(
-          pendenteTotal
-        );
+/* ======================================================= ERRO ======================================================= */
 
+function mostrarErro( mensagem ) {
 
-      elementos.progressoGeral.textContent =
-        formatarPercentual(
-          progressoGeral
-        );
+elementos.erroMensagem.textContent = mensagem;
 
-    }
+elementos.erroOverlay.classList.add( "visivel" );
 
+}
 
-    /* =======================================================
-       STATUS DA API
-       ======================================================= */
+function esconderErro() {
 
-    function definirStatus(
-      classe,
-      texto
-    ) {
+elementos.erroOverlay.classList.remove( "visivel" );
 
-      elementos.apiStatus.className =
-        "api-status " +
-        classe;
+}
 
+/* ======================================================= CARREGAMENTO JSONP DE UM PAINEL ======================================================= */
 
-      elementos.apiStatusTexto.textContent =
-        texto;
+function carregarPainel( chave ) {
 
-    }
+return new Promise( function(resolve, reject) {
 
+const callback = "receberDados" + chave.toLowerCase() + "" + Date.now() + "_" + Math.random() .toString(36) .slice(2);
 
-    /* =======================================================
-       ERRO
-       ======================================================= */
+const script = document.createElement( "script" );
 
-    function mostrarErro(
-      mensagem
-    ) {
+let finalizado = false;
 
-      elementos.erroMensagem.textContent =
-        mensagem;
+const timeoutId = setTimeout( function() {
 
+finalizarErro( "Tempo limite excedido ao carregar o painel " + chave + "." );
 
-      elementos.erroOverlay.classList.add(
-        "visivel"
-      );
+}, TIMEOUTAPIMS );
 
-    }
+function limpar() {
 
+clearTimeout( timeoutId );
 
-    function esconderErro() {
+delete window[ callback ];
 
-      elementos.erroOverlay.classList.remove(
-        "visivel"
-      );
+if ( script.parentNode ) {
 
-    }
+script.parentNode.removeChild( script );
 
+}
 
-    /* =======================================================
-       CARREGAMENTO JSONP
-       ======================================================= */
+}
 
-    function carregarDadosReais() {
+function finalizarErro( mensagem ) {
 
-      /*
-       * Evita duas consultas simultâneas.
-       */
+if ( finalizado ) {
 
-      if (
-        carregamentoEmAndamento
-      ) {
+return;
 
-        return;
+}
 
-      }
+finalizado = true;
 
+limpar();
 
-      carregamentoEmAndamento =
-        true;
+reject( new Error( mensagem ) );
 
+}
 
-      definirStatus(
-        "carregando",
-        "Atualizando dados..."
-      );
+window[callback] = function(resultado) {
 
+if ( finalizado ) {
 
-      /*
-       * Nome exclusivo da função de callback.
-       */
+return;
 
-      const callback =
-        "receberDadosPainel_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2);
+}
 
+finalizado = true;
 
-      /*
-       * Cria o elemento <script>.
-       *
-       * O JSONP utiliza uma requisição
-       * de script em vez de fetch().
-       */
+try {
 
-      const script =
-        document.createElement(
-          "script"
-        );
+if ( !resultado || resultado.sucesso !== true ) {
 
+throw new Error( resultado && resultado.erro ? resultado.erro : "Resposta inválida da API." );
 
-      let finalizado =
-        false;
+}
 
+const dados = prepararDados( resultado );
 
-      /*
-       * Timeout de segurança.
-       */
+dadosPaineis[ chave ] = dados;
 
-      const timeoutId =
-        setTimeout(
-          function() {
+limpar();
 
-            finalizarErro(
-              "O servidor demorou para responder. " +
-              "Tentando novamente automaticamente."
-            );
+resolve( dados );
 
-          },
-          10000
-        );
+} catch ( erro ) {
 
+limpar();
 
-      /*
-       * Limpeza da chamada.
-       */
+reject( erro );
 
-      function limpar() {
+}
 
-        clearTimeout(
-          timeoutId
-        );
+};
 
+script.onerror = function() {
 
-        delete window[
-          callback
-        ];
+finalizarErro( "Não foi possível conectar ao painel " + chave + "." );
 
+};
 
-        if (
-          script.parentNode
-        ) {
+const separador = URL_API.indexOf("?") >= 0 ? "&" : "?";
 
-          script.parentNode.removeChild(
-            script
-          );
+const url = URLAPI + separador + "painel=" + encodeURIComponent( chave ) + "&callback=" + encodeURIComponent( callback ) + "&=" + Date.now();
 
-        }
+script.src = url;
 
+document.head.appendChild( script );
 
-        carregamentoEmAndamento =
-          false;
+} );
 
-      }
+}
 
+/* ======================================================= CARREGA TODOS OS PAINÉIS ======================================================= */
 
-      /*
-       * Tratamento de erro.
+async function carregarTodosOsPaineis() {
 
-       */
+if ( carregamentoEmAndamento ) {
 
-      function finalizarErro(
-        mensagem
-      ) {
+return;
 
-        if (
-          finalizado
-        ) {
+}
 
-          return;
+carregamentoEmAndamento = true;
 
-        }
+definirStatus( "carregando", "Atualizando PACOTE e DOBRA..." );
 
+try {
 
-        finalizado =
-          true;
+/* * As duas consultas são realizadas * independentemente. * * Assim, se um painel falhar, * o outro ainda poderá permanecer * disponível. */
 
+const resultados = await Promise.allSettled([
 
-        console.error(
-          mensagem
-        );
+carregarPainel( "PACOTE" ),
 
+carregarPainel( "DOBRA" )
 
-        definirStatus(
-          "",
-          "Erro de conexão • tentando novamente"
-        );
+]);
 
+const pacoteOK = resultados[0].status === "fulfilled";
 
-        mostrarErro(
-          mensagem
-        );
+const dobraOK = resultados[1].status === "fulfilled";
 
+if ( pacoteOK && dobraOK ) {
 
-        setTimeout(
-          esconderErro,
-          3000
-        );
+definirStatus( "ok", "Conectado • dados atualizados" );
 
+esconderErro();
 
-        limpar();
+} else if ( pacoteOK || dobraOK ) {
 
-      }
+definirStatus( "ok", "Conectado • um painel atualizado" );
 
+mostrarErro( "Um dos painéis não pôde ser atualizado. " + "O painel disponível continuará sendo exibido." );
 
-      /*
-       * CALLBACK JSONP.
-       */
+setTimeout( esconderErro, 3000 );
 
-      window[callback] =
-        function(resultado) {
+} else {
 
+throw new Error( "Não foi possível atualizar nenhum dos painéis." );
 
-          if (
-            finalizado
-          ) {
+}
 
-            return;
+/* * Re-renderiza somente o painel que * está atualmente na tela. */
 
-          }
+const painelAtual = PAINEIS[ indicePainelAtual ];
 
+if ( dadosPaineis[ painelAtual.chave ] ) {
 
-          finalizado =
-            true;
+renderizarPainel( painelAtual.chave );
 
+}
 
-          try {
+} catch ( erro ) {
 
+console.error( "Erro na atualização dos painéis:", erro );
 
-            /*
-             * Verifica se o Apps Script
-             * respondeu corretamente.
-             */
+definirStatus( "", "Erro de conexão • tentando novamente" );
 
-            if (
-              !resultado ||
-              resultado.sucesso !== true
-            ) {
+mostrarErro( "Não foi possível atualizar os painéis. " + "O sistema tentará novamente automaticamente." );
 
-              throw new Error(
-                resultado &&
-                resultado.erro
-                  ? resultado.erro
-                  : "Resposta inválida da API"
-              );
+setTimeout( esconderErro, 3000 );
 
-            }
+} finally {
 
+carregamentoEmAndamento = false;
 
-            /*
-             * Normaliza os itens recebidos.
-             */
+}
 
-            const itens =
-              normalizarItens(
-                resultado.itens
-              );
+}
 
+/* ======================================================= ALTERNÂNCIA ENTRE PAINÉIS ======================================================= */
 
-            /*
-             * Atualiza os cards.
-             */
+function alternarPainel() {
 
-            renderizarItens(
-              itens
-            );
+const proximoIndice = ( indicePainelAtual + 1 ) % PAINEIS.length;
 
+const proximoPainel = PAINEIS[ proximoIndice ];
 
-            /*
-             * Atualiza o resumo.
-             */
+/* * Se o próximo painel ainda não * tiver dados, não troca para * uma tela vazia. */
 
-            renderizarResumo(
-              resultado.resumo,
-              itens
-            );
+if ( !dadosPaineis[ proximoPainel.chave ] ) {
 
+return;
 
-            /*
-             * Atualiza a data.
-             */
+}
 
-            elementos.data.textContent =
-              resultado.data ||
-              "--";
+elementos.conteudo.classList.add( "trocando" );
 
+setTimeout( function() {
 
-            /*
-             * Atualiza o horário.
-             */
+indicePainelAtual = proximoIndice;
 
-            elementos.ultimaAtualizacao.textContent =
-              resultado.atualizacao
-                ? "Atualizado: " +
-                  resultado.atualizacao
-                : "Atualizado agora";
+renderizarPainel( proximoPainel.chave );
 
+elementos.conteudo.classList.remove( "trocando" );
 
-            /*
-             * Conexão funcionando.
-             */
+}, 450 );
 
-            definirStatus(
-              "ok",
-              "Conectado • dados atualizados"
-            );
+}
 
+/* ======================================================= INICIALIZAÇÃO ======================================================= */
 
-            /*
-             * Esconde eventual erro
-             * anterior.
-             */
+document.addEventListener( "DOMContentLoaded", function() {
 
-            esconderErro();
+/* * Carrega os dois painéis * imediatamente. */
 
+carregarTodosOsPaineis();
 
-          } catch (
-            erro
-          ) {
+/* * Atualiza os dados a cada 15 segundos. */
 
+setInterval( carregarTodosOsPaineis, INTERVALOATUALIZACAOMS );
 
-            console.error(
-              "Erro nos dados do painel:",
-              erro
-            );
+/* * Alterna entre PACOTE e DOBRA * a cada 10 segundos. */
 
+setInterval( alternarPainel, INTERVALOALTERNANCIAMS );
 
-            definirStatus(
-              "",
-              "Erro de conexão • tentando novamente"
-            );
+} );
 
-
-            mostrarErro(
-              "Não foi possível atualizar os dados. " +
-              "O painel tentará novamente automaticamente."
-            );
-
-
-            setTimeout(
-              esconderErro,
-              3000
-            );
-
-
-          } finally {
-
-
-            limpar();
-
-          }
-
-        };
-
-
-      /*
-       * Erro de carregamento do script.
-       */
-
-      script.onerror =
-        function() {
-
-          finalizarErro(
-            "Não foi possível conectar ao servidor. " +
-            "Tentando novamente automaticamente."
-          );
-
-        };
-
-
-      /*
-       * Monta a URL do Apps Script.
-       */
-
-      const separador =
-        URL_API.indexOf("?") >= 0
-          ? "&"
-          : "?";
-
-
-      const url =
-        URL_API +
-        separador +
-        "painel=PACOTE" +
-        "&callback=" +
-        encodeURIComponent(
-          callback
-        ) +
-        "&_=" +
-        Date.now();
-
-
-      /*
-       * Define o endereço do script.
-       */
-
-      script.src =
-        url;
-
-
-      /*
-       * Inicia a requisição JSONP.
-       */
-
-      document.head.appendChild(
-        script
-      );
-
-    }
-
-
-    /* =======================================================
-       INICIALIZAÇÃO
-       ======================================================= */
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      function() {
-
-
-        /*
-         * Primeira atualização imediatamente.
-         */
-
-        carregarDadosReais();
-
-
-        /*
-         * Atualização automática
-         * a cada 15 segundos.
-         */
-
-        setInterval(
-          carregarDadosReais,
-          INTERVALO_MS
-        );
-
-      }
-    );
-
-
-  </script>
-
+</script>
 
 </body>
 
