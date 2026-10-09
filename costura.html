@@ -4,547 +4,378 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apontamento Contínuo - Costura</title>
-
+<title>Apontamento Contínuo — Costura</title>
 <style>
-:root {
-  --azul:#17365d;
-  --azul2:#1a73e8;
-  --fundo:#f1f4f9;
-  --borda:#d5dce6;
-  --verde:#137333;
-  --vermelho:#b3261e;
-}
 *{box-sizing:border-box}
-body{
-  margin:0;font-family:Arial,sans-serif;
-  background:var(--fundo);color:#202124
-}
-header{
-  background:var(--azul);color:white;padding:15px 20px;
-  position:sticky;top:0;z-index:20;
-  box-shadow:0 2px 8px #0002
-}
-header h1{font-size:21px;margin:0}
-header p{font-size:13px;margin:6px 0 0}
-main{max-width:1500px;margin:auto;padding:14px}
-.painel{
-  background:white;border-radius:12px;padding:16px;
-  margin-bottom:14px;box-shadow:0 2px 7px #0000000b
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#202124}
+header{background:#19375d;color:white;padding:15px 22px;position:sticky;top:0;z-index:5}
+header h1{font-size:22px;margin:0}
+header p{font-size:14px;margin:6px 0 0}
+main{padding:15px;max-width:1800px;margin:auto}
+.painel{background:white;padding:16px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 7px #0001}
 h2{font-size:18px;margin:0 0 14px}
-label{font-size:13px;font-weight:bold;display:block;margin-bottom:6px}
+label{font-size:13px;font-weight:bold;display:block;margin-bottom:5px}
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 input,select,button{font:inherit}
-input,select{
-  width:100%;min-width:0;min-height:44px;padding:10px;
-  border:1px solid var(--borda);border-radius:7px;background:white
-}
-button{
-  border:0;border-radius:8px;padding:12px 16px;
-  min-height:44px;font-weight:bold;cursor:pointer
-}
+input,select{width:100%;min-width:65px;padding:9px;border:1px solid #cbd5e1;border-radius:6px;min-height:39px}
+button{border:0;border-radius:7px;padding:11px 15px;cursor:pointer;font-weight:bold}
 button:disabled{opacity:.55;cursor:wait}
-.primario{background:var(--azul2);color:white}
-.secundario{background:#e8eef8;color:#174ea6}
-.perigo{background:#fce8e6;color:#b3261e}
-.grade{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px
-}
-.acoes{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
-.nota{font-size:12px;color:#5f6368;line-height:1.5}
-.resumo{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;margin-bottom:14px
-}
-.resumo-item{
-  background:#eaf1fc;border:1px solid #cbd9f0;
-  padding:12px;border-radius:9px;min-width:0
-}
-.resumo-item small{display:block;color:#53657d;margin-bottom:5px}
-.resumo-item strong{display:block;overflow-wrap:anywhere;font-size:15px}
-.status{font-weight:bold;font-size:14px;white-space:pre-wrap;margin-top:12px}
-.ok{color:var(--verde)}.erro{color:var(--vermelho)}
-.horarios{
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px
-}
-.par{
-  padding:10px;border:1px solid var(--borda);
-  border-radius:9px;background:#fafbff;min-width:0
-}
-.par h3{font-size:13px;color:var(--azul);margin:0 0 9px}
-.dupla{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.dupla input{padding:7px 3px}
-.dupla label{font-size:11px}
-.tabela-wrap{
-  overflow:auto;max-height:420px;border:1px solid var(--borda);
-  border-radius:8px
-}
-table{border-collapse:collapse;width:100%;background:white;font-size:12px;white-space:nowrap}
-th,td{padding:9px;border-bottom:1px solid #e4e8ef;text-align:left}
-thead th{background:#e5edf9;position:sticky;top:0;z-index:2}
-tbody tr:nth-child(even){background:#f8faff}
-.vazio{text-align:center;color:#666;padding:20px}
-.oculto{display:none!important}
-@media(max-width:900px){
-  .horarios{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:520px){
-  main{padding:8px}.painel{padding:11px}
-  header h1{font-size:18px}
-  .grade{grid-template-columns:1fr}
-  .resumo{grid-template-columns:1fr}
-  .horarios{grid-template-columns:1fr 1fr}
-  .acoes button{width:100%}
+.azul{background:#1a73e8;color:white}
+.claro{background:#e7eef9;color:#174ea6}
+.acoes{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+.resumo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.cartao{background:#eaf1fc;border:1px solid #d1def2;border-radius:8px;padding:11px}
+.cartao small{display:block;color:#52647d;margin-bottom:5px}
+.cartao strong{overflow-wrap:anywhere}
+.nota{font-size:12px;line-height:1.5;color:#5f6368}
+.status{font-weight:bold;font-size:13px;white-space:pre-wrap;margin-top:10px}
+.ok{color:#137333}.erro{color:#b3261e}
+.tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #d5dce6;border-radius:8px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px;white-space:nowrap;background:white}
+th,td{padding:6px;border-bottom:1px solid #dce2eb;border-right:1px solid #e5e9f0;text-align:center}
+thead th{position:sticky;top:0;background:#e4ecf8;z-index:2}
+tbody tr:nth-child(even){background:#f7f9fd}
+th:nth-child(-n+5),td:nth-child(-n+5){position:sticky;z-index:1}
+th:nth-child(1),td:nth-child(1){left:0;min-width:60px}
+th:nth-child(2),td:nth-child(2){left:60px;min-width:95px}
+th:nth-child(3),td:nth-child(3){left:155px;min-width:155px;text-align:left}
+th:nth-child(4),td:nth-child(4){left:310px;min-width:145px;text-align:left}
+th:nth-child(5),td:nth-child(5){left:455px;min-width:90px}
+thead th:nth-child(-n+5){z-index:4}
+tbody td:nth-child(-n+5){background:#f1f5fc}
+tbody tr:nth-child(even) td:nth-child(-n+5){background:#eaf0f9}
+.hora{width:94px;min-width:90px;padding:6px 3px;text-align:center}
+.qtd{width:85px;min-width:80px;text-align:center;font-weight:bold}
+.salvar-linha{background:#137333;color:white;padding:9px 11px;font-size:12px}
+.vazio{padding:22px;text-align:center;color:#666}
+.escondido{display:none!important}
+@media(max-width:650px){
+ main{padding:7px}.painel{padding:10px}
+ header h1{font-size:18px}
+ .grade{grid-template-columns:1fr}
+ .resumo{grid-template-columns:1fr}
+ .acoes button{width:100%}
+ .tabela-wrap{max-height:65vh}
 }
 </style>
 </head>
-
 <body>
+
 <header>
   <h1>📋 Apontamento Contínuo — Costura</h1>
-  <p>Identifique a produção uma vez e registre quantidades e horários continuamente.</p>
+  <p>Edite a quantidade e os horários diretamente na linha do colaborador.</p>
 </header>
 
 <main>
-
 <section class="painel">
   <h2>1. Identificação da produção</h2>
-
-  <div id="configuracao">
+  <div id="selecao">
     <div class="grade">
       <div>
-        <label for="data">Data — coluna A</label>
-        <input type="date" id="data" required>
+        <label for="data">Data</label>
+        <input type="date" id="data">
       </div>
       <div>
-        <label for="colaborador">Colaborador — coluna B</label>
-        <select id="colaborador" required>
-          <option value="">Carregando colaboradores...</option>
-        </select>
+        <label for="colaborador">Colaborador</label>
+        <select id="colaborador"><option value="">Carregando...</option></select>
       </div>
       <div>
-        <label for="atividade">Serviço — coluna C</label>
-        <select id="atividade" required>
-          <option value="">Carregando serviços...</option>
-        </select>
+        <label for="atividade">Serviço</label>
+        <select id="atividade"><option value="">Carregando...</option></select>
       </div>
     </div>
-
     <div class="acoes">
-      <button type="button" class="primario" id="iniciar">
-        ▶ Iniciar produção
-      </button>
+      <button type="button" class="azul" id="iniciar">Confirmar identificação</button>
     </div>
-    <p class="nota">
-      Selecione a identificação antes de começar os apontamentos.
-    </p>
   </div>
 
-  <div id="identificacaoAtiva" class="oculto">
+  <div id="identificacao" class="escondido">
     <div class="resumo">
-      <div class="resumo-item">
-        <small>DATA — A</small>
-        <strong id="fixData"></strong>
-      </div>
-      <div class="resumo-item">
-        <small>COLABORADOR — B</small>
-        <strong id="fixColaborador"></strong>
-      </div>
-      <div class="resumo-item">
-        <small>SERVIÇO — C</small>
-        <strong id="fixAtividade"></strong>
-      </div>
+      <div class="cartao"><small>DATA — A</small><strong id="fixData"></strong></div>
+      <div class="cartao"><small>COLABORADOR — B</small><strong id="fixColaborador"></strong></div>
+      <div class="cartao"><small>SERVIÇO — C</small><strong id="fixAtividade"></strong></div>
     </div>
-
-    <div class="acoes">
-      <button type="button" class="secundario" id="trocar">
-        Trocar identificação
-      </button>
-    </div>
-    <p class="nota">
-      Identificação fixa durante os apontamentos. Cada salvamento cria
-      um novo registro com estes mesmos dados.
-    </p>
+    <button type="button" class="claro" id="trocar">Trocar identificação</button>
+    <p class="nota">A identificação é apenas de referência. Para salvar, edite a linha correspondente na tabela abaixo.</p>
   </div>
-</section>
-
-<section class="painel" id="painelApontamento">
-  <h2>2. Quantidade e horários</h2>
-
-  <form id="formulario">
-    <div class="grade">
-      <div>
-        <label for="quantidade">Quantidade produzida — coluna E</label>
-        <input type="number" id="quantidade" min="0" step="any"
-          placeholder="Digite a quantidade" required>
-      </div>
-    </div>
-
-    <h2 style="margin-top:22px">Horários das atividades — F a Y</h2>
-    <p class="nota">
-      Preencha os horários de início e fim correspondentes.
-      Os campos não utilizados ficam vazios.
-    </p>
-
-    <div class="horarios" id="horarios"></div>
-
-    <div class="acoes">
-      <button type="submit" class="primario" id="salvar">
-        💾 Salvar apontamento
-      </button>
-      <button type="button" class="secundario" id="limpar">
-        Limpar quantidade e horários
-      </button>
-    </div>
-
-    <div id="status" class="status" role="status" aria-live="polite"></div>
-  </form>
 </section>
 
 <section class="painel">
-  <h2>3. Últimos lançamentos gravados</h2>
+  <h2>2. Registros — edição direta na mesma linha</h2>
   <p class="nota">
-    Consulte os registros para conferir a quantidade, a identificação
-    e os horários lançados.
+    Edite a quantidade na coluna E e os horários de F até Y.
+    Clique em Salvar na própria linha. A, B, C e D não serão modificadas.
+    A lista mostra os últimos 100 registros encontrados.
   </p>
-
-  <div class="acoes" style="margin:0 0 12px">
-    <button type="button" class="secundario" id="atualizar">
-      ↻ Atualizar registros
-    </button>
+  <div class="acoes">
+    <button class="claro" id="atualizar">↻ Atualizar registros</button>
   </div>
+  <div id="statusGeral" class="status" role="status" aria-live="polite"></div>
 
   <div class="tabela-wrap">
     <table>
       <thead>
         <tr>
-          <th>Linha</th><th>Data</th><th>Colaborador</th>
-          <th>Serviço</th><th>Qtd.</th>
-          <th>F</th><th>G</th><th>H</th><th>I</th><th>J</th>
-          <th>K</th><th>L</th><th>M</th><th>N</th><th>O</th>
-          <th>P</th><th>Q</th><th>R</th><th>S</th><th>T</th>
-          <th>U</th><th>V</th><th>W</th><th>X</th><th>Y</th>
+          <th>Linha</th><th>Data</th><th>Colaborador</th><th>Serviço</th><th>E — Qtd.</th>
+          <th>F — Início</th><th>G — Fim</th>
+          <th>H — Início</th><th>I — Fim</th>
+          <th>J — Início</th><th>K — Fim</th>
+          <th>L — Início</th><th>M — Fim</th>
+          <th>N — Início</th><th>O — Fim</th>
+          <th>P — Início</th><th>Q — Fim</th>
+          <th>R — Início</th><th>S — Fim</th>
+          <th>T — Início</th><th>U — Fim</th>
+          <th>V — Início</th><th>W — Fim</th>
+          <th>X — Início</th><th>Y — Fim</th>
+          <th>Salvar</th>
         </tr>
       </thead>
       <tbody id="registros">
-        <tr><td colspan="25" class="vazio">Carregando...</td></tr>
+        <tr><td colspan="26" class="vazio">Carregando registros...</td></tr>
       </tbody>
     </table>
   </div>
 </section>
-
 </main>
 
 <script>
-/*
-  IMPORTANTE:
-  Substitua pela URL real da implantação do Apps Script.
-*/
-const API_URL = 'https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
+const API_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
 const $ = id => document.getElementById(id);
+let salvamentos = new Set();
 
-let producaoAtiva = false;
-let enviando = false;
-
-function status(texto, tipo = '') {
-  $('status').textContent = texto;
-  $('status').className = 'status ' + tipo;
+function mostrarStatus(texto,tipo=''){
+  $('statusGeral').textContent=texto;
+  $('statusGeral').className='status '+tipo;
 }
 
-function chamarAPI(parametros) {
-  return new Promise((resolve, reject) => {
-    const callback = 'cb_' + Date.now() + '_' +
-      Math.random().toString(36).slice(2);
+function chamarAPI(parametros){
+  return new Promise((resolve,reject)=>{
+    const callback='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const script=document.createElement('script');
+    let terminou=false;
+    const timer=setTimeout(()=>finalizar(new Error('Tempo esgotado. Confira a conexão.')),25000);
 
-    const query = new URLSearchParams({
-      ...parametros,
-      callback
-    });
-
-    const script = document.createElement('script');
-    let finalizado = false;
-
-    const timer = setTimeout(() => {
-      finalizar(new Error(
-        'Tempo esgotado. Confira a conexão e a implantação do Apps Script.'
-      ));
-    }, 25000);
-
-    function finalizar(erro, resultado) {
-      if (finalizado) return;
-      finalizado = true;
+    function finalizar(erro,resultado){
+      if(terminou)return;
+      terminou=true;
       clearTimeout(timer);
       delete window[callback];
       script.remove();
-
-      if (erro) reject(erro);
-      else resolve(resultado);
+      erro?reject(erro):resolve(resultado);
     }
 
-    window[callback] = resultado => finalizar(null, resultado);
-    script.onerror = () => finalizar(
-      new Error('Falha ao conectar com o Google Apps Script.')
-    );
-
-    script.src = API_URL + '?' + query.toString();
+    window[callback]=r=>finalizar(null,r);
+    script.onerror=()=>finalizar(new Error('Não foi possível acessar o Apps Script.'));
+    script.src=API_URL+'?'+new URLSearchParams({...parametros,callback}).toString();
     document.body.appendChild(script);
   });
 }
 
-function criarHorarios() {
-  const area = $('horarios');
-
-  for (let i = 0; i < 10; i++) {
-    const letraEntrada = String.fromCharCode(70 + i * 2);
-    const letraSaida = String.fromCharCode(71 + i * 2);
-
-    const bloco = document.createElement('div');
-    bloco.className = 'par';
-
-    const titulo = document.createElement('h3');
-    titulo.textContent = 'Intervalo ' + (i + 1);
-    bloco.appendChild(titulo);
-
-    const dupla = document.createElement('div');
-    dupla.className = 'dupla';
-
-    [[letraEntrada, 'Início'], [letraSaida, 'Fim']].forEach(
-      ([letra, descricao]) => {
-        const grupo = document.createElement('div');
-
-        const label = document.createElement('label');
-        label.textContent = letra + ' — ' + descricao;
-        label.htmlFor = 'hora_' + letra;
-
-        const input = document.createElement('input');
-        input.type = 'time';
-        input.id = 'hora_' + letra;
-        input.step = '60';
-        input.setAttribute('aria-label', 'Coluna ' + letra);
-
-        grupo.append(label, input);
-        dupla.appendChild(grupo);
-      }
-    );
-
-    bloco.appendChild(dupla);
-    area.appendChild(bloco);
-  }
-}
-
-function preencherSelect(id, valores, texto) {
-  const select = $(id);
-  const anterior = select.value;
-
+function preencherSelect(id,lista,texto){
+  const select=$(id);
+  const anterior=select.value;
   select.replaceChildren();
 
-  const opcaoInicial = document.createElement('option');
-  opcaoInicial.value = '';
-  opcaoInicial.textContent = texto;
-  select.appendChild(opcaoInicial);
+  const inicial=document.createElement('option');
+  inicial.value='';
+  inicial.textContent=texto;
+  select.appendChild(inicial);
 
-  valores.forEach(valor => {
-    const opcao = document.createElement('option');
-    opcao.value = valor;
-    opcao.textContent = valor;
-    select.appendChild(opcao);
+  lista.forEach(valor=>{
+    const op=document.createElement('option');
+    op.value=valor;
+    op.textContent=valor;
+    select.appendChild(op);
   });
 
-  if (valores.includes(anterior)) select.value = anterior;
+  if(lista.includes(anterior))select.value=anterior;
 }
 
-function montarTabela(registros) {
-  const tbody = $('registros');
+function criarCelula(texto){
+  const td=document.createElement('td');
+  td.textContent=texto??'';
+  return td;
+}
+
+function montarTabela(lista){
+  const tbody=$('registros');
   tbody.replaceChildren();
 
-  if (!registros || !registros.length) {
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.colSpan = 25;
-    td.className = 'vazio';
-    td.textContent = 'Nenhum registro encontrado.';
+  if(!lista.length){
+    const tr=document.createElement('tr');
+    const td=criarCelula('Nenhum registro encontrado.');
+    td.colSpan=26;
+    td.className='vazio';
     tr.appendChild(td);
     tbody.appendChild(tr);
     return;
   }
 
-  registros.forEach(r => {
-    const tr = document.createElement('tr');
+  lista.forEach(r=>{
+    const tr=document.createElement('tr');
+    tr.appendChild(criarCelula(r.linha));
+    tr.appendChild(criarCelula(r.data));
+    tr.appendChild(criarCelula(r.colaborador));
+    tr.appendChild(criarCelula(r.atividade));
 
-    [
-      r.linha, r.data, r.colaborador, r.atividade, r.quantidade,
-      ...(r.horarios || [])
-    ].forEach(valor => {
-      const td = document.createElement('td');
-      td.textContent = valor == null ? '' : valor;
+    const qtd=document.createElement('input');
+    qtd.type='number';
+    qtd.min='0';
+    qtd.step='any';
+    qtd.className='qtd';
+    qtd.value=normalizarQuantidade(r.quantidade);
+    qtd.setAttribute('aria-label','Quantidade da linha '+r.linha);
+    const tdQtd=document.createElement('td');
+    tdQtd.appendChild(qtd);
+    tr.appendChild(tdQtd);
+
+    const campos=[];
+
+    for(let i=0;i<20;i++){
+      const input=document.createElement('input');
+      input.type='time';
+      input.step='60';
+      input.className='hora';
+      input.value=normalizarHora((r.horarios||[])[i]||'');
+      input.setAttribute('aria-label','Coluna '+String.fromCharCode(70+i)+' da linha '+r.linha);
+
+      const td=document.createElement('td');
+      td.appendChild(input);
       tr.appendChild(td);
-    });
+      campos.push(input);
+    }
+
+    const botao=document.createElement('button');
+    botao.type='button';
+    botao.className='salvar-linha';
+    botao.textContent='💾 Salvar';
+    botao.addEventListener('click',()=>salvarLinha(r.linha,qtd,campos,botao));
+
+    const tdBotao=document.createElement('td');
+    tdBotao.appendChild(botao);
+    tr.appendChild(tdBotao);
 
     tbody.appendChild(tr);
   });
 }
 
-async function carregarDados() {
-  $('atualizar').disabled = true;
+function normalizarQuantidade(valor){
+  if(valor==null)return '';
+  return String(valor).trim().replace(',','.');
+}
 
-  try {
-    const dados = await chamarAPI({action: 'list'});
+function normalizarHora(valor){
+  if(!valor)return '';
+  const s=String(valor).trim();
 
-    if (!dados.ok) {
-      throw new Error(dados.mensagem || 'Erro ao carregar dados.');
-    }
+  // Aceita HH:mm ou data/hora exibida pelo Sheets.
+  const m=s.match(/(?:^|\s)(\d{1,2}):(\d{2})(?::\d{2})?/);
+  if(!m)return '';
 
-    preencherSelect(
-      'colaborador', dados.colaboradores || [],
-      'Selecione o colaborador'
-    );
+  return String(m[1]).padStart(2,'0')+':'+m[2];
+}
 
-    preencherSelect(
-      'atividade', dados.atividades || [],
-      'Selecione o serviço'
-    );
+async function carregarDados(){
+  $('atualizar').disabled=true;
+  mostrarStatus('Atualizando registros...');
 
-    montarTabela(dados.registros || []);
-  } catch (erro) {
-    status(erro.message, 'erro');
-  } finally {
-    $('atualizar').disabled = false;
+  try{
+    const dados=await chamarAPI({action:'list'});
+    if(!dados.ok)throw new Error(dados.mensagem||'Erro ao consultar planilha.');
+
+    preencherSelect('colaborador',dados.colaboradores||[],'Selecione o colaborador');
+    preencherSelect('atividade',dados.atividades||[],'Selecione o serviço');
+    montarTabela(dados.registros||[]);
+    mostrarStatus('Registros carregados. Edite os campos na linha desejada.','ok');
+  }catch(e){
+    mostrarStatus(e.message,'erro');
+  }finally{
+    $('atualizar').disabled=false;
   }
 }
 
-function iniciarProducao() {
-  const data = $('data').value;
-  const colaborador = $('colaborador').value;
-  const atividade = $('atividade').value;
+async function salvarLinha(linha,campoQtd,campoHoras,botao){
+  if(salvamentos.has(linha))return;
 
-  if (!data || !colaborador || !atividade) {
-    alert('Preencha a data, o colaborador e o serviço antes de iniciar.');
+  if(campoQtd.value.trim()===''||!Number.isFinite(Number(campoQtd.value))||Number(campoQtd.value)<0){
+    alert('Informe uma quantidade válida na coluna E da linha '+linha+'.');
+    campoQtd.focus();
     return;
   }
 
-  producaoAtiva = true;
+  const horarios=campoHoras.map(c=>c.value||'');
 
-  $('fixData').textContent = data.split('-').reverse().join('/');
-  $('fixColaborador').textContent = colaborador;
-  $('fixAtividade').textContent = atividade;
+  salvamentos.add(linha);
+  botao.disabled=true;
+  botao.textContent='Salvando...';
+  mostrarStatus('Salvando quantidade e horários da linha '+linha+'...');
 
-  $('configuracao').classList.add('oculto');
-  $('identificacaoAtiva').classList.remove('oculto');
-
-  status('Produção iniciada. Identificação mantida para os próximos registros.', 'ok');
-  $('quantidade').focus();
-}
-
-function trocarIdentificacao() {
-  if (enviando) return;
-
-  if (!confirm(
-    'Deseja alterar a identificação? Os próximos registros usarão os novos dados.'
-  )) return;
-
-  producaoAtiva = false;
-  $('configuracao').classList.remove('oculto');
-  $('identificacaoAtiva').classList.add('oculto');
-  status('Selecione a identificação da próxima produção.');
-}
-
-function limparApontamento() {
-  if (enviando) return;
-
-  $('quantidade').value = '';
-  document.querySelectorAll('input[type="time"]').forEach(c => {
-    c.value = '';
-  });
-
-  status('Quantidade e horários limpos. A identificação foi mantida.');
-  $('quantidade').focus();
-}
-
-$('formulario').addEventListener('submit', async evento => {
-  evento.preventDefault();
-
-  if (!producaoAtiva) {
-    alert('Clique em Iniciar produção antes de salvar.');
-    return;
-  }
-
-  if (enviando) return;
-
-  const horarios = [];
-
-  for (let i = 0; i < 10; i++) {
-    const entrada = $('hora_' + String.fromCharCode(70 + i * 2)).value;
-    const saida = $('hora_' + String.fromCharCode(71 + i * 2)).value;
-    horarios.push(entrada, saida);
-  }
-
-  const registro = {
-    data: $('data').value,
-    colaborador: $('colaborador').value,
-    atividade: $('atividade').value,
-    quantidade: $('quantidade').value,
-    horarios
-  };
-
-  enviando = true;
-  $('salvar').disabled = true;
-  status('Gravando apontamento na planilha...');
-
-  try {
-    const resultado = await chamarAPI({
-      action: 'save',
-      record: JSON.stringify(registro)
+  try{
+    const resultado=await chamarAPI({
+      action:'save',
+      record:JSON.stringify({
+        linha:Number(linha),
+        quantidade:campoQtd.value,
+        horarios
+      })
     });
 
-    if (!resultado.ok) {
-      throw new Error(resultado.mensagem || 'Falha ao gravar.');
-    }
+    if(!resultado.ok)throw new Error(resultado.mensagem||'Não foi possível salvar.');
 
-    $('quantidade').value = '';
-    document.querySelectorAll('input[type="time"]').forEach(c => {
-      c.value = '';
-    });
+    botao.textContent='✓ Salvo';
+    mostrarStatus(resultado.mensagem,'ok');
 
-    status(
-      resultado.mensagem + ' Linha ' + resultado.linha +
-      '. Identificação mantida. Pronto para o próximo apontamento.',
-      'ok'
-    );
-
+    // Atualiza os valores exibidos sem perder a identificação A:C.
     await carregarDados();
-    $('quantidade').focus();
-
-  } catch (erro) {
-    status(
-      erro.message +
-      '\nConfira se o registro foi gravado antes de tentar novamente.',
+  }catch(e){
+    botao.textContent='Tentar salvar';
+    mostrarStatus(
+      'Erro na linha '+linha+': '+e.message+
+      '\nConfira a planilha antes de repetir o salvamento.',
       'erro'
     );
-  } finally {
-    enviando = false;
-    $('salvar').disabled = false;
+  }finally{
+    salvamentos.delete(linha);
+    botao.disabled=false;
+    if(botao.textContent==='Salvando...')botao.textContent='💾 Salvar';
   }
+}
+
+$('iniciar').addEventListener('click',()=>{
+  const data=$('data').value;
+  const colaborador=$('colaborador').value;
+  const atividade=$('atividade').value;
+
+  if(!data||!colaborador||!atividade){
+    alert('Preencha a data, o colaborador e o serviço.');
+    return;
+  }
+
+  $('fixData').textContent=data.split('-').reverse().join('/');
+  $('fixColaborador').textContent=colaborador;
+  $('fixAtividade').textContent=atividade;
+
+  $('selecao').classList.add('escondido');
+  $('identificacao').classList.remove('escondido');
 });
 
-$('iniciar').addEventListener('click', iniciarProducao);
-$('trocar').addEventListener('click', trocarIdentificacao);
-$('limpar').addEventListener('click', limparApontamento);
-$('atualizar').addEventListener('click', carregarDados);
+$('trocar').addEventListener('click',()=>{
+  $('selecao').classList.remove('escondido');
+  $('identificacao').classList.add('escondido');
+});
 
-function iniciarPagina() {
-  criarHorarios();
+$('atualizar').addEventListener('click',carregarDados);
 
-  const agora = new Date();
-  $('data').value =
-    agora.getFullYear() + '-' +
-    String(agora.getMonth() + 1).padStart(2, '0') + '-' +
-    String(agora.getDate()).padStart(2, '0');
-
+function iniciar(){
+  const agora=new Date();
+  $('data').value=agora.getFullYear()+'-'+
+    String(agora.getMonth()+1).padStart(2,'0')+'-'+
+    String(agora.getDate()).padStart(2,'0');
   carregarDados();
 }
 
-iniciarPagina();
+iniciar();
 </script>
 </body>
 </html>
