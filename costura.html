@@ -255,8 +255,17 @@ tbody tr:nth-child(even) td:nth-child(-n+3) {
   max-width: 160px;
 }
 
+.selecao-servico {
+  display: grid;
+  gap: 5px;
+  min-width: 150px;
+}
+
 .data-select {
   min-width: 135px;
+  width: 100%;
+  padding: 6px 4px;
+  font-size: 12px;
 }
 
 .qtd-nova {
@@ -394,6 +403,10 @@ tbody tr:nth-child(even) td:nth-child(-n+3) {
     min-width: 130px;
   }
 
+  .selecao-servico {
+    min-width: 130px;
+  }
+
   .qtd-nova {
     width: 75px;
     min-width: 70px;
@@ -487,8 +500,6 @@ tbody tr:nth-child(even) td:nth-child(-n+3) {
           <th>Serviço</th>
           <th>E — Qtd. nova</th>
           <th>Total E</th>
-          <th>Linha</th>
-          <th>Data</th>
           <th>F — Início</th>
           <th>G — Fim</th>
           <th>H — Início</th>
@@ -515,7 +526,7 @@ tbody tr:nth-child(even) td:nth-child(-n+3) {
 
       <tbody id="registros">
         <tr>
-          <td colspan="27" class="vazio">
+          <td colspan="25" class="vazio">
             Carregando...
           </td>
         </tr>
@@ -558,10 +569,10 @@ function chamarAPI(parametros) {
     const timer = setTimeout(() => {
       finalizar(
         new Error(
-          'Tempo esgotado. Confira a conexão e a implantação do Apps Script.'
+          'Tempo esgotado. Confira a URL /exec, a implantação e as permissões do Apps Script. Antes de repetir uma soma, confira o total na planilha.'
         )
       );
-    }, 30000);
+    }, 45000);
 
     function finalizar(erro, resultado) {
       if (terminou) return;
@@ -597,9 +608,11 @@ function chamarAPI(parametros) {
     };
 
     const url = new URL(API_URL);
+
     Object.entries({
       ...parametros,
-      callback
+      callback,
+      _ts: Date.now()
     }).forEach(([chave, valor]) => {
       url.searchParams.set(chave, valor);
     });
@@ -799,7 +812,7 @@ function montarTabelaInicial() {
       'vazio'
     );
 
-    td.colSpan = 27;
+    td.colSpan = 25;
     tr.appendChild(td);
     tbody.appendChild(tr);
     return;
@@ -829,27 +842,29 @@ function criarLinhaDeSelecao(colaborador, dataInicial = dataLocalISO()) {
 
   tr.appendChild(criarCelula(colaborador, 'colaborador-nome'));
 
+  // Serviço e data ficam juntos na coluna Serviço.
   const tdServico = document.createElement('td');
+  const grupoSelecao = document.createElement('div');
+  grupoSelecao.className = 'selecao-servico';
+
   const selectServico = criarSelectServico();
-
-  tdServico.appendChild(selectServico);
-  tr.appendChild(tdServico);
-
-  const tdQtd = criarCelula('—');
-  tr.appendChild(tdQtd);
-
-  tr.appendChild(criarCelula('—'));
-  tr.appendChild(criarCelula('—'));
-
-  const tdData = document.createElement('td');
   const inputData = document.createElement('input');
 
   inputData.type = 'date';
   inputData.className = 'data-select';
   inputData.value = dataInicial || dataLocalISO();
+  inputData.setAttribute(
+    'aria-label',
+    'Data da produção de ' + colaborador
+  );
 
-  tdData.appendChild(inputData);
-  tr.appendChild(tdData);
+  grupoSelecao.appendChild(selectServico);
+  grupoSelecao.appendChild(inputData);
+  tdServico.appendChild(grupoSelecao);
+  tr.appendChild(tdServico);
+
+  tr.appendChild(criarCelula('—'));
+  tr.appendChild(criarCelula('—'));
 
   for (let i = 0; i < 20; i++) {
     tr.appendChild(criarCelula('—'));
@@ -859,11 +874,10 @@ function criarLinhaDeSelecao(colaborador, dataInicial = dataLocalISO()) {
   const status = document.createElement('span');
 
   status.className = 'nota';
-  status.textContent = 'Selecione serviço';
+  status.textContent = 'Selecione data e serviço';
 
   tdAcao.appendChild(status);
   tr.appendChild(tdAcao);
-
   tbody.appendChild(tr);
 
   let criandoNestaLinha = false;
@@ -919,12 +933,8 @@ function criarLinhaDeSelecao(colaborador, dataInicial = dataLocalISO()) {
 
       registrosCriados.push(registro);
 
-      // Converte a linha de seleção em uma linha de produção.
       tr.remove();
-
       montarLinhaDeProducao(registro);
-
-      // Deixa nova linha disponível para este colaborador.
       criarLinhaDeSelecao(colaborador, data);
 
       mostrarStatus(
@@ -938,11 +948,14 @@ function criarLinhaDeSelecao(colaborador, dataInicial = dataLocalISO()) {
       selectServico.disabled = false;
       inputData.disabled = false;
       status.textContent = 'Tentar novamente';
+
       mostrarStatus(
         'statusGeral',
-        'Erro ao criar produção para ' + colaborador + ': ' + erro.message,
+        'Erro ao criar produção para ' +
+          colaborador + ': ' + erro.message,
         'erro'
       );
+
     } finally {
       criandoNestaLinha = false;
     }
@@ -972,6 +985,7 @@ function montarLinhaDeProducao(registro) {
 
   // Quantidade nova a somar ao total, não o total acumulado.
   const inputQtd = document.createElement('input');
+
   inputQtd.type = 'number';
   inputQtd.min = '0';
   inputQtd.step = 'any';
@@ -990,9 +1004,7 @@ function montarLinhaDeProducao(registro) {
   );
   tr.appendChild(tdTotal);
 
-  tr.appendChild(criarCelula(registro.linha));
-  tr.appendChild(criarCelula(registro.data));
-
+  // Linha e data não são exibidas na tabela.
   const camposHora = [];
 
   for (let i = 0; i < 20; i++) {
@@ -1045,11 +1057,9 @@ function montarLinhaDeProducao(registro) {
   });
 
   tdAcao.appendChild(botaoHoras);
-
   tr.appendChild(tdAcao);
 
-  // Inserir a produção antes da primeira linha de seleção,
-  // mantendo as produções já criadas na tabela.
+  // Insere a produção antes da primeira linha de seleção.
   const primeiraSelecao = tbody.querySelector(
     'tr[data-tipo="selecao"]'
   );
@@ -1290,7 +1300,7 @@ async function criarProducaoManual() {
       'ok'
     );
 
-    // Prepara o formulário para uma próxima criação.
+    // Prepara o formulário para a próxima criação.
     $('novoColaborador').value = '';
     $('novoServico').value = '';
     $('novaData').value = dataLocalISO();
@@ -1301,6 +1311,7 @@ async function criarProducaoManual() {
       'Erro ao criar produção: ' + erro.message,
       'erro'
     );
+
   } finally {
     criando = false;
     $('criarManual').disabled = false;
@@ -1310,7 +1321,7 @@ async function criarProducaoManual() {
 }
 
 /* -------------------------------------------------------
-   ATUALIZAR
+   ATUALIZAR LISTAS
 ------------------------------------------------------- */
 
 $('criarManual').addEventListener(
