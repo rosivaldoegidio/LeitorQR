@@ -7,116 +7,415 @@
 <title>Apontamento Contínuo — Costura</title>
 
 <style>
-*{box-sizing:border-box}
-:root{font-family:Arial,sans-serif;color:#202124;background:#f1f4f9}
-body{margin:0}
-header{
-  background:#19375d;color:#fff;padding:15px 22px;
-  position:sticky;top:0;z-index:20;box-shadow:0 2px 5px #0002
+* {
+  box-sizing: border-box;
 }
-header h1{font-size:22px;margin:0}
-header p{font-size:14px;margin:6px 0 0;line-height:1.4}
-main{padding:15px;max-width:2000px;margin:auto}
-.painel{
-  background:#fff;padding:16px;border-radius:12px;margin-bottom:15px;
-  box-shadow:0 2px 7px #0001
-}
-h2{font-size:19px;margin:0 0 12px}
-.nota{font-size:13px;line-height:1.5;color:#5f6368}
-.acoes{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
-button,select,input{font:inherit}
-button{
-  border:0;border-radius:7px;padding:10px 14px;
-  font-weight:bold;cursor:pointer
-}
-button:disabled{opacity:.55;cursor:wait}
-.azul{background:#1a73e8;color:#fff}
-.claro{background:#e7eef9;color:#174ea6}
-.status{font-size:13px;font-weight:bold;white-space:pre-wrap;margin:10px 0}
-.ok{color:#137333}
-.erro{color:#b3261e}
-.aviso{color:#9a6700}
-.tabela-wrap{
-  width:100%;overflow:auto;max-height:72vh;
-  border:1px solid #d5dce6;border-radius:8px;
-  overscroll-behavior:contain
-}
-table{
-  border-collapse:separate;border-spacing:0;
-  width:max-content;min-width:100%;background:white;
-  font-size:12px;white-space:nowrap
-}
-th,td{
-  padding:6px;border-right:1px solid #e1e7ef;
-  border-bottom:1px solid #dce2eb;text-align:center;
-  height:53px
-}
-thead th{
-  position:sticky;top:0;background:#e4ecf8;
-  z-index:5;font-weight:bold
-}
-tbody tr:nth-child(even){background:#f5f8fd}
-tbody tr:nth-child(odd){background:#fff}
 
-/* Colunas fixas durante a rolagem horizontal */
-th:nth-child(1),td:nth-child(1){
-  position:sticky;left:0;min-width:190px;width:190px;
-  max-width:190px;text-align:left
+:root {
+  --azul: #19375d;
+  --azul-botao: #1a73e8;
+  --fundo: #f1f4f9;
+  --borda: #d5dce6;
+  --fixo: #edf3fc;
+  --verde: #137333;
+  --vermelho: #b3261e;
 }
-th:nth-child(2),td:nth-child(2){
-  position:sticky;left:190px;min-width:175px;width:175px;
-  max-width:175px;text-align:left
-}
-th:nth-child(3),td:nth-child(3){
-  position:sticky;left:365px;min-width:105px;width:105px
-}
-th:nth-child(4),td:nth-child(4){
-  position:sticky;left:470px;min-width:80px;width:80px
-}
-thead th:nth-child(-n+4){z-index:8}
-tbody td:nth-child(-n+4){background:#edf3fc}
-tbody tr:nth-child(even) td:nth-child(-n+4){background:#e4edf9}
 
-select,input{
-  border:1px solid #cbd5e1;border-radius:7px;
-  background:#fff;min-height:39px;padding:7px;width:100%
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--fundo);
+  color: #202124;
 }
-.servico{min-width:160px}
-.data{min-width:145px}
-.qtd{min-width:90px;text-align:center;font-weight:bold}
-.total{font-weight:bold;color:#174ea6;font-size:14px}
-.hora{width:105px;min-width:100px;text-align:center;padding:6px 3px}
-.salvar{
-  background:#137333;color:white;padding:9px 11px;
-  min-width:120px;font-size:12px
+
+header {
+  background: var(--azul);
+  color: white;
+  padding: 15px 22px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
-.vazio{padding:22px;text-align:center;color:#666}
-.indicador{font-size:11px;color:#5f6368;display:block;margin-top:3px}
-@media(max-width:700px){
-  header{padding:12px}
-  header h1{font-size:18px}
-  header p{font-size:12px}
-  main{padding:7px}
-  .painel{padding:9px;border-radius:9px}
-  h2{font-size:17px}
-  .tabela-wrap{max-height:68vh}
-  th,td{padding:5px;height:49px}
-  th:nth-child(1),td:nth-child(1){
-    left:0;min-width:145px;width:145px;max-width:145px
+
+header h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+header p {
+  font-size: 14px;
+  margin: 6px 0 0;
+}
+
+main {
+  padding: 14px;
+  max-width: 1900px;
+  margin: auto;
+}
+
+.painel {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 7px #0001;
+}
+
+h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  width: 100%;
+  min-width: 75px;
+  padding: 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  min-height: 39px;
+}
+
+button {
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 13px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.azul {
+  background: var(--azul-botao);
+  color: white;
+}
+
+.claro {
+  background: #e7eef9;
+  color: #174ea6;
+}
+
+.verde {
+  background: var(--verde);
+  color: white;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.nota {
+  color: #5f6368;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.status {
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 10px 0;
+}
+
+.ok {
+  color: var(--verde);
+}
+
+.erro {
+  color: var(--vermelho);
+}
+
+.info {
+  color: #174ea6;
+}
+
+.tabela-wrap {
+  width: 100%;
+  overflow: auto;
+  max-height: 72vh;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: max-content;
+  min-width: 100%;
+  font-size: 12px;
+  white-space: nowrap;
+  background: white;
+}
+
+th,
+td {
+  padding: 6px;
+  border-bottom: 1px solid #dce2eb;
+  border-right: 1px solid #e5e9f0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background: #e4ecf8;
+  z-index: 5;
+  height: 38px;
+}
+
+tbody tr:nth-child(even) {
+  background: #f7f9fd;
+}
+
+/* Colunas fixas: Colaborador, Serviço e Quantidade nova */
+th:nth-child(1),
+td:nth-child(1) {
+  position: sticky;
+  left: 0;
+  width: 165px;
+  min-width: 165px;
+  max-width: 165px;
+  text-align: left;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  position: sticky;
+  left: 165px;
+  width: 165px;
+  min-width: 165px;
+  max-width: 165px;
+  text-align: left;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  position: sticky;
+  left: 330px;
+  width: 105px;
+  min-width: 105px;
+  max-width: 105px;
+}
+
+thead th:nth-child(-n+3) {
+  z-index: 8;
+  background: #dce7f7;
+}
+
+tbody td:nth-child(-n+3) {
+  z-index: 3;
+  background: var(--fixo);
+}
+
+tbody tr:nth-child(even) td:nth-child(-n+3) {
+  background: #e5edf9;
+}
+
+.colaborador-nome {
+  font-weight: bold;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  min-width: 130px;
+}
+
+.servico-select {
+  min-width: 150px;
+  max-width: 160px;
+}
+
+.selecao-servico {
+  display: grid;
+  gap: 5px;
+  min-width: 150px;
+}
+
+.data-select {
+  min-width: 135px;
+  width: 100%;
+  padding: 6px 4px;
+  font-size: 12px;
+}
+
+.qtd-nova {
+  width: 88px;
+  min-width: 82px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.total {
+  font-weight: bold;
+  color: #174ea6;
+  font-size: 14px;
+}
+
+.hora {
+  width: 100px;
+  min-width: 96px;
+  padding: 7px 3px;
+  text-align: center;
+}
+
+.salvar {
+  background: var(--verde);
+  color: white;
+  min-width: 90px;
+  padding: 9px;
+  font-size: 12px;
+}
+
+.nova {
+  background: #e7eef9;
+  color: #174ea6;
+  padding: 8px;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.vazio {
+  padding: 22px;
+  text-align: center;
+  color: #666;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: #e7f4ea;
+  color: #137333;
+  font-weight: bold;
+}
+
+.escondido {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  header {
+    padding: 12px;
   }
-  th:nth-child(2),td:nth-child(2){
-    left:145px;min-width:145px;width:145px;max-width:145px
+
+  header h1 {
+    font-size: 18px;
+    line-height: 1.35;
   }
-  th:nth-child(3),td:nth-child(3){
-    left:290px;min-width:95px;width:95px
+
+  header p {
+    font-size: 12px;
   }
-  th:nth-child(4),td:nth-child(4){
-    left:385px;min-width:70px;width:70px
+
+  main {
+    padding: 7px;
   }
-  .servico{min-width:145px}
-  .data{min-width:135px}
-  .hora{width:100px;min-width:95px}
-  button{min-height:42px}
+
+  .painel {
+    padding: 10px;
+    border-radius: 9px;
+  }
+
+  h2 {
+    font-size: 17px;
+  }
+
+  .grade {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes button {
+    min-height: 42px;
+  }
+
+  .tabela-wrap {
+    max-height: 68vh;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 5px;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    left: 0;
+    width: 135px;
+    min-width: 135px;
+    max-width: 135px;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    left: 135px;
+    width: 140px;
+    min-width: 140px;
+    max-width: 140px;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    left: 275px;
+    width: 90px;
+    min-width: 90px;
+    max-width: 90px;
+  }
+
+  .colaborador-nome {
+    min-width: 115px;
+  }
+
+  .servico-select {
+    min-width: 130px;
+  }
+
+  .selecao-servico {
+    min-width: 130px;
+  }
+
+  .qtd-nova {
+    width: 75px;
+    min-width: 70px;
+  }
+
+  .hora {
+    width: 94px;
+    min-width: 90px;
+  }
 }
 </style>
 </head>
@@ -128,30 +427,72 @@ select,input{
 </header>
 
 <main>
+
 <section class="painel">
-  <h2>1. Identificação da produção</h2>
+  <h2>1. Nova produção</h2>
+
   <p class="nota">
-    Para criar uma produção, selecione o serviço e a data na linha do colaborador no item 2.
-    A produção será vinculada à linha correspondente na planilha.
+    Use esta opção para criar uma produção adicional. Selecione a data,
+    o colaborador e o serviço e confirme. A produção será acrescentada
+    à tabela do item 2.
   </p>
-  <div class="acoes">
-    <button type="button" class="claro" id="atualizar">↻ Atualizar lista e totais</button>
+
+  <div class="grade">
+    <div>
+      <label for="novaData">Data</label>
+      <input type="date" id="novaData">
+    </div>
+
+    <div>
+      <label for="novoColaborador">Colaborador</label>
+      <select id="novoColaborador">
+        <option value="">Carregando colaboradores...</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="novoServico">Serviço</label>
+      <select id="novoServico">
+        <option value="">Carregando serviços...</option>
+      </select>
+    </div>
   </div>
-  <div id="status" class="status" role="status" aria-live="polite">Conectando à planilha...</div>
+
+  <div class="acoes">
+    <button type="button" class="azul" id="criarManual">
+      + Confirmar e criar produção
+    </button>
+
+    <button type="button" class="claro" id="recarregar">
+      ↻ Atualizar colaboradores
+    </button>
+  </div>
+
+  <div id="statusCriacao" class="status" role="status" aria-live="polite"></div>
 </section>
 
 <section class="painel">
   <h2>2. Produções e colaboradores</h2>
+
   <p class="nota">
-    Todos os colaboradores cadastrados são exibidos nesta tabela.
-    Selecione o serviço e a data na linha desejada.
-    Informe apenas a quantidade nova para somar ao Total E.
-    Os horários são gravados na mesma linha. As colunas A, B, C e D não são alteradas pelos apontamentos.
+    Todos os colaboradores cadastrados aparecem nesta tabela.
+    Selecione a data e o serviço na linha desejada para criar uma produção.
+    Para acumular quantidades, informe apenas a quantidade nova e clique em
+    “Somar e salvar”. Os horários preenchidos são gravados na mesma linha.
+    A, B, C e D não são alteradas pelo salvamento dos apontamentos.
   </p>
 
-  <div id="statusTabela" class="status" aria-live="polite"></div>
+  <div class="acoes">
+    <button type="button" class="claro" id="atualizarLista">
+      ↻ Atualizar lista
+    </button>
+  </div>
 
-  <div class="tabela-wrap">
+  <div id="statusGeral" class="status" role="status" aria-live="polite">
+    Carregando colaboradores e serviços...
+  </div>
+
+  <div class="tabela-wrap" id="tabelaWrap">
     <table>
       <thead>
         <tr>
@@ -182,113 +523,154 @@ select,input{
           <th>Ação</th>
         </tr>
       </thead>
+
       <tbody id="registros">
-        <tr><td colspan="25" class="vazio">Carregando colaboradores...</td></tr>
+        <tr>
+          <td colspan="25" class="vazio">
+            Carregando...
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 </section>
+
 </main>
 
 <script>
 'use strict';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
 
 const $ = id => document.getElementById(id);
 
 let colaboradores = [];
 let atividades = [];
-let registros = [];
-let salvamentos = new Set();
-let criacoesEmAndamento = new Set();
+let registrosCriados = [];
+let criando = false;
+let idLocal = 0;
 
-function mostrarStatus(texto, tipo = '') {
-  $('status').textContent = texto;
-  $('status').className = 'status ' + tipo;
-}
+const salvamentosEmAndamento = new Set();
 
-function mostrarStatusTabela(texto, tipo = '') {
-  $('statusTabela').textContent = texto;
-  $('statusTabela').className = 'status ' + tipo;
-}
+/* -------------------------------------------------------
+   CHAMADA AO APPS SCRIPT POR JSONP
+------------------------------------------------------- */
 
-/*
- * Chamada JSONP ao Apps Script.
- * O tempo limite é de 45 segundos para dar mais tempo à resposta.
- */
-function chamarAPI(parametros, tempoLimite = 45000) {
+function chamarAPI(parametros) {
   return new Promise((resolve, reject) => {
-    const callback = 'cb_' + Date.now() + '_' +
+    const callback =
+      'cb_' + Date.now() + '_' +
       Math.random().toString(36).slice(2);
 
     const script = document.createElement('script');
     let terminou = false;
 
     const timer = setTimeout(() => {
-      finalizar(new Error(
-        'Tempo esgotado. Confira a conexão e a implantação do Apps Script.'
-      ));
-    }, tempoLimite);
+      finalizar(
+        new Error(
+          'Tempo esgotado. Confira a URL /exec, a implantação e as permissões do Apps Script. Antes de repetir uma soma, confira o total na planilha.'
+        )
+      );
+    }, 45000);
 
     function finalizar(erro, resultado) {
       if (terminou) return;
+
       terminou = true;
       clearTimeout(timer);
-      delete window[callback];
+
+      try {
+        delete window[callback];
+      } catch (_) {
+        window[callback] = undefined;
+      }
+
       script.remove();
-      if (erro) reject(erro);
-      else resolve(resultado);
+
+      if (erro) {
+        reject(erro);
+      } else {
+        resolve(resultado);
+      }
     }
 
-    window[callback] = resultado => finalizar(null, resultado);
+    window[callback] = resultado => {
+      finalizar(null, resultado);
+    };
 
-    script.onerror = () => finalizar(new Error(
-      'Não foi possível acessar o Apps Script. Confira a URL e a implantação.'
-    ));
+    script.onerror = () => {
+      finalizar(
+        new Error(
+          'Não foi possível acessar o Apps Script. Verifique a URL e a implantação.'
+        )
+      );
+    };
 
-    script.src = API_URL + '?' +
-      new URLSearchParams({
-        ...parametros,
-        callback
-      }).toString();
+    const url = new URL(API_URL);
 
+    Object.entries({
+      ...parametros,
+      callback,
+      _ts: Date.now()
+    }).forEach(([chave, valor]) => {
+      url.searchParams.set(chave, valor);
+    });
+
+    script.src = url.toString();
     document.body.appendChild(script);
   });
 }
 
-function dataHojeISO() {
+/* -------------------------------------------------------
+   FUNÇÕES GERAIS
+------------------------------------------------------- */
+
+function dataLocalISO() {
   const agora = new Date();
+
   return agora.getFullYear() + '-' +
     String(agora.getMonth() + 1).padStart(2, '0') + '-' +
     String(agora.getDate()).padStart(2, '0');
 }
 
-function isoParaBR(iso) {
-  if (!iso) return '';
-  const partes = iso.split('-');
-  if (partes.length !== 3) return iso;
-  return partes[2] + '/' + partes[1] + '/' + partes[0];
+function formatarDataBR(valor) {
+  if (!valor) return '';
+
+  const texto = String(valor).trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
+    const [ano, mes, dia] = texto.split('-');
+    return dia + '/' + mes + '/' + ano;
+  }
+
+  return texto;
 }
 
-function brParaISO(data) {
-  if (!data) return '';
-  const s = String(data).trim();
+function dataParaISO(valor) {
+  if (!valor) return '';
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const texto = String(valor).trim();
 
-  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s);
-  if (!m) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) {
+    return texto;
+  }
 
-  return m[3] + '-' + m[2].padStart(2, '0') + '-' +
-    m[1].padStart(2, '0');
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(texto);
+
+  if (m) {
+    return m[3] + '-' + m[2] + '-' + m[1];
+  }
+
+  return '';
 }
 
 function normalizarHora(valor) {
   if (valor == null || valor === '') return '';
 
-  const s = String(valor).trim();
-  const m = /(?:^|\s)(\d{1,2}):(\d{2})(?::\d{2})?/.exec(s);
+  const texto = String(valor).trim();
+
+  const m = /(?:^|\s)(\d{1,2}):(\d{2})(?::\d{2})?/.exec(texto);
 
   if (!m) return '';
 
@@ -296,483 +678,82 @@ function normalizarHora(valor) {
 }
 
 function normalizarQuantidade(valor) {
-  if (valor == null || String(valor).trim() === '') return 0;
+  if (valor == null || valor === '') return 0;
 
-  const n = Number(String(valor).trim().replace(',', '.'));
-  return Number.isFinite(n) ? n : 0;
+  const numero = Number(String(valor).trim().replace(',', '.'));
+
+  return Number.isFinite(numero) ? numero : 0;
+}
+
+function mostrarStatus(elemento, texto, tipo = '') {
+  $(elemento).textContent = texto;
+  $(elemento).className = 'status ' + tipo;
 }
 
 function criarCelula(texto, classe = '') {
   const td = document.createElement('td');
   td.textContent = texto == null ? '' : String(texto);
+
   if (classe) td.className = classe;
+
   return td;
 }
 
-function criarSelectServico(valorAtual) {
-  const select = document.createElement('select');
-  select.className = 'servico';
-  select.setAttribute('aria-label', 'Serviço');
+function criarOpcao(texto, valor = '') {
+  const op = document.createElement('option');
+  op.value = valor;
+  op.textContent = texto;
+  return op;
+}
 
-  const inicial = document.createElement('option');
-  inicial.value = '';
-  inicial.textContent = 'Selecione o serviço';
-  select.appendChild(inicial);
+function preencherSelect(elemento, lista, textoInicial) {
+  const select = $(elemento);
+  const valorAnterior = select.value;
 
-  atividades.forEach(atividade => {
-    const op = document.createElement('option');
-    op.value = atividade;
-    op.textContent = atividade;
-    select.appendChild(op);
+  select.replaceChildren();
+  select.appendChild(criarOpcao(textoInicial, ''));
+
+  lista.forEach(valor => {
+    select.appendChild(criarOpcao(valor, valor));
   });
 
-  if (valorAtual && atividades.includes(valorAtual)) {
-    select.value = valorAtual;
+  if (lista.includes(valorAnterior)) {
+    select.value = valorAnterior;
   }
+}
+
+function criarSelectServico(valor = '') {
+  const select = document.createElement('select');
+  select.className = 'servico-select';
+  select.appendChild(criarOpcao('Selecione o serviço', ''));
+
+  atividades.forEach(atividade => {
+    select.appendChild(criarOpcao(atividade, atividade));
+  });
+
+  select.value = atividades.includes(valor) ? valor : '';
 
   return select;
 }
 
-/*
- * Retorna os registros de um colaborador.
- * O último registro listado para cada combinação é utilizado
- * como seleção inicial da linha.
- */
-function registrosDoColaborador(nome) {
-  return registros.filter(r =>
-    String(r.colaborador || '').trim() === String(nome || '').trim()
+/* -------------------------------------------------------
+   CONSULTAR LISTAS DO APPS SCRIPT
+------------------------------------------------------- */
+
+async function carregarListas() {
+  mostrarStatus(
+    'statusGeral',
+    'Carregando colaboradores e serviços...'
   );
-}
-
-function localizarRegistro(nome, atividade, dataISO) {
-  const dataBR = isoParaBR(dataISO);
-
-  for (let i = registros.length - 1; i >= 0; i--) {
-    const r = registros[i];
-
-    if (
-      String(r.colaborador || '').trim() === String(nome || '').trim() &&
-      String(r.atividade || '').trim() === String(atividade || '').trim() &&
-      String(r.data || '').trim() === dataBR
-    ) {
-      return r;
-    }
-  }
-
-  return null;
-}
-
-function totalDoRegistro(registro) {
-  if (!registro) return 0;
-  return normalizarQuantidade(registro.quantidade);
-}
-
-function atualizarTotalNaLinha(tr, total) {
-  const celula = tr.querySelector('.total');
-  if (celula) celula.textContent = String(total);
-}
-
-/*
- * Depois de escolher serviço e data:
- * 1. Usa um registro existente se já houver combinação igual.
- * 2. Caso não exista, cria uma produção na planilha.
- */
-async function garantirProducao(tr) {
-  const nome = tr.dataset.colaborador;
-  const selectServico = tr.querySelector('.servico');
-  const inputData = tr.querySelector('.data');
-
-  const atividade = selectServico.value;
-  const dataISO = inputData.value;
-
-  if (!atividade || !dataISO) return;
-
-  const existente = localizarRegistro(nome, atividade, dataISO);
-
-  if (existente) {
-    tr.dataset.linha = String(existente.linha);
-    tr.dataset.servicoAtivo = atividade;
-    tr.dataset.dataAtiva = dataISO;
-
-    atualizarTotalNaLinha(tr, totalDoRegistro(existente));
-    preencherHorarios(tr, existente.horarios || []);
-
-    mostrarStatusTabela(
-      'Registro existente selecionado para ' + nome + '.',
-      'ok'
-    );
-    return;
-  }
-
-  const chave = nome + '|' + atividade + '|' + dataISO;
-  if (criacoesEmAndamento.has(chave)) return;
-
-  criacoesEmAndamento.add(chave);
-  selectServico.disabled = true;
-  inputData.disabled = true;
-
-  mostrarStatusTabela('Criando produção para ' + nome + '...');
 
   try {
-    const resultado = await chamarAPI({
-      action: 'create',
-      record: JSON.stringify({
-        data: dataISO,
-        colaborador: nome,
-        atividade: atividade
-      })
-    });
-
-    if (!resultado || !resultado.ok || !resultado.registro) {
-      throw new Error(
-        resultado && resultado.mensagem
-          ? resultado.mensagem
-          : 'Não foi possível criar a produção.'
-      );
-    }
-
-    const novo = resultado.registro;
-    novo.linha = Number(novo.linha);
-    novo.quantidade = 0;
-
-    registros.push(novo);
-
-    tr.dataset.linha = String(novo.linha);
-    tr.dataset.servicoAtivo = atividade;
-    tr.dataset.dataAtiva = dataISO;
-
-    atualizarTotalNaLinha(tr, 0);
-    preencherHorarios(tr, novo.horarios || []);
-
-    mostrarStatusTabela(
-      resultado.mensagem + ' O Total E será atualizado após cada soma.',
-      'ok'
-    );
-
-  } catch (erro) {
-    mostrarStatusTabela(
-      'Erro ao criar produção de ' + nome + ': ' + erro.message,
-      'erro'
-    );
-  } finally {
-    criacoesEmAndamento.delete(chave);
-    selectServico.disabled = false;
-    inputData.disabled = false;
-  }
-}
-
-function preencherHorarios(tr, horarios) {
-  const campos = tr.querySelectorAll('.hora');
-
-  campos.forEach((campo, i) => {
-    campo.value = normalizarHora(horarios[i] || '');
-  });
-}
-
-function obterHorarios(tr) {
-  return Array.from(tr.querySelectorAll('.hora'))
-    .map(campo => campo.value || '');
-}
-
-/*
- * Atualiza os dados locais a partir da resposta do Apps Script.
- * O campo quantidade vem de Controle!E:E.
- */
-function atualizarRegistroLocal(linha, quantidade, horarios) {
-  const r = registros.find(item => Number(item.linha) === Number(linha));
-
-  if (r) {
-    r.quantidade = quantidade;
-    if (horarios) r.horarios = horarios;
-  }
-}
-
-/*
- * Monta uma linha para cada colaborador cadastrado.
- * Total E sempre parte do valor de quantidade retornado pela planilha.
- */
-function montarTabela() {
-  const tbody = $('registros');
-  tbody.replaceChildren();
-
-  if (!colaboradores.length) {
-    const tr = document.createElement('tr');
-    const td = criarCelula('Nenhum colaborador encontrado na aba Controle.');
-    td.colSpan = 25;
-    td.className = 'vazio';
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
-
-  const hoje = dataHojeISO();
-
-  colaboradores.forEach(nome => {
-    const doColaborador = registrosDoColaborador(nome);
-    const ultimo = doColaborador.length
-      ? doColaborador[doColaborador.length - 1]
-      : null;
-
-    const tr = document.createElement('tr');
-    tr.dataset.colaborador = nome;
-    tr.dataset.linha = ultimo ? String(ultimo.linha) : '';
-    tr.dataset.servicoAtivo = ultimo ? String(ultimo.atividade || '') : '';
-    tr.dataset.dataAtiva = ultimo ? brParaISO(ultimo.data) : '';
-
-    tr.appendChild(criarCelula(nome));
-
-    const tdServico = document.createElement('td');
-    const selectServico = criarSelectServico(
-      ultimo ? String(ultimo.atividade || '') : ''
-    );
-    tdServico.appendChild(selectServico);
-
-    const inputData = document.createElement('input');
-    inputData.type = 'date';
-    inputData.className = 'data';
-    inputData.setAttribute('aria-label', 'Data da produção');
-    inputData.value = ultimo ? (brParaISO(ultimo.data) || hoje) : hoje;
-
-    const pequeno = document.createElement('span');
-    pequeno.className = 'indicador';
-    pequeno.textContent = 'Data da produção';
-    tdServico.appendChild(inputData);
-    tdServico.appendChild(pequeno);
-    tr.appendChild(tdServico);
-
-    const tdQtdNova = document.createElement('td');
-    const qtdNova = document.createElement('input');
-    qtdNova.type = 'number';
-    qtdNova.min = '0';
-    qtdNova.step = 'any';
-    qtdNova.inputMode = 'decimal';
-    qtdNova.className = 'qtd';
-    qtdNova.placeholder = '+ qtd';
-    qtdNova.setAttribute('aria-label', 'Quantidade nova para somar');
-    tdQtdNova.appendChild(qtdNova);
-    tr.appendChild(tdQtdNova);
-
-    const tdTotal = criarCelula(
-      ultimo ? totalDoRegistro(ultimo) : '—',
-      'total'
-    );
-    tr.appendChild(tdTotal);
-
-    for (let i = 0; i < 20; i++) {
-      const td = document.createElement('td');
-      const hora = document.createElement('input');
-      hora.type = 'time';
-      hora.step = '60';
-      hora.className = 'hora';
-      hora.setAttribute('aria-label',
-        'Horário ' + String.fromCharCode(70 + i));
-
-      hora.value = ultimo
-        ? normalizarHora((ultimo.horarios || [])[i] || '')
-        : '';
-
-      td.appendChild(hora);
-      tr.appendChild(td);
-    }
-
-    const tdAcao = document.createElement('td');
-    const botao = document.createElement('button');
-    botao.type = 'button';
-    botao.className = 'salvar';
-    botao.textContent = 'Somar e salvar';
-
-    botao.addEventListener('click', () => salvarLinha(tr, botao, qtdNova));
-
-    tdAcao.appendChild(botao);
-    tr.appendChild(tdAcao);
-
-    selectServico.addEventListener('change', () => {
-      tr.dataset.linha = '';
-      tr.dataset.servicoAtivo = '';
-      tr.dataset.dataAtiva = '';
-      atualizarTotalNaLinha(tr, '—');
-      preencherHorarios(tr, []);
-      garantirProducao(tr);
-    });
-
-    inputData.addEventListener('change', () => {
-      tr.dataset.linha = '';
-      tr.dataset.servicoAtivo = '';
-      tr.dataset.dataAtiva = '';
-      atualizarTotalNaLinha(tr, '—');
-      preencherHorarios(tr, []);
-      garantirProducao(tr);
-    });
-
-    tbody.appendChild(tr);
-  });
-}
-
-/*
- * Salva os horários e, se houver quantidade nova, incrementa a coluna E.
- * O total apresentado é atualizado com totalQuantidade retornado pelo Apps Script.
- */
-async function salvarLinha(tr, botao, campoQtd) {
-  const nome = tr.dataset.colaborador;
-  const selectServico = tr.querySelector('.servico');
-  const inputData = tr.querySelector('.data');
-  const atividade = selectServico.value;
-  const dataISO = inputData.value;
-
-  if (!atividade || !dataISO) {
-    alert('Selecione o serviço e a data para este colaborador.');
-    return;
-  }
-
-  let registro = localizarRegistro(nome, atividade, dataISO);
-
-  if (!registro) {
-    await garantirProducao(tr);
-    registro = localizarRegistro(nome, atividade, dataISO);
-  }
-
-  if (!registro) {
-    mostrarStatusTabela(
-      'Não foi possível localizar a produção. Confira a conexão e tente atualizar a lista.',
-      'erro'
-    );
-    return;
-  }
-
-  const linha = Number(registro.linha);
-  if (salvamentos.has(linha)) return;
-
-  const textoQtd = String(campoQtd.value || '').trim().replace(',', '.');
-  const qtd = textoQtd === '' ? 0 : Number(textoQtd);
-
-  if (!Number.isFinite(qtd) || qtd < 0) {
-    alert('Informe uma quantidade válida, igual ou maior que zero.');
-    campoQtd.focus();
-    return;
-  }
-
-  const horarios = obterHorarios(tr);
-
-  salvamentos.add(linha);
-  botao.disabled = true;
-  botao.textContent = 'Salvando...';
-  mostrarStatusTabela('Salvando apontamento de ' + nome + '...');
-
-  try {
-    let resultado;
-
-    if (qtd > 0) {
-      resultado = await chamarAPI({
-        action: 'incrementar',
-        record: JSON.stringify({
-          linha: linha,
-          quantidadeAdicionar: qtd,
-          horarios: horarios
-        })
-      });
-
-      if (!resultado || !resultado.ok) {
-        /*
-         * Se o servidor gravou a soma, mas falhou ao montar a resposta,
-         * relê a planilha para evitar mostrar um total antigo.
-         */
-        await carregarDados({silencioso: true});
-
-        const atualizado = registros.find(r => Number(r.linha) === linha);
-        if (atualizado) {
-          atualizarTotalNaLinha(tr, totalDoRegistro(atualizado));
-        }
-
-        throw new Error(
-          (resultado && resultado.mensagem
-            ? resultado.mensagem
-            : 'O servidor não confirmou a soma.') +
-          ' O total foi consultado novamente na planilha. Confira o Total E antes de repetir.'
-        );
-      }
-
-      atualizarRegistroLocal(
-        linha,
-        resultado.totalQuantidade,
-        horarios
-      );
-
-      atualizarTotalNaLinha(tr, resultado.totalQuantidade);
-      campoQtd.value = '';
-
-      mostrarStatusTabela(
-        'Quantidade adicionada. Total E atualizado para ' +
-        resultado.totalQuantidade + ' na linha ' + linha + '.',
-        'ok'
-      );
-
-    } else {
-      resultado = await chamarAPI({
-        action: 'save',
-        record: JSON.stringify({
-          linha: linha,
-          horarios: horarios
-        })
-      });
-
-      if (!resultado || !resultado.ok) {
-        throw new Error(
-          resultado && resultado.mensagem
-            ? resultado.mensagem
-            : 'Não foi possível salvar os horários.'
-        );
-      }
-
-      atualizarRegistroLocal(
-        linha,
-        totalDoRegistro(registro),
-        horarios
-      );
-
-      atualizarTotalNaLinha(tr, totalDoRegistro(registro));
-
-      mostrarStatusTabela(
-        'Horários salvos na linha ' + linha +
-        '. Total E mantido em ' + totalDoRegistro(registro) + '.',
-        'ok'
-      );
-    }
-
-  } catch (erro) {
-    mostrarStatusTabela(
-      'Erro ao salvar: ' + erro.message,
-      'erro'
-    );
-    botao.textContent = 'Tentar novamente';
-  } finally {
-    salvamentos.delete(linha);
-    botao.disabled = false;
-    if (botao.textContent === 'Salvando...') {
-      botao.textContent = 'Somar e salvar';
-    }
-  }
-}
-
-/*
- * Consulta novamente o Apps Script.
- * A coluna E é obtida de registros[].quantidade e exibida em Total E.
- */
-async function carregarDados(opcoes = {}) {
-  const silencioso = Boolean(opcoes.silencioso);
-
-  if (!silencioso) {
-    $('atualizar').disabled = true;
-    mostrarStatus('Consultando colaboradores, serviços e totais da planilha...');
-  }
-
-  try {
-    const dados = await chamarAPI({action: 'list'});
+    const dados = await chamarAPI({ action: 'list' });
 
     if (!dados || !dados.ok) {
       throw new Error(
         dados && dados.mensagem
           ? dados.mensagem
-          : 'Não foi possível consultar a planilha.'
+          : 'Erro ao consultar os dados.'
       );
     }
 
@@ -784,51 +765,580 @@ async function carregarDados(opcoes = {}) {
       ? dados.atividades
       : [];
 
-    registros = Array.isArray(dados.registros)
-      ? dados.registros.map(r => ({
-          ...r,
-          linha: Number(r.linha),
-          quantidade: normalizarQuantidade(r.quantidade),
-          horarios: Array.isArray(r.horarios) ? r.horarios : []
-        }))
-      : [];
+    preencherSelect(
+      'novoColaborador',
+      colaboradores,
+      'Selecione o colaborador'
+    );
 
-    montarTabela();
+    preencherSelect(
+      'novoServico',
+      atividades,
+      'Selecione o serviço'
+    );
 
-    if (!silencioso) {
-      mostrarStatus(
-        'Conectado. Total E carregado da coluna E da aba Controle.',
-        'ok'
-      );
-      mostrarStatusTabela(
-        'Lista atualizada. Os totais exibidos correspondem aos valores consultados na planilha.',
-        'ok'
-      );
-    }
+    montarTabelaInicial();
+
+    mostrarStatus(
+      'statusGeral',
+      colaboradores.length +
+        ' colaboradores carregados. Selecione data e serviço na tabela.',
+      'ok'
+    );
 
   } catch (erro) {
-    if (!silencioso) {
-      mostrarStatus(erro.message, 'erro');
-      mostrarStatusTabela(
-        'Não foi possível atualizar os totais. Confira a conexão e a implantação do Apps Script.',
-        'erro'
-      );
-    }
-    throw erro;
-  } finally {
-    if (!silencioso) $('atualizar').disabled = false;
+    mostrarStatus(
+      'statusGeral',
+      'Erro ao carregar a lista: ' + erro.message,
+      'erro'
+    );
   }
 }
 
-$('atualizar').addEventListener('click', async () => {
-  try {
-    await carregarDados();
-  } catch (e) {
-    // O erro já foi apresentado na tela.
-  }
-});
+/* -------------------------------------------------------
+   MONTAGEM DA TABELA
+------------------------------------------------------- */
 
-carregarDados().catch(() => {});
+function montarTabelaInicial() {
+  const tbody = $('registros');
+  tbody.replaceChildren();
+
+  registrosCriados = [];
+
+  if (colaboradores.length === 0) {
+    const tr = document.createElement('tr');
+    const td = criarCelula(
+      'Nenhum colaborador encontrado. Verifique a aba Controle.',
+      'vazio'
+    );
+
+    td.colSpan = 25;
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  colaboradores.forEach(colaborador => {
+    criarLinhaDeSelecao(colaborador);
+  });
+
+  registrosCriados.forEach(registro => {
+    montarLinhaDeProducao(registro);
+  });
+}
+
+/*
+ * Cada colaborador começa com uma linha para escolher data
+ * e serviço. Ao criar uma produção, essa linha vira uma linha
+ * de produção e uma nova linha de seleção é adicionada para
+ * permitir novas produções para o mesmo colaborador.
+ */
+function criarLinhaDeSelecao(colaborador, dataInicial = dataLocalISO()) {
+  const tbody = $('registros');
+  const tr = document.createElement('tr');
+
+  tr.dataset.tipo = 'selecao';
+  tr.dataset.colaborador = colaborador;
+
+  tr.appendChild(criarCelula(colaborador, 'colaborador-nome'));
+
+  // Serviço e data ficam juntos na coluna Serviço.
+  const tdServico = document.createElement('td');
+  const grupoSelecao = document.createElement('div');
+  grupoSelecao.className = 'selecao-servico';
+
+  const selectServico = criarSelectServico();
+  const inputData = document.createElement('input');
+
+  inputData.type = 'date';
+  inputData.className = 'data-select';
+  inputData.value = dataInicial || dataLocalISO();
+  inputData.setAttribute(
+    'aria-label',
+    'Data da produção de ' + colaborador
+  );
+
+  grupoSelecao.appendChild(selectServico);
+  grupoSelecao.appendChild(inputData);
+  tdServico.appendChild(grupoSelecao);
+  tr.appendChild(tdServico);
+
+  tr.appendChild(criarCelula('—'));
+  tr.appendChild(criarCelula('—'));
+
+  for (let i = 0; i < 20; i++) {
+    tr.appendChild(criarCelula('—'));
+  }
+
+  const tdAcao = document.createElement('td');
+  const status = document.createElement('span');
+
+  status.className = 'nota';
+  status.textContent = 'Selecione data e serviço';
+
+  tdAcao.appendChild(status);
+  tr.appendChild(tdAcao);
+  tbody.appendChild(tr);
+
+  let criandoNestaLinha = false;
+
+  async function verificarSelecao() {
+    if (criandoNestaLinha) return;
+
+    const data = inputData.value;
+    const atividade = selectServico.value;
+
+    if (!data || !atividade) {
+      status.textContent = 'Selecione data e serviço';
+      return;
+    }
+
+    criandoNestaLinha = true;
+    selectServico.disabled = true;
+    inputData.disabled = true;
+    status.textContent = 'Criando...';
+
+    try {
+      const resultado = await chamarAPI({
+        action: 'create',
+        record: JSON.stringify({
+          data,
+          colaborador,
+          atividade
+        })
+      });
+
+      if (!resultado || !resultado.ok || !resultado.registro) {
+        throw new Error(
+          resultado && resultado.mensagem
+            ? resultado.mensagem
+            : 'Não foi possível criar a produção.'
+        );
+      }
+
+      const registro = {
+        ...resultado.registro,
+        idLocal: ++idLocal,
+        colaborador,
+        atividade,
+        data: resultado.registro.data || formatarDataBR(data),
+        quantidade: normalizarQuantidade(
+          resultado.registro.quantidade
+        ),
+        horarios: Array.isArray(resultado.registro.horarios)
+          ? resultado.registro.horarios
+          : Array(20).fill(''),
+        ultimaQuantidadeAdicionada: 0
+      };
+
+      registrosCriados.push(registro);
+
+      tr.remove();
+      montarLinhaDeProducao(registro);
+      criarLinhaDeSelecao(colaborador, data);
+
+      mostrarStatus(
+        'statusGeral',
+        resultado.mensagem +
+          ' Preencha a quantidade nova e os horários na linha criada.',
+        'ok'
+      );
+
+    } catch (erro) {
+      selectServico.disabled = false;
+      inputData.disabled = false;
+      status.textContent = 'Tentar novamente';
+
+      mostrarStatus(
+        'statusGeral',
+        'Erro ao criar produção para ' +
+          colaborador + ': ' + erro.message,
+        'erro'
+      );
+
+    } finally {
+      criandoNestaLinha = false;
+    }
+  }
+
+  selectServico.addEventListener('change', verificarSelecao);
+  inputData.addEventListener('change', verificarSelecao);
+}
+
+/* -------------------------------------------------------
+   LINHA DE PRODUÇÃO CRIADA
+------------------------------------------------------- */
+
+function montarLinhaDeProducao(registro) {
+  const tbody = $('registros');
+  const tr = document.createElement('tr');
+
+  tr.dataset.tipo = 'producao';
+  tr.dataset.linha = String(registro.linha);
+  tr.dataset.idLocal = String(registro.idLocal);
+
+  tr.appendChild(
+    criarCelula(registro.colaborador, 'colaborador-nome')
+  );
+
+  tr.appendChild(criarCelula(registro.atividade));
+
+  // Quantidade nova a somar ao total, não o total acumulado.
+  const inputQtd = document.createElement('input');
+
+  inputQtd.type = 'number';
+  inputQtd.min = '0';
+  inputQtd.step = 'any';
+  inputQtd.inputMode = 'decimal';
+  inputQtd.placeholder = '+ qtd';
+  inputQtd.className = 'qtd-nova';
+
+  const tdQtd = document.createElement('td');
+  tdQtd.appendChild(inputQtd);
+  tr.appendChild(tdQtd);
+
+  const tdTotal = document.createElement('td');
+  tdTotal.className = 'total';
+  tdTotal.textContent = String(
+    normalizarQuantidade(registro.quantidade)
+  );
+  tr.appendChild(tdTotal);
+
+  // Linha e data não são exibidas na tabela.
+  const camposHora = [];
+
+  for (let i = 0; i < 20; i++) {
+    const input = document.createElement('input');
+
+    input.type = 'time';
+    input.step = '60';
+    input.className = 'hora';
+    input.value = normalizarHora(
+      (registro.horarios || [])[i] || ''
+    );
+
+    const td = document.createElement('td');
+    td.appendChild(input);
+    tr.appendChild(td);
+
+    camposHora.push(input);
+  }
+
+  const tdAcao = document.createElement('td');
+
+  const botaoSomar = document.createElement('button');
+  botaoSomar.type = 'button';
+  botaoSomar.className = 'salvar';
+  botaoSomar.textContent = '＋ Somar e salvar';
+
+  botaoSomar.addEventListener('click', () => {
+    somarESalvar(
+      registro,
+      inputQtd,
+      tdTotal,
+      camposHora,
+      botaoSomar
+    );
+  });
+
+  tdAcao.appendChild(botaoSomar);
+
+  const botaoHoras = document.createElement('button');
+  botaoHoras.type = 'button';
+  botaoHoras.className = 'nova';
+  botaoHoras.textContent = 'Salvar somente horários';
+
+  botaoHoras.addEventListener('click', () => {
+    salvarSomenteHorarios(
+      registro,
+      camposHora,
+      botaoHoras
+    );
+  });
+
+  tdAcao.appendChild(botaoHoras);
+  tr.appendChild(tdAcao);
+
+  // Insere a produção antes da primeira linha de seleção.
+  const primeiraSelecao = tbody.querySelector(
+    'tr[data-tipo="selecao"]'
+  );
+
+  if (primeiraSelecao) {
+    tbody.insertBefore(tr, primeiraSelecao);
+  } else {
+    tbody.appendChild(tr);
+  }
+}
+
+/* -------------------------------------------------------
+   SOMAR QUANTIDADE E SALVAR HORÁRIOS
+------------------------------------------------------- */
+
+async function somarESalvar(
+  registro,
+  inputQtd,
+  tdTotal,
+  camposHora,
+  botao
+) {
+  const quantidadeTexto = inputQtd.value.trim().replace(',', '.');
+
+  if (
+    quantidadeTexto === '' ||
+    !Number.isFinite(Number(quantidadeTexto)) ||
+    Number(quantidadeTexto) <= 0
+  ) {
+    alert('Informe uma quantidade nova maior que zero.');
+    inputQtd.focus();
+    return;
+  }
+
+  const chave = String(registro.linha);
+
+  if (salvamentosEmAndamento.has(chave)) {
+    return;
+  }
+
+  const horarios = camposHora.map(campo => campo.value || '');
+
+  salvamentosEmAndamento.add(chave);
+  botao.disabled = true;
+  botao.textContent = 'Salvando...';
+
+  try {
+    const resultado = await chamarAPI({
+      action: 'incrementar',
+      record: JSON.stringify({
+        linha: Number(registro.linha),
+        quantidadeAdicionar: quantidadeTexto,
+        horarios
+      })
+    });
+
+    if (!resultado || !resultado.ok) {
+      throw new Error(
+        resultado && resultado.mensagem
+          ? resultado.mensagem
+          : 'Não foi possível somar a quantidade.'
+      );
+    }
+
+    const total = normalizarQuantidade(
+      resultado.totalQuantidade
+    );
+
+    registro.quantidade = total;
+    registro.horarios = horarios;
+    registro.ultimaQuantidadeAdicionada = Number(quantidadeTexto);
+
+    tdTotal.textContent = String(total);
+    inputQtd.value = '';
+
+    botao.textContent = '✓ Salvo';
+
+    mostrarStatus(
+      'statusGeral',
+      'Colaborador: ' + registro.colaborador +
+        ' | Serviço: ' + registro.atividade +
+        ' | Linha: ' + registro.linha +
+        ' | Quantidade adicionada: ' + quantidadeTexto +
+        ' | Total acumulado: ' + total,
+      'ok'
+    );
+
+    setTimeout(() => {
+      if (botao.isConnected) {
+        botao.textContent = '＋ Somar e salvar';
+      }
+    }, 1800);
+
+  } catch (erro) {
+    botao.textContent = 'Tentar novamente';
+
+    mostrarStatus(
+      'statusGeral',
+      'Erro ao somar quantidade: ' + erro.message +
+        '. Confira o total na planilha antes de repetir o envio.',
+      'erro'
+    );
+
+  } finally {
+    salvamentosEmAndamento.delete(chave);
+    botao.disabled = false;
+  }
+}
+
+/* -------------------------------------------------------
+   SALVAR SOMENTE HORÁRIOS
+------------------------------------------------------- */
+
+async function salvarSomenteHorarios(
+  registro,
+  camposHora,
+  botao
+) {
+  const chave = 'horas-' + registro.linha;
+
+  if (salvamentosEmAndamento.has(chave)) {
+    return;
+  }
+
+  const horarios = camposHora.map(campo => campo.value || '');
+
+  salvamentosEmAndamento.add(chave);
+  botao.disabled = true;
+  botao.textContent = 'Salvando horários...';
+
+  try {
+    const resultado = await chamarAPI({
+      action: 'save',
+      record: JSON.stringify({
+        linha: Number(registro.linha),
+        horarios
+      })
+    });
+
+    if (!resultado || !resultado.ok) {
+      throw new Error(
+        resultado && resultado.mensagem
+          ? resultado.mensagem
+          : 'Não foi possível salvar os horários.'
+      );
+    }
+
+    registro.horarios = horarios;
+    botao.textContent = '✓ Horários salvos';
+
+    mostrarStatus(
+      'statusGeral',
+      resultado.mensagem,
+      'ok'
+    );
+
+    setTimeout(() => {
+      if (botao.isConnected) {
+        botao.textContent = 'Salvar somente horários';
+      }
+    }, 1800);
+
+  } catch (erro) {
+    botao.textContent = 'Tentar novamente';
+
+    mostrarStatus(
+      'statusGeral',
+      'Erro ao salvar horários: ' + erro.message,
+      'erro'
+    );
+
+  } finally {
+    salvamentosEmAndamento.delete(chave);
+    botao.disabled = false;
+  }
+}
+
+/* -------------------------------------------------------
+   CRIAÇÃO PELO ITEM 1
+------------------------------------------------------- */
+
+async function criarProducaoManual() {
+  if (criando) return;
+
+  const data = $('novaData').value;
+  const colaborador = $('novoColaborador').value.trim();
+  const atividade = $('novoServico').value.trim();
+
+  if (!data || !colaborador || !atividade) {
+    alert('Preencha a data, o colaborador e o serviço.');
+    return;
+  }
+
+  criando = true;
+  $('criarManual').disabled = true;
+  $('criarManual').textContent = 'Criando produção...';
+
+  try {
+    const resultado = await chamarAPI({
+      action: 'create',
+      record: JSON.stringify({
+        data,
+        colaborador,
+        atividade
+      })
+    });
+
+    if (!resultado || !resultado.ok || !resultado.registro) {
+      throw new Error(
+        resultado && resultado.mensagem
+          ? resultado.mensagem
+          : 'Não foi possível criar a produção.'
+      );
+    }
+
+    const registro = {
+      ...resultado.registro,
+      idLocal: ++idLocal,
+      colaborador,
+      atividade,
+      data: resultado.registro.data || formatarDataBR(data),
+      quantidade: normalizarQuantidade(
+        resultado.registro.quantidade
+      ),
+      horarios: Array.isArray(resultado.registro.horarios)
+        ? resultado.registro.horarios
+        : Array(20).fill(''),
+      ultimaQuantidadeAdicionada: 0
+    };
+
+    registrosCriados.push(registro);
+    montarLinhaDeProducao(registro);
+
+    mostrarStatus(
+      'statusCriacao',
+      resultado.mensagem +
+        ' A produção foi adicionada ao item 2.',
+      'ok'
+    );
+
+    // Prepara o formulário para a próxima criação.
+    $('novoColaborador').value = '';
+    $('novoServico').value = '';
+    $('novaData').value = dataLocalISO();
+
+  } catch (erro) {
+    mostrarStatus(
+      'statusCriacao',
+      'Erro ao criar produção: ' + erro.message,
+      'erro'
+    );
+
+  } finally {
+    criando = false;
+    $('criarManual').disabled = false;
+    $('criarManual').textContent =
+      '+ Confirmar e criar produção';
+  }
+}
+
+/* -------------------------------------------------------
+   ATUALIZAR LISTAS
+------------------------------------------------------- */
+
+$('criarManual').addEventListener(
+  'click',
+  criarProducaoManual
+);
+
+$('recarregar').addEventListener('click', carregarListas);
+$('atualizarLista').addEventListener('click', carregarListas);
+
+function iniciar() {
+  $('novaData').value = dataLocalISO();
+  carregarListas();
+}
+
+iniciar();
 </script>
+
 </body>
 </html>
