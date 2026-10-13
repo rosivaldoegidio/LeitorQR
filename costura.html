@@ -8,240 +8,55 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f1f4f9;
-  color:#202124;
-}
-
-header{
-  background:#19375d;
-  color:white;
-  padding:15px 22px;
-  position:sticky;
-  top:0;
-  z-index:5;
-}
-
+body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#202124}
+header{background:#19375d;color:white;padding:15px 22px;position:sticky;top:0;z-index:5}
 header h1{font-size:22px;margin:0}
 header p{font-size:14px;margin:6px 0 0}
-
-main{
-  padding:15px;
-  max-width:1800px;
-  margin:auto;
-}
-
-.painel{
-  background:white;
-  padding:16px;
-  border-radius:12px;
-  margin-bottom:15px;
-  box-shadow:0 2px 7px #0001;
-}
-
+main{padding:15px;max-width:1800px;margin:auto}
+.painel{background:white;padding:16px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 7px #0001}
 h2{font-size:18px;margin:0 0 14px}
-
-label{
-  font-size:13px;
-  font-weight:bold;
-  display:block;
-  margin-bottom:5px;
-}
-
-.grade{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;
-}
-
+label{font-size:13px;font-weight:bold;display:block;margin-bottom:5px}
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 input,select,button{font:inherit}
-
-input,select{
-  width:100%;
-  min-width:65px;
-  padding:9px;
-  border:1px solid #cbd5e1;
-  border-radius:6px;
-  min-height:39px;
-}
-
-button{
-  border:0;
-  border-radius:7px;
-  padding:11px 15px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-button:disabled{
-  opacity:.55;
-  cursor:wait;
-}
-
+input,select{width:100%;min-width:65px;padding:9px;border:1px solid #cbd5e1;border-radius:6px;min-height:39px}
+button{border:0;border-radius:7px;padding:11px 15px;cursor:pointer;font-weight:bold}
+button:disabled{opacity:.55;cursor:wait}
 .azul{background:#1a73e8;color:white}
 .claro{background:#e7eef9;color:#174ea6}
-
-.acoes{
-  display:flex;
-  flex-wrap:wrap;
-  gap:9px;
-  margin-top:13px;
-}
-
-.resumo{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  margin:12px 0;
-}
-
-.cartao{
-  background:#eaf1fc;
-  border:1px solid #d1def2;
-  border-radius:8px;
-  padding:11px;
-}
-
-.cartao small{
-  display:block;
-  color:#52647d;
-  margin-bottom:5px;
-}
-
+.acoes{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+.resumo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.cartao{background:#eaf1fc;border:1px solid #d1def2;border-radius:8px;padding:11px}
+.cartao small{display:block;color:#52647d;margin-bottom:5px}
 .cartao strong{overflow-wrap:anywhere}
-
-.nota{
-  font-size:12px;
-  line-height:1.5;
-  color:#5f6368;
-}
-
-.status{
-  font-weight:bold;
-  font-size:13px;
-  white-space:pre-wrap;
-  margin-top:10px;
-}
-
-.ok{color:#137333}
-.erro{color:#b3261e}
-
-.tabela-wrap{
-  overflow:auto;
-  max-height:70vh;
-  border:1px solid #d5dce6;
-  border-radius:8px;
-}
-
-table{
-  border-collapse:separate;
-  border-spacing:0;
-  width:100%;
-  font-size:12px;
-  white-space:nowrap;
-  background:white;
-}
-
-th,td{
-  padding:6px;
-  border-bottom:1px solid #dce2eb;
-  border-right:1px solid #e5e9f0;
-  text-align:center;
-}
-
-thead th{
-  position:sticky;
-  top:0;
-  background:#e4ecf8;
-  z-index:2;
-}
-
+.nota{font-size:12px;line-height:1.5;color:#5f6368}
+.status{font-weight:bold;font-size:13px;white-space:pre-wrap;margin-top:10px}
+.ok{color:#137333}.erro{color:#b3261e}
+.tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #d5dce6;border-radius:8px}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px;white-space:nowrap;background:white}
+th,td{padding:6px;border-bottom:1px solid #dce2eb;border-right:1px solid #e5e9f0;text-align:center}
+thead th{position:sticky;top:0;background:#e4ecf8;z-index:2}
 tbody tr:nth-child(even){background:#f7f9fd}
 
-/* COLUNAS FIXAS: COLABORADOR, SERVIÇO E QUANTIDADE */
-
-th:nth-child(-n+3),
-td:nth-child(-n+3){
-  position:sticky;
-  z-index:3;
-}
-
-th:nth-child(1),
-td:nth-child(1){
-  left:0;
-  width:155px;
-  min-width:155px;
-  max-width:155px;
-  text-align:left;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-th:nth-child(2),
-td:nth-child(2){
-  left:155px;
-  width:145px;
-  min-width:145px;
-  max-width:145px;
-  text-align:left;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-th:nth-child(3),
-td:nth-child(3){
-  left:300px;
-  width:90px;
-  min-width:90px;
-  max-width:90px;
-}
-
+/* Fixas: colaborador, serviço e quantidade */
+th:nth-child(-n+3),td:nth-child(-n+3){position:sticky;z-index:3}
+th:nth-child(1),td:nth-child(1){left:0;width:155px;min-width:155px;max-width:155px;text-align:left}
+th:nth-child(2),td:nth-child(2){left:155px;width:145px;min-width:145px;max-width:145px;text-align:left}
+th:nth-child(3),td:nth-child(3){left:300px;width:90px;min-width:90px;max-width:90px}
 thead th:nth-child(-n+3){z-index:4}
-
 tbody td:nth-child(-n+3){background:#f1f5fc}
+tbody tr:nth-child(even) td:nth-child(-n+3){background:#eaf0f9}
 
-tbody tr:nth-child(even) td:nth-child(-n+3){
-  background:#eaf0f9;
-}
-
-.hora{
-  width:94px;
-  min-width:90px;
-  padding:6px 3px;
-  text-align:center;
-}
-
-.qtd{
-  width:85px;
-  min-width:80px;
-  text-align:center;
-  font-weight:bold;
-}
-
-.salvar-linha{
-  background:#137333;
-  color:white;
-  padding:9px 11px;
-  font-size:12px;
-}
-
-.vazio{
-  padding:22px;
-  text-align:center;
-  color:#666;
-}
-
+.hora{width:94px;min-width:90px;padding:6px 3px;text-align:center}
+.qtd{width:85px;min-width:80px;text-align:center;font-weight:bold}
+.salvar-linha{background:#137333;color:white;padding:9px 11px;font-size:12px}
+.vazio{padding:22px;text-align:center;color:#666}
 .escondido{display:none!important}
 
 @media(max-width:650px){
   main{padding:7px}
   .painel{padding:10px}
   header h1{font-size:18px}
-  .grade{grid-template-columns:1fr}
-  .resumo{grid-template-columns:1fr}
+  .grade,.resumo{grid-template-columns:1fr}
   .acoes button{width:100%}
   .tabela-wrap{max-height:65vh}
 }
@@ -249,170 +64,105 @@ tbody tr:nth-child(even) td:nth-child(-n+3){
 </head>
 
 <body>
-
 <header>
   <h1>📋 Apontamento Contínuo — Costura</h1>
-  <p>Edite a quantidade e os horários diretamente na linha do colaborador.</p>
+  <p>Confirme a produção e informe a quantidade e os horários na mesma linha.</p>
 </header>
 
 <main>
-
 <section class="painel">
   <h2>1. Identificação da produção</h2>
 
   <div id="selecao">
     <div class="grade">
-
       <div>
         <label for="data">Data</label>
         <input type="date" id="data">
       </div>
-
       <div>
         <label for="colaborador">Colaborador</label>
-        <select id="colaborador">
-          <option value="">Carregando...</option>
-        </select>
+        <select id="colaborador"><option value="">Carregando...</option></select>
       </div>
-
       <div>
         <label for="atividade">Serviço</label>
-        <select id="atividade">
-          <option value="">Carregando...</option>
-        </select>
+        <select id="atividade"><option value="">Carregando...</option></select>
       </div>
-
     </div>
 
     <div class="acoes">
       <button type="button" class="azul" id="iniciar">
-        Confirmar identificação
+        Confirmar identificação e criar produção
       </button>
     </div>
   </div>
 
   <div id="identificacao" class="escondido">
-
     <div class="resumo">
-      <div class="cartao">
-        <small>DATA — A</small>
-        <strong id="fixData"></strong>
-      </div>
-
-      <div class="cartao">
-        <small>COLABORADOR — B</small>
-        <strong id="fixColaborador"></strong>
-      </div>
-
-      <div class="cartao">
-        <small>SERVIÇO — C</small>
-        <strong id="fixAtividade"></strong>
-      </div>
+      <div class="cartao"><small>DATA — A</small><strong id="fixData"></strong></div>
+      <div class="cartao"><small>COLABORADOR — B</small><strong id="fixColaborador"></strong></div>
+      <div class="cartao"><small>SERVIÇO — C</small><strong id="fixAtividade"></strong></div>
     </div>
 
-    <button type="button" class="claro" id="trocar">
-      Trocar identificação
-    </button>
-
-    <p class="nota">
-      A identificação é apenas de referência.
-      Para salvar, edite a linha correspondente na tabela abaixo.
-    </p>
+    <button type="button" class="claro" id="trocar">Nova produção / Trocar identificação</button>
+    <p class="nota">A nova linha foi criada na planilha. Preencha E e os horários de F até Y e clique em Salvar.</p>
   </div>
 </section>
 
 <section class="painel">
   <h2>2. Produção selecionada</h2>
-
   <p class="nota">
-    Edite a quantidade na coluna E e os horários de F até Y.
-    Clique em Salvar na própria linha.
-    As colunas A, B, C e D não serão modificadas.
-    Será exibida somente a produção correspondente à identificação escolhida.
+    Somente a produção criada nesta confirmação será exibida.
+    A, B, C e D não serão alteradas ao salvar o apontamento.
+    As colunas Colaborador, Serviço e E — Qtd. ficam fixas durante a rolagem horizontal.
   </p>
 
   <div class="acoes">
-    <button class="claro" id="atualizar">
-      ↻ Atualizar produção
-    </button>
+    <button class="claro" id="atualizar">↻ Atualizar produção</button>
   </div>
 
   <div id="statusGeral" class="status" role="status" aria-live="polite"></div>
 
   <div class="tabela-wrap">
     <table>
-      <thead>
-        <tr>
-          <th>Colaborador</th>
-          <th>Serviço</th>
-          <th>E — Qtd.</th>
-          <th>Linha</th>
-          <th>Data</th>
-
-          <th>F — Início</th>
-          <th>G — Fim</th>
-          <th>H — Início</th>
-          <th>I — Fim</th>
-          <th>J — Início</th>
-          <th>K — Fim</th>
-          <th>L — Início</th>
-          <th>M — Fim</th>
-          <th>N — Início</th>
-          <th>O — Fim</th>
-          <th>P — Início</th>
-          <th>Q — Fim</th>
-          <th>R — Início</th>
-          <th>S — Fim</th>
-          <th>T — Início</th>
-          <th>U — Fim</th>
-          <th>V — Início</th>
-          <th>W — Fim</th>
-          <th>X — Início</th>
-          <th>Y — Fim</th>
-          <th>Salvar</th>
-        </tr>
-      </thead>
-
+      <thead><tr>
+        <th>Colaborador</th><th>Serviço</th><th>E — Qtd.</th>
+        <th>Linha</th><th>Data</th>
+        <th>F — Início</th><th>G — Fim</th>
+        <th>H — Início</th><th>I — Fim</th>
+        <th>J — Início</th><th>K — Fim</th>
+        <th>L — Início</th><th>M — Fim</th>
+        <th>N — Início</th><th>O — Fim</th>
+        <th>P — Início</th><th>Q — Fim</th>
+        <th>R — Início</th><th>S — Fim</th>
+        <th>T — Início</th><th>U — Fim</th>
+        <th>V — Início</th><th>W — Fim</th>
+        <th>X — Início</th><th>Y — Fim</th><th>Salvar</th>
+      </tr></thead>
       <tbody id="registros">
-        <tr>
-          <td colspan="26" class="vazio">
-            Selecione uma produção para começar.
-          </td>
-        </tr>
+        <tr><td colspan="26" class="vazio">Confirme uma identificação para criar uma nova produção.</td></tr>
       </tbody>
     </table>
   </div>
 </section>
-
 </main>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
 
 const $ = id => document.getElementById(id);
-
 let salvamentos = new Set();
-let todosRegistros = [];
-let identificacaoConfirmada = false;
-
-
-/* MENSAGENS NA TELA */
+let registroAtual = null;
+let criando = false;
 
 function mostrarStatus(texto,tipo=''){
   $('statusGeral').textContent = texto;
   $('statusGeral').className = 'status ' + tipo;
 }
 
-
-/* COMUNICAÇÃO COM O APPS SCRIPT */
-
 function chamarAPI(parametros){
   return new Promise((resolve,reject)=>{
-
-    const callback =
-      'cb_' + Date.now() + '_' +
+    const callback = 'cb_' + Date.now() + '_' +
       Math.random().toString(36).slice(2);
-
     const script = document.createElement('script');
     let terminou = false;
 
@@ -423,17 +173,14 @@ function chamarAPI(parametros){
 
     function finalizar(erro,resultado){
       if(terminou)return;
-
       terminou = true;
       clearTimeout(timer);
       delete window[callback];
       script.remove();
-
       erro ? reject(erro) : resolve(resultado);
     }
 
     window[callback] = r => finalizar(null,r);
-
     script.onerror = () =>
       finalizar(new Error('Não foi possível acessar o Apps Script.'));
 
@@ -444,13 +191,9 @@ function chamarAPI(parametros){
   });
 }
 
-
-/* PREENCHER LISTAS */
-
 function preencherSelect(id,lista,texto){
   const select = $(id);
   const anterior = select.value;
-
   select.replaceChildren();
 
   const inicial = document.createElement('option');
@@ -465,13 +208,8 @@ function preencherSelect(id,lista,texto){
     select.appendChild(op);
   });
 
-  if(lista.includes(anterior)){
-    select.value = anterior;
-  }
+  if(lista.includes(anterior))select.value = anterior;
 }
-
-
-/* CRIAR CÉLULA */
 
 function criarCelula(texto){
   const td = document.createElement('td');
@@ -479,16 +217,26 @@ function criarCelula(texto){
   return td;
 }
 
+function normalizarQuantidade(valor){
+  if(valor == null)return '';
+  return String(valor).trim().replace(',','.');
+}
 
-/* MONTAR A TABELA COM APENAS UMA PRODUÇÃO */
+function normalizarHora(valor){
+  if(!valor)return '';
+  const s = String(valor).trim();
+  const m = s.match(/(?:^|\s)(\d{1,2}):(\d{2})(?::\d{2})?/);
+  if(!m)return '';
+  return String(m[1]).padStart(2,'0') + ':' + m[2];
+}
 
-function montarTabela(lista){
+function montarTabela(r){
   const tbody = $('registros');
   tbody.replaceChildren();
 
-  if(!lista.length){
+  if(!r){
     const tr = document.createElement('tr');
-    const td = criarCelula('Nenhum registro encontrado.');
+    const td = criarCelula('Confirme uma identificação para criar uma nova produção.');
     td.colSpan = 26;
     td.className = 'vazio';
     tr.appendChild(td);
@@ -496,239 +244,119 @@ function montarTabela(lista){
     return;
   }
 
-  lista.forEach(r=>{
+  const tr = document.createElement('tr');
+  tr.appendChild(criarCelula(r.colaborador));
+  tr.appendChild(criarCelula(r.atividade));
 
-    const tr = document.createElement('tr');
+  const qtd = document.createElement('input');
+  qtd.type = 'number';
+  qtd.min = '0';
+  qtd.step = 'any';
+  qtd.className = 'qtd';
+  qtd.value = normalizarQuantidade(r.quantidade);
 
-    /* COLUNAS FIXAS: COLABORADOR, SERVIÇO E QUANTIDADE */
+  const tdQtd = document.createElement('td');
+  tdQtd.appendChild(qtd);
+  tr.appendChild(tdQtd);
 
-    tr.appendChild(criarCelula(r.colaborador));
-    tr.appendChild(criarCelula(r.atividade));
+  tr.appendChild(criarCelula(r.linha));
+  tr.appendChild(criarCelula(r.data));
 
-    const qtd = document.createElement('input');
-    qtd.type = 'number';
-    qtd.min = '0';
-    qtd.step = 'any';
-    qtd.className = 'qtd';
-    qtd.value = normalizarQuantidade(r.quantidade);
-    qtd.setAttribute(
-      'aria-label',
-      'Quantidade da linha ' + r.linha
-    );
+  const campos = [];
 
-    const tdQtd = document.createElement('td');
-    tdQtd.appendChild(qtd);
-    tr.appendChild(tdQtd);
+  for(let i=0;i<20;i++){
+    const input = document.createElement('input');
+    input.type = 'time';
+    input.step = '60';
+    input.className = 'hora';
+    input.value = normalizarHora((r.horarios || [])[i] || '');
 
-    /* DADOS DE REFERÊNCIA */
-
-    tr.appendChild(criarCelula(r.linha));
-    tr.appendChild(criarCelula(r.data));
-
-    /* CAMPOS DE HORÁRIO F ATÉ Y */
-
-    const campos = [];
-
-    for(let i=0;i<20;i++){
-
-      const input = document.createElement('input');
-      input.type = 'time';
-      input.step = '60';
-      input.className = 'hora';
-
-      input.value = normalizarHora(
-        (r.horarios || [])[i] || ''
-      );
-
-      input.setAttribute(
-        'aria-label',
-        'Coluna ' + String.fromCharCode(70+i) +
-        ' da linha ' + r.linha
-      );
-
-      const td = document.createElement('td');
-      td.appendChild(input);
-      tr.appendChild(td);
-
-      campos.push(input);
-    }
-
-    /* BOTÃO SALVAR */
-
-    const botao = document.createElement('button');
-    botao.type = 'button';
-    botao.className = 'salvar-linha';
-    botao.textContent = '💾 Salvar';
-
-    botao.addEventListener(
-      'click',
-      ()=>salvarLinha(r.linha,qtd,campos,botao)
-    );
-
-    const tdBotao = document.createElement('td');
-    tdBotao.appendChild(botao);
-    tr.appendChild(tdBotao);
-
-    tbody.appendChild(tr);
-  });
-}
-
-
-/* NORMALIZAR QUANTIDADE */
-
-function normalizarQuantidade(valor){
-  if(valor == null)return '';
-  return String(valor).trim().replace(',','.');
-}
-
-
-/* NORMALIZAR HORÁRIO */
-
-function normalizarHora(valor){
-  if(!valor)return '';
-
-  const s = String(valor).trim();
-
-  const m = s.match(
-    /(?:^|\s)(\d{1,2}):(\d{2})(?::\d{2})?/
-  );
-
-  if(!m)return '';
-
-  return String(m[1]).padStart(2,'0') + ':' + m[2];
-}
-
-
-/* CONVERTER DATA PARA O FORMATO AAAA-MM-DD */
-
-function dataParaISO(valor){
-  const texto = String(valor || '').trim();
-
-  if(/^\d{4}-\d{2}-\d{2}$/.test(texto)){
-    return texto;
+    const td = document.createElement('td');
+    td.appendChild(input);
+    tr.appendChild(td);
+    campos.push(input);
   }
 
-  const br = texto.match(
-    /^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/
-  );
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = 'salvar-linha';
+  botao.textContent = '💾 Salvar';
+  botao.addEventListener('click',()=>salvarLinha(r.linha,qtd,campos,botao));
 
-  if(br){
-    return br[3] + '-' +
-      String(br[2]).padStart(2,'0') + '-' +
-      String(br[1]).padStart(2,'0');
-  }
-
-  return texto;
+  const tdBotao = document.createElement('td');
+  tdBotao.appendChild(botao);
+  tr.appendChild(tdBotao);
+  tbody.appendChild(tr);
 }
 
+/* Carrega nomes e serviços, mas NÃO exibe o histórico. */
+async function carregarListas(){
+  try{
+    const dados = await chamarAPI({action:'list'});
+    if(!dados.ok)throw new Error(dados.mensagem || 'Erro ao consultar planilha.');
 
-/* EXIBIR SOMENTE A PRODUÇÃO SELECIONADA */
+    preencherSelect('colaborador',dados.colaboradores || [],'Selecione o colaborador');
+    preencherSelect('atividade',dados.atividades || [],'Selecione o serviço');
 
-function exibirRegistroSelecionado(){
+    mostrarStatus('Conectado. Selecione a identificação para criar uma nova linha.','ok');
+  }catch(e){
+    mostrarStatus(e.message,'erro');
+  }
+}
 
-  if(!identificacaoConfirmada){
-    montarTabela([]);
+/* Cada confirmação cria uma NOVA linha na aba Controle. */
+async function criarNovaProducao(){
+  if(criando)return;
 
-    mostrarStatus(
-      'Escolha a data, o colaborador e o serviço e confirme a identificação para exibir a produção correspondente.'
-    );
+  const data = $('data').value;
+  const colaborador = $('colaborador').value.trim();
+  const atividade = $('atividade').value.trim();
 
+  if(!data || !colaborador || !atividade){
+    alert('Preencha a data, o colaborador e o serviço.');
     return;
   }
 
-  const dataEscolhida = $('data').value;
-  const colaboradorEscolhido = $('colaborador').value.trim();
-  const atividadeEscolhida = $('atividade').value.trim();
-
-  /*
-    A API devolve os registros do mais recente para o mais antigo.
-    Seleciona o primeiro registro que corresponde à identificação.
-  */
-
-  const registro = todosRegistros.find(r =>
-    dataParaISO(r.data) === dataEscolhida &&
-    String(r.colaborador || '').trim() === colaboradorEscolhido &&
-    String(r.atividade || '').trim() === atividadeEscolhida
-  );
-
-  if(!registro){
-    montarTabela([]);
-
-    mostrarStatus(
-      'Não encontrei uma linha existente para essa data, colaborador e serviço. Esta tela edita registros existentes; ela não cria uma nova linha na planilha.',
-      'erro'
-    );
-
-    return;
-  }
-
-  montarTabela([registro]);
-
-  mostrarStatus(
-    'Exibindo somente a produção correspondente à identificação — linha ' +
-    registro.linha + '.',
-    'ok'
-  );
-}
-
-
-/* CARREGAR DADOS DA PLANILHA */
-
-async function carregarDados(){
-
-  $('atualizar').disabled = true;
-  mostrarStatus('Atualizando registros...');
+  criando = true;
+  $('iniciar').disabled = true;
+  mostrarStatus('Criando nova produção na planilha...');
 
   try{
+    const resultado = await chamarAPI({
+      action:'create',
+      record:JSON.stringify({data,colaborador,atividade})
+    });
 
-    const dados = await chamarAPI({action:'list'});
-
-    if(!dados.ok){
-      throw new Error(
-        dados.mensagem || 'Erro ao consultar planilha.'
-      );
+    if(!resultado.ok || !resultado.registro){
+      throw new Error(resultado.mensagem || 'Não foi possível criar a produção.');
     }
 
-    todosRegistros = dados.registros || [];
+    registroAtual = resultado.registro;
 
-    preencherSelect(
-      'colaborador',
-      dados.colaboradores || [],
-      'Selecione o colaborador'
+    $('fixData').textContent = data.split('-').reverse().join('/');
+    $('fixColaborador').textContent = colaborador;
+    $('fixAtividade').textContent = atividade;
+
+    $('selecao').classList.add('escondido');
+    $('identificacao').classList.remove('escondido');
+
+    montarTabela(registroAtual);
+
+    mostrarStatus(
+      resultado.mensagem + ' Preencha a quantidade e os horários.',
+      'ok'
     );
-
-    preencherSelect(
-      'atividade',
-      dados.atividades || [],
-      'Selecione o serviço'
-    );
-
-    if(identificacaoConfirmada){
-      exibirRegistroSelecionado();
-    }else{
-      montarTabela([]);
-
-      mostrarStatus(
-        'Registros consultados. Confirme a identificação para exibir somente a produção desejada.',
-        'ok'
-      );
-    }
 
   }catch(e){
-
-    mostrarStatus(e.message,'erro');
-
+    mostrarStatus('Erro ao criar produção: ' + e.message,'erro');
   }finally{
-
-    $('atualizar').disabled = false;
+    criando = false;
+    $('iniciar').disabled = false;
   }
 }
 
-
-/* SALVAR QUANTIDADE E HORÁRIOS NA MESMA LINHA */
-
+/* Salva somente E:Y da linha criada. */
 async function salvarLinha(linha,campoQtd,campoHoras,botao){
-
   if(salvamentos.has(linha))return;
 
   if(
@@ -736,11 +364,7 @@ async function salvarLinha(linha,campoQtd,campoHoras,botao){
     !Number.isFinite(Number(campoQtd.value)) ||
     Number(campoQtd.value) < 0
   ){
-    alert(
-      'Informe uma quantidade válida na coluna E da linha ' +
-      linha + '.'
-    );
-
+    alert('Informe uma quantidade válida na coluna E.');
     campoQtd.focus();
     return;
   }
@@ -750,13 +374,9 @@ async function salvarLinha(linha,campoQtd,campoHoras,botao){
   salvamentos.add(linha);
   botao.disabled = true;
   botao.textContent = 'Salvando...';
-
-  mostrarStatus(
-    'Salvando quantidade e horários da linha ' + linha + '...'
-  );
+  mostrarStatus('Salvando quantidade e horários da linha ' + linha + '...');
 
   try{
-
     const resultado = await chamarAPI({
       action:'save',
       record:JSON.stringify({
@@ -767,92 +387,47 @@ async function salvarLinha(linha,campoQtd,campoHoras,botao){
     });
 
     if(!resultado.ok){
-      throw new Error(
-        resultado.mensagem || 'Não foi possível salvar.'
-      );
+      throw new Error(resultado.mensagem || 'Não foi possível salvar.');
     }
 
-    botao.textContent = '✓ Salvo';
+    registroAtual.quantidade = campoQtd.value;
+    registroAtual.horarios = horarios;
 
+    botao.textContent = '✓ Salvo';
     mostrarStatus(resultado.mensagem,'ok');
 
-    /* Atualiza os dados sem perder a identificação escolhida. */
-    await carregarDados();
-
   }catch(e){
-
     botao.textContent = 'Tentar salvar';
-
-    mostrarStatus(
-      'Erro na linha ' + linha + ': ' + e.message +
-      '\nConfira a planilha antes de repetir o salvamento.',
-      'erro'
-    );
-
+    mostrarStatus('Erro ao salvar: ' + e.message,'erro');
   }finally{
-
     salvamentos.delete(linha);
     botao.disabled = false;
-
     if(botao.textContent === 'Salvando...'){
       botao.textContent = '💾 Salvar';
     }
   }
 }
 
-
-/* CONFIRMAR A IDENTIFICAÇÃO */
-
-$('iniciar').addEventListener('click',()=>{
-
-  const data = $('data').value;
-  const colaborador = $('colaborador').value;
-  const atividade = $('atividade').value;
-
-  if(!data || !colaborador || !atividade){
-    alert('Preencha a data, o colaborador e o serviço.');
-    return;
-  }
-
-  $('fixData').textContent = data.split('-').reverse().join('/');
-  $('fixColaborador').textContent = colaborador;
-  $('fixAtividade').textContent = atividade;
-
-  identificacaoConfirmada = true;
-
-  $('selecao').classList.add('escondido');
-  $('identificacao').classList.remove('escondido');
-
-  exibirRegistroSelecionado();
-});
-
-
-/* TROCAR A IDENTIFICAÇÃO */
+$('iniciar').addEventListener('click',criarNovaProducao);
 
 $('trocar').addEventListener('click',()=>{
-
-  identificacaoConfirmada = false;
-
+  registroAtual = null;
   $('selecao').classList.remove('escondido');
   $('identificacao').classList.add('escondido');
-
-  montarTabela([]);
-
-  mostrarStatus(
-    'Escolha outra identificação e confirme para exibir somente a produção correspondente.'
-  );
+  montarTabela(null);
+  mostrarStatus('Selecione a identificação da próxima produção.');
 });
 
-
-/* ATUALIZAR DADOS */
-
-$('atualizar').addEventListener('click',carregarDados);
-
-
-/* INICIALIZAR A PÁGINA */
+$('atualizar').addEventListener('click',()=>{
+  if(registroAtual){
+    montarTabela(registroAtual);
+    mostrarStatus('Produção atual exibida.','ok');
+  }else{
+    carregarListas();
+  }
+});
 
 function iniciar(){
-
   const agora = new Date();
 
   $('data').value =
@@ -860,11 +435,11 @@ function iniciar(){
     String(agora.getMonth()+1).padStart(2,'0') + '-' +
     String(agora.getDate()).padStart(2,'0');
 
-  carregarDados();
+  montarTabela(null);
+  carregarListas();
 }
 
 iniciar();
-
 </script>
 </body>
 </html>
