@@ -9,82 +9,57 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#202124}
-header{background:#19375d;color:white;padding:15px 20px;position:sticky;top:0;z-index:20}
+header{background:#19375d;color:white;padding:15px 20px;position:sticky;top:0;z-index:10}
 header h1{font-size:22px;margin:0}
 header p{font-size:14px;margin:6px 0 0}
 main{padding:14px;max-width:1900px;margin:auto}
 .painel{background:white;padding:16px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 7px #0001}
-h2{font-size:19px;margin:0 0 14px}
-h3{font-size:16px;margin:16px 0 10px}
-label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+h2{font-size:18px;margin:0 0 12px}
+label{display:block;font-size:12px;font-weight:bold;margin-bottom:4px}
 input,select,button{font:inherit}
-input,select{width:100%;min-width:0;padding:9px;border:1px solid #cbd5e1;border-radius:7px;min-height:40px;background:white}
-button{border:0;border-radius:7px;padding:10px 13px;cursor:pointer;font-weight:bold}
+input,select{width:100%;min-width:65px;padding:8px;border:1px solid #cbd5e1;border-radius:6px;min-height:38px;background:white}
+button{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;font-weight:bold}
 button:disabled{opacity:.55;cursor:wait}
 .azul{background:#1a73e8;color:white}
 .claro{background:#e7eef9;color:#174ea6}
-.verde{background:#137333;color:white}
-.acoes{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
-.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.resumo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
-.cartao{background:#eaf1fc;border:1px solid #d1def2;border-radius:8px;padding:11px}
-.cartao small{display:block;color:#52647d;margin-bottom:5px}
-.cartao strong{overflow-wrap:anywhere}
+.acoes{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
 .nota{font-size:12px;line-height:1.5;color:#5f6368}
-.status{font-weight:bold;font-size:13px;white-space:pre-wrap;margin:10px 0}
+.status{font-weight:bold;font-size:13px;white-space:pre-wrap;margin:9px 0}
 .ok{color:#137333}.erro{color:#b3261e}
-.escondido{display:none!important}
-
-/* Lista de colaboradores */
-.lista-colaboradores{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.colaborador-card{border:1px solid #d7dfeb;border-radius:9px;padding:10px;background:#f8faff;display:grid;grid-template-columns:minmax(130px,1fr) minmax(150px,1fr) auto;gap:10px;align-items:end}
-.colaborador-nome{font-weight:bold;overflow-wrap:anywhere;align-self:center}
-.colaborador-card label{font-size:12px}
-
-/* Tabelas */
-.tabela-wrap{width:100%;overflow:auto;max-height:65vh;border:1px solid #d5dce6;border-radius:8px}
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tabela-wrap{overflow:auto;max-height:72vh;border:1px solid #d5dce6;border-radius:8px;position:relative}
 table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12px;white-space:nowrap;background:white}
 th,td{padding:6px;border-bottom:1px solid #dce2eb;border-right:1px solid #e5e9f0;text-align:center}
-thead th{position:sticky;top:0;background:#e4ecf8;z-index:4}
+thead th{position:sticky;top:0;background:#e4ecf8;z-index:5}
 tbody tr:nth-child(even){background:#f7f9fd}
 
-/* Colaborador, Serviço e Quantidade fixos na rolagem horizontal */
-#tabelaProducoes th:nth-child(1),#tabelaProducoes td:nth-child(1),
-#tabelaProducoes th:nth-child(2),#tabelaProducoes td:nth-child(2),
-#tabelaProducoes th:nth-child(3),#tabelaProducoes td:nth-child(3){
- position:sticky;z-index:3
-}
-#tabelaProducoes th:nth-child(1),#tabelaProducoes td:nth-child(1){left:0;width:155px;min-width:155px;max-width:155px;text-align:left}
-#tabelaProducoes th:nth-child(2),#tabelaProducoes td:nth-child(2){left:155px;width:145px;min-width:145px;max-width:145px;text-align:left}
-#tabelaProducoes th:nth-child(3),#tabelaProducoes td:nth-child(3){left:300px;width:90px;min-width:90px;max-width:90px}
-#tabelaProducoes thead th:nth-child(-n+3){z-index:6}
-#tabelaProducoes tbody td:nth-child(-n+3){background:#f1f5fc}
-#tabelaProducoes tbody tr:nth-child(even) td:nth-child(-n+3){background:#eaf0f9}
-.hora{width:94px;min-width:90px;text-align:center;padding:7px 3px}
+/* Colunas fixas durante a rolagem horizontal */
+th:nth-child(1),td:nth-child(1){position:sticky;left:0;width:155px;min-width:155px;max-width:155px;text-align:left}
+th:nth-child(2),td:nth-child(2){position:sticky;left:155px;width:150px;min-width:150px;max-width:150px;text-align:left}
+th:nth-child(3),td:nth-child(3){position:sticky;left:305px;width:90px;min-width:90px;max-width:90px}
+thead th:nth-child(-n+3){z-index:7}
+tbody td:nth-child(-n+3){background:#f1f5fc}
+tbody tr:nth-child(even) td:nth-child(-n+3){background:#eaf0f9}
+tbody tr.seletor td:nth-child(-n+3){background:#fff8e1}
+tbody tr.seletor:nth-child(even) td:nth-child(-n+3){background:#fff4cc}
+
+.hora{width:94px;min-width:90px;padding:6px 3px;text-align:center}
 .qtd{width:85px;min-width:80px;text-align:center;font-weight:bold}
+.servico{min-width:145px}
+.data-campo{min-width:140px}
 .salvar-linha{background:#137333;color:white;padding:9px 11px;font-size:12px}
 .vazio{padding:22px;text-align:center;color:#666}
-.contador{font-size:12px;color:#5f6368;margin:8px 0}
-
-@media(max-width:850px){
- main{padding:8px}
- .painel{padding:11px}
- header{padding:12px}
- header h1{font-size:19px}
- .grade,.resumo{grid-template-columns:1fr}
- .lista-colaboradores{grid-template-columns:1fr}
- .colaborador-card{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
- .colaborador-nome{grid-column:1/-1}
- .colaborador-card button{grid-column:1/-1;width:100%}
- .tabela-wrap{max-height:60vh}
-}
-@media(max-width:420px){
- header h1{font-size:17px}
- header p{font-size:12px}
- h2{font-size:17px}
- .colaborador-card{grid-template-columns:1fr}
- .colaborador-nome,.colaborador-card button{grid-column:auto}
- .acoes button{width:100%}
+.badge{font-size:11px;color:#174ea6;font-weight:bold}
+@media(max-width:700px){
+  main{padding:7px}
+  .painel{padding:10px}
+  header{padding:12px}
+  header h1{font-size:18px}
+  header p{font-size:12px}
+  .grade{grid-template-columns:1fr}
+  .acoes button{width:100%}
+  .tabela-wrap{max-height:68vh}
+  input,select{font-size:16px}
 }
 </style>
 </head>
@@ -92,65 +67,70 @@ tbody tr:nth-child(even){background:#f7f9fd}
 <body>
 <header>
   <h1>📋 Apontamento Contínuo — Costura</h1>
-  <p>Selecione o serviço de cada colaborador e registre a produção diretamente na planilha.</p>
+  <p>Selecione o serviço na linha do colaborador. A produção será criada automaticamente.</p>
 </header>
 
 <main>
-  <!-- ITEM 1: NOVA PRODUÇÃO PELO FORMULÁRIO -->
-  <section class="painel">
-    <h2>1. Criar nova produção</h2>
-    <p class="nota">Use esta opção para escolher manualmente a data, o colaborador e o serviço.</p>
+<section class="painel">
+  <h2>1. Nova produção / identificação manual</h2>
+  <p class="nota">
+    Use esta opção quando quiser criar uma produção por este formulário.
+    A nova produção será adicionada à tabela do item 2.
+  </p>
 
-    <div class="grade">
-      <div>
-        <label for="data">Data da produção</label>
-        <input type="date" id="data">
-      </div>
-      <div>
-        <label for="colaborador">Colaborador</label>
-        <select id="colaborador"><option value="">Carregando colaboradores...</option></select>
-      </div>
-      <div>
-        <label for="atividade">Serviço</label>
-        <select id="atividade"><option value="">Carregando serviços...</option></select>
-      </div>
+  <div class="grade">
+    <div>
+      <label for="dataManual">Data</label>
+      <input type="date" id="dataManual">
     </div>
-
-    <div class="acoes">
-      <button type="button" class="azul" id="iniciar">＋ Confirmar e criar produção</button>
+    <div>
+      <label for="colaboradorManual">Colaborador</label>
+      <select id="colaboradorManual">
+        <option value="">Carregando colaboradores...</option>
+      </select>
     </div>
-  </section>
-
-  <!-- ITEM 2: TODOS OS COLABORADORES -->
-  <section class="painel">
-    <h2>2. Colaboradores e seleção de serviço</h2>
-    <p class="nota">
-      Todos os colaboradores cadastrados na coluna B são apresentados abaixo.
-      Selecione o serviço ao lado do nome e clique em “Criar produção”.
-      Cada criação gera uma nova linha na aba Controle.
-    </p>
-
-    <div class="acoes">
-      <button type="button" class="claro" id="atualizarListas">↻ Atualizar colaboradores e serviços</button>
+    <div>
+      <label for="servicoManual">Serviço</label>
+      <select id="servicoManual">
+        <option value="">Carregando serviços...</option>
+      </select>
     </div>
+  </div>
 
-    <div id="statusGeral" class="status" role="status" aria-live="polite"></div>
-    <div id="listaColaboradores" class="lista-colaboradores">
-      Carregando colaboradores...
-    </div>
+  <div class="acoes">
+    <button type="button" class="azul" id="criarManual">
+      ＋ Confirmar identificação e criar produção
+    </button>
+  </div>
+  <div id="statusManual" class="status" role="status" aria-live="polite"></div>
+</section>
 
-    <h3>Produções criadas nesta sessão</h3>
-    <p class="nota">
-      Preencha a quantidade na coluna E e os horários de F até Y. Clique em Salvar na própria linha.
-      As colunas A, B, C e D não são alteradas pelo salvamento.
-    </p>
-    <div id="contador" class="contador">Nenhuma produção criada nesta sessão.</div>
+<section class="painel">
+  <h2>2. Colaboradores e produções</h2>
+  <p class="nota">
+    Todos os colaboradores cadastrados são exibidos abaixo.
+    Selecione a data e o serviço na linha do colaborador para criar uma produção.
+    Depois preencha a quantidade e os horários e clique em Salvar.
+    A, B, C e D não são modificadas durante o salvamento de E:Y.
+  </p>
 
-    <div class="tabela-wrap">
-      <table id="tabelaProducoes">
-        <thead><tr>
-          <th>Colaborador</th><th>Serviço</th><th>E — Qtd.</th>
-          <th>Linha</th><th>Data</th>
+  <div class="acoes">
+    <button type="button" class="claro" id="atualizar">↻ Atualizar lista</button>
+  </div>
+
+  <div id="statusGeral" class="status" role="status" aria-live="polite">
+    Carregando colaboradores e serviços...
+  </div>
+
+  <div class="tabela-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Colaborador</th>
+          <th>Serviço</th>
+          <th>E — Qtd.</th>
+          <th>Linha</th>
+          <th>Data</th>
           <th>F — Início</th><th>G — Fim</th>
           <th>H — Início</th><th>I — Fim</th>
           <th>J — Início</th><th>K — Fim</th>
@@ -160,39 +140,61 @@ tbody tr:nth-child(even){background:#f7f9fd}
           <th>R — Início</th><th>S — Fim</th>
           <th>T — Início</th><th>U — Fim</th>
           <th>V — Início</th><th>W — Fim</th>
-          <th>X — Início</th><th>Y — Fim</th><th>Salvar</th>
-        </tr></thead>
-        <tbody id="registros">
-          <tr><td colspan="26" class="vazio">Crie uma produção para ela aparecer aqui.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+          <th>X — Início</th><th>Y — Fim</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="registros">
+        <tr><td colspan="26" class="vazio">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 </main>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
 
 const $ = id => document.getElementById(id);
-const salvamentos = new Set();
-const producoes = [];
-let colaboradoresLista = [];
-let atividadesLista = [];
-let criando = false;
 
-function mostrarStatus(texto,tipo=''){
+let colaboradores = [];
+let atividades = [];
+let producoesCriadas = [];
+let criandoChaves = new Set();
+let salvamentos = new Set();
+
+function hojeISO(){
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function dataBR(iso){
+  if(!iso)return '';
+  const partes = iso.split('-');
+  return partes.length === 3 ? partes[2]+'/'+partes[1]+'/'+partes[0] : iso;
+}
+
+function status(texto,tipo=''){
   $('statusGeral').textContent = texto;
   $('statusGeral').className = 'status ' + tipo;
 }
 
+function statusManual(texto,tipo=''){
+  $('statusManual').textContent = texto;
+  $('statusManual').className = 'status ' + tipo;
+}
+
 function chamarAPI(parametros){
   return new Promise((resolve,reject)=>{
-    const callback = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const callback = 'cb_' + Date.now() + '_' +
+      Math.random().toString(36).slice(2);
     const script = document.createElement('script');
     let terminou = false;
 
     const timer = setTimeout(
-      ()=>finalizar(new Error('Tempo esgotado. Verifique a conexão com o Apps Script.')),
+      ()=>finalizar(new Error('Tempo esgotado ao acessar o Apps Script.')),
       25000
     );
 
@@ -206,7 +208,8 @@ function chamarAPI(parametros){
     }
 
     window[callback] = r => finalizar(null,r);
-    script.onerror = () => finalizar(new Error('Não foi possível acessar o Apps Script.'));
+    script.onerror = () =>
+      finalizar(new Error('Não foi possível acessar o Apps Script. Confira a URL e a implantação.'));
 
     script.src = API_URL + '?' +
       new URLSearchParams({...parametros,callback}).toString();
@@ -220,10 +223,10 @@ function preencherSelect(id,lista,texto){
   const anterior = select.value;
   select.replaceChildren();
 
-  const primeira = document.createElement('option');
-  primeira.value = '';
-  primeira.textContent = texto;
-  select.appendChild(primeira);
+  const inicial = document.createElement('option');
+  inicial.value = '';
+  inicial.textContent = texto;
+  select.appendChild(inicial);
 
   lista.forEach(valor=>{
     const op = document.createElement('option');
@@ -232,56 +235,13 @@ function preencherSelect(id,lista,texto){
     select.appendChild(op);
   });
 
-  if(lista.includes(anterior)) select.value = anterior;
+  if(lista.includes(anterior))select.value = anterior;
 }
 
-function criarOpcao(valor,texto){
-  const op = document.createElement('option');
-  op.value = valor;
-  op.textContent = texto;
-  return op;
-}
-
-function renderizarColaboradores(){
-  const area = $('listaColaboradores');
-  area.replaceChildren();
-
-  if(!colaboradoresLista.length){
-    area.textContent = 'Nenhum colaborador foi encontrado na coluna B.';
-    return;
-  }
-
-  colaboradoresLista.forEach(nome=>{
-    const cartao = document.createElement('div');
-    cartao.className = 'colaborador-card';
-
-    const nomeEl = document.createElement('div');
-    nomeEl.className = 'colaborador-nome';
-    nomeEl.textContent = nome;
-
-    const grupo = document.createElement('div');
-    const label = document.createElement('label');
-    label.textContent = 'Serviço';
-    const select = document.createElement('select');
-    select.appendChild(criarOpcao('', 'Selecione o serviço'));
-
-    atividadesLista.forEach(servico=>{
-      select.appendChild(criarOpcao(servico,servico));
-    });
-
-    grupo.append(label,select);
-
-    const botao = document.createElement('button');
-    botao.type = 'button';
-    botao.className = 'azul';
-    botao.textContent = '＋ Criar produção';
-    botao.addEventListener('click',()=>{
-      criarProducao($('data').value,nome,select.value,botao);
-    });
-
-    cartao.append(nomeEl,grupo,botao);
-    area.appendChild(cartao);
-  });
+function celula(texto){
+  const td = document.createElement('td');
+  td.textContent = texto ?? '';
+  return td;
 }
 
 function normalizarQuantidade(valor){
@@ -295,158 +255,159 @@ function normalizarHora(valor){
   return String(m[1]).padStart(2,'0') + ':' + m[2];
 }
 
-function celula(texto){
+function montarCelulaHora(valor=''){
+  const input = document.createElement('input');
+  input.type = 'time';
+  input.step = '60';
+  input.className = 'hora';
+  input.value = normalizarHora(valor);
+
   const td = document.createElement('td');
-  td.textContent = texto == null ? '' : texto;
-  return td;
+  td.appendChild(input);
+  return {td,input};
 }
 
-function renderizarProducoes(){
-  const tbody = $('registros');
-  tbody.replaceChildren();
+function criarLinhaSeletor(nome){
+  const tr = document.createElement('tr');
+  tr.className = 'seletor';
+  tr.dataset.colaborador = nome;
 
-  $('contador').textContent = producoes.length
-    ? producoes.length + (producoes.length === 1 ? ' produção criada nesta sessão.' : ' produções criadas nesta sessão.')
-    : 'Nenhuma produção criada nesta sessão.';
+  tr.appendChild(celula(nome));
 
-  if(!producoes.length){
-    const tr = document.createElement('tr');
-    const td = celula('Crie uma produção para ela aparecer aqui.');
-    td.colSpan = 26;
-    td.className = 'vazio';
-    tr.appendChild(td);
-    tbody.appendChild(tr);
-    return;
-  }
+  const selectServico = document.createElement('select');
+  selectServico.className = 'servico';
+  selectServico.setAttribute('aria-label','Serviço de '+nome);
 
-  producoes.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.append(celula(r.colaborador),celula(r.atividade));
+  const opInicial = document.createElement('option');
+  opInicial.value = '';
+  opInicial.textContent = 'Selecione o serviço';
+  selectServico.appendChild(opInicial);
 
-    const qtd = document.createElement('input');
-    qtd.type = 'number';
-    qtd.min = '0';
-    qtd.step = 'any';
-    qtd.className = 'qtd';
-    qtd.value = normalizarQuantidade(r.quantidade);
-
-    const tdQtd = document.createElement('td');
-    tdQtd.appendChild(qtd);
-    tr.appendChild(tdQtd);
-
-    tr.append(celula(r.linha),celula(r.data));
-
-    const campos = [];
-    for(let i=0;i<20;i++){
-      const input = document.createElement('input');
-      input.type = 'time';
-      input.step = '60';
-      input.className = 'hora';
-      input.value = normalizarHora((r.horarios || [])[i] || '');
-
-      const td = document.createElement('td');
-      td.appendChild(input);
-      tr.appendChild(td);
-      campos.push(input);
-    }
-
-    const botao = document.createElement('button');
-    botao.type = 'button';
-    botao.className = 'salvar-linha';
-    botao.textContent = '💾 Salvar';
-    botao.addEventListener('click',()=>salvarLinha(r,qtd,campos,botao));
-
-    const tdSalvar = document.createElement('td');
-    tdSalvar.appendChild(botao);
-    tr.appendChild(tdSalvar);
-    tbody.appendChild(tr);
+  atividades.forEach(servico=>{
+    const op = document.createElement('option');
+    op.value = servico;
+    op.textContent = servico;
+    selectServico.appendChild(op);
   });
-}
 
-async function carregarListas(){
-  mostrarStatus('Carregando colaboradores e serviços...');
-  $('atualizarListas').disabled = true;
+  const tdServico = document.createElement('td');
+  tdServico.appendChild(selectServico);
+  tr.appendChild(tdServico);
 
-  try{
-    const dados = await chamarAPI({action:'list'});
-    if(!dados || !dados.ok) throw new Error(dados?.mensagem || 'Erro ao consultar a planilha.');
+  tr.appendChild(celula('—'));
+  tr.appendChild(celula('—'));
 
-    colaboradoresLista = dados.colaboradores || [];
-    atividadesLista = dados.atividades || [];
+  const data = document.createElement('input');
+  data.type = 'date';
+  data.className = 'data-campo';
+  data.value = hojeISO();
+  data.setAttribute('aria-label','Data da produção de '+nome);
 
-    preencherSelect('colaborador',colaboradoresLista,'Selecione o colaborador');
-    preencherSelect('atividade',atividadesLista,'Selecione o serviço');
-    renderizarColaboradores();
+  const tdData = document.createElement('td');
+  tdData.appendChild(data);
+  tr.appendChild(tdData);
 
-    mostrarStatus('Listas atualizadas. Selecione um serviço para criar a produção.','ok');
-  }catch(e){
-    mostrarStatus(e.message,'erro');
-    $('listaColaboradores').textContent = 'Não foi possível carregar os colaboradores.';
-  }finally{
-    $('atualizarListas').disabled = false;
-  }
-}
+  for(let i=0;i<20;i++)tr.appendChild(celula('—'));
+  tr.appendChild(celula('Selecione o serviço'));
 
-async function criarProducao(data,colaborador,atividade,botao=null){
-  if(criando)return;
+  let aguardando = false;
 
-  if(!data || !colaborador || !atividade){
-    alert('Selecione a data e o serviço. Confira também o colaborador.');
-    return;
-  }
+  async function verificarCriacao(){
+    if(aguardando)return;
+    if(!selectServico.value || !data.value)return;
 
-  criando = true;
-  const botaoPrincipal = $('iniciar');
-  botaoPrincipal.disabled = true;
-  if(botao)botao.disabled = true;
-  mostrarStatus('Criando produção para ' + colaborador + '...');
+    const chave = nome + '|' + data.value + '|' + selectServico.value;
+    if(criandoChaves.has(chave))return;
 
-  try{
-    const resultado = await chamarAPI({
-      action:'create',
-      record:JSON.stringify({data,colaborador,atividade})
-    });
+    aguardando = true;
+    criandoChaves.add(chave);
+    selectServico.disabled = true;
+    data.disabled = true;
+    status('Criando produção para '+nome+'...');
 
-    if(!resultado || !resultado.ok || !resultado.registro){
-      throw new Error(resultado?.mensagem || 'Não foi possível criar a produção.');
+    try{
+      const resultado = await chamarAPI({
+        action:'create',
+        record:JSON.stringify({
+          data:data.value,
+          colaborador:nome,
+          atividade:selectServico.value
+        })
+      });
+
+      if(!resultado.ok || !resultado.registro){
+        throw new Error(resultado.mensagem || 'Não foi possível criar a produção.');
+      }
+
+      producoesCriadas.push(resultado.registro);
+      adicionarLinhaProducao(resultado.registro);
+
+      status(resultado.mensagem+' Preencha a quantidade e os horários na linha criada.','ok');
+
+      // Libera esta linha para uma nova produção, sem remover as anteriores.
+      selectServico.value = '';
+      data.value = hojeISO();
+
+    }catch(e){
+      status('Erro ao criar produção para '+nome+': '+e.message,'erro');
+    }finally{
+      aguardando = false;
+      criandoChaves.delete(chave);
+      selectServico.disabled = false;
+      data.disabled = false;
     }
-
-    const registro = resultado.registro;
-    registro.horarios = registro.horarios || Array(20).fill('');
-    registro.quantidade = registro.quantidade ?? '';
-    registro.atividade = registro.atividade || atividade;
-    registro.colaborador = registro.colaborador || colaborador;
-    registroAtualizarData(registro,data);
-
-    // Evita duplicar a linha na lista visual, caso a resposta seja repetida.
-    if(!producoes.some(p=>Number(p.linha) === Number(registro.linha))){
-      producoes.push(registro);
-    }
-
-    renderizarProducoes();
-    mostrarStatus(resultado.mensagem || 'Produção criada com sucesso.','ok');
-
-    // Mantém o item 1 pronto para a próxima criação.
-    $('colaborador').value = colaborador;
-    $('atividade').value = atividade;
-
-  }catch(e){
-    mostrarStatus('Erro ao criar produção: ' + e.message,'erro');
-  }finally{
-    criando = false;
-    botaoPrincipal.disabled = false;
-    if(botao)botao.disabled = false;
   }
+
+  selectServico.addEventListener('change',verificarCriacao);
+  data.addEventListener('change',verificarCriacao);
+
+  $('registros').appendChild(tr);
 }
 
-function registroAtualizarData(registro,data){
-  if(!registro.data || /^\d{4}-\d{2}-\d{2}$/.test(registro.data)){
-    registro.data = data.split('-').reverse().join('/');
+function adicionarLinhaProducao(r){
+  const tr = document.createElement('tr');
+  tr.className = 'linha-producao';
+  tr.dataset.linha = String(r.linha);
+
+  tr.appendChild(celula(r.colaborador));
+  tr.appendChild(celula(r.atividade));
+
+  const qtd = document.createElement('input');
+  qtd.type = 'number';
+  qtd.min = '0';
+  qtd.step = 'any';
+  qtd.className = 'qtd';
+  qtd.value = normalizarQuantidade(r.quantidade);
+
+  const tdQtd = document.createElement('td');
+  tdQtd.appendChild(qtd);
+  tr.appendChild(tdQtd);
+
+  tr.appendChild(celula(r.linha));
+  tr.appendChild(celula(r.data));
+
+  const campos = [];
+  for(let i=0;i<20;i++){
+    const c = montarCelulaHora((r.horarios || [])[i] || '');
+    tr.appendChild(c.td);
+    campos.push(c.input);
   }
+
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = 'salvar-linha';
+  botao.textContent = '💾 Salvar';
+  botao.addEventListener('click',()=>salvarLinha(r,qtd,campos,botao));
+
+  const tdAcao = document.createElement('td');
+  tdAcao.appendChild(botao);
+  tr.appendChild(tdAcao);
+
+  $('registros').appendChild(tr);
 }
 
-async function salvarLinha(registro,campoQtd,campoHoras,botao){
-  const linha = Number(registro.linha);
+async function salvarLinha(r,campoQtd,campoHoras,botao){
+  const linha = Number(r.linha);
   if(salvamentos.has(linha))return;
 
   if(campoQtd.value.trim()==='' ||
@@ -461,53 +422,122 @@ async function salvarLinha(registro,campoQtd,campoHoras,botao){
   salvamentos.add(linha);
   botao.disabled = true;
   botao.textContent = 'Salvando...';
-  mostrarStatus('Salvando quantidade e horários da linha ' + linha + '...');
+  status('Salvando quantidade e horários da linha '+linha+'...');
 
   try{
     const resultado = await chamarAPI({
       action:'save',
       record:JSON.stringify({
-        linha,
+        linha:linha,
         quantidade:campoQtd.value,
-        horarios
+        horarios:horarios
       })
     });
 
-    if(!resultado || !resultado.ok){
-      throw new Error(resultado?.mensagem || 'Não foi possível salvar.');
-    }
+    if(!resultado.ok)throw new Error(resultado.mensagem || 'Não foi possível salvar.');
 
-    registro.quantidade = campoQtd.value;
-    registro.horarios = horarios;
+    r.quantidade = campoQtd.value;
+    r.horarios = horarios;
     botao.textContent = '✓ Salvo';
-    mostrarStatus(resultado.mensagem || 'Apontamento salvo.','ok');
+    status(resultado.mensagem,'ok');
 
   }catch(e){
     botao.textContent = 'Tentar salvar';
-    mostrarStatus('Erro ao salvar: ' + e.message,'erro');
+    status('Erro ao salvar: '+e.message,'erro');
   }finally{
     salvamentos.delete(linha);
+    botao.disabled = false;
+    if(botao.textContent==='Salvando...')botao.textContent='💾 Salvar';
+  }
+}
+
+function renderizarColaboradores(){
+  const tbody = $('registros');
+  tbody.replaceChildren();
+
+  if(!colaboradores.length){
+    const tr = document.createElement('tr');
+    const td = celula('Nenhum colaborador encontrado na coluna B da aba Controle.');
+    td.colSpan = 26;
+    td.className = 'vazio';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  colaboradores.forEach(nome=>criarLinhaSeletor(nome));
+}
+
+async function carregarListas(){
+  status('Carregando colaboradores e serviços...');
+
+  try{
+    const dados = await chamarAPI({action:'list'});
+    if(!dados.ok)throw new Error(dados.mensagem || 'Erro ao consultar a planilha.');
+
+    colaboradores = [...new Set((dados.colaboradores || [])
+      .map(x=>String(x || '').trim()).filter(Boolean))]
+      .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+    atividades = [...new Set((dados.atividades || [])
+      .map(x=>String(x || '').trim()).filter(Boolean))]
+      .sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+    preencherSelect('colaboradorManual',colaboradores,'Selecione o colaborador');
+    preencherSelect('servicoManual',atividades,'Selecione o serviço');
+
+    renderizarColaboradores();
+    status('Conectado. '+colaboradores.length+' colaboradores carregados. Selecione o serviço na linha desejada.','ok');
+
+  }catch(e){
+    status('Erro ao carregar a lista: '+e.message,'erro');
+  }
+}
+
+async function criarManual(){
+  const data = $('dataManual').value;
+  const colaborador = $('colaboradorManual').value.trim();
+  const atividade = $('servicoManual').value.trim();
+
+  if(!data || !colaborador || !atividade){
+    alert('Preencha a data, o colaborador e o serviço.');
+    return;
+  }
+
+  const botao = $('criarManual');
+  botao.disabled = true;
+  statusManual('Criando produção...');
+
+  try{
+    const resultado = await chamarAPI({
+      action:'create',
+      record:JSON.stringify({data,colaborador,atividade})
+    });
+
+    if(!resultado.ok || !resultado.registro){
+      throw new Error(resultado.mensagem || 'Não foi possível criar a produção.');
+    }
+
+    producoesCriadas.push(resultado.registro);
+    adicionarLinhaProducao(resultado.registro);
+    statusManual(resultado.mensagem+' A produção foi adicionada ao item 2.','ok');
+
+  }catch(e){
+    statusManual('Erro ao criar produção: '+e.message,'erro');
+  }finally{
     botao.disabled = false;
   }
 }
 
-$('iniciar').addEventListener('click',()=>{
-  criarProducao(
-    $('data').value,
-    $('colaborador').value.trim(),
-    $('atividade').value.trim()
-  );
+$('criarManual').addEventListener('click',criarManual);
+
+$('atualizar').addEventListener('click',async()=>{
+  await carregarListas();
+  status('Lista de colaboradores e serviços atualizada. As produções já criadas nesta sessão permanecem na tabela.','ok');
 });
 
-$('atualizarListas').addEventListener('click',carregarListas);
-
 function iniciar(){
-  const agora = new Date();
-  $('data').value = agora.getFullYear() + '-' +
-    String(agora.getMonth()+1).padStart(2,'0') + '-' +
-    String(agora.getDate()).padStart(2,'0');
-
-  renderizarProducoes();
+  $('dataManual').value = hojeISO();
   carregarListas();
 }
 
