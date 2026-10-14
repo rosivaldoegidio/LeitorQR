@@ -103,8 +103,6 @@ thead th{
   height:42px;
 }
 tbody tr:nth-child(even){background:#f7f9fd}
-
-/* Colaborador fixo durante a rolagem horizontal */
 th:first-child,td:first-child{
   position:sticky;
   left:0;
@@ -116,35 +114,15 @@ th:first-child,td:first-child{
 thead th:first-child{z-index:10;background:#dce7f7}
 tbody td:first-child{z-index:3;background:#edf3fc}
 tbody tr:nth-child(even) td:first-child{background:#e5edf9}
-
 .col-servico{width:175px;min-width:175px}
 .col-qtd{width:105px;min-width:105px}
 .col-total{width:65px;min-width:65px}
 .servico{width:165px;min-width:155px}
 .qtd{width:90px;min-width:80px;text-align:center;font-weight:bold}
-.total{
-  font-weight:bold;
-  color:#174ea6;
-  font-size:14px;
-}
-.hora{
-  width:105px;
-  min-width:100px;
-  text-align:center;
-  padding:7px 4px;
-}
-.botao-salvar{
-  background:#137333;
-  color:white;
-  padding:9px;
-  font-size:12px;
-}
-.botao-limpar{
-  background:#fce8e6;
-  color:#b3261e;
-  padding:9px;
-  font-size:12px;
-}
+.total{font-weight:bold;color:#174ea6;font-size:14px}
+.hora{width:105px;min-width:100px;text-align:center;padding:7px 4px}
+.botao-salvar{background:#137333;color:white;padding:9px;font-size:12px}
+.botao-limpar{background:#fce8e6;color:#b3261e;padding:9px;font-size:12px}
 .vazio{padding:22px;text-align:center;color:#666}
 @media(max-width:700px){
   header{padding:12px}
@@ -159,9 +137,7 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
   table{font-size:11px}
   th,td{padding:5px}
   th:first-child,td:first-child{
-    width:145px;
-    min-width:145px;
-    max-width:145px;
+    width:145px;min-width:145px;max-width:145px;
   }
   .servico{width:145px;min-width:135px}
   .hora{width:95px;min-width:90px}
@@ -211,11 +187,11 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 <section class="painel">
   <h2>2. Produções e colaboradores</h2>
   <p class="nota">
-    Todos os colaboradores cadastrados aparecem nesta tabela.
-    Selecione o serviço na linha desejada para criar ou localizar a produção do dia.
+    Selecione o serviço para atualizar somente a coluna C da produção existente.
+    O item 2 nunca cria linhas. Para criar uma nova produção, utilize o item 1.
     Informe somente a quantidade nova para somá-la ao total existente.
-    Os horários são gravados na mesma linha. As colunas A:D não são alteradas
-    pelo salvamento dos apontamentos.
+    Os horários são gravados na mesma linha. O salvamento dos apontamentos
+    preserva as colunas A:D.
   </p>
 
   <div class="acoes">
@@ -234,28 +210,17 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
           <th class="col-servico">Serviço</th>
           <th class="col-qtd">E — Qtd. nova</th>
           <th class="col-total">Total E</th>
-          <th>F — Início</th>
-          <th>G — Fim</th>
-          <th>H — Início</th>
-          <th>I — Fim</th>
-          <th>J — Início</th>
-          <th>K — Fim</th>
-          <th>L — Início</th>
-          <th>M — Fim</th>
-          <th>N — Início</th>
-          <th>O — Fim</th>
-          <th>P — Início</th>
-          <th>Q — Fim</th>
-          <th>R — Início</th>
-          <th>S — Fim</th>
-          <th>T — Início</th>
-          <th>U — Fim</th>
-          <th>V — Início</th>
-          <th>W — Fim</th>
-          <th>X — Início</th>
-          <th>Y — Fim</th>
-          <th>Salvar</th>
-          <th>Limpar</th>
+          <th>F — Início</th><th>G — Fim</th>
+          <th>H — Início</th><th>I — Fim</th>
+          <th>J — Início</th><th>K — Fim</th>
+          <th>L — Início</th><th>M — Fim</th>
+          <th>N — Início</th><th>O — Fim</th>
+          <th>P — Início</th><th>Q — Fim</th>
+          <th>R — Início</th><th>S — Fim</th>
+          <th>T — Início</th><th>U — Fim</th>
+          <th>V — Início</th><th>W — Fim</th>
+          <th>X — Início</th><th>Y — Fim</th>
+          <th>Salvar</th><th>Limpar</th>
         </tr>
       </thead>
       <tbody id="registros">
@@ -319,11 +284,7 @@ function chamarAPI(parametros){
       'Não foi possível acessar o Apps Script. Verifique a URL /exec e as permissões da implantação.'
     ));
 
-    const query = new URLSearchParams({
-      ...parametros,
-      callback
-    });
-
+    const query = new URLSearchParams({...parametros,callback});
     script.src = API_URL + '?' + query.toString();
     document.body.appendChild(script);
   });
@@ -357,10 +318,6 @@ function horaParaInput(valor){
   return String(m[1]).padStart(2,'0') + ':' + m[2];
 }
 
-function dataHojeExibicao(){
-  return hojeISO().split('-').reverse().join('/');
-}
-
 function quantidadeNumerica(valor){
   if(valor == null || String(valor).trim()==='')return 0;
   const n = Number(String(valor).trim().replace(',','.'));
@@ -374,6 +331,14 @@ function criarCelula(texto,classe=''){
   return td;
 }
 
+function normalizarDataRegistro(valor){
+  const s = String(valor || '').trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m)return m[3]+'-'+m[2]+'-'+m[1];
+  return s;
+}
+
 function encontrarRegistro(colaborador,atividade,data){
   return registros.find(r =>
     String(r.colaborador || '').trim().toUpperCase() ===
@@ -384,15 +349,12 @@ function encontrarRegistro(colaborador,atividade,data){
   ) || null;
 }
 
-function normalizarDataRegistro(valor){
-  const s = String(valor || '').trim();
-
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
-
-  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if(m)return m[3]+'-'+m[2]+'-'+m[1];
-
-  return s;
+function encontrarProducaoDoDia(colaborador,data){
+  return registros.find(r =>
+    String(r.colaborador || '').trim().toUpperCase() ===
+      String(colaborador || '').trim().toUpperCase() &&
+    normalizarDataRegistro(r.data) === data
+  ) || null;
 }
 
 async function carregarDados(){
@@ -400,37 +362,21 @@ async function carregarDados(){
 
   try{
     const dados = await chamarAPI({action:'list'});
-
     if(!dados || !dados.ok){
       throw new Error(dados?.mensagem || 'A consulta à planilha falhou.');
     }
 
-    colaboradores = Array.isArray(dados.colaboradores)
-      ? dados.colaboradores : [];
+    colaboradores = Array.isArray(dados.colaboradores) ? dados.colaboradores : [];
+    atividades = Array.isArray(dados.atividades) ? dados.atividades : [];
+    registros = Array.isArray(dados.registros) ? dados.registros : [];
 
-    atividades = Array.isArray(dados.atividades)
-      ? dados.atividades : [];
-
-    registros = Array.isArray(dados.registros)
-      ? dados.registros : [];
-
-    preencherSelect(
-      'colaboradorNovo',
-      colaboradores,
-      'Selecione o colaborador'
-    );
-
-    preencherSelect(
-      'servicoNovo',
-      atividades,
-      'Selecione o serviço'
-    );
+    preencherSelect('colaboradorNovo',colaboradores,'Selecione o colaborador');
+    preencherSelect('servicoNovo',atividades,'Selecione o serviço');
 
     montarTabela();
 
     mostrarStatus(
-      colaboradores.length + ' colaborador(es) carregado(s). ' +
-      'O Total E reflete a coluna E da planilha.',
+      colaboradores.length + ' colaborador(es) carregado(s). O Total E reflete a coluna E da planilha.',
       'ok'
     );
   }catch(e){
@@ -453,7 +399,6 @@ function montarTabela(){
 
   colaboradores.forEach(nome=>{
     const tr = document.createElement('tr');
-
     tr.appendChild(criarCelula(nome));
 
     const tdServico = document.createElement('td');
@@ -492,7 +437,6 @@ function montarTabela(){
     tr.appendChild(tdTotal);
 
     const horas = [];
-
     for(let i=0;i<20;i++){
       const td = document.createElement('td');
       const input = document.createElement('input');
@@ -536,18 +480,7 @@ function montarTabela(){
       btnLimpar
     };
 
-    select.addEventListener('change',async()=>{
-      estado.atividade = select.value;
-      estado.registro = null;
-      estado.inputQtd.value = '';
-      estado.tdTotal.textContent = '—';
-      estado.horas.forEach(c=>c.value='');
-
-      if(!estado.atividade)return;
-
-      await selecionarProducao(estado);
-    });
-
+    select.addEventListener('change',()=>selecionarProducao(estado));
     btnSalvar.addEventListener('click',()=>somarESalvar(estado));
     btnLimpar.addEventListener('click',()=>limparRegistro(estado));
 
@@ -555,69 +488,121 @@ function montarTabela(){
   });
 }
 
+/*
+ * ITEM 2:
+ * Esta função NUNCA chama action=create.
+ * Procura a produção de hoje e, se necessário, altera somente a coluna C.
+ */
 async function selecionarProducao(estado){
   const chave = 'selecionar:' + estado.colaborador;
-
   if(operacoesEmAndamento.has(chave))return;
+
+  const atividadeSolicitada = estado.select.value;
+  estado.atividade = atividadeSolicitada;
+
+  if(!atividadeSolicitada){
+    estado.registro = null;
+    estado.inputQtd.value = '';
+    estado.tdTotal.textContent = '—';
+    estado.horas.forEach(c=>c.value='');
+    return;
+  }
+
   operacoesEmAndamento.add(chave);
 
   try{
     const data = hojeISO();
+
     let registro = encontrarRegistro(
       estado.colaborador,
-      estado.atividade,
+      atividadeSolicitada,
       data
     );
 
     if(!registro){
+      registro = encontrarProducaoDoDia(estado.colaborador,data);
+    }
+
+    if(!registro){
+      estado.registro = null;
+      estado.tdTotal.textContent = '—';
+      estado.horas.forEach(input=>input.value='');
       mostrarStatus(
-        'Criando produção de hoje para ' + estado.colaborador + '...'
+        'Não existe produção de hoje para ' + estado.colaborador +
+        '. Para criar uma nova linha, utilize somente o item 1.',
+        'erro'
+      );
+      return;
+    }
+
+    const linhaOriginal = Number(registro.linha);
+    const atividadeOriginal = String(registro.atividade || '').trim();
+
+    if(!Number.isInteger(linhaOriginal) || linhaOriginal < 5){
+      throw new Error('A linha da produção não é válida. Atualize a lista.');
+    }
+
+    if(atividadeOriginal !== atividadeSolicitada){
+      mostrarStatus(
+        'Atualizando somente a coluna C da linha ' + linhaOriginal + '...'
       );
 
       const resposta = await chamarAPI({
-        action:'create',
+        action:'updateService',
         record:JSON.stringify({
-          data,
-          colaborador:estado.colaborador,
-          atividade:estado.atividade
+          linha:linhaOriginal,
+          atividade:atividadeSolicitada
         })
       });
 
-      if(!resposta || !resposta.ok || !resposta.registro){
+      if(!resposta || !resposta.ok){
         throw new Error(
-          resposta?.mensagem || 'Não foi possível criar a produção.'
+          resposta?.mensagem || 'Não foi possível atualizar o serviço.'
         );
       }
 
-      registro = resposta.registro;
-      registro.data = data;
-      registros.push(registro);
+      // Atualiza a cópia local da linha existente.
+      registro.atividade = atividadeSolicitada;
     }
 
     estado.registro = registro;
-    estado.tdTotal.textContent = String(
-      quantidadeNumerica(registro.quantidade)
-    );
+    estado.atividade = atividadeSolicitada;
+    estado.tdTotal.textContent = String(quantidadeNumerica(registro.quantidade));
 
-    const valoresHora = Array.isArray(registro.horarios)
-      ? registro.horarios : [];
-
+    const valoresHora = Array.isArray(registro.horarios) ? registro.horarios : [];
     estado.horas.forEach((input,i)=>{
       input.value = horaParaInput(valoresHora[i] || '');
     });
 
     mostrarStatus(
-      'Produção localizada para ' + estado.colaborador +
-      '. Total E atual: ' + estado.tdTotal.textContent + '.',
+      'Serviço atualizado/selecionado na linha existente ' +
+      linhaOriginal + '. Nenhuma linha foi criada.',
       'ok'
     );
+
+    // Reconsulta a planilha para manter os dados locais sincronizados.
+    await recarregarRegistrosSemReconstruirTabela();
   }catch(e){
-    mostrarStatus('Erro ao selecionar produção: ' + e.message,'erro');
+    estado.registro = null;
+    mostrarStatus('Erro ao selecionar/atualizar serviço: ' + e.message,'erro');
   }finally{
     operacoesEmAndamento.delete(chave);
   }
 }
 
+async function recarregarRegistrosSemReconstruirTabela(){
+  try{
+    const dados = await chamarAPI({action:'list'});
+    if(dados && dados.ok){
+      registros = Array.isArray(dados.registros) ? dados.registros : [];
+    }
+  }catch(e){}
+}
+
+/*
+ * ITEM 1:
+ * ÚNICO lugar do HTML que chama action=create.
+ */
 async function criarProducaoTopo(){
   const data = $('dataNova').value || hojeISO();
   const colaborador = $('colaboradorNovo').value.trim();
@@ -636,13 +621,13 @@ async function criarProducaoTopo(){
 
     if(existente){
       mostrarStatus(
-        'Já existe uma produção para esse colaborador, serviço e data. ' +
-        'Utilize a linha correspondente no item 2.',
+        'Já existe uma produção para esse colaborador, serviço e data. Utilize a linha correspondente.',
         'ok'
       );
       return;
     }
 
+    // A criação de linha só acontece neste ponto, pelo item 1.
     const resposta = await chamarAPI({
       action:'create',
       record:JSON.stringify({data,colaborador,atividade})
@@ -655,10 +640,9 @@ async function criarProducaoTopo(){
     resposta.registro.data = data;
     registros.push(resposta.registro);
 
-    montarTabela();
+    await carregarDados();
 
     const linhas = [...$('registros').querySelectorAll('tr')];
-
     for(const tr of linhas){
       const nome = tr.cells[0]?.textContent?.trim();
       const select = tr.querySelector('select.servico');
@@ -672,8 +656,7 @@ async function criarProducaoTopo(){
     }
 
     mostrarStatus(
-      'Nova produção criada para ' + colaborador +
-      ' — ' + atividade + '.',
+      'Nova produção criada para ' + colaborador + ' — ' + atividade + '.',
       'ok'
     );
   }catch(e){
@@ -720,8 +703,8 @@ async function somarESalvar(estado){
 
   const linha = Number(estado.registro.linha);
   const chave = 'salvar:' + linha;
-
   if(operacoesEmAndamento.has(chave))return;
+
   operacoesEmAndamento.add(chave);
 
   const botao = estado.btnSalvar;
@@ -734,19 +717,12 @@ async function somarESalvar(estado){
     if(quantidadeAdicionar > 0){
       resposta = await chamarAPI({
         action:'incrementar',
-        record:JSON.stringify({
-          linha,
-          quantidadeAdicionar,
-          horarios
-        })
+        record:JSON.stringify({linha,quantidadeAdicionar,horarios})
       });
     }else{
       resposta = await chamarAPI({
         action:'save',
-        record:JSON.stringify({
-          linha,
-          horarios
-        })
+        record:JSON.stringify({linha,horarios})
       });
     }
 
@@ -754,40 +730,23 @@ async function somarESalvar(estado){
       throw new Error(resposta?.mensagem || 'O Apps Script não confirmou a gravação.');
     }
 
-    /*
-     * CORREÇÃO PRINCIPAL:
-     * Total E é atualizado pelo valor total retornado pelo Apps Script.
-     * Não usamos a variável quantidadeAdicionada para mostrar o total.
-     */
     if(resposta.totalQuantidade !== undefined &&
        resposta.totalQuantidade !== null){
       estado.tdTotal.textContent = String(resposta.totalQuantidade);
       estado.registro.quantidade = resposta.totalQuantidade;
-    }else if(quantidadeAdicionar > 0){
-      /*
-       * Compatibilidade: se o Apps Script antigo não devolver totalQuantidade,
-       * recarregamos os dados da planilha em vez de inventar o total exibido.
-       */
-      estado.tdTotal.textContent = '…';
     }
 
     estado.registro.horarios = horarios;
     estado.inputQtd.value = '';
-
     botao.textContent = '✓ Salvo';
+
     mostrarStatus(
       resposta.mensagem ||
-      (quantidadeAdicionar > 0
-        ? 'Quantidade somada e horários salvos.'
-        : 'Horários salvos.'),
+      (quantidadeAdicionar > 0 ? 'Quantidade somada e horários salvos.' : 'Horários salvos.'),
       'ok'
     );
 
-    /*
-     * Consulta novamente a planilha para confirmar o valor real da coluna E.
-     */
     await atualizarTotalDaPlanilha(estado);
-
   }catch(e){
     botao.textContent = 'Tentar novamente';
     mostrarStatus(
@@ -807,7 +766,6 @@ async function somarESalvar(estado){
 async function atualizarTotalDaPlanilha(estado){
   try{
     const dados = await chamarAPI({action:'list'});
-
     if(!dados || !dados.ok)return;
 
     registros = Array.isArray(dados.registros) ? dados.registros : [];
@@ -818,27 +776,19 @@ async function atualizarTotalDaPlanilha(estado){
 
     if(atual){
       estado.registro = atual;
-      estado.tdTotal.textContent = String(
-        quantidadeNumerica(atual.quantidade)
-      );
-
+      estado.tdTotal.textContent = String(quantidadeNumerica(atual.quantidade));
       estado.horas.forEach((input,i)=>{
         input.value = horaParaInput((atual.horarios || [])[i] || '');
       });
     }
-  }catch(e){
-    /*
-     * Mantém na tela o total confirmado pela resposta de gravação.
-     * O usuário pode usar Atualizar lista e totais para consultar novamente.
-     */
-  }
+  }catch(e){}
 }
 
 async function limparRegistro(estado){
   if(!estado.atividade){
     estado.inputQtd.value = '';
     estado.horas.forEach(c=>c.value='');
-    alert('Os campos digitados nesta linha foram limpos. Nenhum registro da planilha foi alterado.');
+    alert('Os campos digitados foram limpos. Nenhum registro da planilha foi alterado.');
     return;
   }
 
@@ -847,34 +797,22 @@ async function limparRegistro(estado){
     return;
   }
 
-  const confirmar = confirm(
-    'Deseja apagar a quantidade da coluna E e os horários F:Y deste registro na planilha? ' +
-    'A identificação A:D será preservada.'
-  );
-
-  if(!confirmar)return;
+  if(!confirm(
+    'Deseja apagar a quantidade da coluna E e os horários F:Y deste registro? A identificação A:D será preservada.'
+  ))return;
 
   const botao = estado.btnLimpar;
   botao.disabled = true;
   botao.textContent = 'Limpando...';
 
   try{
-    /*
-     * Requer a ação "limpar" no Apps Script.
-     * Ela deve limpar apenas E:Y, sem modificar A:D.
-     */
     const resposta = await chamarAPI({
       action:'limpar',
-      record:JSON.stringify({
-        linha:Number(estado.registro.linha)
-      })
+      record:JSON.stringify({linha:Number(estado.registro.linha)})
     });
 
     if(!resposta || !resposta.ok){
-      throw new Error(
-        resposta?.mensagem ||
-        'A ação limpar não foi confirmada pelo Apps Script.'
-      );
+      throw new Error(resposta?.mensagem || 'A ação limpar não foi confirmada.');
     }
 
     estado.inputQtd.value = '';
@@ -889,7 +827,6 @@ async function limparRegistro(estado){
     );
 
     await atualizarTotalDaPlanilha(estado);
-
   }catch(e){
     mostrarStatus(
       'Não foi possível limpar a planilha: ' + e.message +
