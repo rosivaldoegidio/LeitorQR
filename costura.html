@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apontamento Contínuo — Costura</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#202124}
@@ -22,11 +22,11 @@ button{border:0;border-radius:6px;padding:11px 14px;font-weight:bold;cursor:poin
 button:disabled{opacity:.5}
 .azul{background:#1a73e8;color:white}
 .claro{background:#e7eef9;color:#174ea6}
+.vermelho{background:#fce8e6;color:#b3261e}
 .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .nota{font-size:12px;line-height:1.5;color:#5f6368}
 .status{font-size:13px;font-weight:bold;margin:12px 0;white-space:pre-wrap}
-.ok{color:#137333}
-.erro{color:#b3261e}
+.ok{color:#137333}.erro{color:#b3261e}
 .tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #d5dce6;border-radius:7px}
 table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12px;white-space:nowrap;background:white}
 th,td{padding:5px;border-right:1px solid #e0e5ed;border-bottom:1px solid #e0e5ed;text-align:center}
@@ -42,21 +42,19 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 .hora{width:100px;min-width:95px;text-align:center;padding:6px 3px}
 .salvar{background:#137333;color:white;padding:9px;font-size:12px}
 .limpar{background:#fce8e6;color:#b3261e;padding:9px;font-size:12px}
-
 @media(max-width:700px){
-  header{padding:12px}
-  header h1{font-size:18px}
-  main{padding:7px}
-  .painel{padding:10px}
-  .grade{grid-template-columns:1fr}
-  .acoes button{flex:1 1 100%;min-height:42px}
-  th:first-child,td:first-child{width:140px;min-width:140px;max-width:140px}
-  .servico{width:150px;min-width:140px}
-  .hora{width:92px;min-width:88px}
+ header{padding:12px}
+ header h1{font-size:18px}
+ main{padding:7px}
+ .painel{padding:10px}
+ .grade{grid-template-columns:1fr}
+ .acoes button{flex:1 1 100%;min-height:42px}
+ th:first-child,td:first-child{width:140px;min-width:140px;max-width:140px}
+ .servico{width:150px;min-width:140px}
+ .hora{width:92px;min-width:88px}
 }
 </style>
 </head>
-
 <body>
 <header>
   <h1>📋 Apontamento Contínuo — Costura</h1>
@@ -67,28 +65,20 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 <section class="painel">
   <h2>1. Criar produção</h2>
   <p class="nota">Este é o único local do aplicativo que cria uma nova linha na planilha.</p>
-
   <div class="grade">
     <div>
       <label for="dataNova">Data</label>
       <input type="date" id="dataNova">
     </div>
-
     <div>
       <label for="colaboradorNovo">Colaborador</label>
-      <select id="colaboradorNovo">
-        <option value="">Carregando...</option>
-      </select>
+      <select id="colaboradorNovo"><option value="">Carregando...</option></select>
     </div>
-
     <div>
       <label for="servicoNovo">Serviço</label>
-      <select id="servicoNovo">
-        <option value="">Carregando...</option>
-      </select>
+      <select id="servicoNovo"><option value="">Carregando...</option></select>
     </div>
   </div>
-
   <div class="acoes">
     <button class="azul" id="criar">＋ Criar produção</button>
     <button class="claro" id="atualizar">↻ Atualizar lista</button>
@@ -97,18 +87,13 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 
 <section class="painel">
   <h2>2. Apontar produção existente</h2>
-
   <p class="nota">
     Alterar o serviço modifica somente a coluna C da linha existente.
     Não cria uma linha, mesmo quando o serviço é novo.
     A quantidade informada é somada à coluna E. Os horários são gravados em F:Y.
     A identificação A:D é preservada ao salvar ou limpar.
   </p>
-
-  <div id="status" class="status" role="status" aria-live="polite">
-    Carregando registros...
-  </div>
-
+  <div id="status" class="status" role="status" aria-live="polite">Carregando registros...</div>
   <div class="tabela-wrap">
     <table>
       <thead>
@@ -159,11 +144,8 @@ function hojeISO(){
 
 function normalizarData(valor){
   const s = String(valor || '').trim();
-
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-
   const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-
   return m ? `${m[3]}-${m[2]}-${m[1]}` : s;
 }
 
@@ -181,18 +163,14 @@ function api(parametros){
   return new Promise((resolve,reject)=>{
     const callback = 'retorno_' + Date.now() + '_' +
       Math.random().toString(36).slice(2);
-
     const script = document.createElement('script');
     let finalizado = false;
 
     const concluir = (erro,dados)=>{
       if(finalizado)return;
-
       finalizado = true;
       clearTimeout(temporizador);
-
       try{delete window[callback]}catch(e){}
-
       script.remove();
       erro ? reject(erro) : resolve(dados);
     };
@@ -203,13 +181,11 @@ function api(parametros){
     );
 
     window[callback] = dados => concluir(null,dados);
-
     script.onerror = ()=>concluir(new Error(
       'Falha de conexão com o Apps Script. Verifique a implantação.'
     ));
 
     const query = new URLSearchParams({...parametros,callback});
-
     script.src = API_URL + '?' + query.toString();
     document.body.appendChild(script);
   });
@@ -218,9 +194,7 @@ function api(parametros){
 function selecionarOpcoes(id,lista,textoInicial){
   const el = $(id);
   const anterior = el.value;
-
   el.replaceChildren();
-
   const inicial = document.createElement('option');
   inicial.value = '';
   inicial.textContent = textoInicial;
@@ -232,24 +206,28 @@ function selecionarOpcoes(id,lista,textoInicial){
     op.textContent = v;
     el.appendChild(op);
   });
-
   if(lista.includes(anterior)) el.value = anterior;
 }
 
 function numero(valor){
   if(valor === '' || valor == null) return 0;
-
   const n = Number(String(valor).replace(',','.'));
-
   return Number.isFinite(n) ? n : 0;
 }
 
 function formatarHora(valor){
   if(valor == null || valor === '') return '';
-
   const m = String(valor).trim().match(/(\d{1,2}):(\d{2})/);
-
   return m ? String(m[1]).padStart(2,'0') + ':' + m[2] : '';
+}
+
+function localizarRegistro(colaborador,data){
+  // Procura uma linha já existente para este colaborador e data.
+  // A seleção do serviço NÃO participa da localização da linha.
+  return registros.find(r =>
+    textoIgual(r.colaborador,colaborador) &&
+    normalizarData(r.data) === data
+  ) || null;
 }
 
 function localizarRegistroExato(colaborador,servico,data){
@@ -262,34 +240,19 @@ function localizarRegistroExato(colaborador,servico,data){
 
 async function carregar(){
   status('Carregando dados da planilha...');
-
   try{
     const d = await api({action:'list'});
-
-    if(!d || !d.ok){
-      throw new Error(d?.mensagem || 'Falha ao consultar dados.');
-    }
+    if(!d || !d.ok) throw new Error(d?.mensagem || 'Falha ao consultar dados.');
 
     colaboradores = Array.isArray(d.colaboradores) ? d.colaboradores : [];
     atividades = Array.isArray(d.atividades) ? d.atividades : [];
     registros = Array.isArray(d.registros) ? d.registros : [];
 
-    selecionarOpcoes(
-      'colaboradorNovo',
-      colaboradores,
-      'Selecione o colaborador'
-    );
-
-    selecionarOpcoes(
-      'servicoNovo',
-      atividades,
-      'Selecione o serviço'
-    );
-
+    selecionarOpcoes('colaboradorNovo',colaboradores,'Selecione o colaborador');
+    selecionarOpcoes('servicoNovo',atividades,'Selecione o serviço');
     desenharTabela();
 
     status(`${colaboradores.length} colaborador(es) carregado(s).`,'ok');
-
   }catch(e){
     status('Erro ao carregar: ' + e.message,'erro');
   }
@@ -297,7 +260,6 @@ async function carregar(){
 
 function desenharTabela(){
   const tbody = $('corpoTabela');
-
   tbody.replaceChildren();
   estados = [];
 
@@ -310,7 +272,6 @@ function desenharTabela(){
 
     const tdServico = document.createElement('td');
     const sel = document.createElement('select');
-
     sel.className = 'servico';
     sel.setAttribute('aria-label','Serviço de '+nome);
 
@@ -325,19 +286,16 @@ function desenharTabela(){
       op.textContent = a;
       sel.appendChild(op);
     });
-
     tdServico.appendChild(sel);
     tr.appendChild(tdServico);
 
     const tdNova = document.createElement('td');
     const qtd = document.createElement('input');
-
     qtd.type = 'number';
     qtd.min = '0';
     qtd.step = 'any';
     qtd.placeholder = '+ qtd';
     qtd.className = 'qtd';
-
     tdNova.appendChild(qtd);
     tr.appendChild(tdNova);
 
@@ -347,20 +305,14 @@ function desenharTabela(){
     tr.appendChild(tdTotal);
 
     const horas = [];
-
     for(let i=0;i<20;i++){
       const td = document.createElement('td');
       const input = document.createElement('input');
-
       input.type = 'time';
       input.step = '60';
       input.className = 'hora';
-
-      input.setAttribute(
-        'aria-label',
-        'Horário coluna '+String.fromCharCode(70+i)+' de '+nome
-      );
-
+      input.setAttribute('aria-label',
+        'Horário coluna '+String.fromCharCode(70+i)+' de '+nome);
       td.appendChild(input);
       tr.appendChild(td);
       horas.push(input);
@@ -368,19 +320,15 @@ function desenharTabela(){
 
     const tdSalvar = document.createElement('td');
     const btnSalvar = document.createElement('button');
-
     btnSalvar.className = 'salvar';
     btnSalvar.textContent = '💾 Salvar';
-
     tdSalvar.appendChild(btnSalvar);
     tr.appendChild(tdSalvar);
 
     const tdLimpar = document.createElement('td');
     const btnLimpar = document.createElement('button');
-
     btnLimpar.className = 'limpar';
     btnLimpar.textContent = 'Limpar registro';
-
     tdLimpar.appendChild(btnLimpar);
     tr.appendChild(tdLimpar);
 
@@ -388,39 +336,8 @@ function desenharTabela(){
       colaborador:nome,
       atividade:'',
       registro:null,
-      sel,
-      qtd,
-      tdTotal,
-      horas,
-      btnSalvar,
-      btnLimpar
+      sel,qtd,tdTotal,horas,btnSalvar,btnLimpar
     };
-
-    // Vincula à produção de hoje mais recente deste colaborador.
-    const registroHoje = registros.find(r =>
-      textoIgual(r.colaborador,nome) &&
-      normalizarData(r.data) === hojeISO()
-    ) || null;
-
-    if(registroHoje){
-      estado.registro = registroHoje;
-      estado.atividade = String(registroHoje.atividade || '');
-
-      sel.value = atividades.includes(estado.atividade)
-        ? estado.atividade
-        : '';
-
-      tdTotal.textContent = String(numero(registroHoje.quantidade));
-
-      const hsIniciais = Array.isArray(registroHoje.horarios)
-        ? registroHoje.horarios
-        : [];
-
-      horas.forEach((h,i)=>{
-        h.value = formatarHora(hsIniciais[i] || '');
-      });
-    }
-
     estados.push(estado);
 
     sel.addEventListener('change',()=>alterarServico(estado));
@@ -433,10 +350,8 @@ function desenharTabela(){
   if(!colaboradores.length){
     const tr = document.createElement('tr');
     const td = document.createElement('td');
-
     td.colSpan = 26;
     td.textContent = 'Nenhum colaborador encontrado.';
-
     tr.appendChild(td);
     tbody.appendChild(tr);
   }
@@ -444,138 +359,54 @@ function desenharTabela(){
 
 async function alterarServico(estado){
   const chave = 'servico:' + estado.colaborador;
-
   if(ocupadas.has(chave)) return;
 
   const servicoNovo = estado.sel.value;
+  estado.atividade = servicoNovo;
 
   if(!servicoNovo){
-    if(!estado.registro){
-      estado.atividade = '';
-      estado.qtd.value = '';
-      estado.tdTotal.textContent = '—';
-      estado.horas.forEach(h=>h.value='');
-
-      status(
-        'Serviço desmarcado. Nenhuma célula foi alterada porque não havia linha selecionada.',
-        'ok'
-      );
-
-      return;
-    }
-
-    const linhaParaLimpar = Number(estado.registro.linha);
-
-    if(!Number.isInteger(linhaParaLimpar) || linhaParaLimpar < 5){
-      status(
-        'Não foi possível limpar o serviço: linha inválida. Atualize a lista.',
-        'erro'
-      );
-      return;
-    }
-
-    ocupadas.add(chave);
-    estado.sel.disabled = true;
-
-    try{
-      status('Limpando somente a coluna C da linha '+linhaParaLimpar+'...');
-
-      const resposta = await api({
-        action:'updateService',
-        record:JSON.stringify({
-          linha:linhaParaLimpar,
-          atividade:''
-        })
-      });
-
-      if(!resposta || !resposta.ok){
-        throw new Error(
-          resposta?.mensagem ||
-          'Não foi possível apagar o serviço da coluna C.'
-        );
-      }
-
-      estado.registro.atividade = '';
-      estado.atividade = '';
-
-      estado.qtd.value = '';
-      estado.tdTotal.textContent = String(
-        numero(estado.registro.quantidade)
-      );
-
-      const hs = Array.isArray(estado.registro.horarios)
-        ? estado.registro.horarios
-        : [];
-
-      estado.horas.forEach((h,i)=>{
-        h.value = formatarHora(hs[i] || '');
-      });
-
-      registros = registros.map(r =>
-        Number(r.linha) === linhaParaLimpar
-          ? {...r,atividade:''}
-          : r
-      );
-
-      status(
-        'Serviço apagado da coluna C da linha '+linhaParaLimpar+
-        '. Quantidade, horários, data e colaborador foram preservados.',
-        'ok'
-      );
-
-    }catch(e){
-      estado.sel.value = estado.registro.atividade || '';
-      status('Erro ao limpar o serviço da coluna C: '+e.message,'erro');
-
-    }finally{
-      estado.sel.disabled = false;
-      ocupadas.delete(chave);
-    }
-
+    estado.registro = null;
+    estado.qtd.value = '';
+    estado.tdTotal.textContent = '—';
+    estado.horas.forEach(h=>h.value='');
     return;
   }
 
   ocupadas.add(chave);
-  estado.sel.disabled = true;
-
   try{
     const data = hojeISO();
 
-    // Só altera a linha já vinculada.
-    // Nunca procura outra linha pelo novo serviço.
-    let registro = estado.registro;
+    // Se esse serviço já existe para a data, usa a linha correspondente.
+    let registro = localizarRegistroExato(
+      estado.colaborador,servicoNovo,data
+    );
 
+    // Se não existe serviço igual, reutiliza a linha existente do colaborador.
     if(!registro){
-      registro = registros.find(r =>
-        textoIgual(r.colaborador,estado.colaborador) &&
-        normalizarData(r.data) === data
-      ) || null;
+      registro = localizarRegistro(estado.colaborador,data);
     }
 
+    // REGRA FUNDAMENTAL:
+    // Item 2 jamais cria linha. Sem linha existente, informa que deve usar item 1.
     if(!registro){
-      estado.atividade = '';
-      estado.sel.value = '';
+      estado.registro = null;
       estado.tdTotal.textContent = '—';
       estado.horas.forEach(h=>h.value='');
-
       status(
         'Não existe produção de hoje para '+estado.colaborador+
         '. Utilize o item 1 para criar a primeira produção. Nenhuma linha foi criada.',
         'erro'
       );
-
       return;
     }
 
     const linha = Number(registro.linha);
-
     if(!Number.isInteger(linha) || linha < 5){
       throw new Error('Linha de produção inválida. Atualize a lista.');
     }
 
     if(!textoIgual(registro.atividade,servicoNovo)){
       status('Alterando somente a coluna C da linha '+linha+'...');
-
       const resposta = await api({
         action:'updateService',
         record:JSON.stringify({
@@ -585,26 +416,19 @@ async function alterarServico(estado){
       });
 
       if(!resposta || !resposta.ok){
-        throw new Error(
-          resposta?.mensagem || 'Não foi possível alterar o serviço.'
-        );
+        throw new Error(resposta?.mensagem || 'Não foi possível alterar o serviço.');
       }
 
+      // Atualiza o serviço na cópia local; não chama create.
       registro.atividade = servicoNovo;
     }
 
     estado.registro = registro;
     estado.atividade = servicoNovo;
-
     estado.tdTotal.textContent = String(numero(registro.quantidade));
 
-    const hs = Array.isArray(registro.horarios)
-      ? registro.horarios
-      : [];
-
-    estado.horas.forEach((h,i)=>{
-      h.value = formatarHora(hs[i] || '');
-    });
+    const hs = Array.isArray(registro.horarios) ? registro.horarios : [];
+    estado.horas.forEach((h,i)=>h.value=formatarHora(hs[i] || ''));
 
     status(
       'Serviço selecionado na linha '+linha+
@@ -613,12 +437,10 @@ async function alterarServico(estado){
     );
 
     await atualizarDadosLocais();
-
   }catch(e){
+    estado.registro = null;
     status('Erro ao alterar serviço: '+e.message,'erro');
-
   }finally{
-    estado.sel.disabled = false;
     ocupadas.delete(chave);
   }
 }
@@ -626,30 +448,25 @@ async function alterarServico(estado){
 async function atualizarDadosLocais(){
   try{
     const d = await api({action:'list'});
-
     if(d && d.ok){
       registros = Array.isArray(d.registros) ? d.registros : [];
-
       estados.forEach(estado=>{
-        if(!estado.registro) return;
-
-        const atualizado = registros.find(r =>
+        if(!estado.registro)return;
+        const atualizado = registros.find(r=>
           Number(r.linha) === Number(estado.registro.linha)
         );
-
         if(atualizado){
           estado.registro = atualizado;
-          estado.tdTotal.textContent = String(
-            numero(atualizado.quantidade)
-          );
+          estado.tdTotal.textContent = String(numero(atualizado.quantidade));
         }
       });
     }
   }catch(e){}
 }
 
-/**
- * SOMENTE O ITEM 1 ENVIA action=create.
+/*
+ * ÚNICA FUNÇÃO DO HTML AUTORIZADA A ENVIAR action=create:
+ * o botão do item 1.
  */
 async function criarProducao(){
   const data = $('dataNova').value || hojeISO();
@@ -665,10 +482,7 @@ async function criarProducao(){
   botao.disabled = true;
 
   try{
-    const existente = localizarRegistroExato(
-      colaborador,atividade,data
-    );
-
+    const existente = localizarRegistroExato(colaborador,atividade,data);
     if(existente){
       status(
         'Esta produção já existe na linha '+existente.linha+
@@ -680,35 +494,23 @@ async function criarProducao(){
 
     const resposta = await api({
       action:'create',
-      record:JSON.stringify({
-        data,
-        colaborador,
-        atividade
-      })
+      record:JSON.stringify({data,colaborador,atividade})
     });
 
     if(!resposta || !resposta.ok){
-      throw new Error(
-        resposta?.mensagem || 'Não foi possível criar a produção.'
-      );
+      throw new Error(resposta?.mensagem || 'Não foi possível criar a produção.');
     }
 
     status(resposta.mensagem || 'Produção criada pelo item 1.','ok');
-
     await carregar();
 
-    const estado = estados.find(e =>
-      textoIgual(e.colaborador,colaborador)
-    );
-
+    const estado = estados.find(e=>textoIgual(e.colaborador,colaborador));
     if(estado){
       estado.sel.value = atividade;
       await alterarServico(estado);
     }
-
   }catch(e){
     status('Erro ao criar produção: '+e.message,'erro');
-
   }finally{
     botao.disabled = false;
   }
@@ -723,20 +525,13 @@ async function salvar(estado){
   if(!estado.registro){
     await alterarServico(estado);
   }
-
   if(!estado.registro){
-    status(
-      'Não existe linha existente para salvar. Use o item 1 para criar.',
-      'erro'
-    );
+    status('Não existe linha existente para salvar. Use o item 1 para criar.','erro');
     return;
   }
 
   const textoQtd = String(estado.qtd.value || '').trim();
-
-  const qtdNova = textoQtd === ''
-    ? 0
-    : Number(textoQtd.replace(',','.'));
+  const qtdNova = textoQtd === '' ? 0 : Number(textoQtd.replace(',','.'));
 
   if(textoQtd && (!Number.isFinite(qtdNova) || qtdNova < 0)){
     alert('Informe uma quantidade válida, igual ou maior que zero.');
@@ -744,7 +539,6 @@ async function salvar(estado){
   }
 
   const horarios = estado.horas.map(h=>h.value || '');
-
   if(qtdNova === 0 && !horarios.some(Boolean)){
     alert('Informe uma quantidade ou preencha algum horário.');
     return;
@@ -752,12 +546,10 @@ async function salvar(estado){
 
   const linha = Number(estado.registro.linha);
   const chave = 'salvar:'+linha;
-
-  if(ocupadas.has(chave)) return;
-
+  if(ocupadas.has(chave))return;
   ocupadas.add(chave);
-  estado.btnSalvar.disabled = true;
 
+  estado.btnSalvar.disabled = true;
   try{
     const resposta = await api({
       action:qtdNova > 0 ? 'incrementar' : 'save',
@@ -769,9 +561,7 @@ async function salvar(estado){
     });
 
     if(!resposta || !resposta.ok){
-      throw new Error(
-        resposta?.mensagem || 'O salvamento não foi confirmado.'
-      );
+      throw new Error(resposta?.mensagem || 'O salvamento não foi confirmado.');
     }
 
     if(resposta.totalQuantidade !== undefined){
@@ -781,18 +571,10 @@ async function salvar(estado){
 
     estado.registro.horarios = horarios;
     estado.qtd.value = '';
-
-    status(
-      resposta.mensagem ||
-      'Dados salvos na linha existente '+linha+'.',
-      'ok'
-    );
-
+    status(resposta.mensagem || 'Dados salvos na linha existente '+linha+'.','ok');
     await atualizarDadosLocais();
-
   }catch(e){
     status('Erro ao salvar: '+e.message,'erro');
-
   }finally{
     ocupadas.delete(chave);
     estado.btnSalvar.disabled = false;
@@ -803,23 +585,15 @@ async function limpar(estado){
   if(!estado.registro){
     estado.qtd.value = '';
     estado.horas.forEach(h=>h.value='');
-
-    alert(
-      'Campos limpos apenas na tela. Selecione um registro existente para limpar a planilha.'
-    );
-
+    alert('Campos limpos apenas na tela. Selecione um registro existente para limpar a planilha.');
     return;
   }
 
-  if(!confirm('Apagar E:Y desta linha? A:D serão preservadas.')){
-    return;
-  }
+  if(!confirm('Apagar E:Y desta linha? A:D serão preservadas.'))return;
 
   const linha = Number(estado.registro.linha);
   const chave = 'limpar:'+linha;
-
-  if(ocupadas.has(chave)) return;
-
+  if(ocupadas.has(chave))return;
   ocupadas.add(chave);
   estado.btnLimpar.disabled = true;
 
@@ -830,28 +604,19 @@ async function limpar(estado){
     });
 
     if(!resposta || !resposta.ok){
-      throw new Error(
-        resposta?.mensagem || 'Não foi possível limpar.'
-      );
+      throw new Error(resposta?.mensagem || 'Não foi possível limpar.');
     }
 
     estado.qtd.value = '';
     estado.horas.forEach(h=>h.value='');
     estado.tdTotal.textContent = '0';
-
     estado.registro.quantidade = 0;
     estado.registro.horarios = Array(20).fill('');
 
-    status(
-      resposta.mensagem || 'E:Y limpas. A:D preservadas.',
-      'ok'
-    );
-
+    status(resposta.mensagem || 'E:Y limpas. A:D preservadas.','ok');
     await atualizarDadosLocais();
-
   }catch(e){
     status('Erro ao limpar: '+e.message,'erro');
-
   }finally{
     ocupadas.delete(chave);
     estado.btnLimpar.disabled = false;
@@ -860,9 +625,7 @@ async function limpar(estado){
 
 $('criar').addEventListener('click',criarProducao);
 $('atualizar').addEventListener('click',carregar);
-
 $('dataNova').value = hojeISO();
-
 carregar();
 </script>
 </body>
