@@ -365,10 +365,62 @@ async function alterarServico(estado){
   estado.atividade = servicoNovo;
 
   if(!servicoNovo){
-    estado.registro = null;
-    estado.qtd.value = '';
-    estado.tdTotal.textContent = '—';
-    estado.horas.forEach(h=>h.value='');
+    // Se havia uma produção selecionada, limpa automaticamente somente a coluna C
+    // da mesma linha. Não apaga quantidade, horários, data nem colaborador.
+    if(!estado.registro){
+      estado.atividade = '';
+      estado.qtd.value = '';
+      estado.tdTotal.textContent = '—';
+      estado.horas.forEach(h=>h.value='');
+      status('Serviço desmarcado. Nenhuma célula foi alterada porque não havia linha selecionada.','ok');
+      return;
+    }
+
+    const linhaParaLimpar = Number(estado.registro.linha);
+    if(!Number.isInteger(linhaParaLimpar) || linhaParaLimpar < 5){
+      status('Não foi possível limpar o serviço: linha inválida. Atualize a lista.','erro');
+      return;
+    }
+
+    ocupadas.add(chave);
+    estado.sel.disabled = true;
+
+    try{
+      status('Limpando somente a coluna C da linha '+linhaParaLimpar+'...');
+      const resposta = await api({
+        action:'updateService',
+        record:JSON.stringify({
+          linha:linhaParaLimpar,
+          atividade:''
+        })
+      });
+
+      if(!resposta || !resposta.ok){
+        throw new Error(resposta?.mensagem || 'Não foi possível apagar o serviço da coluna C.');
+      }
+
+      // Mantém o vínculo com a linha existente para que uma nova seleção
+      // de serviço possa atualizar essa mesma linha, sem criar outra.
+      estado.registro.atividade = '';
+      estado.atividade = '';
+      estado.qtd.value = '';
+      estado.tdTotal.textContent = String(numero(estado.registro.quantidade));
+      const hs = Array.isArray(estado.registro.horarios) ? estado.registro.horarios : [];
+      estado.horas.forEach((h,i)=>h.value=formatarHora(hs[i] || ''));
+
+      registros = registros.map(r =>
+        Number(r.linha) === linhaParaLimpar ? {...r, atividade:''} : r
+      );
+
+      status('Serviço apagado da coluna C da linha '+linhaParaLimpar+'. Quantidade, horários, data e colaborador foram preservados.','ok');
+    }catch(e){
+      // Reverte a seleção visual se a planilha não confirmou a limpeza.
+      estado.sel.value = estado.registro.atividade || '';
+      status('Erro ao limpar o serviço da coluna C: '+e.message,'erro');
+    }finally{
+      estado.sel.disabled = false;
+      ocupadas.delete(chave);
+    }
     return;
   }
 
