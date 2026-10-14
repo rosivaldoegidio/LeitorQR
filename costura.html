@@ -26,7 +26,8 @@ button:disabled{opacity:.5;cursor:wait}
 .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .nota{font-size:12px;line-height:1.5;color:#5f6368}
 .status{font-size:13px;font-weight:bold;margin:12px 0;white-space:pre-wrap}
-.ok{color:#137333}.erro{color:#b3261e}
+.ok{color:#137333}
+.erro{color:#b3261e}
 .tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #d5dce6;border-radius:7px}
 table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12px;white-space:nowrap;background:white}
 th,td{padding:5px;border-right:1px solid #e0e5ed;border-bottom:1px solid #e0e5ed;text-align:center}
@@ -38,10 +39,15 @@ tbody tr:nth-child(even){background:#f7f9fd}
 tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 .servico{width:175px;min-width:160px}
 .qtd{width:90px;text-align:center}
+.controle-qtd{display:flex;align-items:center;gap:4px;min-width:155px}
+.controle-qtd .qtd{flex:1;width:65px;min-width:55px;padding:8px 3px;text-align:center}
+.btn-qtd{width:42px;min-width:42px;height:44px;padding:0;border-radius:8px;font-size:23px;line-height:1;background:#e7eef9;color:#174ea6;touch-action:manipulation}
+.btn-qtd:active{transform:scale(.96)}
 .total{min-width:65px;font-weight:bold;color:#174ea6}
 .hora{width:100px;min-width:95px;text-align:center;padding:6px 3px}
 .salvar{background:#137333;color:white;padding:9px;font-size:12px}
 .limpar{background:#fce8e6;color:#b3261e;padding:9px;font-size:12px}
+
 @media(max-width:700px){
  header{padding:12px}
  header h1{font-size:18px}
@@ -52,6 +58,8 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
  th:first-child,td:first-child{width:140px;min-width:140px;max-width:140px}
  .servico{width:150px;min-width:140px}
  .hora{width:92px;min-width:88px}
+ .controle-qtd{min-width:155px;gap:4px}
+ .btn-qtd{width:42px;min-width:42px;height:44px}
 }
 </style>
 </head>
@@ -157,7 +165,6 @@ function hojeISO(){
 function normalizarData(valor){
   const s = String(valor || '').trim();
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-
   const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   return m ? `${m[3]}-${m[2]}-${m[1]}` : s;
 }
@@ -176,7 +183,6 @@ function api(parametros){
   return new Promise((resolve,reject)=>{
     const callback = 'retorno_' + Date.now() + '_' +
       Math.random().toString(36).slice(2);
-
     const script = document.createElement('script');
     let finalizado = false;
     let temporizador;
@@ -185,10 +191,8 @@ function api(parametros){
       if(finalizado) return;
       finalizado = true;
       clearTimeout(temporizador);
-
       try{delete window[callback]}catch(e){}
       script.remove();
-
       erro ? reject(erro) : resolve(dados);
     };
 
@@ -214,7 +218,6 @@ function api(parametros){
 function selecionarOpcoes(id,lista,textoInicial){
   const el = $(id);
   const anterior = el.value;
-
   el.replaceChildren();
 
   const inicial = document.createElement('option');
@@ -240,7 +243,6 @@ function numero(valor){
 
 function formatarHora(valor){
   if(valor == null || valor === '') return '';
-
   const m = String(valor).trim().match(/(\d{1,2}):(\d{2})/);
   return m
     ? String(m[1]).padStart(2,'0') + ':' + m[2]
@@ -254,7 +256,6 @@ function preencherEstado(estado,registro){
   estado.tdTotal.textContent = String(numero(registro.quantidade));
 
   const hs = Array.isArray(registro.horarios) ? registro.horarios : [];
-
   estado.horas.forEach((h,i)=>{
     h.value = formatarHora(hs[i] || '');
   });
@@ -274,17 +275,8 @@ async function carregar(){
     atividades = Array.isArray(d.atividades) ? d.atividades : [];
     registros = Array.isArray(d.registros) ? d.registros : [];
 
-    selecionarOpcoes(
-      'colaboradorNovo',
-      colaboradores,
-      'Selecione o colaborador'
-    );
-
-    selecionarOpcoes(
-      'servicoNovo',
-      atividades,
-      'Selecione o serviço'
-    );
+    selecionarOpcoes('colaboradorNovo',colaboradores,'Selecione o colaborador');
+    selecionarOpcoes('servicoNovo',atividades,'Selecione o serviço');
 
     desenharTabela();
 
@@ -329,16 +321,49 @@ function desenharTabela(){
     tdServico.appendChild(sel);
     tr.appendChild(tdServico);
 
+    // Campo de quantidade com botões de diminuir e aumentar.
     const tdNova = document.createElement('td');
+    const controleQtd = document.createElement('div');
+    controleQtd.className = 'controle-qtd';
+
+    const btnMenos = document.createElement('button');
+    btnMenos.type = 'button';
+    btnMenos.className = 'btn-qtd';
+    btnMenos.textContent = '−';
+    btnMenos.setAttribute('aria-label','Diminuir quantidade de '+nome);
+    btnMenos.title = 'Diminuir 1';
+
     const qtd = document.createElement('input');
     qtd.type = 'number';
     qtd.min = '0';
     qtd.step = 'any';
-    qtd.placeholder = '+ qtd';
+    qtd.placeholder = 'Qtd';
     qtd.className = 'qtd';
     qtd.setAttribute('aria-label','Quantidade nova de '+nome);
-    tdNova.appendChild(qtd);
+    qtd.inputMode = 'decimal';
+
+    const btnMais = document.createElement('button');
+    btnMais.type = 'button';
+    btnMais.className = 'btn-qtd';
+    btnMais.textContent = '+';
+    btnMais.setAttribute('aria-label','Aumentar quantidade de '+nome);
+    btnMais.title = 'Adicionar 1';
+
+    controleQtd.append(btnMenos,qtd,btnMais);
+    tdNova.appendChild(controleQtd);
     tr.appendChild(tdNova);
+
+    function ajustarQuantidade(delta){
+      const textoAtual = qtd.value.trim();
+      const atual = textoAtual === '' ? 0 : numero(textoAtual);
+      const novo = Math.max(0,atual + delta);
+      qtd.value = Number.isInteger(novo)
+        ? String(novo)
+        : String(Number(novo.toFixed(3)));
+    }
+
+    btnMenos.addEventListener('click',()=>ajustarQuantidade(-1));
+    btnMais.addEventListener('click',()=>ajustarQuantidade(1));
 
     const tdTotal = document.createElement('td');
     tdTotal.className = 'total';
@@ -350,7 +375,6 @@ function desenharTabela(){
     for(let i=0;i<20;i++){
       const td = document.createElement('td');
       const input = document.createElement('input');
-
       input.type = 'time';
       input.step = '60';
       input.className = 'hora';
@@ -358,7 +382,6 @@ function desenharTabela(){
         'aria-label',
         'Horário coluna '+String.fromCharCode(70+i)+' de '+nome
       );
-
       td.appendChild(input);
       tr.appendChild(td);
       horas.push(input);
@@ -384,6 +407,8 @@ function desenharTabela(){
       registro:null,
       sel:sel,
       qtd:qtd,
+      btnMenos:btnMenos,
+      btnMais:btnMais,
       tdTotal:tdTotal,
       horas:horas,
       btnSalvar:btnSalvar,
@@ -409,12 +434,6 @@ function desenharTabela(){
   }
 }
 
-/**
- * ITEM 2:
- * Selecionar serviço inicia ou reutiliza o apontamento de hoje.
- * A decisão de localizar/criar o registro diário é feita no Apps Script,
- * para evitar depender dos registros limitados carregados no navegador.
- */
 async function alterarServico(estado){
   const servicoNovo = estado.sel.value;
 
@@ -424,6 +443,7 @@ async function alterarServico(estado){
     estado.qtd.value = '';
     estado.tdTotal.textContent = '—';
     estado.horas.forEach(h=>h.value='');
+
     mostrarStatus(
       'Selecione um serviço para iniciar ou continuar o apontamento de '+
       estado.colaborador+'.'
@@ -432,10 +452,8 @@ async function alterarServico(estado){
   }
 
   const chave = 'apontamento:' + estado.colaborador;
-
   if(ocupadas.has(chave)) return;
   ocupadas.add(chave);
-
   estado.sel.disabled = true;
 
   try{
@@ -464,7 +482,6 @@ async function alterarServico(estado){
 
     preencherEstado(estado,resposta.registro);
 
-    // Atualiza a cópia local para manter a interface coerente.
     const existente = registros.findIndex(
       r=>Number(r.linha) === Number(resposta.registro.linha)
     );
@@ -493,10 +510,6 @@ async function alterarServico(estado){
   }
 }
 
-/**
- * ÚNICO BOTÃO MANUAL DE CRIAÇÃO:
- * Item 1 — Criar produção.
- */
 async function criarProducao(){
   const data = $('dataNova').value || hojeISO();
   const colaborador = $('colaboradorNovo').value;
@@ -521,10 +534,8 @@ async function criarProducao(){
     }
 
     mostrarStatus(resposta.mensagem || 'Produção criada pelo item 1.','ok');
-
     await carregar();
 
-    // Associa a linha efetivamente criada à pessoa correta.
     const estado = estados.find(
       e=>textoIgual(e.colaborador,colaborador)
     );
@@ -546,8 +557,6 @@ async function salvar(estado){
     return;
   }
 
-  // Se o usuário ainda não selecionou um serviço no item 2,
-  // tenta iniciar o apontamento diário antes de salvar.
   if(!estado.registro){
     await alterarServico(estado);
   }
@@ -639,7 +648,7 @@ async function atualizarDadosLocais(){
       });
     }
   }catch(e){
-    // Não apaga o registro que já foi confirmado pelo servidor.
+    // Mantém os dados já confirmados pelo servidor.
   }
 }
 
@@ -699,7 +708,6 @@ async function limpar(estado){
 
 $('criar').addEventListener('click',criarProducao);
 $('atualizar').addEventListener('click',carregar);
-
 $('dataNova').value = hojeISO();
 
 carregar();
