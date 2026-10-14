@@ -19,19 +19,19 @@ header{
   z-index:20;
   display:flex;
   align-items:center;
-  gap:15px
+  justify-content:space-between;
+  gap:20px
 }
 
+header .cabecalho-texto{min-width:0;flex:1}
 header .logo{
-  width:155px;
+  width:185px;
   height:auto;
   max-height:76px;
   object-fit:contain;
   flex-shrink:0;
   filter:brightness(0) invert(1)
 }
-
-header .cabecalho-texto{min-width:0}
 header h1{font-size:21px;margin:0}
 header p{font-size:13px;margin:7px 0 0}
 
@@ -71,7 +71,6 @@ button{
   font-weight:bold;
   cursor:pointer
 }
-
 button:disabled{opacity:.5;cursor:wait}
 .azul{background:#1a73e8;color:white}
 .claro{background:#e7eef9;color:#174ea6}
@@ -159,7 +158,6 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 }
 
 .btn-qtd:active{transform:scale(.96)}
-
 .total{min-width:65px;font-weight:bold;color:#174ea6}
 
 .hora{
@@ -191,23 +189,39 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 .limpar{background:#fce8e6;color:#b3261e;padding:9px;font-size:12px}
 
 @media(max-width:700px){
-  header{padding:12px;gap:10px}
-  header .logo{width:105px;max-height:58px}
+  header{
+    padding:12px;
+    gap:10px
+  }
+
+  header .logo{
+    width:110px;
+    max-height:58px
+  }
+
   header h1{font-size:18px}
+  header p{font-size:12px;line-height:1.35}
+
   main{padding:7px}
   .painel{padding:10px}
   .grade{grid-template-columns:1fr}
   .acoes button{flex:1 1 100%;min-height:42px}
+
   th:first-child,td:first-child{
-    width:140px;min-width:140px;max-width:140px
+    width:140px;
+    min-width:140px;
+    max-width:140px
   }
+
   .servico{width:150px;min-width:140px}
+
   .hora{
     width:100%;
     min-width:88px;
     min-height:42px;
     font-size:16px
   }
+
   .controle-hora{min-width:92px;gap:5px}
   .btn-agora{min-height:42px;font-size:13px}
   .controle-qtd{min-width:155px;gap:4px}
@@ -219,11 +233,12 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 <body>
 
 <header>
-  <img class="logo" src="logo.png" alt="Logomarca da empresa">
   <div class="cabecalho-texto">
     <h1>Boletim de Produção - Costura</h1>
     <p>Item 1: criar produção manualmente. Item 2: iniciar ou continuar o apontamento do dia.</p>
   </div>
+
+  <img class="logo" src="logo.png" alt="Logomarca da empresa">
 </header>
 
 <main>
@@ -305,7 +320,6 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 const API_URL='https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
 
 const $=id=>document.getElementById(id);
-
 let colaboradores=[],atividades=[],registros=[],ocupadas=new Set(),estados=[];
 
 function hojeISO(){
