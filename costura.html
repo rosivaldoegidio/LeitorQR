@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boletim de Produção - Costura</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f1f4f9;color:#202124}
@@ -27,49 +28,206 @@ button:disabled{opacity:.5;cursor:wait}
 .acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .nota{font-size:12px;line-height:1.5;color:#5f6368}
 .status{font-size:13px;font-weight:bold;margin:12px 0;white-space:pre-wrap}
-.ok{color:#137333}.erro{color:#b3261e}
-.tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #d5dce6;border-radius:7px}
-table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12px;white-space:nowrap;background:white}
-th,td{padding:5px;border-right:1px solid #e0e5ed;border-bottom:1px solid #e0e5ed;text-align:center}
-thead th{position:sticky;top:0;background:#e4ecf8;z-index:5;height:42px}
-th:first-child,td:first-child{position:sticky;left:0;width:155px;min-width:155px;max-width:155px;text-align:left}
+.ok{color:#137333}
+.erro{color:#b3261e}
+
+.tabela-wrap{
+ overflow:auto;
+ max-height:70vh;
+ border:1px solid #d5dce6;
+ border-radius:7px;
+ -webkit-overflow-scrolling:touch;
+}
+table{
+ border-collapse:separate;
+ border-spacing:0;
+ width:max-content;
+ min-width:100%;
+ font-size:12px;
+ white-space:nowrap;
+ background:white
+}
+th,td{
+ padding:4px;
+ border-right:1px solid #e0e5ed;
+ border-bottom:1px solid #e0e5ed;
+ text-align:center
+}
+thead th{
+ position:sticky;
+ top:0;
+ background:#e4ecf8;
+ z-index:5;
+ height:38px;
+ font-size:11px
+}
+th:first-child,td:first-child{
+ position:sticky;
+ left:0;
+ width:112px;
+ min-width:112px;
+ max-width:112px;
+ text-align:left;
+ white-space:normal;
+ overflow-wrap:anywhere
+}
 thead th:first-child{z-index:10;background:#dce7f7}
 tbody td:first-child{z-index:3;background:#edf3fc}
 tbody tr:nth-child(even){background:#f7f9fd}
 tbody tr:nth-child(even) td:first-child{background:#e5edf9}
-.servico{width:175px;min-width:160px}
-.qtd{width:90px;text-align:center}
-.controle-qtd{display:flex;align-items:center;gap:4px;min-width:155px}
-.controle-qtd .qtd{flex:1;width:65px;min-width:55px;padding:8px 3px;text-align:center}
-.btn-qtd{width:42px;min-width:42px;height:44px;padding:0;border-radius:8px;font-size:23px;line-height:1;background:#e7eef9;color:#174ea6;touch-action:manipulation}
+
+.servico{width:125px;min-width:120px}
+.qtd{width:68px;min-width:64px;text-align:center}
+.controle-qtd{
+ display:flex;
+ align-items:center;
+ gap:3px;
+ min-width:0
+}
+.controle-qtd .qtd{
+ flex:1;
+ width:38px;
+ min-width:34px;
+ padding:7px 2px;
+ text-align:center
+}
+.btn-qtd{
+ width:30px;
+ min-width:30px;
+ height:40px;
+ padding:0;
+ border-radius:7px;
+ font-size:20px;
+ line-height:1;
+ background:#e7eef9;
+ color:#174ea6;
+ touch-action:manipulation
+}
 .btn-qtd:active{transform:scale(.96)}
-.total{min-width:65px;font-weight:bold;color:#174ea6}
-.hora{width:100px;min-width:95px;text-align:center;padding:6px 3px}
-.controle-hora{display:flex;flex-direction:column;gap:5px;min-width:96px}
-.btn-agora{width:100%;min-height:38px;padding:7px 5px;background:#e7eef9;color:#174ea6;font-size:12px;touch-action:manipulation}
+.total{
+ width:58px;
+ min-width:52px;
+ font-weight:bold;
+ color:#174ea6
+}
+.hora{
+ width:78px;
+ min-width:76px;
+ text-align:center;
+ padding:6px 2px;
+ font-size:14px
+}
+.controle-hora{
+ display:flex;
+ flex-direction:column;
+ gap:4px;
+ min-width:0
+}
+.btn-agora{
+ width:100%;
+ min-height:38px;
+ padding:6px 3px;
+ background:#e7eef9;
+ color:#174ea6;
+ font-size:11px;
+ white-space:normal;
+ touch-action:manipulation
+}
 .btn-agora:active{transform:scale(.98)}
-.salvar{background:#137333;color:white;padding:9px;font-size:12px}
-.limpar{background:#fce8e6;color:#b3261e;padding:9px;font-size:12px}
-.btn-duplicar{background:#e0f2e8;color:#137333;padding:9px;font-size:12px}
+.salvar{
+ background:#137333;
+ color:white;
+ padding:8px 6px;
+ font-size:11px
+}
+.limpar{
+ background:#fce8e6;
+ color:#b3261e;
+ padding:8px 6px;
+ font-size:11px
+}
+.btn-duplicar{
+ background:#e0f2e8;
+ color:#137333;
+ padding:8px 6px;
+ font-size:11px
+}
+
 @media(max-width:700px){
- header{padding:12px;gap:10px}
- header .logo{width:110px;max-height:58px}
- header h1{font-size:18px}
- header p{font-size:12px;line-height:1.35}
- main{padding:7px}.painel{padding:10px}
+ header{padding:9px;gap:8px}
+ header .logo{width:78px;max-height:48px}
+ header h1{font-size:16px}
+ header p{font-size:11px;line-height:1.3}
+
+ main{padding:5px}
+ .painel{padding:8px}
  .grade{grid-template-columns:1fr}
  .acoes button{flex:1 1 100%;min-height:42px}
- th:first-child,td:first-child{width:140px;min-width:140px;max-width:140px}
- .servico{width:150px;min-width:140px}
- .hora{width:100%;min-width:88px;min-height:42px;font-size:16px}
- .controle-hora{min-width:92px;gap:5px}
- .btn-agora{min-height:42px;font-size:13px}
- .controle-qtd{min-width:155px;gap:4px}
- .btn-qtd{width:42px;min-width:42px;height:44px}
+
+ table{font-size:11px}
+ th,td{padding:3px}
+ thead th{height:36px;font-size:10px}
+
+ th:first-child,td:first-child{
+  width:96px;
+  min-width:96px;
+  max-width:96px
+ }
+
+ .servico{
+  width:112px;
+  min-width:108px;
+  font-size:12px;
+  padding:6px 3px
+ }
+
+ .hora{
+  width:76px;
+  min-width:74px;
+  min-height:42px;
+  font-size:14px;
+  padding:5px 1px
+ }
+
+ .controle-hora{min-width:0;gap:4px}
+ .btn-agora{
+  min-height:40px;
+  font-size:10px;
+  padding:5px 2px
+ }
+
+ .controle-qtd{min-width:0;gap:2px}
+ .controle-qtd .qtd{
+  width:34px;
+  min-width:30px;
+  padding:6px 1px;
+  font-size:14px
+ }
+
+ .btn-qtd{
+  width:27px;
+  min-width:27px;
+  height:40px;
+  font-size:18px
+ }
+
+ .total{
+  width:48px;
+  min-width:45px;
+  font-size:11px
+ }
+
+ .salvar,.limpar,.btn-duplicar{
+  font-size:10px;
+  padding:7px 4px;
+  white-space:normal
+ }
 }
 </style>
 </head>
+
 <body>
+
 <header>
  <div class="cabecalho-texto">
   <h1>Boletim de Produção - Costura</h1>
@@ -79,14 +237,32 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 </header>
 
 <main>
+
 <section class="painel">
  <h2>1. Criar produção</h2>
  <p class="nota">Use esta opção para criar uma produção manualmente.</p>
+
  <div class="grade">
-  <div><label for="dataNova">Data</label><input type="date" id="dataNova"></div>
-  <div><label for="colaboradorNovo">Colaborador</label><select id="colaboradorNovo"><option value="">Carregando...</option></select></div>
-  <div><label for="servicoNovo">Serviço</label><select id="servicoNovo"><option value="">Carregando...</option></select></div>
+  <div>
+   <label for="dataNova">Data</label>
+   <input type="date" id="dataNova">
+  </div>
+
+  <div>
+   <label for="colaboradorNovo">Colaborador</label>
+   <select id="colaboradorNovo">
+    <option value="">Carregando...</option>
+   </select>
+  </div>
+
+  <div>
+   <label for="servicoNovo">Serviço</label>
+   <select id="servicoNovo">
+    <option value="">Carregando...</option>
+   </select>
+  </div>
  </div>
+
  <div class="acoes">
   <button class="azul" id="criar">＋ Criar produção</button>
   <button class="claro" id="atualizar">↻ Atualizar lista</button>
@@ -95,24 +271,42 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 
 <section class="painel">
  <h2>2. Apontar produção do dia</h2>
+
  <p class="nota">
   O painel mostra os colaboradores cadastrados na lista suspensa e as produções de hoje.
   Use ＋ Nova atividade para criar uma nova linha para o mesmo colaborador.
   A quantidade é somada à coluna E e os horários são gravados em F:K.
   A coluna D e as colunas L:Y são preservadas.
  </p>
- <div id="status" class="status" role="status" aria-live="polite">Carregando registros...</div>
+
+ <div id="status" class="status" role="status" aria-live="polite">
+  Carregando registros...
+ </div>
+
  <div class="tabela-wrap">
   <table>
-   <thead><tr>
-    <th>COLABORADOR</th><th>SERVIÇO — C</th><th>QTD NOVA</th><th>TOTAL E</th>
-    <th>F Início</th><th>G Fim</th><th>H Início</th><th>I Fim</th><th>J Início</th><th>K Fim</th>
-    <th>Salvar</th><th>Limpar</th><th>Nova atividade</th>
-   </tr></thead>
+   <thead>
+    <tr>
+     <th>COLABORADOR</th>
+     <th>SERVIÇO — C</th>
+     <th>QTD NOVA</th>
+     <th>TOTAL E</th>
+     <th>F Início</th>
+     <th>G Fim</th>
+     <th>H Início</th>
+     <th>I Fim</th>
+     <th>J Início</th>
+     <th>K Fim</th>
+     <th>Salvar</th>
+     <th>Limpar</th>
+     <th>Nova atividade</th>
+    </tr>
+   </thead>
    <tbody id="corpoTabela"></tbody>
   </table>
  </div>
 </section>
+
 </main>
 
 <script>
@@ -127,20 +321,24 @@ function hojeISO(){
  const d=new Date();
  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+
 function normalizarData(v){
  const s=String(v||'').trim();
  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
  const m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
  return m?`${m[3]}-${m[2]}-${m[1]}`:s;
 }
+
 function textoIgual(a,b){
  return String(a||'').trim().toLocaleUpperCase('pt-BR')===
  String(b||'').trim().toLocaleUpperCase('pt-BR');
 }
+
 function mostrarStatus(msg,tipo=''){
  $('status').textContent=msg;
  $('status').className='status '+tipo;
 }
+
 function api(parametros){
  return new Promise((resolve,reject)=>{
   const callback='retorno_'+Date.now()+'_'+Math.random().toString(36).slice(2);
@@ -167,22 +365,32 @@ function api(parametros){
   document.body.appendChild(script);
  });
 }
+
 function selecionarOpcoes(id,lista,texto){
  const el=$(id),anterior=el.value;
  el.replaceChildren();
+
  const op=document.createElement('option');
- op.value='';op.textContent=texto;el.appendChild(op);
+ op.value='';
+ op.textContent=texto;
+ el.appendChild(op);
+
  lista.forEach(v=>{
   const o=document.createElement('option');
-  o.value=v;o.textContent=v;el.appendChild(o);
+  o.value=v;
+  o.textContent=v;
+  el.appendChild(o);
  });
+
  if(lista.includes(anterior))el.value=anterior;
 }
+
 function numero(v){
  if(v===''||v==null)return 0;
  const n=Number(String(v).replace(',','.'));
  return Number.isFinite(n)?n:0;
 }
+
 function formatarHora(v){
  if(v==null||v==='')return '';
  const m=String(v).trim().match(/(\d{1,2}):(\d{2})/);
@@ -191,6 +399,7 @@ function formatarHora(v){
 
 async function carregar(){
  mostrarStatus('Carregando colaboradores e registros...');
+
  try{
   const d=await api({action:'list'});
   if(!d||!d.ok)throw new Error(d?.mensagem||'Falha ao consultar os dados.');
@@ -207,6 +416,7 @@ async function carregar(){
    colaboradores.length+' colaborador(es) cadastrado(s). O painel mostra somente a lista cadastrada e as produções de hoje.',
    'ok'
   );
+
  }catch(e){
   mostrarStatus('Erro ao carregar: '+e.message,'erro');
  }
@@ -217,6 +427,7 @@ function preencherEstado(e,r){
  e.atividade=r.atividade||'';
  e.sel.value=e.atividade;
  e.tdTotal.textContent=String(numero(r.quantidade));
+
  const hs=Array.isArray(r.horarios)?r.horarios:[];
  e.horas.forEach((h,i)=>h.value=formatarHora(hs[i]||''));
 }
@@ -235,7 +446,7 @@ function desenharTabela(){
  const linhas=[];
  const usados=new Set();
 
- // Uma linha inicial para cada colaborador cadastrado.
+ // Uma linha inicial para cada colaborador.
  // Registros adicionais do mesmo dia aparecem em linhas independentes.
  colaboradores.forEach(nome=>{
   const doColaborador=registrosHoje
@@ -262,10 +473,12 @@ function desenharTabela(){
  linhas.forEach(item=>criarLinhaTabela(item.colaborador,item.registro,tbody));
 
  if(!colaboradores.length){
-  const tr=document.createElement('tr'),td=document.createElement('td');
+  const tr=document.createElement('tr');
+  const td=document.createElement('td');
   td.colSpan=13;
   td.textContent='Nenhum colaborador encontrado na lista suspensa.';
-  tr.appendChild(td);tbody.appendChild(tr);
+  tr.appendChild(td);
+  tbody.appendChild(tr);
  }
 }
 
@@ -283,37 +496,54 @@ function criarLinhaTabela(nome,registro,tbody){
  sel.setAttribute('aria-label','Serviço de '+nome);
 
  const vazio=document.createElement('option');
- vazio.value='';vazio.textContent='Selecione o serviço';
+ vazio.value='';
+ vazio.textContent='Selecione o serviço';
  sel.appendChild(vazio);
 
  atividades.forEach(a=>{
   const op=document.createElement('option');
-  op.value=a;op.textContent=a;sel.appendChild(op);
+  op.value=a;
+  op.textContent=a;
+  sel.appendChild(op);
  });
- tdServico.appendChild(sel);tr.appendChild(tdServico);
+
+ tdServico.appendChild(sel);
+ tr.appendChild(tdServico);
 
  const tdNova=document.createElement('td');
  const controle=document.createElement('div');
  controle.className='controle-qtd';
 
  const menos=document.createElement('button');
- menos.type='button';menos.className='btn-qtd';menos.textContent='−';menos.title='Diminuir 1';
+ menos.type='button';
+ menos.className='btn-qtd';
+ menos.textContent='−';
+ menos.title='Diminuir 1';
 
  const qtd=document.createElement('input');
- qtd.type='number';qtd.min='0';qtd.step='any';qtd.placeholder='Qtd';
- qtd.className='qtd';qtd.inputMode='decimal';
+ qtd.type='number';
+ qtd.min='0';
+ qtd.step='any';
+ qtd.placeholder='Qtd';
+ qtd.className='qtd';
+ qtd.inputMode='decimal';
 
  const mais=document.createElement('button');
- mais.type='button';mais.className='btn-qtd';mais.textContent='+';mais.title='Adicionar 1';
+ mais.type='button';
+ mais.className='btn-qtd';
+ mais.textContent='+';
+ mais.title='Adicionar 1';
 
  controle.append(menos,qtd,mais);
- tdNova.appendChild(controle);tr.appendChild(tdNova);
+ tdNova.appendChild(controle);
+ tr.appendChild(tdNova);
 
  function ajustar(delta){
   const atual=qtd.value.trim()===''?0:numero(qtd.value);
   const novo=Math.max(0,atual+delta);
   qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
  }
+
  menos.addEventListener('click',()=>ajustar(-1));
  mais.addEventListener('click',()=>ajustar(1));
 
@@ -323,16 +553,22 @@ function criarLinhaTabela(nome,registro,tbody){
  tr.appendChild(tdTotal);
 
  const horas=[];
+
  for(let i=0;i<6;i++){
-  const td=document.createElement('td'),grupo=document.createElement('div');
+  const td=document.createElement('td');
+  const grupo=document.createElement('div');
   grupo.className='controle-hora';
 
   const inp=document.createElement('input');
-  inp.type='time';inp.step='60';inp.className='hora';
+  inp.type='time';
+  inp.step='60';
+  inp.className='hora';
   inp.setAttribute('aria-label','Horário '+String.fromCharCode(70+i)+' de '+nome);
 
   const agora=document.createElement('button');
-  agora.type='button';agora.className='btn-agora';agora.textContent='Registrar agora';
+  agora.type='button';
+  agora.className='btn-agora';
+  agora.textContent='Registrar agora';
 
   agora.addEventListener('click',()=>{
    const d=new Date();
@@ -341,26 +577,46 @@ function criarLinhaTabela(nome,registro,tbody){
   });
 
   grupo.append(inp,agora);
-  td.appendChild(grupo);tr.appendChild(td);horas.push(inp);
+  td.appendChild(grupo);
+  tr.appendChild(td);
+  horas.push(inp);
  }
 
- const tdSalvar=document.createElement('td'),btnSalvar=document.createElement('button');
- btnSalvar.className='salvar';btnSalvar.textContent='💾 Salvar';
- tdSalvar.appendChild(btnSalvar);tr.appendChild(tdSalvar);
+ const tdSalvar=document.createElement('td');
+ const btnSalvar=document.createElement('button');
+ btnSalvar.className='salvar';
+ btnSalvar.textContent='💾 Salvar';
+ tdSalvar.appendChild(btnSalvar);
+ tr.appendChild(tdSalvar);
 
- const tdLimpar=document.createElement('td'),btnLimpar=document.createElement('button');
- btnLimpar.className='limpar';btnLimpar.textContent='Limpar registro';
- tdLimpar.appendChild(btnLimpar);tr.appendChild(tdLimpar);
+ const tdLimpar=document.createElement('td');
+ const btnLimpar=document.createElement('button');
+ btnLimpar.className='limpar';
+ btnLimpar.textContent='Limpar registro';
+ tdLimpar.appendChild(btnLimpar);
+ tr.appendChild(tdLimpar);
 
- const tdNovaAtividade=document.createElement('td'),btnNova=document.createElement('button');
- btnNova.className='btn-duplicar';btnNova.textContent='＋ Nova atividade';
+ const tdNovaAtividade=document.createElement('td');
+ const btnNova=document.createElement('button');
+ btnNova.className='btn-duplicar';
+ btnNova.textContent='＋ Nova atividade';
  btnNova.title='Criar uma nova linha de produção para este colaborador';
- tdNovaAtividade.appendChild(btnNova);tr.appendChild(tdNovaAtividade);
+ tdNovaAtividade.appendChild(btnNova);
+ tr.appendChild(tdNovaAtividade);
 
  const e={
-  colaborador:nome,atividade:'',registro:null,sel,qtd,tdTotal,horas,
-  btnSalvar,btnLimpar,btnNova
+  colaborador:nome,
+  atividade:'',
+  registro:null,
+  sel,
+  qtd,
+  tdTotal,
+  horas,
+  btnSalvar,
+  btnLimpar,
+  btnNova
  };
+
  estados.push(e);
 
  if(registro)preencherEstado(e,registro);
@@ -383,6 +639,7 @@ async function novaAtividade(e){
   alert('Não foi possível identificar o colaborador desta linha.');
   return;
  }
+
  if(!servico){
   alert('Selecione primeiro o serviço que deseja registrar nesta nova atividade.');
   e.sel.focus();
@@ -529,6 +786,7 @@ async function salvar(e){
 
  if(!e.registro){
   await alterarServico(e);
+
   if(!e.registro){
    mostrarStatus('Não foi possível obter a linha da produção.','erro');
    return;
@@ -624,5 +882,6 @@ $('atualizar').addEventListener('click',carregar);
 $('dataNova').value=hojeISO();
 carregar();
 </script>
+
 </body>
 </html>
