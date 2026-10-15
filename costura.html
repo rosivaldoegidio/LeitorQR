@@ -194,6 +194,17 @@ function formatarHora(v){
  return m?String(m[1]).padStart(2,'0')+':'+m[2]:'';
 }
 
+/* NOVO: identifica se o registro possui pelo menos um horário em F:K. */
+function temHorarioPreenchido(registro){
+ if(!registro)return false;
+
+ const horarios=Array.isArray(registro.horarios)?registro.horarios:[];
+
+ return horarios.some(h=>{
+  return h!==null&&h!==undefined&&String(h).trim()!=='';
+ });
+}
+
 async function carregar(){
  mostrarStatus('Carregando colaboradores e registros...');
 
@@ -266,6 +277,21 @@ function desenharTabela(){
    linhas.push({colaborador:r.colaborador,registro:r});
    usados.add(Number(r.linha));
   });
+
+ /*
+  * NOVO: classificação apenas na tela.
+  * Registros com pelo menos um horário ficam primeiro.
+  * Registros sem horário ficam por último.
+  * A ordenação é estável: a ordem original dentro de cada grupo
+  * é preservada. Nenhuma linha é movida na planilha.
+  */
+ linhas.sort((a,b)=>{
+  const horarioA=temHorarioPreenchido(a.registro);
+  const horarioB=temHorarioPreenchido(b.registro);
+
+  if(horarioA===horarioB)return 0;
+  return horarioB?1:-1;
+ });
 
  linhas.forEach(item=>criarLinhaTabela(item.colaborador,item.registro,tbody));
 
