@@ -99,9 +99,14 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
  <h2>1. Criar produção</h2>
  <p class="nota">Use esta opção para criar uma produção manualmente.</p>
  <div class="grade">
-  <div><label for="dataNova">Data</label><input type="date" id="dataNova"></div>
-  <div><label for="colaboradorNovo">Colaborador</label><select id="colaboradorNovo"><option value="">Carregando...</option></select></div>
-  <div><label for="servicoNovo">Serviço</label><select id="servicoNovo"><option value="">Carregando...</option></select></div>
+  <div>
+   <label for="colaboradorNovo">Colaborador</label>
+   <select id="colaboradorNovo"><option value="">Carregando...</option></select>
+  </div>
+  <div>
+   <label for="servicoNovo">Serviço</label>
+   <select id="servicoNovo"><option value="">Carregando...</option></select>
+  </div>
  </div>
  <div class="acoes">
   <button class="azul" id="criar">＋ Criar produção</button>
@@ -109,24 +114,46 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 </section>
 
 <section class="painel">
- <h2>2. Apontar produção do dia</h2>
+ <h2>2. Apontar produção</h2>
  <p class="nota">
-  O painel mostra os colaboradores cadastrados na lista suspensa e as produções de hoje.
+  Selecione a data para consultar e apontar a produção. O painel mostra os colaboradores cadastrados e os registros da data escolhida.
   Use ＋ Nova atividade para criar uma nova linha para o mesmo colaborador.
   A quantidade é somada à coluna E e os horários são gravados em F:K.
   A coluna D e as colunas L:Y são preservadas.
  </p>
+
+ <div class="grade" style="margin:10px 0">
+  <div>
+   <label for="dataApontamento">Data da produção</label>
+   <input type="date" id="dataApontamento">
+  </div>
+ </div>
+
  <div class="acoes">
   <button class="claro" id="atualizar">↻ Atualizar lista</button>
  </div>
+
  <div id="status" class="status" role="status" aria-live="polite">Carregando registros...</div>
+
  <div class="tabela-wrap">
   <table>
-   <thead><tr>
-    <th>COLABORADOR</th><th>SERVIÇO — C</th><th>QTD NOVA</th><th>TOTAL E</th>
-    <th>F Início</th><th>G Fim</th><th>H Início</th><th>I Fim</th><th>J Início</th><th>K Fim</th>
-    <th>Salvar</th><th>Limpar</th><th>Nova atividade</th>
-   </tr></thead>
+   <thead>
+    <tr>
+     <th>COLABORADOR</th>
+     <th>SERVIÇO — C</th>
+     <th>QTD NOVA</th>
+     <th>TOTAL E</th>
+     <th>F Início</th>
+     <th>G Fim</th>
+     <th>H Início</th>
+     <th>I Fim</th>
+     <th>J Início</th>
+     <th>K Fim</th>
+     <th>Salvar</th>
+     <th>Limpar</th>
+     <th>Nova atividade</th>
+    </tr>
+   </thead>
    <tbody id="corpoTabela"></tbody>
   </table>
  </div>
@@ -145,20 +172,24 @@ function hojeISO(){
  const d=new Date();
  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+
 function normalizarData(v){
  const s=String(v||'').trim();
  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
  const m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
  return m?`${m[3]}-${m[2]}-${m[1]}`:s;
 }
+
 function textoIgual(a,b){
  return String(a||'').trim().toLocaleUpperCase('pt-BR')===
  String(b||'').trim().toLocaleUpperCase('pt-BR');
 }
+
 function mostrarStatus(msg,tipo=''){
  $('status').textContent=msg;
  $('status').className='status '+tipo;
 }
+
 function api(parametros){
  return new Promise((resolve,reject)=>{
   const callback='retorno_'+Date.now()+'_'+Math.random().toString(36).slice(2);
@@ -185,6 +216,7 @@ function api(parametros){
   document.body.appendChild(script);
  });
 }
+
 function selecionarOpcoes(id,lista,texto){
  const el=$(id),anterior=el.value;
  el.replaceChildren();
@@ -196,11 +228,13 @@ function selecionarOpcoes(id,lista,texto){
  });
  if(lista.includes(anterior))el.value=anterior;
 }
+
 function numero(v){
  if(v===''||v==null)return 0;
  const n=Number(String(v).replace(',','.'));
  return Number.isFinite(n)?n:0;
 }
+
 function formatarHora(v){
  if(v==null||v==='')return '';
  const m=String(v).trim().match(/(\d{1,2}):(\d{2})/);
@@ -210,7 +244,8 @@ function formatarHora(v){
 async function carregar(){
  mostrarStatus('Carregando colaboradores e registros...');
  try{
-  const d=await api({action:'list'});
+  const dataSelecionada=$('dataApontamento').value||hojeISO();
+  const d=await api({action:'list',data:dataSelecionada});
   if(!d||!d.ok)throw new Error(d?.mensagem||'Falha ao consultar os dados.');
 
   colaboradores=Array.isArray(d.colaboradores)?d.colaboradores:[];
@@ -222,7 +257,7 @@ async function carregar(){
   desenharTabela();
 
   mostrarStatus(
-   colaboradores.length+' colaborador(es) cadastrado(s). O painel mostra somente a lista cadastrada e as produções de hoje.',
+   colaboradores.length+' colaborador(es) cadastrado(s). Exibindo registros de '+dataSelecionada+'.',
    'ok'
   );
  }catch(e){
@@ -244,15 +279,17 @@ function desenharTabela(){
  tbody.replaceChildren();
  estados=[];
 
- const hoje=hojeISO();
+ const dataSelecionada=$('dataApontamento').value||hojeISO();
  const registrosHoje=registros.filter(r=>
-  normalizarData(r.data)===hoje &&
+  normalizarData(r.data)===dataSelecionada &&
   colaboradores.some(nome=>textoIgual(nome,r.colaborador))
  );
 
  const linhas=[];
  const usados=new Set();
 
+ // Uma linha inicial para cada colaborador cadastrado.
+ // Registros adicionais do mesmo dia aparecem em linhas independentes.
  colaboradores.forEach(nome=>{
   const doColaborador=registrosHoje
    .filter(r=>textoIgual(r.colaborador,nome))
@@ -389,10 +426,11 @@ function criarLinhaTabela(nome,registro,tbody){
  tbody.appendChild(tr);
 }
 
+/* Cria uma linha independente; não reutiliza nem altera a linha anterior. */
 async function novaAtividade(e){
  const servico=String(e.sel.value||'').trim();
  const colaborador=String(e.colaborador||'').trim();
- const data=hojeISO();
+ const data=$('dataApontamento').value||hojeISO();
 
  if(!colaborador){
   alert('Não foi possível identificar o colaborador desta linha.');
@@ -434,6 +472,7 @@ async function novaAtividade(e){
 
   mostrarStatus(r.mensagem||'Nova atividade criada.','ok');
   await carregar();
+
  }catch(err){
   mostrarStatus('Erro ao criar nova atividade: '+err.message,'erro');
  }finally{
@@ -473,7 +512,8 @@ async function alterarServico(e){
     action:'iniciarApontamento',
     record:JSON.stringify({
      colaborador:e.colaborador,
-     atividade:servico
+     atividade:servico,
+     data:$('dataApontamento').value||hojeISO()
     })
    });
   }
@@ -499,12 +539,12 @@ async function alterarServico(e){
 }
 
 async function criarProducao(){
- const data=$('dataNova').value||hojeISO();
+ const data=hojeISO();
  const colaborador=String($('colaboradorNovo').value||'').trim();
  const atividade=String($('servicoNovo').value||'').trim();
 
  if(!data||!colaborador||!atividade){
-  alert('Selecione data, colaborador e serviço.');
+  alert('Selecione colaborador e serviço.');
   return;
  }
 
@@ -634,7 +674,8 @@ async function limpar(e){
 
 $('criar').addEventListener('click',criarProducao);
 $('atualizar').addEventListener('click',carregar);
-$('dataNova').value=hojeISO();
+$('dataApontamento').value=hojeISO();
+$('dataApontamento').addEventListener('change',carregar);
 carregar();
 </script>
 </body>
