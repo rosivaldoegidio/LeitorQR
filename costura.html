@@ -71,6 +71,7 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 }
 </style>
 </head>
+
 <body>
 <header>
  <div class="cabecalho-texto">
@@ -89,6 +90,7 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
   A quantidade é somada à coluna E e os horários são gravados em F:K.
   A coluna D e as colunas L:Y são preservadas.
   Quantidades e horários são salvos automaticamente.
+  A tela consulta a planilha a cada 30 segundos quando é seguro atualizar.
  </p>
 
  <div class="grade" style="grid-template-columns:minmax(220px,320px) minmax(160px,220px);align-items:end;margin:12px 0">
@@ -101,7 +103,9 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
   </div>
  </div>
 
- <div id="status" class="status" role="status" aria-live="polite">Carregando registros...</div>
+ <div id="status" class="status" role="status" aria-live="polite">
+  Carregando registros...
+ </div>
 
  <div class="tabela-wrap">
   <table>
@@ -132,11 +136,14 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
 'use strict';
 
 const API_URL='https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
+const INTERVALO_ATUALIZACAO=30000;
 const $=id=>document.getElementById(id);
 
 let colaboradores=[],atividades=[],registros=[],ocupadas=new Set(),estados=[];
 let carregamentoEmCurso=false;
+let verificacaoAutomaticaEmCurso=false;
 let promessaFlushFundo=null;
+let timerAtualizacao=null;
 
 function hojeISO(){
  const d=new Date();
@@ -242,7 +249,7 @@ function agendarHorariosAuto(e){
 }
 
 /* =====================================================
-   VERIFICAR SE EXISTEM ALTERAÇÕES PENDENTES
+   DETECTAR ALTERAÇÕES LOCAIS NÃO SALVAS
    ===================================================== */
 
 function haAlteracoesPendentes(){
@@ -261,7 +268,6 @@ function haAlteracoesPendentes(){
   }
 
   const leitura=valorQuantidadeAtual(e);
-
   if(!leitura.ok)return true;
 
   if(
@@ -276,12 +282,160 @@ function haAlteracoesPendentes(){
    horariosAtuais(e),
    e.horariosAplicados
   );
- });
 }
 
 /* =====================================================
-   SALVAR AUTOMATICAMENTE A QUANTIDADE
-   Aplica somente a diferença; não soma duas vezes.
+   PROTEÇÃO PARA ATUALIZAÇÃO AUTOMÁTICA
+   Não redesenha se houver edição ou gravação em andamento.
+   ===================================================== */
+
+function podeAtualizarAutomaticamente(){
+ if(document.visibilityState!=='visible')return false;
+ if(carregamentoEmCurso)return false;
+ if(verificacaoAutomaticaEmCurso)return false;
+ if(ocupadas.size>0)return false;
+ if(haAlteracoesPendentes())return false;
+
+ const ativo=document.activeElement;
+ const corpo=$('corpoTabela');
+
+ // Se o usuário estiver editando um campo da tabela,
+ // espera que termine para não apagar o que está digitando.
+ if(
+  ativo&&
+  corpo&&
+  corpo.contains(ativo)&&
+  ativo.matches('input,select,textarea')
+ ){
+  return false;
+ }
+
+ return true;
+}
+
+function assinaturaDados(dados){
+ return JSON.stringify({
+  colaboradores:dados.colaboradores||[],
+  atividades:dados.atividades||[],
+  registros:dados.registros||[]
+ });
+}
+
+function obterDadosAtuais(){
+ return {
+  colaboradores:colaboradores,
+  atividades:atividades,
+  registros:registros
+ };
+}
+
+/* =====================================================
+   VERIFICAÇÃO AUTOMÁTICA A CADA 30 SEGUNDOS
+   Consulta o servidor e redesenha apenas se houver mudança.
+   ===================================================== */
+
+async function verificarAtualizacaoAutomatica(){
+ if(!podeAtualizarAutomaticamente())return;
+
+ verificacaoAutomaticaEmCurso=true;
+
+ const dataConsultada=$('dataApontamento').value||hojeISO();
+
+ try{
+  const d=await api({
+   action:'list',
+   data:dataConsultada
+  });
+
+  if(!d||!d.ok){
+   throw new Error(d?.mensagem||'Não foi possível consultar a planilha.');
+  }
+
+  // Se a data mudou durante a consulta, descarta esta resposta.
+  const dataAtual=$('dataApontamento').value||hojeISO();
+
+  if(dataAtual!==dataConsultada)return;
+
+  const novosColaboradores=Array.isArray(d.colaboradores)?d.colaboradores:[];
+  const novasAtividades=Array.isArray(d.atividades)?d.atividades:[];
+  const novosRegistros=Array.isArray(d.registros)?d.registros:[];
+
+  const novosDados={
+   colaboradores:novosColaboradores,
+   atividades:novasAtividades,
+   registros:novosRegistros
+  };
+
+  const houveMudanca=
+   assinaturaDados(novosDados)!==assinaturaDados(obterDadosAtuais());
+
+  // Enquanto a consulta estava ocorrendo, o usuário pode
+  // ter começado a digitar. Nesse caso, não redesenha.
+  if(!podeAtualizarDuranteConsulta())return;
+
+  if(!houveMudanca)return;
+
+  colaboradores=novosColaboradores;
+  atividades=novasAtividades;
+  registros=novosRegistros;
+
+  desenharTabela();
+
+  const agora=new Date();
+  const horario=String(agora.getHours()).padStart(2,'0')+':'+
+                String(agora.getMinutes()).padStart(2,'0');
+
+  mostrarStatus(
+   'Lista sincronizada automaticamente às '+horario+
+   '. Alterações externas da planilha foram carregadas.',
+   'ok'
+  );
+
+ }catch(err){
+  // Uma falha na consulta não altera nem limpa a tela atual.
+  mostrarStatus(
+   'Não foi possível verificar as alterações da planilha. '+
+   'Os dados da tela foram preservados. Erro: '+err.message,
+   'erro'
+  );
+
+ }finally{
+  verificacaoAutomaticaEmCurso=false;
+ }
+}
+
+function podeAtualizarDuranteConsulta(){
+ if(document.visibilityState!=='visible')return false;
+ if(carregamentoEmCurso)return false;
+ if(ocupadas.size>0)return false;
+ if(haAlteracoesPendentes())return false;
+
+ const ativo=document.activeElement;
+ const corpo=$('corpoTabela');
+
+ if(
+  ativo&&
+  corpo&&
+  corpo.contains(ativo)&&
+  ativo.matches('input,select,textarea')
+ ){
+  return false;
+ }
+
+ return true;
+}
+
+function iniciarAtualizacaoAutomatica(){
+ if(timerAtualizacao)clearInterval(timerAtualizacao);
+
+ timerAtualizacao=setInterval(
+  verificarAtualizacaoAutomatica,
+  INTERVALO_ATUALIZACAO
+ );
+}
+
+/* =====================================================
+   GRAVAÇÃO AUTOMÁTICA DA QTD NOVA
    ===================================================== */
 
 async function processarQuantidadeAuto(e){
@@ -352,7 +506,10 @@ async function processarQuantidadeAuto(e){
 
     const atual=valorQuantidadeAtual(e);
 
-    if(atual.ok&&Math.abs(atual.valor-Number(e.quantidadeAplicada||0))>0.000000001){
+    if(
+     atual.ok&&
+     Math.abs(atual.valor-Number(e.quantidadeAplicada||0))>0.000000001
+    ){
      e.quantidadePendente=true;
     }
 
@@ -373,7 +530,7 @@ async function processarQuantidadeAuto(e){
 }
 
 /* =====================================================
-   SALVAR AUTOMATICAMENTE OS HORÁRIOS F:K
+   GRAVAÇÃO AUTOMÁTICA DOS HORÁRIOS F:K
    ===================================================== */
 
 async function processarHorariosAuto(e){
@@ -458,10 +615,6 @@ async function processarHorariosAuto(e){
  return e.promessaHorarios;
 }
 
-/* =====================================================
-   ESVAZIAR FILA DE GRAVAÇÃO
-   ===================================================== */
-
 async function salvarPendentesDaTela(){
  const lista=estados.slice();
 
@@ -487,19 +640,12 @@ async function salvarPendentesDaTela(){
 }
 
 /* =====================================================
-   NOVO: SALVAR QUANDO A PÁGINA FICAR OCULTA OU SAIR
+   PROTEÇÃO AO OCULTAR OU SAIR DA PÁGINA
    ===================================================== */
 
 async function salvarAoOcultar(motivo){
- if(!haAlteracoesPendentes()){
-  return true;
- }
-
- // Evita iniciar duas rotinas de gravação ao mesmo tempo
- // quando visibilitychange e pagehide ocorrerem juntos.
- if(promessaFlushFundo){
-  return promessaFlushFundo;
- }
+ if(!haAlteracoesPendentes())return true;
+ if(promessaFlushFundo)return promessaFlushFundo;
 
  promessaFlushFundo=(async()=>{
   try{
@@ -525,10 +671,7 @@ async function salvarAoOcultar(motivo){
    return ok;
 
   }catch(err){
-   mostrarStatus(
-    'Erro ao salvar antes de '+motivo+': '+err.message,
-    'erro'
-   );
+   mostrarStatus('Erro ao salvar antes de '+motivo+': '+err.message,'erro');
    return false;
 
   }finally{
@@ -539,25 +682,16 @@ async function salvarAoOcultar(motivo){
  return promessaFlushFundo;
 }
 
-/* Quando o usuário troca de aba, minimiza o navegador
-   ou coloca a página em segundo plano, tentamos concluir
-   as gravações pendentes. */
 document.addEventListener('visibilitychange',()=>{
  if(document.visibilityState==='hidden'){
   salvarAoOcultar('a página ficar em segundo plano');
  }
 });
 
-/* Última tentativa ao sair da página.
-   Os navegadores podem interromper operações assíncronas
-   durante o fechamento; portanto, esta tentativa não é
-   uma garantia absoluta de gravação. */
 window.addEventListener('pagehide',()=>{
  salvarAoOcultar('sair da página');
 });
 
-/* Se houver alterações pendentes, pede confirmação antes
-   de permitir o fechamento ou a navegação para outro local. */
 window.addEventListener('beforeunload',e=>{
  if(haAlteracoesPendentes()){
   e.preventDefault();
@@ -566,7 +700,7 @@ window.addEventListener('beforeunload',e=>{
 });
 
 /* =====================================================
-   CARREGAR A LISTA
+   CARREGAMENTO MANUAL DA LISTA
    ===================================================== */
 
 async function carregar(){
@@ -648,7 +782,7 @@ function desenharTabela(){
 
  colaboradores.forEach(nome=>{
   const doColaborador=registrosData
-   .filter(r=>textoIgual(r.colaborador,nome))
+   .filter(r=>textoIgual(nome,r.colaborador))
    .sort((a,b)=>Number(b.linha)-Number(a.linha));
 
   if(doColaborador.length){
@@ -668,7 +802,8 @@ function desenharTabela(){
    usados.add(Number(r.linha));
   });
 
- // Registros com horários primeiro; sem horários por último.
+ // Horários preenchidos primeiro, linhas sem horários por último.
+ // A classificação acontece somente na tela.
  linhas.sort((a,b)=>{
   const horarioA=temHorarioPreenchido(a.registro);
   const horarioB=temHorarioPreenchido(b.registro);
@@ -772,7 +907,7 @@ function criarLinhaTabela(nome,registro,tbody){
    const d=new Date();
 
    inp.value=
-    String(d.getHours()).padStart(2,'0')+':' +
+    String(d.getHours()).padStart(2,'0')+':'+
     String(d.getMinutes()).padStart(2,'0');
 
    inp.dispatchEvent(new Event('change',{bubbles:true}));
@@ -841,9 +976,7 @@ function criarLinhaTabela(nome,registro,tbody){
 
  estados.push(e);
 
- if(registro){
-  preencherEstado(e,registro);
- }
+ if(registro)preencherEstado(e,registro);
 
  qtd.addEventListener('input',()=>agendarQuantidadeAuto(e));
  qtd.addEventListener('change',()=>agendarQuantidadeAuto(e));
@@ -856,14 +989,22 @@ function criarLinhaTabela(nome,registro,tbody){
  menos.addEventListener('click',()=>{
   const atual=qtd.value.trim()===''?0:numero(qtd.value);
   const novo=Math.max(0,atual-1);
-  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+
+  qtd.value=Number.isInteger(novo)
+   ?String(novo)
+   :String(Number(novo.toFixed(3)));
+
   agendarQuantidadeAuto(e);
  });
 
  mais.addEventListener('click',()=>{
   const atual=qtd.value.trim()===''?0:numero(qtd.value);
   const novo=atual+1;
-  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+
+  qtd.value=Number.isInteger(novo)
+   ?String(novo)
+   :String(Number(novo.toFixed(3)));
+
   agendarQuantidadeAuto(e);
  });
 
@@ -1082,20 +1223,13 @@ async function salvar(e){
   }
 
   const qtdOk=await processarQuantidadeAuto(e);
-
-  if(!qtdOk){
-   throw new Error('Não foi possível concluir a gravação automática da quantidade.');
-  }
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade.');
 
   const horariosOk=await processarHorariosAuto(e);
-
-  if(!horariosOk){
-   throw new Error('Não foi possível concluir a gravação automática dos horários.');
-  }
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários.');
 
   const horariosFinais=horariosAtuais(e);
 
-  // Confirma F:K sem somar QTD NOVA novamente.
   const r=await api({
    action:'save',
    record:JSON.stringify({
@@ -1116,8 +1250,7 @@ async function salvar(e){
    e.registro.quantidade=r.totalQuantidade;
   }
 
-  // A quantidade já foi aplicada ao TOTAL E.
-  // Limpa o campo de novo lançamento sem alterar o total.
+  // QTD NOVA já foi aplicada ao TOTAL E; limpa apenas o campo.
   e.qtd.value='';
   e.quantidadeAplicada=0;
 
@@ -1178,25 +1311,17 @@ async function limpar(e){
 
  try{
   const qtdOk=await processarQuantidadeAuto(e);
-
-  if(!qtdOk){
-   throw new Error('Não foi possível concluir a gravação pendente da quantidade.');
-  }
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
 
   const horariosOk=await processarHorariosAuto(e);
-
-  if(!horariosOk){
-   throw new Error('Não foi possível concluir a gravação pendente dos horários.');
-  }
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários pendentes.');
 
   const r=await api({
    action:'limpar',
    record:JSON.stringify({linha:linha})
   });
 
-  if(!r||!r.ok){
-   throw new Error(r?.mensagem||'Não foi possível limpar.');
-  }
+  if(!r||!r.ok)throw new Error(r?.mensagem||'Não foi possível limpar.');
 
   mostrarStatus(r.mensagem||'Quantidade e horários limpos.','ok');
   await carregar();
@@ -1210,10 +1335,16 @@ async function limpar(e){
  }
 }
 
+/* =====================================================
+   INICIALIZAÇÃO
+   ===================================================== */
+
 $('atualizar').addEventListener('click',carregar);
 $('dataApontamento').value=hojeISO();
 $('dataApontamento').addEventListener('change',carregar);
+
 carregar();
+iniciarAtualizacaoAutomatica();
 </script>
 </body>
 </html>
