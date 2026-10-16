@@ -86,6 +86,7 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
   Use ＋ Nova atividade para criar uma nova linha para o mesmo colaborador.
   A quantidade é somada à coluna E e os horários são gravados em F:K.
   A coluna D e as colunas L:Y são preservadas.
+  Quantidades e horários são salvos automaticamente.
  </p>
 
  <div class="grade" style="grid-template-columns:minmax(220px,320px) minmax(160px,220px);align-items:end;margin:12px 0">
@@ -94,7 +95,7 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
    <input type="date" id="dataApontamento">
   </div>
   <div>
-   <button class="claro" id="atualizar">↻ Atualizar lista</button>
+   <button type="button" class="claro" id="atualizar">↻ Atualizar lista</button>
   </div>
  </div>
 
@@ -132,6 +133,7 @@ const API_URL='https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlT
 const $=id=>document.getElementById(id);
 
 let colaboradores=[],atividades=[],registros=[],ocupadas=new Set(),estados=[];
+let carregamentoEmCurso=false;
 
 function hojeISO(){
  const d=new Date();
@@ -194,21 +196,293 @@ function formatarHora(v){
  return m?String(m[1]).padStart(2,'0')+':'+m[2]:'';
 }
 
-/* NOVO: identifica se o registro possui pelo menos um horário em F:K. */
 function temHorarioPreenchido(registro){
  if(!registro)return false;
-
  const horarios=Array.isArray(registro.horarios)?registro.horarios:[];
+ return horarios.some(h=>h!==null&&h!==undefined&&String(h).trim()!=='');
+}
 
- return horarios.some(h=>{
-  return h!==null&&h!==undefined&&String(h).trim()!=='';
- });
+function valorQuantidadeAtual(e){
+ const texto=String(e.qtd.value==null?'':e.qtd.value).trim();
+
+ if(texto===''){
+  return {ok:true,valor:0};
+ }
+
+ const valor=Number(texto.replace(',','.'));
+
+ if(!Number.isFinite(valor)||valor<0){
+  return {ok:false,valor:0};
+ }
+
+ return {ok:true,valor:valor};
+}
+
+function horariosAtuais(e){
+ return e.horas.map(h=>h.value||'');
+}
+
+function horariosIguais(a,b){
+ return JSON.stringify(a||[])===JSON.stringify(b||[]);
+}
+
+function agendarQuantidadeAuto(e){
+ clearTimeout(e.timerQuantidade);
+ e.timerQuantidade=setTimeout(()=>{
+  e.timerQuantidade=null;
+  processarQuantidadeAuto(e);
+ },450);
+}
+
+function agendarHorariosAuto(e){
+ clearTimeout(e.timerHorarios);
+ e.timerHorarios=setTimeout(()=>{
+  e.timerHorarios=null;
+  processarHorariosAuto(e);
+ },350);
+}
+
+/* =====================================================
+   GRAVAÇÃO AUTOMÁTICA DA QTD NOVA
+   Calcula a diferença entre o valor desejado e o valor
+   já aplicado nesta tela. As chamadas são serializadas.
+   ===================================================== */
+
+async function processarQuantidadeAuto(e){
+ if(e.timerQuantidade){
+  clearTimeout(e.timerQuantidade);
+  e.timerQuantidade=null;
+ }
+
+ if(e.processandoQuantidade){
+  e.quantidadePendente=true;
+  return e.promessaQuantidade;
+ }
+
+ e.processandoQuantidade=true;
+
+ e.promessaQuantidade=(async()=>{
+  try{
+   do{
+    e.quantidadePendente=false;
+
+    if(!e.registro){
+     return true;
+    }
+
+    const leitura=valorQuantidadeAtual(e);
+
+    if(!leitura.ok){
+     throw new Error('Informe uma QTD NOVA válida, igual ou maior que zero.');
+    }
+
+    const desejada=leitura.valor;
+    const aplicada=Number(e.quantidadeAplicada||0);
+    const delta=desejada-aplicada;
+
+    if(Math.abs(delta)>0.000000001){
+     const linha=Number(e.registro.linha);
+     const chave='qtd:'+linha;
+
+     if(ocupadas.has(chave)){
+      throw new Error('Já existe uma gravação de quantidade em andamento nesta linha.');
+     }
+
+     ocupadas.add(chave);
+
+     try{
+      mostrarStatus('Salvando quantidade da linha '+linha+'...');
+
+      const r=await api({
+       action:'ajustarQuantidade',
+       record:JSON.stringify({
+        linha:linha,
+        delta:delta
+       })
+      });
+
+      if(!r||!r.ok){
+       throw new Error(r?.mensagem||'Não foi possível salvar a quantidade.');
+      }
+
+      e.quantidadeAplicada=desejada;
+      e.tdTotal.textContent=String(numero(r.totalQuantidade));
+      e.registro.quantidade=r.totalQuantidade;
+
+      mostrarStatus(
+       'Quantidade salva automaticamente. TOTAL E: '+r.totalQuantidade+'.',
+       'ok'
+      );
+
+     }finally{
+      ocupadas.delete(chave);
+     }
+    }
+
+    const atual=valorQuantidadeAtual(e);
+
+    if(atual.ok&&Math.abs(atual.valor-Number(e.quantidadeAplicada||0))>0.000000001){
+     e.quantidadePendente=true;
+    }
+
+   }while(e.quantidadePendente);
+
+   return true;
+
+  }catch(err){
+   mostrarStatus('Erro ao salvar quantidade automaticamente: '+err.message,'erro');
+   return false;
+
+  }finally{
+   e.processandoQuantidade=false;
+  }
+ })();
+
+ return e.promessaQuantidade;
+}
+
+/* =====================================================
+   GRAVAÇÃO AUTOMÁTICA DOS HORÁRIOS F:K
+   Envia os seis campos juntos para preservar os valores
+   e evitar que gravações rápidas se sobreponham.
+   ===================================================== */
+
+async function processarHorariosAuto(e){
+ if(e.timerHorarios){
+  clearTimeout(e.timerHorarios);
+  e.timerHorarios=null;
+ }
+
+ if(e.processandoHorarios){
+  e.horariosPendentes=true;
+  return e.promessaHorarios;
+ }
+
+ e.processandoHorarios=true;
+
+ e.promessaHorarios=(async()=>{
+  try{
+   do{
+    e.horariosPendentes=false;
+
+    if(!e.registro){
+     return true;
+    }
+
+    const horarios=horariosAtuais(e);
+
+    if(!horariosIguais(horarios,e.horariosAplicados)){
+     const linha=Number(e.registro.linha);
+     const chave='horarios:'+linha;
+
+     if(ocupadas.has(chave)){
+      throw new Error('Já existe uma gravação de horários em andamento nesta linha.');
+     }
+
+     ocupadas.add(chave);
+
+     try{
+      mostrarStatus('Salvando horários da linha '+linha+'...');
+
+      const r=await api({
+       action:'save',
+       record:JSON.stringify({
+        linha:linha,
+        horarios:horarios
+       })
+      });
+
+      if(!r||!r.ok){
+       throw new Error(r?.mensagem||'Não foi possível salvar os horários.');
+      }
+
+      e.horariosAplicados=horarios.slice();
+
+      if(r.totalQuantidade!==undefined){
+       e.tdTotal.textContent=String(numero(r.totalQuantidade));
+       e.registro.quantidade=r.totalQuantidade;
+      }
+
+      e.registro.horarios=horarios.slice();
+
+      mostrarStatus(
+       'Horários salvos automaticamente na linha '+linha+'.',
+       'ok'
+      );
+
+     }finally{
+      ocupadas.delete(chave);
+     }
+    }
+
+    const maisRecentes=horariosAtuais(e);
+
+    if(!horariosIguais(maisRecentes,e.horariosAplicados)){
+     e.horariosPendentes=true;
+    }
+
+   }while(e.horariosPendentes);
+
+   return true;
+
+  }catch(err){
+   mostrarStatus('Erro ao salvar horários automaticamente: '+err.message,'erro');
+   return false;
+
+  }finally{
+   e.processandoHorarios=false;
+  }
+ })();
+
+ return e.promessaHorarios;
+}
+
+/* Antes de atualizar ou reconstruir a tabela, conclui as
+   gravações pendentes para não perder o que foi digitado. */
+async function salvarPendentesDaTela(){
+ const lista=estados.slice();
+
+ for(const e of lista){
+  if(e.timerQuantidade){
+   clearTimeout(e.timerQuantidade);
+   e.timerQuantidade=null;
+  }
+
+  if(e.timerHorarios){
+   clearTimeout(e.timerHorarios);
+   e.timerHorarios=null;
+  }
+
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)return false;
+
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)return false;
+ }
+
+ return true;
 }
 
 async function carregar(){
- mostrarStatus('Carregando colaboradores e registros...');
+ if(carregamentoEmCurso)return;
+
+ carregamentoEmCurso=true;
 
  try{
+  if(estados.length){
+   const pendentesOk=await salvarPendentesDaTela();
+
+   if(!pendentesOk){
+    mostrarStatus(
+     'A lista não foi atualizada porque existe uma gravação pendente com erro. Corrija a conexão e tente novamente.',
+     'erro'
+    );
+    return;
+   }
+  }
+
+  mostrarStatus('Carregando colaboradores e registros...');
+
   const data=$('dataApontamento').value||hojeISO();
   const d=await api({action:'list',data:data});
 
@@ -224,8 +498,12 @@ async function carregar(){
    colaboradores.length+' colaborador(es) cadastrado(s). Exibindo produções de '+data+'.',
    'ok'
   );
+
  }catch(e){
   mostrarStatus('Erro ao carregar: '+e.message,'erro');
+
+ }finally{
+  carregamentoEmCurso=false;
  }
 }
 
@@ -235,8 +513,17 @@ function preencherEstado(e,r){
  e.sel.value=e.atividade;
  e.tdTotal.textContent=String(numero(r.quantidade));
 
+ if(typeof e.quantidadeAplicada!=='number'){
+  e.quantidadeAplicada=0;
+ }
+
  const hs=Array.isArray(r.horarios)?r.horarios:[];
- e.horas.forEach((h,i)=>h.value=formatarHora(hs[i]||''));
+
+ e.horas.forEach((h,i)=>{
+  h.value=formatarHora(hs[i]||'');
+ });
+
+ e.horariosAplicados=e.horas.map(h=>h.value||'');
 }
 
 function desenharTabela(){
@@ -254,8 +541,6 @@ function desenharTabela(){
  const linhas=[];
  const usados=new Set();
 
- // Uma linha inicial para cada colaborador cadastrado.
- // Registros adicionais do mesmo dia aparecem em linhas independentes.
  colaboradores.forEach(nome=>{
   const doColaborador=registrosData
    .filter(r=>textoIgual(r.colaborador,nome))
@@ -274,17 +559,13 @@ function desenharTabela(){
   .sort((a,b)=>Number(a.linha)-Number(b.linha))
   .forEach(r=>{
    if(usados.has(Number(r.linha)))return;
+
    linhas.push({colaborador:r.colaborador,registro:r});
    usados.add(Number(r.linha));
   });
 
- /*
-  * NOVO: classificação apenas na tela.
-  * Registros com pelo menos um horário ficam primeiro.
-  * Registros sem horário ficam por último.
-  * A ordenação é estável: a ordem original dentro de cada grupo
-  * é preservada. Nenhuma linha é movida na planilha.
-  */
+ // Registros com horários primeiro; registros sem horário por último.
+ // A classificação ocorre somente na tela.
  linhas.sort((a,b)=>{
   const horarioA=temHorarioPreenchido(a.registro);
   const horarioB=temHorarioPreenchido(b.registro);
@@ -306,6 +587,7 @@ function desenharTabela(){
 
 function criarLinhaTabela(nome,registro,tbody){
  const tr=document.createElement('tr');
+
  if(registro)tr.dataset.linha=registro.linha;
 
  const tdNome=document.createElement('td');
@@ -363,7 +645,12 @@ function criarLinhaTabela(nome,registro,tbody){
  function ajustar(delta){
   const atual=qtd.value.trim()===''?0:numero(qtd.value);
   const novo=Math.max(0,atual+delta);
-  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+
+  qtd.value=Number.isInteger(novo)
+   ?String(novo)
+   :String(Number(novo.toFixed(3)));
+
+  agendarQuantidadeAuto(e);
  }
 
  menos.addEventListener('click',()=>ajustar(-1));
@@ -394,8 +681,18 @@ function criarLinhaTabela(nome,registro,tbody){
 
   agora.addEventListener('click',()=>{
    const d=new Date();
-   inp.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-   mostrarStatus('Horário registrado no campo '+String.fromCharCode(70+i)+' de '+nome+'.','ok');
+
+   inp.value=
+    String(d.getHours()).padStart(2,'0')+':' +
+    String(d.getMinutes()).padStart(2,'0');
+
+   inp.dispatchEvent(new Event('change',{bubbles:true}));
+
+   mostrarStatus(
+    'Horário registrado no campo '+String.fromCharCode(70+i)+
+    ' de '+nome+'. Salvando automaticamente...',
+    'ok'
+   );
   });
 
   grupo.append(inp,agora);
@@ -406,6 +703,7 @@ function criarLinhaTabela(nome,registro,tbody){
 
  const tdSalvar=document.createElement('td');
  const btnSalvar=document.createElement('button');
+ btnSalvar.type='button';
  btnSalvar.className='salvar';
  btnSalvar.textContent='💾 Salvar';
  tdSalvar.appendChild(btnSalvar);
@@ -413,6 +711,7 @@ function criarLinhaTabela(nome,registro,tbody){
 
  const tdLimpar=document.createElement('td');
  const btnLimpar=document.createElement('button');
+ btnLimpar.type='button';
  btnLimpar.className='limpar';
  btnLimpar.textContent='Limpar registro';
  tdLimpar.appendChild(btnLimpar);
@@ -420,6 +719,7 @@ function criarLinhaTabela(nome,registro,tbody){
 
  const tdNovaAtividade=document.createElement('td');
  const btnNova=document.createElement('button');
+ btnNova.type='button';
  btnNova.className='btn-duplicar';
  btnNova.textContent='＋ Nova atividade';
  btnNova.title='Criar uma nova linha de produção para este colaborador';
@@ -427,13 +727,39 @@ function criarLinhaTabela(nome,registro,tbody){
  tr.appendChild(tdNovaAtividade);
 
  const e={
-  colaborador:nome,atividade:'',registro:null,sel,qtd,tdTotal,horas,
-  btnSalvar,btnLimpar,btnNova
+  colaborador:nome,
+  atividade:'',
+  registro:null,
+  sel,
+  qtd,
+  tdTotal,
+  horas,
+  btnSalvar,
+  btnLimpar,
+  btnNova,
+  quantidadeAplicada:0,
+  timerQuantidade:null,
+  timerHorarios:null,
+  processandoQuantidade:false,
+  processandoHorarios:false,
+  quantidadePendente:false,
+  horariosPendentes:false,
+  promessaQuantidade:null,
+  promessaHorarios:null,
+  horariosAplicados:['','','','','','']
  };
 
  estados.push(e);
 
  if(registro)preencherEstado(e,registro);
+
+ qtd.addEventListener('input',()=>agendarQuantidadeAuto(e));
+ qtd.addEventListener('change',()=>agendarQuantidadeAuto(e));
+
+ horas.forEach(h=>{
+  h.addEventListener('input',()=>agendarHorariosAuto(e));
+  h.addEventListener('change',()=>agendarHorariosAuto(e));
+ });
 
  sel.addEventListener('change',()=>alterarServico(e));
  btnSalvar.addEventListener('click',()=>salvar(e));
@@ -443,7 +769,7 @@ function criarLinhaTabela(nome,registro,tbody){
  tbody.appendChild(tr);
 }
 
-/* Cria uma linha independente; não reutiliza nem altera a linha anterior. */
+/* Cria uma linha independente; não altera a linha anterior. */
 async function novaAtividade(e){
  const servico=String(e.sel.value||'').trim();
  const colaborador=String(e.colaborador||'').trim();
@@ -472,6 +798,12 @@ async function novaAtividade(e){
  e.btnNova.disabled=true;
 
  try{
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
+
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários pendentes.');
+
   mostrarStatus('Criando uma nova atividade para '+colaborador+'...');
 
   const novoRegistro={
@@ -497,6 +829,7 @@ async function novaAtividade(e){
 
  }catch(err){
   mostrarStatus('Erro ao criar nova atividade: '+err.message,'erro');
+
  }finally{
   ocupadas.delete(chave);
   e.btnNova.disabled=false;
@@ -519,6 +852,13 @@ async function alterarServico(e){
  e.sel.disabled=true;
 
  try{
+  // Termina as gravações pendentes antes de alterar o serviço.
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
+
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários pendentes.');
+
   let r;
 
   if(e.registro){
@@ -529,6 +869,7 @@ async function alterarServico(e){
      atividade:servico
     })
    });
+
   }else{
    const data=$('dataApontamento').value||hojeISO();
 
@@ -543,7 +884,9 @@ async function alterarServico(e){
    });
   }
 
-  if(!r||!r.ok)throw new Error(r?.mensagem||'Não foi possível atualizar o serviço.');
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'Não foi possível atualizar o serviço.');
+  }
 
   if(r.registro){
    preencherEstado(e,r.registro);
@@ -557,11 +900,19 @@ async function alterarServico(e){
 
  }catch(err){
   mostrarStatus('Erro ao alterar serviço: '+err.message,'erro');
+
  }finally{
   ocupadas.delete(chave);
   e.sel.disabled=false;
  }
 }
+
+/* =====================================================
+   SALVAR
+   A quantidade já foi aplicada automaticamente.
+   Aqui salvamos/confirmamos somente os horários, evitando
+   somar QTD NOVA pela segunda vez.
+   ===================================================== */
 
 async function salvar(e){
  if(!e.atividade&&!e.sel.value){
@@ -578,45 +929,75 @@ async function salvar(e){
   }
  }
 
- const t=String(e.qtd.value||'').trim();
- const q=t===''?0:Number(t.replace(',','.'));
+ const leitura=valorQuantidadeAtual(e);
 
- if(t&&(!Number.isFinite(q)||q<0)){
+ if(!leitura.ok){
   alert('Informe uma quantidade válida, igual ou maior que zero.');
   return;
  }
 
- const horarios=e.horas.map(h=>h.value||'');
+ const qtdAtual=leitura.valor;
+ const horarios=horariosAtuais(e);
 
- if(q===0&&!horarios.some(Boolean)){
+ if(qtdAtual===0&&!horarios.some(Boolean)){
   alert('Informe uma quantidade maior que zero ou preencha algum horário.');
   return;
  }
 
  const linha=Number(e.registro.linha);
  const chave='salvar:'+linha;
+
  if(ocupadas.has(chave))return;
 
  ocupadas.add(chave);
  e.btnSalvar.disabled=true;
 
  try{
+  const qtdOk=await processarQuantidadeAuto(e);
+
+  if(!qtdOk){
+   throw new Error('Não foi possível concluir o salvamento automático da quantidade.');
+  }
+
+  const horariosOk=await processarHorariosAuto(e);
+
+  if(!horariosOk){
+   throw new Error('Não foi possível concluir o salvamento automático dos horários.');
+  }
+
+  // Confirma os horários, sem incrementar novamente a coluna E.
+  const horariosFinais=horariosAtuais(e);
+
   const r=await api({
-   action:q>0?'incrementar':'save',
-   record:JSON.stringify(
-    q>0
-     ?{linha:linha,quantidadeAdicionar:q,horarios:horarios}
-     :{linha:linha,horarios:horarios}
-   )
+   action:'save',
+   record:JSON.stringify({
+    linha:linha,
+    horarios:horariosFinais
+   })
   });
 
-  if(!r||!r.ok)throw new Error(r?.mensagem||'O salvamento não foi confirmado.');
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'O salvamento não foi confirmado.');
+  }
 
-  mostrarStatus(r.mensagem||'Dados salvos na linha '+linha+'.','ok');
+  e.horariosAplicados=horariosFinais.slice();
+  e.registro.horarios=horariosFinais.slice();
+
+  if(r.totalQuantidade!==undefined){
+   e.tdTotal.textContent=String(numero(r.totalQuantidade));
+   e.registro.quantidade=r.totalQuantidade;
+  }
+
+  mostrarStatus(
+   r.mensagem||'Dados salvos na linha '+linha+'.',
+   'ok'
+  );
+
   await carregar();
 
  }catch(err){
   mostrarStatus('Erro ao salvar: '+err.message,'erro');
+
  }finally{
   ocupadas.delete(chave);
   e.btnSalvar.disabled=false;
@@ -627,6 +1008,7 @@ async function limpar(e){
  if(!e.registro){
   e.qtd.value='';
   e.horas.forEach(h=>h.value='');
+
   alert('Esta linha ainda não está vinculada a uma produção. Selecione um serviço primeiro.');
   return;
  }
@@ -638,24 +1020,41 @@ async function limpar(e){
 
  const linha=Number(e.registro.linha);
  const chave='limpar:'+linha;
+
  if(ocupadas.has(chave))return;
 
  ocupadas.add(chave);
  e.btnLimpar.disabled=true;
 
  try{
+  // Aguarda gravações automáticas em andamento antes de limpar.
+  const qtdOk=await processarQuantidadeAuto(e);
+
+  if(!qtdOk){
+   throw new Error('Não foi possível concluir a gravação pendente da quantidade.');
+  }
+
+  const horariosOk=await processarHorariosAuto(e);
+
+  if(!horariosOk){
+   throw new Error('Não foi possível concluir a gravação pendente dos horários.');
+  }
+
   const r=await api({
    action:'limpar',
    record:JSON.stringify({linha:linha})
   });
 
-  if(!r||!r.ok)throw new Error(r?.mensagem||'Não foi possível limpar.');
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'Não foi possível limpar.');
+  }
 
   mostrarStatus(r.mensagem||'Quantidade e horários limpos.','ok');
   await carregar();
 
  }catch(err){
   mostrarStatus('Erro ao limpar: '+err.message,'erro');
+
  }finally{
   ocupadas.delete(chave);
   e.btnLimpar.disabled=false;
