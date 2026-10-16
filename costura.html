@@ -244,8 +244,6 @@ function agendarHorariosAuto(e){
 
 /* =====================================================
    GRAVAÇÃO AUTOMÁTICA DA QTD NOVA
-   Calcula a diferença entre o valor desejado e o valor
-   já aplicado nesta tela. As chamadas são serializadas.
    ===================================================== */
 
 async function processarQuantidadeAuto(e){
@@ -266,9 +264,7 @@ async function processarQuantidadeAuto(e){
    do{
     e.quantidadePendente=false;
 
-    if(!e.registro){
-     return true;
-    }
+    if(!e.registro)return true;
 
     const leitura=valorQuantidadeAtual(e);
 
@@ -295,10 +291,7 @@ async function processarQuantidadeAuto(e){
 
       const r=await api({
        action:'ajustarQuantidade',
-       record:JSON.stringify({
-        linha:linha,
-        delta:delta
-       })
+       record:JSON.stringify({linha:linha,delta:delta})
       });
 
       if(!r||!r.ok){
@@ -343,8 +336,6 @@ async function processarQuantidadeAuto(e){
 
 /* =====================================================
    GRAVAÇÃO AUTOMÁTICA DOS HORÁRIOS F:K
-   Envia os seis campos juntos para preservar os valores
-   e evitar que gravações rápidas se sobreponham.
    ===================================================== */
 
 async function processarHorariosAuto(e){
@@ -365,9 +356,7 @@ async function processarHorariosAuto(e){
    do{
     e.horariosPendentes=false;
 
-    if(!e.registro){
-     return true;
-    }
+    if(!e.registro)return true;
 
     const horarios=horariosAtuais(e);
 
@@ -386,10 +375,7 @@ async function processarHorariosAuto(e){
 
       const r=await api({
        action:'save',
-       record:JSON.stringify({
-        linha:linha,
-        horarios:horarios
-       })
+       record:JSON.stringify({linha:linha,horarios:horarios})
       });
 
       if(!r||!r.ok){
@@ -405,10 +391,7 @@ async function processarHorariosAuto(e){
 
       e.registro.horarios=horarios.slice();
 
-      mostrarStatus(
-       'Horários salvos automaticamente na linha '+linha+'.',
-       'ok'
-      );
+      mostrarStatus('Horários salvos automaticamente na linha '+linha+'.','ok');
 
      }finally{
       ocupadas.delete(chave);
@@ -437,8 +420,6 @@ async function processarHorariosAuto(e){
  return e.promessaHorarios;
 }
 
-/* Antes de atualizar ou reconstruir a tabela, conclui as
-   gravações pendentes para não perder o que foi digitado. */
 async function salvarPendentesDaTela(){
  const lista=estados.slice();
 
@@ -464,7 +445,7 @@ async function salvarPendentesDaTela(){
 }
 
 async function carregar(){
- if(carregamentoEmCurso)return;
+ if(carregamentoEmCurso)return false;
 
  carregamentoEmCurso=true;
 
@@ -477,7 +458,7 @@ async function carregar(){
      'A lista não foi atualizada porque existe uma gravação pendente com erro. Corrija a conexão e tente novamente.',
      'erro'
     );
-    return;
+    return false;
    }
   }
 
@@ -499,8 +480,11 @@ async function carregar(){
    'ok'
   );
 
+  return true;
+
  }catch(e){
   mostrarStatus('Erro ao carregar: '+e.message,'erro');
+  return false;
 
  }finally{
   carregamentoEmCurso=false;
@@ -512,10 +496,6 @@ function preencherEstado(e,r){
  e.atividade=r.atividade||'';
  e.sel.value=e.atividade;
  e.tdTotal.textContent=String(numero(r.quantidade));
-
- if(typeof e.quantidadeAplicada!=='number'){
-  e.quantidadeAplicada=0;
- }
 
  const hs=Array.isArray(r.horarios)?r.horarios:[];
 
@@ -564,8 +544,7 @@ function desenharTabela(){
    usados.add(Number(r.linha));
   });
 
- // Registros com horários primeiro; registros sem horário por último.
- // A classificação ocorre somente na tela.
+ // Registros com horários primeiro; sem horário por último.
  linhas.sort((a,b)=>{
   const horarioA=temHorarioPreenchido(a.registro);
   const horarioB=temHorarioPreenchido(b.registro);
@@ -642,20 +621,6 @@ function criarLinhaTabela(nome,registro,tbody){
  tdNova.appendChild(controle);
  tr.appendChild(tdNova);
 
- function ajustar(delta){
-  const atual=qtd.value.trim()===''?0:numero(qtd.value);
-  const novo=Math.max(0,atual+delta);
-
-  qtd.value=Number.isInteger(novo)
-   ?String(novo)
-   :String(Number(novo.toFixed(3)));
-
-  agendarQuantidadeAuto(e);
- }
-
- menos.addEventListener('click',()=>ajustar(-1));
- mais.addEventListener('click',()=>ajustar(1));
-
  const tdTotal=document.createElement('td');
  tdTotal.className='total';
  tdTotal.textContent=registro?String(numero(registro.quantidade)):'—';
@@ -706,6 +671,7 @@ function criarLinhaTabela(nome,registro,tbody){
  btnSalvar.type='button';
  btnSalvar.className='salvar';
  btnSalvar.textContent='💾 Salvar';
+ btnSalvar.title='Confirmar e garantir a gravação da quantidade e dos horários';
  tdSalvar.appendChild(btnSalvar);
  tr.appendChild(tdSalvar);
 
@@ -751,7 +717,9 @@ function criarLinhaTabela(nome,registro,tbody){
 
  estados.push(e);
 
- if(registro)preencherEstado(e,registro);
+ if(registro){
+  preencherEstado(e,registro);
+ }
 
  qtd.addEventListener('input',()=>agendarQuantidadeAuto(e));
  qtd.addEventListener('change',()=>agendarQuantidadeAuto(e));
@@ -766,10 +734,27 @@ function criarLinhaTabela(nome,registro,tbody){
  btnLimpar.addEventListener('click',()=>limpar(e));
  btnNova.addEventListener('click',()=>novaAtividade(e));
 
+ menos.addEventListener('click',()=>{
+  const atual=qtd.value.trim()===''?0:numero(qtd.value);
+  const novo=Math.max(0,atual-1);
+  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+  agendarQuantidadeAuto(e);
+ });
+
+ mais.addEventListener('click',()=>{
+  const atual=qtd.value.trim()===''?0:numero(qtd.value);
+  const novo=atual+1;
+  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+  agendarQuantidadeAuto(e);
+ });
+
  tbody.appendChild(tr);
 }
 
-/* Cria uma linha independente; não altera a linha anterior. */
+/* =====================================================
+   NOVA ATIVIDADE
+   ===================================================== */
+
 async function novaAtividade(e){
  const servico=String(e.sel.value||'').trim();
  const colaborador=String(e.colaborador||'').trim();
@@ -836,6 +821,10 @@ async function novaAtividade(e){
  }
 }
 
+/* =====================================================
+   ALTERAR SERVIÇO
+   ===================================================== */
+
 async function alterarServico(e){
  const servico=String(e.sel.value||'').trim();
 
@@ -852,7 +841,6 @@ async function alterarServico(e){
  e.sel.disabled=true;
 
  try{
-  // Termina as gravações pendentes antes de alterar o serviço.
   const qtdOk=await processarQuantidadeAuto(e);
   if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
 
@@ -908,10 +896,12 @@ async function alterarServico(e){
 }
 
 /* =====================================================
-   SALVAR
-   A quantidade já foi aplicada automaticamente.
-   Aqui salvamos/confirmamos somente os horários, evitando
-   somar QTD NOVA pela segunda vez.
+   SALVAR / CONFIRMAR
+   - Aguarda a quantidade automática.
+   - Aguarda os horários automáticos.
+   - Grava os horários uma última vez como confirmação.
+   - NÃO incrementa novamente a coluna E.
+   - Limpa QTD NOVA para permitir um novo lançamento.
    ===================================================== */
 
 async function salvar(e){
@@ -936,10 +926,10 @@ async function salvar(e){
   return;
  }
 
- const qtdAtual=leitura.valor;
  const horarios=horariosAtuais(e);
+ const totalExistente=numero(e.registro.quantidade);
 
- if(qtdAtual===0&&!horarios.some(Boolean)){
+ if(leitura.valor===0&&!horarios.some(Boolean)&&totalExistente===0){
   alert('Informe uma quantidade maior que zero ou preencha algum horário.');
   return;
  }
@@ -950,24 +940,52 @@ async function salvar(e){
  if(ocupadas.has(chave))return;
 
  ocupadas.add(chave);
- e.btnSalvar.disabled=true;
+
+ /*
+  * Desativa os controles desta linha durante a confirmação.
+  * Isso evita que o usuário altere dados no meio da gravação.
+  */
+ const linhaTabela=e.sel.closest('tr');
+ const controles=linhaTabela
+  ?Array.from(linhaTabela.querySelectorAll('input,select,button'))
+  :[];
+
+ const estadosDesabilitados=controles.map(c=>c.disabled);
+
+ controles.forEach(c=>c.disabled=true);
 
  try{
+  mostrarStatus('Conferindo e salvando os dados da linha '+linha+'...');
+
+  if(e.timerQuantidade){
+   clearTimeout(e.timerQuantidade);
+   e.timerQuantidade=null;
+  }
+
+  if(e.timerHorarios){
+   clearTimeout(e.timerHorarios);
+   e.timerHorarios=null;
+  }
+
   const qtdOk=await processarQuantidadeAuto(e);
 
   if(!qtdOk){
-   throw new Error('Não foi possível concluir o salvamento automático da quantidade.');
+   throw new Error(
+    'Não foi possível concluir a gravação automática da quantidade.'
+   );
   }
 
   const horariosOk=await processarHorariosAuto(e);
 
   if(!horariosOk){
-   throw new Error('Não foi possível concluir o salvamento automático dos horários.');
+   throw new Error(
+    'Não foi possível concluir a gravação automática dos horários.'
+   );
   }
 
-  // Confirma os horários, sem incrementar novamente a coluna E.
   const horariosFinais=horariosAtuais(e);
 
+  // Salva somente F:K. Não soma a QTD NOVA outra vez.
   const r=await api({
    action:'save',
    record:JSON.stringify({
@@ -977,7 +995,7 @@ async function salvar(e){
   });
 
   if(!r||!r.ok){
-   throw new Error(r?.mensagem||'O salvamento não foi confirmado.');
+   throw new Error(r?.mensagem||'O salvamento não foi confirmado pelo servidor.');
   }
 
   e.horariosAplicados=horariosFinais.slice();
@@ -988,21 +1006,62 @@ async function salvar(e){
    e.registro.quantidade=r.totalQuantidade;
   }
 
-  mostrarStatus(
-   r.mensagem||'Dados salvos na linha '+linha+'.',
-   'ok'
-  );
+  /*
+   * A quantidade que estava em QTD NOVA já foi aplicada ao total.
+   * Zera somente o campo de lançamento e a sua referência local.
+   * O TOTAL E da planilha permanece acumulado.
+   */
+  e.qtd.value='';
+  e.quantidadeAplicada=0;
 
-  await carregar();
+  /*
+   * Atualiza a lista para refletir a ordem dos horários e, depois,
+   * apresenta a confirmação. Se a atualização falhar, informa
+   * que a gravação foi confirmada, mas a tela precisa ser atualizada.
+   */
+  const listaAtualizada=await carregar();
+
+  if(listaAtualizada){
+   const totalConfirmado=numero(
+    r.totalQuantidade!==undefined
+     ?r.totalQuantidade
+     :e.registro.quantidade
+   );
+
+   mostrarStatus(
+    '✅ CONFIRMADO! Quantidade e horários da linha '+linha+
+    ' foram salvos na planilha. TOTAL E: '+totalConfirmado+
+    '. A QTD NOVA está pronta para um novo lançamento.',
+    'ok'
+   );
+
+  }else{
+   mostrarStatus(
+    '✅ O servidor confirmou a gravação da linha '+linha+
+    ', mas não foi possível atualizar a lista na tela. '+
+    'Clique em "Atualizar lista" para recarregar os dados.',
+    'erro'
+   );
+  }
 
  }catch(err){
-  mostrarStatus('Erro ao salvar: '+err.message,'erro');
+  mostrarStatus(
+   'Erro ao confirmar a gravação da linha '+linha+': '+err.message,
+   'erro'
+  );
 
  }finally{
   ocupadas.delete(chave);
-  e.btnSalvar.disabled=false;
+
+  controles.forEach((c,i)=>{
+   c.disabled=estadosDesabilitados[i];
+  });
  }
 }
+
+/* =====================================================
+   LIMPAR REGISTRO
+   ===================================================== */
 
 async function limpar(e){
  if(!e.registro){
@@ -1027,7 +1086,6 @@ async function limpar(e){
  e.btnLimpar.disabled=true;
 
  try{
-  // Aguarda gravações automáticas em andamento antes de limpar.
   const qtdOk=await processarQuantidadeAuto(e);
 
   if(!qtdOk){
