@@ -91,13 +91,16 @@ tbody tr:nth-child(even) td:first-child{background:#e5edf9}
   Quantidades e horários são salvos automaticamente.
  </p>
 
- <div class="grade" style="grid-template-columns:minmax(220px,320px) minmax(160px,220px);align-items:end;margin:12px 0">
+ <div class="grade" style="grid-template-columns:minmax(220px,320px) minmax(160px,220px) minmax(150px,200px);align-items:end;margin:12px 0">
   <div>
    <label for="dataApontamento">Data da produção</label>
    <input type="date" id="dataApontamento">
   </div>
   <div>
    <button type="button" class="claro" id="atualizar">↻ Atualizar lista</button>
+  </div>
+  <div>
+   <button type="button" class="azul" id="abrirRelatorios" onclick="window.location.href='relatorio.html'">📊 Relatórios</button>
   </div>
  </div>
 
