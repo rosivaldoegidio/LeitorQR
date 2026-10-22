@@ -60,7 +60,7 @@ function prepararDados(){
   }
 
   if(!nome) nome='(sem identificação)';
-  const chave=nome.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleUpperCase('pt-BR').replace(/\\s+/g,' ').trim();
+  const chave=nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
   if(!mapa.has(chave)){
    mapa.set(chave,{nome:nome,qtd:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
