@@ -12,6 +12,14 @@
 <header><div><h1>📊 Relatórios de Produção</h1><p>Indicadores de Costura, Dobra e Pacote</p></div><button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button></header>
 <main>
  <div class="topo"><div><div id="periodo" class="periodo">Período da planilha</div><div id="status" class="status">Carregando dados da planilha...</div></div><div class="abas"><button class="btn aba ativa" data-setor="costura">Costura</button><button class="btn aba" data-setor="dobra">Dobra</button><button class="btn aba" data-setor="pacote">Pacote</button><button class="btn aba" id="recarregar">↻ Atualizar</button></div></div>
+ <section class="painel" style="margin-bottom:16px;padding:14px 17px">
+  <div style="display:flex;align-items:end;gap:12px;flex-wrap:wrap">
+   <div><label for="dataInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA INICIAL</label><input id="dataInicio" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"></div>
+   <div><label for="dataFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA FINAL</label><input id="dataFim" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"></div>
+   <button class="btn aba ativa" id="aplicarPeriodo">Aplicar período</button>
+   <span style="font-size:12px;color:var(--muted)">Escolha as datas e clique em “Aplicar período”.</span>
+  </div>
+ </section>
  <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe">Soma do setor selecionado</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média de todos os registros da planilha</div></article></section>
  <section class="graficos"><article class="painel"><h2 id="tituloUnidades">Produção por serviço</h2><p class="sub">Quantidade produzida em cada item</p><div class="canvas-wrap"><canvas id="graficoUnidades"></canvas></div></article><article class="painel"><h2>Ritmo por hora</h2><p class="sub">Ritmo médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoRitmo"></canvas></div></article><article class="painel" id="painelDesempenho"><h2>Desempenho por item</h2><p class="sub">Desempenho médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoDesempenho"></canvas></div></article><article class="painel"><h2>Resumo dos indicadores</h2><p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p><div class="canvas-wrap"><canvas id="graficoResumo"></canvas></div></article></section>
  <section class="painel tabela-painel"><h2>Dados detalhados</h2><p class="sub">Tabela com os valores que alimentam os gráficos</p><div id="tabela" class="tabela-wrap"><div class="vazio">Aguardando dados...</div></div></section>
@@ -24,7 +32,7 @@ const cache={};let setorAtual='costura';let charts=[];
 const $=id=>document.getElementById(id);
 const fmtN=n=>n===null||n===undefined||n===''?'—':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
 const fmtPct=n=>n===null||n===undefined?'—':(Number(n)*100).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%';
-function chamarApi(){return new Promise((resolve,reject)=>{if(REPORT_API_URL.startsWith('COLE_AQUI')){reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));return;}const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');let done=false;const fim=(err,d)=>{if(done)return;done=true;clearTimeout(t);delete window[cb];s.remove();err?reject(err):resolve(d)};const t=setTimeout(()=>fim(new Error('Tempo esgotado ao consultar a planilha.')),30000);window[cb]=d=>fim(null,d);s.onerror=()=>fim(new Error('Falha de conexão com a API de relatórios.'));s.src=REPORT_API_URL+'?callback='+encodeURIComponent(cb)+'&t='+Date.now();document.body.appendChild(s);});}
+function chamarApi(inicio='',fim=''){return new Promise((resolve,reject)=>{if(REPORT_API_URL.startsWith('COLE_AQUI')){reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));return;}const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');let done=false;const fimReq=(err,d)=>{if(done)return;done=true;clearTimeout(t);delete window[cb];s.remove();err?reject(err):resolve(d)};const t=setTimeout(()=>fimReq(new Error('Tempo esgotado ao consultar a planilha.')),30000);window[cb]=d=>fimReq(null,d);s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));const qs=new URLSearchParams({callback:cb,t:String(Date.now())});if(inicio&&fim){qs.set('inicio',inicio);qs.set('fim',fim);}s.src=REPORT_API_URL+'?'+qs.toString();document.body.appendChild(s);});}
 function destroyCharts(){charts.forEach(c=>c.destroy());charts=[];}
 function prepararDados(){
  const origem=cache[setorAtual]||[];
@@ -178,6 +186,29 @@ function render(){
 }
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function selecionarSetor(s){setorAtual=s;document.querySelectorAll('[data-setor]').forEach(b=>b.classList.toggle('ativa',b.dataset.setor===s));render();}
-async function carregar(){ $('status').textContent='Consultando dados atualizados da planilha...';try{const d=await chamarApi();if(!d||!d.ok)throw new Error(d?.mensagem||'A API não retornou os dados.');Object.assign(cache,d.setores||{});const p=d.periodo||{};$('periodo').textContent='Período: '+(p.inicio||'não informado')+' a '+(p.fim||'não informado');$('status').textContent='Dados carregados da planilha. Última consulta: '+new Date().toLocaleTimeString('pt-BR');render();}catch(e){$('status').textContent='Não foi possível carregar os relatórios: '+e.message;$('tabela').innerHTML='<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';}}
-document.querySelectorAll('[data-setor]').forEach(b=>b.addEventListener('click',()=>selecionarSetor(b.dataset.setor)));$('recarregar').addEventListener('click',carregar);carregar();
+async function carregar(usandoDatasDigitadas=false){
+ $('status').textContent='Consultando dados atualizados da planilha...';
+ try{
+  const inicio=usandoDatasDigitadas?$('dataInicio').value:'';
+  const fim=usandoDatasDigitadas?$('dataFim').value:'';
+  if(usandoDatasDigitadas&&(!inicio||!fim))throw new Error('Informe a data inicial e a data final.');
+  if(usandoDatasDigitadas&&inicio>fim)throw new Error('A data inicial não pode ser posterior à data final.');
+  const d=await chamarApi(inicio,fim);
+  if(!d||!d.ok)throw new Error(d?.mensagem||'A API não retornou os dados.');
+  Object.assign(cache,d.setores||{});
+  const p=d.periodo||{};
+  if(p.inicio)$('dataInicio').value=p.inicio;
+  if(p.fim)$('dataFim').value=p.fim;
+  $('periodo').textContent='Período: '+(p.inicio||'não informado')+' a '+(p.fim||'não informado');
+  $('status').textContent='Dados carregados da planilha. Última consulta: '+new Date().toLocaleTimeString('pt-BR');
+  render();
+ }catch(e){
+  $('status').textContent='Não foi possível carregar os relatórios: '+e.message;
+  if(!document.querySelector('#tabela table'))$('tabela').innerHTML='<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
+ }
+}
+document.querySelectorAll('[data-setor]').forEach(b=>b.addEventListener('click',()=>selecionarSetor(b.dataset.setor)));
+$('recarregar').addEventListener('click',()=>carregar(true));
+$('aplicarPeriodo').addEventListener('click',()=>carregar(true));
+carregar();
 </script></body></html>
