@@ -60,7 +60,9 @@ function prepararDados(){
   }
 
   if(!nome) nome='(sem identificação)';
-  const chave=nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
+  // Chave de agrupamento: iguala apenas maiúsculas/minúsculas e espaços.
+  // Não remove partes do nome; produtos diferentes permanecem separados.
+  const chave=nome.toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
   if(!mapa.has(chave)){
    mapa.set(chave,{nome:nome,qtd:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
