@@ -150,7 +150,7 @@ function render(){
  const resumoData=[
   dados.length,
   somar('qtd'),
-  ritmos.length?ritmos.reduce((a,b)=>a+Number(b),0)/ritmos.length:0
+  ritmosOriginais.length?ritmosOriginais.reduce((a,b)=>a+Number(b),0)/ritmosOriginais.length:0
  ];
  criarChart('graficoResumo','bar',resumoLabels,[
   {label:'Indicador',data:resumoData,backgroundColor:['#f59e0b','#2879d0','#16a078'],borderRadius:6}
