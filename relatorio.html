@@ -73,11 +73,12 @@ function prepararDados(){
   const chave=nome.toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
   if(!mapa.has(chave)){
-   mapa.set(chave,{nome:nome,qtd:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
+   mapa.set(chave,{nome:nome,qtd:0,caixasSoma:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
   }
   const item=mapa.get(chave);
 
   if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
+  if(setorAtual==='dobra' && lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.caixasSoma+=Number(lote);
   if(lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.loteValores.push(Number(lote));
   if(ritmo!==null && ritmo!=='' && Number.isFinite(Number(ritmo))) item.ritmoValores.push(Number(ritmo));
   if(desempenho!==null && desempenho!=='' && Number.isFinite(Number(desempenho))) item.desempenhoValores.push(Number(desempenho));
@@ -88,7 +89,9 @@ function prepararDados(){
   nome:item.nome,
   servico:item.servico,
   qtd:item.qtd,
-  // Não somamos lotes: exibimos a quantidade de lotes distintos quando disponível.
+  // Dobra: soma as caixas registradas em todas as linhas do produto.
+  // Costura/Pacote: mantém a contagem de lotes distintos já existente.
+  caixas:item.caixasSoma,
   lote:item.loteValores.length ? new Set(item.loteValores.map(String)).size : null,
   ritmo:item.ritmoValores.length ? item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length : null,
   desempenho:item.desempenhoValores.length ? item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length : null,
@@ -165,7 +168,7 @@ function render(){
  ]);
 
  const colunas=setorAtual==='dobra'?
-  [['Produto','nome'],['Caixas','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
+  [['Produto','nome'],['Caixas','caixas'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
   setorAtual==='costura'?
   [['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
   [['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo']];
@@ -177,7 +180,7 @@ function render(){
   h+='<tr>'+colunas.map(c=>{
    let v=r[c[1]];
    if(c[1]==='desempenho') v=fmtPct(v);
-   else if(['qtd','lote','ritmo'].includes(c[1])) v=fmtN(v);
+   else if(['qtd','lote','caixas','ritmo'].includes(c[1])) v=fmtN(v);
    return '<td>'+esc(v===null||v===undefined?'—':v)+'</td>';
   }).join('')+'</tr>';
  });
