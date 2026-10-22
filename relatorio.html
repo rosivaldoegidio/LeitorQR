@@ -12,7 +12,7 @@
 <header><div><h1>📊 Relatórios de Produção</h1><p>Indicadores de Costura, Dobra e Pacote</p></div><button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button></header>
 <main>
  <div class="topo"><div><div id="periodo" class="periodo">Período da planilha</div><div id="status" class="status">Carregando dados da planilha...</div></div><div class="abas"><button class="btn aba ativa" data-setor="costura">Costura</button><button class="btn aba" data-setor="dobra">Dobra</button><button class="btn aba" data-setor="pacote">Pacote</button><button class="btn aba" id="recarregar">↻ Atualizar</button></div></div>
- <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe">Soma do setor selecionado</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média dos registros com indicador</div></article></section>
+ <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe">Soma do setor selecionado</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média de todos os registros da planilha</div></article></section>
  <section class="graficos"><article class="painel"><h2 id="tituloUnidades">Produção por serviço</h2><p class="sub">Quantidade produzida em cada item</p><div class="canvas-wrap"><canvas id="graficoUnidades"></canvas></div></article><article class="painel"><h2>Ritmo por hora</h2><p class="sub">Ritmo médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoRitmo"></canvas></div></article><article class="painel" id="painelDesempenho"><h2>Desempenho por item</h2><p class="sub">Desempenho médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoDesempenho"></canvas></div></article><article class="painel"><h2>Resumo dos indicadores</h2><p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p><div class="canvas-wrap"><canvas id="graficoResumo"></canvas></div></article></section>
  <section class="painel tabela-painel"><h2>Dados detalhados</h2><p class="sub">Tabela com os valores que alimentam os gráficos</p><div id="tabela" class="tabela-wrap"><div class="vazio">Aguardando dados...</div></div></section>
 </main>
@@ -99,13 +99,24 @@ function render(){
  $('tituloUnidades').textContent='Unidades por produto';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
- const ritmos=dados.map(r=>r.ritmo).filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)));
- const desempenhos=dados.map(r=>r.desempenho).filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)));
+ // Os cartões de média devem usar TODOS os registros da planilha,
+ // não a média das médias por produto. Os gráficos continuam agrupados por produto.
+ const registrosOriginais=cache[setorAtual]||[];
+ const ritmosOriginais=registrosOriginais
+  .map(r=>r.ritmo)
+  .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
+  .map(Number);
+ const desempenhosOriginais=registrosOriginais
+  .map(r=>r.desempenho)
+  .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
+  .map(Number);
 
  $('kpi1').textContent=fmtN(dados.length);
  $('kpi2').textContent=fmtN(somar('qtd'));
- $('kpi3').textContent=ritmos.length?fmtN(ritmos.reduce((a,b)=>a+Number(b),0)/ritmos.length):'—';
- $('kpi4').textContent=desempenhos.length?fmtPct(desempenhos.reduce((a,b)=>a+Number(b),0)/desempenhos.length):'N/D';
+ $('kpi3').textContent=ritmosOriginais.length
+  ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length):'—';
+ $('kpi4').textContent=desempenhosOriginais.length
+  ?fmtPct(desempenhosOriginais.reduce((a,b)=>a+b,0)/desempenhosOriginais.length):'N/D';
 
  const labels=dados.map(r=>r.nome);
  const units=dados.map(r=>Number(r.qtd)||0);
