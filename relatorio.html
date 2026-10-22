@@ -73,13 +73,13 @@ function prepararDados(){
   const chave=nome.toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
   if(!mapa.has(chave)){
-   mapa.set(chave,{nome:nome,qtd:0,caixasSoma:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
+   mapa.set(chave,{nome:nome,qtd:0,caixasSoma:0,loteSoma:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
   }
   const item=mapa.get(chave);
 
   if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
   if(setorAtual==='dobra' && lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.caixasSoma+=Number(lote);
-  if(lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.loteValores.push(Number(lote));
+  if(lote!==null && lote!=='' && Number.isFinite(Number(lote))) { item.loteValores.push(Number(lote)); item.loteSoma+=Number(lote); }
   if(ritmo!==null && ritmo!=='' && Number.isFinite(Number(ritmo))) item.ritmoValores.push(Number(ritmo));
   if(desempenho!==null && desempenho!=='' && Number.isFinite(Number(desempenho))) item.desempenhoValores.push(Number(desempenho));
   if(data) item.datas.push(data);
@@ -90,9 +90,9 @@ function prepararDados(){
   servico:item.servico,
   qtd:item.qtd,
   // Dobra: soma as caixas registradas em todas as linhas do produto.
-  // Costura/Pacote: mantém a contagem de lotes distintos já existente.
+  // Costura/Pacote: soma os valores de lote de todas as linhas agrupadas.
   caixas:item.caixasSoma,
-  lote:item.loteValores.length ? new Set(item.loteValores.map(String)).size : null,
+  lote:item.loteValores.length ? item.loteSoma : null,
   ritmo:item.ritmoValores.length ? item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length : null,
   desempenho:item.desempenhoValores.length ? item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length : null,
   data:item.datas.length ? item.datas.sort()[item.datas.length-1] : ''
@@ -110,20 +110,26 @@ function render(){
  $('tituloUnidades').textContent='Unidades por produto';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
+ const ehMontagem = r => String(r.servico || r.nome || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleUpperCase('pt-BR').includes('MONTAGEM');
  // Os cartões de média devem usar TODOS os registros da planilha,
  // não a média das médias por produto. Os gráficos continuam agrupados por produto.
  const registrosOriginais=cache[setorAtual]||[];
- const ritmosOriginais=registrosOriginais
+ // Para os cartões de Costura, considerar somente os registros de MONTAGEM.
+ const registrosKpi = setorAtual==='costura' ? registrosOriginais.filter(ehMontagem) : registrosOriginais;
+ const unidadesKpi = setorAtual==='costura'
+  ? registrosKpi.reduce((s,r)=>s+(r.unidades!==null && r.unidades!=='' && Number.isFinite(Number(r.unidades))?Number(r.unidades):0),0)
+  : somar('qtd');
+ const ritmosOriginais=registrosKpi
   .map(r=>r.ritmo)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
- const desempenhosOriginais=registrosOriginais
+ const desempenhosOriginais=registrosKpi
   .map(r=>r.desempenho)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
 
  $('kpi1').textContent=fmtN(dados.length);
- $('kpi2').textContent=fmtN(somar('qtd'));
+ $('kpi2').textContent=fmtN(unidadesKpi);
  // O campo CAIXAS usa a soma real da coluna de caixas da Dobra.
  // Nos setores Costura e Pacote, que não possuem esse campo na API, mostra traço.
  const totalCaixas = setorAtual === 'dobra'
