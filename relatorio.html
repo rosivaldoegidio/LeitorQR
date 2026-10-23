@@ -85,6 +85,9 @@ function prepararDados(){
   const item=mapa.get(chave);
 
   if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
+  // Corte: a coluna 'Caixas' deve reproduzir os valores da coluna Y da aba CAPACIDADE PRODUÇÃO (campo unidades).
+  // Dobra mantém a regra original de somar o campo caixas.
+  if(setorAtual==='corte' && qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.caixasSoma+=Number(qtd);
   if(setorAtual==='dobra' && lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.caixasSoma+=Number(lote);
   if(lote!==null && lote!=='' && Number.isFinite(Number(lote))) { item.loteValores.push(Number(lote)); item.loteSoma+=Number(lote); }
   if(ritmo!==null && ritmo!=='' && Number.isFinite(Number(ritmo))) item.ritmoValores.push(Number(ritmo));
