@@ -138,11 +138,20 @@ function render(){
 
  $('kpi1').textContent=fmtN(dados.length);
  $('kpi2').textContent=fmtN(unidadesKpi);
- // O campo CAIXAS usa a soma real da coluna de caixas da Dobra.
- // Nos setores Costura e Pacote, que não possuem esse campo na API, mostra traço.
+ // CAIXAS:
+ // Dobra mantém a soma da coluna de caixas.
+ // Costura soma a coluna de lotes (J) somente nos registros de MONTAGEM.
+ // Pacote mantém o comportamento anterior, sem valor neste cartão.
  const totalCaixas = setorAtual === 'dobra'
   ? registrosOriginais.reduce((s,r)=>s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
-  : null;
+  : setorAtual === 'costura'
+   ? registrosKpi.reduce((s,r)=>{
+       const n = r.lote;
+       if (n === null || n === undefined || n === '') return s;
+       const valor = Number(String(n).trim().replace(',', '.'));
+       return s + (Number.isFinite(valor) ? valor : 0);
+     },0)
+   : null;
  $('kpiCaixas').textContent = totalCaixas === null ? '—' : fmtN(totalCaixas);
  $('kpi3').textContent=ritmosOriginais.length
   ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length):'—';
