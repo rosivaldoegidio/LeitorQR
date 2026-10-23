@@ -131,7 +131,10 @@ function render(){
   .map(r=>r.ritmo)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
- const desempenhosOriginais=registrosKpi
+ // O cartão de desempenho da Costura considera todos os serviços da coluna M,
+ // enquanto os demais cartões mantêm os filtros já definidos.
+ const registrosDesempenho = setorAtual==='costura' ? registrosOriginais : registrosKpi;
+ const desempenhosOriginais=registrosDesempenho
   .map(r=>r.desempenho)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
