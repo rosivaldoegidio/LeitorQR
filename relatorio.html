@@ -110,14 +110,22 @@ function render(){
  $('tituloUnidades').textContent='Unidades por produto';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
- const ehMontagem = r => String(r.servico || r.nome || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleUpperCase('pt-BR').includes('MONTAGEM');
+ const ehMontagem = r => {
+  const servico = String(r.servico || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLocaleUpperCase('pt-BR');
+  return servico === 'MONTAGEM';
+ };
  // Os cartões de média devem usar TODOS os registros da planilha,
  // não a média das médias por produto. Os gráficos continuam agrupados por produto.
  const registrosOriginais=cache[setorAtual]||[];
  // Para os cartões de Costura, considerar somente os registros de MONTAGEM.
  const registrosKpi = setorAtual==='costura' ? registrosOriginais.filter(ehMontagem) : registrosOriginais;
+ // Costura: somar somente a coluna de unidades dos registros cujo serviço (coluna I) é MONTAGEM.
+ // A API entrega essa coluna no campo r.unidades; demais setores mantêm o cálculo anterior.
  const unidadesKpi = setorAtual==='costura'
-  ? registrosKpi.reduce((s,r)=>s+(r.unidades!==null && r.unidades!=='' && Number.isFinite(Number(r.unidades))?Number(r.unidades):0),0)
+  ? registrosKpi.reduce((s,r)=>{
+      const n = r.unidades;
+      return s + (n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+    },0)
   : somar('qtd');
  const ritmosOriginais=registrosKpi
   .map(r=>r.ritmo)
