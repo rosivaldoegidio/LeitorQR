@@ -9,9 +9,9 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink)}header{background:linear-gradient(115deg,#142b49,#214d7b);color:#fff;padding:22px max(18px,calc((100% - 1500px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}header h1{margin:0;font-size:clamp(21px,3vw,30px)}header p{margin:7px 0 0;color:#d8e5f5;font-size:13px}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:bold;cursor:pointer}.voltar{background:#fff;color:var(--navy);white-space:nowrap}main{max-width:1500px;margin:auto;padding:20px}.topo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}.periodo{color:var(--muted);font-size:13px}.abas{display:flex;gap:8px;flex-wrap:wrap}.aba{background:#e4ebf5;color:#24466d}.aba.ativa{background:var(--navy);color:#fff}.status{font-size:13px;color:var(--muted);margin:10px 0 16px}.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}.kpi,.painel{background:white;border:1px solid var(--line);border-radius:15px;box-shadow:0 4px 15px #19375d0a}.kpi{padding:17px}.kpi .rotulo{font-size:12px;color:var(--muted);font-weight:bold}.kpi .valor{font-size:clamp(22px,3vw,30px);font-weight:800;margin-top:8px;overflow-wrap:anywhere}.kpi .detalhe{font-size:12px;color:var(--muted);margin-top:5px}.graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.painel{padding:17px;min-width:0}.painel h2{font-size:16px;margin:0 0 4px}.painel .sub{font-size:12px;color:var(--muted);margin:0 0 12px}.canvas-wrap{height:340px;position:relative}.tabela-painel{margin-top:14px}.tabela-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}th{position:sticky;top:0;background:#edf2f9;color:#344966;z-index:1}th:first-child,td:first-child{text-align:left}td:first-child{font-weight:600}.vazio{padding:28px;text-align:center;color:var(--muted)}@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:850px){main{padding:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.graficos{grid-template-columns:1fr}.canvas-wrap{height:300px}header{padding:16px;align-items:flex-start}.voltar{padding:10px;font-size:12px}}@media(max-width:430px){header h1{font-size:20px}header p{max-width:220px;line-height:1.4}.cards{gap:8px}.kpi{padding:12px}.kpi .valor{font-size:22px}.painel{padding:12px}}
 </style></head>
 <body>
-<header><div><h1>📊 Relatórios de Produção</h1><p>Indicadores de Costura, Dobra e Pacote</p></div><button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button></header>
+<header><div><h1>📊 Relatórios de Produção</h1><p>Indicadores de Corte, Costura, Dobra e Pacote</p></div><button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button></header>
 <main>
- <div class="topo"><div><div id="periodo" class="periodo">Período da planilha</div><div id="status" class="status">Carregando dados da planilha...</div></div><div class="abas"><button class="btn aba ativa" data-setor="costura">Costura</button><button class="btn aba" data-setor="dobra">Dobra</button><button class="btn aba" data-setor="pacote">Pacote</button><button class="btn aba" id="recarregar">↻ Atualizar</button></div></div>
+ <div class="topo"><div><div id="periodo" class="periodo">Período da planilha</div><div id="status" class="status">Carregando dados da planilha...</div></div><div class="abas"><button class="btn aba" data-setor="corte">Corte</button><button class="btn aba ativa" data-setor="costura">Costura</button><button class="btn aba" data-setor="dobra">Dobra</button><button class="btn aba" data-setor="pacote">Pacote</button><button class="btn aba" id="recarregar">↻ Atualizar</button></div></div>
  <section class="painel" style="margin-bottom:16px;padding:14px 17px">
   <div style="display:flex;align-items:end;gap:12px;flex-wrap:wrap">
    <div><label for="dataInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA INICIAL</label><input id="dataInicio" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"></div>
@@ -43,7 +43,14 @@ function prepararDados(){
  origem.forEach(r=>{
   let nome='', qtd=null, lote=null, ritmo=null, desempenho=null, data='';
 
-  if(setorAtual==='dobra'){
+  if(setorAtual==='corte'){
+   nome=(r.produto||'').trim();
+   qtd=r.unidades;
+   lote=r.caixas;
+   ritmo=r.ritmo;
+   desempenho=r.desempenho;
+   data=r.data||'';
+  }else if(setorAtual==='dobra'){
    nome=(r.produto||'').trim();
    qtd=r.unidades;
    lote=r.caixas;
@@ -89,7 +96,7 @@ function prepararDados(){
   nome:item.nome,
   servico:item.servico,
   qtd:item.qtd,
-  // Dobra: soma as caixas registradas em todas as linhas do produto.
+  // Corte/Dobra: soma as caixas registradas em todas as linhas do produto.
   // Costura/Pacote: soma os valores de lote de todas as linhas agrupadas.
   caixas:item.caixasSoma,
   lote:item.loteValores.length ? item.loteSoma : null,
@@ -158,7 +165,7 @@ function render(){
  // Dobra mantém a soma da coluna de caixas.
  // Costura soma a coluna de lotes (J) somente nos registros de MONTAGEM.
  // Pacote mantém o comportamento anterior, sem valor neste cartão.
- const totalCaixas = setorAtual === 'dobra'
+ const totalCaixas = (setorAtual === 'dobra' || setorAtual === 'corte')
   ? registrosOriginais.reduce((s,r)=>s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
   : setorAtual === 'costura'
    ? registrosKpi.reduce((s,r)=>{
@@ -212,7 +219,7 @@ function render(){
   {label:'Indicador',data:resumoData,backgroundColor:['#f59e0b','#2879d0','#16a078'],borderRadius:6}
  ]);
 
- const colunas=setorAtual==='dobra'?
+ const colunas=(setorAtual==='dobra'||setorAtual==='corte')?
   [['Produto','nome'],['Caixas','caixas'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
   setorAtual==='costura'?
   [['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
