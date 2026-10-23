@@ -20,7 +20,7 @@
    <span style="font-size:12px;color:var(--muted)">Escolha as datas e clique em “Aplicar período”.</span>
   </div>
  </section>
- <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe">Soma do setor selecionado</div></article><article class="kpi"><div class="rotulo">CAIXAS</div><div class="valor" id="kpiCaixas">—</div><div class="detalhe">Soma das caixas registradas</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média de todos os registros da planilha</div></article></section>
+ <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe" id="detalheUnidades">Soma do setor selecionado</div><div class="detalhe" id="kpiOutrosLinha" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)"><strong>Outros:</strong> <span id="kpiOutros">—</span></div></article><article class="kpi"><div class="rotulo" id="rotuloCaixas">CAIXAS</div><div class="valor" id="kpiCaixas">—</div><div class="detalhe" id="detalheCaixas">Soma das caixas registradas</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média de todos os registros da planilha</div></article></section>
  <section class="graficos"><article class="painel"><h2 id="tituloUnidades">Produção por serviço</h2><p class="sub">Quantidade produzida em cada item</p><div class="canvas-wrap"><canvas id="graficoUnidades"></canvas></div></article><article class="painel"><h2>Ritmo por hora</h2><p class="sub">Ritmo médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoRitmo"></canvas></div></article><article class="painel" id="painelDesempenho"><h2>Desempenho por item</h2><p class="sub">Desempenho médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoDesempenho"></canvas></div></article><article class="painel"><h2>Resumo dos indicadores</h2><p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p><div class="canvas-wrap"><canvas id="graficoResumo"></canvas></div></article></section>
  <section class="painel tabela-painel"><h2>Dados detalhados</h2><p class="sub">Tabela com os valores que alimentam os gráficos</p><div id="tabela" class="tabela-wrap"><div class="vazio">Aguardando dados...</div></div></section>
 </main>
@@ -108,6 +108,11 @@ function render(){
  $('painelDesempenho').style.display=temDesempenho?'block':'none';
  $('rotulo1').textContent='PRODUTOS ÚNICOS';
  $('tituloUnidades').textContent='Unidades por produto';
+ // Alterações visuais exclusivas da aba Costura.
+ $('rotuloCaixas').textContent = setorAtual==='costura' ? 'LOTES' : 'CAIXAS';
+ $('detalheCaixas').textContent = setorAtual==='costura' ? 'Soma dos lotes registrados em Montagem' : 'Soma das caixas registradas';
+ $('kpiOutrosLinha').style.display = setorAtual==='costura' ? 'block' : 'none';
+ $('detalheUnidades').textContent = setorAtual==='costura' ? 'Montagem' : 'Soma do setor selecionado';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
  const ehMontagem = r => {
@@ -141,6 +146,14 @@ function render(){
 
  $('kpi1').textContent=fmtN(dados.length);
  $('kpi2').textContent=fmtN(unidadesKpi);
+ // O campo Outros existe somente na aba Costura e soma unidades de todos os serviços exceto MONTAGEM.
+ const unidadesOutros = setorAtual==='costura'
+  ? registrosOriginais.filter(r=>!ehMontagem(r)).reduce((s,r)=>{
+      const n=r.unidades;
+      return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+    },0)
+  : null;
+ if (setorAtual==='costura') $('kpiOutros').textContent=fmtN(unidadesOutros);
  // CAIXAS:
  // Dobra mantém a soma da coluna de caixas.
  // Costura soma a coluna de lotes (J) somente nos registros de MONTAGEM.
