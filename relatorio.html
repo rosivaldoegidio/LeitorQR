@@ -109,7 +109,7 @@ function prepararDados(){
   ritmo:item.ritmoValores.length ? item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length : null,
   desempenho:item.desempenhoValores.length ? item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length : null,
   data:item.datas.length ? item.datas.sort()[item.datas.length-1] : ''
- }));
+ })).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));
 }
 function chartOptions(horizontal=false){return {responsive:true,maintainAspectRatio:false,indexAxis:horizontal?'y':'x',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label||'Valor'}: ${fmtN(ctx.parsed.x??ctx.parsed.y)}`}}},scales:{x:{grid:{color:'#edf1f6'},ticks:{autoSkip:true,maxRotation:55,minRotation:0}},y:{beginAtZero:true,grid:{color:'#edf1f6'}}}};}
 function criarChart(id,type,labels,datasets,opts={}){const c=new Chart($(id),{type,data:{labels,datasets},options:{...chartOptions(opts.horizontal),...(opts.options||{}),plugins:{...chartOptions(opts.horizontal).plugins,...(opts.options?.plugins||{})}}});charts.push(c);return c;}
@@ -139,12 +139,19 @@ function render(){
  const registrosKpi = setorAtual==='costura' ? registrosOriginais.filter(ehMontagem) : registrosOriginais;
  // Costura: somar somente a coluna de unidades dos registros cujo serviço (coluna I) é MONTAGEM.
  // A API entrega essa coluna no campo r.unidades; demais setores mantêm o cálculo anterior.
- const unidadesKpi = setorAtual==='costura'
-  ? registrosKpi.reduce((s,r)=>{
-      const n = r.unidades;
+ const normalizarNome = v => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toUpperCase();
+ const unidadesKpi = setorAtual==='corte'
+  ? registrosOriginais.reduce((s,r)=>{
+      if (normalizarNome(r.produto) !== 'COLAGEM DE TIRA') return s;
+      const n = r.caixas; // Coluna X da aba CAPACIDADE PRODUÇÃO
       return s + (n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
     },0)
-  : somar('qtd');
+  : setorAtual==='costura'
+    ? registrosKpi.reduce((s,r)=>{
+        const n = r.unidades;
+        return s + (n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+      },0)
+    : somar('qtd');
  const ritmosOriginais=registrosKpi
   .map(r=>r.ritmo)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
@@ -171,16 +178,22 @@ function render(){
  // Dobra mantém a soma da coluna de caixas.
  // Costura soma a coluna de lotes (J) somente nos registros de MONTAGEM.
  // Pacote mantém o comportamento anterior, sem valor neste cartão.
- const totalCaixas = (setorAtual === 'dobra' || setorAtual === 'corte')
-  ? registrosOriginais.reduce((s,r)=>s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
-  : setorAtual === 'costura'
-   ? registrosKpi.reduce((s,r)=>{
-       const n = r.lote;
-       if (n === null || n === undefined || n === '') return s;
-       const valor = Number(String(n).trim().replace(',', '.'));
-       return s + (Number.isFinite(valor) ? valor : 0);
-     },0)
-   : null;
+ const totalCaixas = setorAtual === 'corte'
+  ? registrosOriginais.reduce((s,r)=>{
+      if (normalizarNome(r.produto) !== 'COLAGEM DE TIRA') return s;
+      const n = r.unidades; // Coluna Y da aba CAPACIDADE PRODUÇÃO
+      return s + (n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+    },0)
+  : setorAtual === 'dobra'
+    ? registrosOriginais.reduce((s,r)=>s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
+    : setorAtual === 'costura'
+      ? registrosKpi.reduce((s,r)=>{
+          const n = r.lote;
+          if (n === null || n === undefined || n === '') return s;
+          const valor = Number(String(n).trim().replace(',', '.'));
+          return s + (Number.isFinite(valor) ? valor : 0);
+        },0)
+      : null;
  $('kpiCaixas').textContent = totalCaixas === null ? '—' : fmtN(totalCaixas);
  $('kpi3').textContent=ritmosOriginais.length
   ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length):'—';
