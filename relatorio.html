@@ -1,47 +1,205 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Relatórios de Produção</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--navy:#19375d;--blue:#2474d2;--orange:#f59e0b;--green:#159b72;--red:#e05252;--ink:#182230;--muted:#64748b;--bg:#f3f6fb;--line:#e5eaf2}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink)}header{background:linear-gradient(115deg,#142b49,#214d7b);color:#fff;padding:22px max(18px,calc((100% - 1500px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}header h1{margin:0;font-size:clamp(21px,3vw,30px)}header p{margin:7px 0 0;color:#d8e5f5;font-size:13px}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:bold;cursor:pointer}.voltar{background:#fff;color:var(--navy);white-space:nowrap}main{max-width:1500px;margin:auto;padding:20px}.topo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}.periodo{color:var(--muted);font-size:13px}.abas{display:flex;gap:8px;flex-wrap:wrap}.aba{background:#e4ebf5;color:#24466d}.aba.ativa{background:var(--navy);color:#fff}.status{font-size:13px;color:var(--muted);margin:10px 0 16px}.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}.kpi,.painel{background:white;border:1px solid var(--line);border-radius:15px;box-shadow:0 4px 15px #19375d0a}.kpi{padding:17px}.kpi .rotulo{font-size:12px;color:var(--muted);font-weight:bold}.kpi .valor{font-size:clamp(22px,3vw,30px);font-weight:800;margin-top:8px;overflow-wrap:anywhere}.kpi .detalhe{font-size:12px;color:var(--muted);margin-top:5px}.graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.painel{padding:17px;min-width:0}.painel h2{font-size:16px;margin:0 0 4px}.painel .sub{font-size:12px;color:var(--muted);margin:0 0 12px}.canvas-wrap{height:340px;position:relative}.tabela-painel{margin-top:14px}.tabela-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}th{position:sticky;top:0;background:#edf2f9;color:#344966;z-index:1}th:first-child,td:first-child{text-align:left}td:first-child{font-weight:600}.vazio{padding:28px;text-align:center;color:var(--muted)}@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:850px){main{padding:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.graficos{grid-template-columns:1fr}.canvas-wrap{height:300px}header{padding:16px;align-items:flex-start}.voltar{padding:10px;font-size:12px}}@media(max-width:430px){header h1{font-size:20px}header p{max-width:220px;line-height:1.4}.cards{gap:8px}.kpi{padding:12px}.kpi .valor{font-size:22px}.painel{padding:12px}}
-</style></head>
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(115deg,#142b49,#214d7b);color:#fff;padding:22px max(18px,calc((100% - 1500px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
+header h1{margin:0;font-size:clamp(21px,3vw,30px)}
+header p{margin:7px 0 0;color:#d8e5f5;font-size:13px}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:bold;cursor:pointer}
+.voltar{background:#fff;color:var(--navy);white-space:nowrap}
+main{max-width:1500px;margin:auto;padding:20px}
+.topo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.periodo{color:var(--muted);font-size:13px}
+.abas{display:flex;gap:8px;flex-wrap:wrap}
+.aba{background:#e4ebf5;color:#24466d}
+.aba.ativa{background:var(--navy);color:#fff}
+.status{font-size:13px;color:var(--muted);margin:10px 0 16px}
+.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi,.painel{background:white;border:1px solid var(--line);border-radius:15px;box-shadow:0 4px 15px #19375d0a}
+.kpi{padding:17px}
+.kpi .rotulo{font-size:12px;color:var(--muted);font-weight:bold}
+.kpi .valor{font-size:clamp(22px,3vw,30px);font-weight:800;margin-top:8px;overflow-wrap:anywhere}
+.kpi .detalhe{font-size:12px;color:var(--muted);margin-top:5px}
+.graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.painel{padding:17px;min-width:0}
+.painel h2{font-size:16px;margin:0 0 4px}
+.painel .sub{font-size:12px;color:var(--muted);margin:0 0 12px}
+.canvas-wrap{height:340px;position:relative}
+.tabela-painel{margin-top:14px}
+.tabela-wrap{overflow:auto;max-height:480px;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
+th{position:sticky;top:0;background:#edf2f9;color:#344966;z-index:1}
+th:first-child,td:first-child{text-align:left}
+td:first-child{font-weight:600}
+.vazio{padding:28px;text-align:center;color:var(--muted)}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){main{padding:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.graficos{grid-template-columns:1fr}.canvas-wrap{height:300px}header{padding:16px;align-items:flex-start}.voltar{padding:10px;font-size:12px}}
+@media(max-width:430px){header h1{font-size:20px}header p{max-width:220px;line-height:1.4}.cards{gap:8px}.kpi{padding:12px}.kpi .valor{font-size:22px}.painel{padding:12px}}
+</style>
+</head>
 <body>
-<header><div><h1>📊 Relatórios de Produção</h1><p>Indicadores de Corte, Costura, Dobra e Pacote</p></div><button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button></header>
+<header>
+ <div>
+  <h1>📊 Relatórios de Produção</h1>
+  <p>Indicadores de Corte, Costura, Dobra e Pacote</p>
+ </div>
+ <button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button>
+</header>
 <main>
- <div class="topo"><div><div id="periodo" class="periodo">Período da planilha</div><div id="status" class="status">Carregando dados da planilha...</div></div><div class="abas"><button class="btn aba" data-setor="corte">Corte</button><button class="btn aba ativa" data-setor="costura">Costura</button><button class="btn aba" data-setor="dobra">Dobra</button><button class="btn aba" data-setor="pacote">Pacote</button><button class="btn aba" id="recarregar">↻ Atualizar</button></div></div>
+ <div class="topo">
+  <div>
+   <div id="periodo" class="periodo">Período da planilha</div>
+   <div id="status" class="status">Carregando dados da planilha...</div>
+  </div>
+  <div class="abas">
+   <button class="btn aba" data-setor="corte">Corte</button>
+   <button class="btn aba ativa" data-setor="costura">Costura</button>
+   <button class="btn aba" data-setor="dobra">Dobra</button>
+   <button class="btn aba" data-setor="pacote">Pacote</button>
+   <button class="btn aba" id="recarregar">↻ Atualizar</button>
+  </div>
+ </div>
+
  <section class="painel" style="margin-bottom:16px;padding:14px 17px">
   <div style="display:flex;align-items:end;gap:12px;flex-wrap:wrap">
-   <div><label for="dataInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA INICIAL</label><input id="dataInicio" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"></div>
-   <div><label for="dataFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA FINAL</label><input id="dataFim" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"></div>
+   <div>
+    <label for="dataInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA INICIAL</label>
+    <input id="dataInicio" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+   </div>
+   <div>
+    <label for="dataFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">DATA FINAL</label>
+    <input id="dataFim" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+   </div>
    <button class="btn aba ativa" id="aplicarPeriodo">Aplicar período</button>
    <span style="font-size:12px;color:var(--muted)">Escolha as datas e clique em “Aplicar período”.</span>
   </div>
  </section>
- <section class="cards"><article class="kpi"><div class="rotulo" id="rotulo1">SERVIÇOS</div><div class="valor" id="kpi1">—</div><div class="detalhe">Produtos/serviços diferentes</div></article><article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpi2">—</div><div class="detalhe" id="detalheUnidades">Soma do setor selecionado</div><div class="detalhe" id="kpiOutrosLinha" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)"><strong>Outros:</strong> <span id="kpiOutros">—</span></div></article><article class="kpi"><div class="rotulo" id="rotuloCaixas">CAIXAS</div><div class="valor" id="kpiCaixas">—</div><div class="detalhe" id="detalheCaixas">Soma das caixas registradas</div></article><article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpi3">—</div><div class="detalhe">Unidades por hora</div></article><article class="kpi"><div class="rotulo">DESEMPENHO MÉDIO</div><div class="valor" id="kpi4">—</div><div class="detalhe">Média de todos os registros da planilha</div></article></section>
- <section class="graficos"><article class="painel"><h2 id="tituloUnidades">Produção por serviço</h2><p class="sub">Quantidade produzida em cada item</p><div class="canvas-wrap"><canvas id="graficoUnidades"></canvas></div></article><article class="painel"><h2>Ritmo por hora</h2><p class="sub">Ritmo médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoRitmo"></canvas></div></article><article class="painel" id="painelDesempenho"><h2>Desempenho por item</h2><p class="sub">Desempenho médio por produto, sem duplicar nomes</p><div class="canvas-wrap"><canvas id="graficoDesempenho"></canvas></div></article><article class="painel"><h2>Resumo dos indicadores</h2><p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p><div class="canvas-wrap"><canvas id="graficoResumo"></canvas></div></article></section>
- <section class="painel tabela-painel"><h2>Dados detalhados</h2><p class="sub">Tabela com os valores que alimentam os gráficos</p><div id="tabela" class="tabela-wrap"><div class="vazio">Aguardando dados...</div></div></section>
+
+ <section class="cards">
+  <article class="kpi">
+   <div class="rotulo" id="rotulo1">SERVIÇOS</div>
+   <div class="valor" id="kpi1">—</div>
+   <div class="detalhe">Produtos/serviços diferentes</div>
+  </article>
+  <article class="kpi">
+   <div class="rotulo">UNIDADES PRODUZIDAS</div>
+   <div class="valor" id="kpi2">—</div>
+   <div class="detalhe" id="detalheUnidades">Soma do setor selecionado</div>
+   <div class="detalhe" id="kpiOutrosLinha" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">
+    <strong>Outros:</strong> <span id="kpiOutros">—</span>
+   </div>
+  </article>
+  <article class="kpi">
+   <div class="rotulo" id="rotuloCaixas">CAIXAS</div>
+   <div class="valor" id="kpiCaixas">—</div>
+   <div class="detalhe" id="detalheCaixas">Soma das caixas registradas</div>
+  </article>
+  <article class="kpi">
+   <div class="rotulo">RITMO MÉDIO</div>
+   <div class="valor" id="kpi3">—</div>
+   <div class="detalhe">Unidades por hora</div>
+  </article>
+  <article class="kpi">
+   <div class="rotulo">DESEMPENHO MÉDIO</div>
+   <div class="valor" id="kpi4">—</div>
+   <div class="detalhe">Média de todos os registros da planilha</div>
+  </article>
+ </section>
+
+ <section class="graficos">
+  <article class="painel">
+   <h2 id="tituloUnidades">Produção por serviço</h2>
+   <p class="sub">Quantidade produzida em cada item</p>
+   <div class="canvas-wrap"><canvas id="graficoUnidades"></canvas></div>
+  </article>
+  <article class="painel">
+   <h2>Ritmo por hora</h2>
+   <p class="sub">Ritmo médio por produto, sem duplicar nomes</p>
+   <div class="canvas-wrap"><canvas id="graficoRitmo"></canvas></div>
+  </article>
+  <article class="painel" id="painelDesempenho">
+   <h2>Desempenho por item</h2>
+   <p class="sub">Desempenho médio por produto, sem duplicar nomes</p>
+   <div class="canvas-wrap"><canvas id="graficoDesempenho"></canvas></div>
+  </article>
+  <article class="painel">
+   <h2>Resumo dos indicadores</h2>
+   <p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p>
+   <div class="canvas-wrap"><canvas id="graficoResumo"></canvas></div>
+  </article>
+ </section>
+
+ <section class="painel tabela-painel">
+  <h2>Dados detalhados</h2>
+  <p class="sub">Tabela com os valores que alimentam os gráficos</p>
+  <div id="tabela" class="tabela-wrap"><div class="vazio">Aguardando dados...</div></div>
+ </section>
 </main>
+
 <script>
 'use strict';
-// Depois de implantar codigo_relatorios.gs como Aplicativo da Web, cole aqui a URL terminada em /exec.
+
+// URL atual da API de relatórios.
 const REPORT_API_URL='https://script.google.com/macros/s/AKfycbw0DTeI-uzZcZcEIjkYNbhleSmyxEL4UhXYbok-ckLLqaSv1FBGTeuWwzo4iLc3b8Ng/exec';
-const cache={};let setorAtual='costura';let charts=[];
+
+const cache={};
+let setorAtual='costura';
+let charts=[];
+
 const $=id=>document.getElementById(id);
 const fmtN=n=>n===null||n===undefined||n===''?'—':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
 const fmtPct=n=>n===null||n===undefined?'—':(Number(n)*100).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%';
-function chamarApi(inicio='',fim=''){return new Promise((resolve,reject)=>{if(REPORT_API_URL.startsWith('COLE_AQUI')){reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));return;}const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const s=document.createElement('script');let done=false;const fimReq=(err,d)=>{if(done)return;done=true;clearTimeout(t);delete window[cb];s.remove();err?reject(err):resolve(d)};const t=setTimeout(()=>fimReq(new Error('Tempo esgotado ao consultar a planilha.')),30000);window[cb]=d=>fimReq(null,d);s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));const qs=new URLSearchParams({callback:cb,t:String(Date.now())});if(inicio&&fim){qs.set('inicio',inicio);qs.set('fim',fim);}s.src=REPORT_API_URL+'?'+qs.toString();document.body.appendChild(s);});}
-function destroyCharts(){charts.forEach(c=>c.destroy());charts=[];}
+
+function chamarApi(inicio='',fim=''){
+ return new Promise((resolve,reject)=>{
+  if(REPORT_API_URL.startsWith('COLE_AQUI')){
+   reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));
+   return;
+  }
+  const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const s=document.createElement('script');
+  let done=false;
+  const fimReq=(err,d)=>{
+   if(done)return;
+   done=true;
+   clearTimeout(t);
+   delete window[cb];
+   s.remove();
+   err?reject(err):resolve(d);
+  };
+  const t=setTimeout(()=>fimReq(new Error('Tempo esgotado ao consultar a planilha.')),30000);
+  window[cb]=d=>fimReq(null,d);
+  s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));
+  const qs=new URLSearchParams({callback:cb,t:String(Date.now())});
+  if(inicio&&fim){
+   qs.set('inicio',inicio);
+   qs.set('fim',fim);
+  }
+  s.src=REPORT_API_URL+'?'+qs.toString();
+  document.body.appendChild(s);
+ });
+}
+
+function destroyCharts(){
+ charts.forEach(c=>c.destroy());
+ charts=[];
+}
+
 function prepararDados(){
  const origem=cache[setorAtual]||[];
- // Cada produto/serviço aparece uma única vez, mesmo que exista em várias linhas.
- // Unidades são somadas; ritmo e desempenho são médias dos registros daquele item.
  const mapa=new Map();
 
  origem.forEach(r=>{
-  let nome='', qtd=null, lote=null, ritmo=null, desempenho=null, data='';
+  let nome='',qtd=null,lote=null,ritmo=null,desempenho=null,data='';
 
   if(setorAtual==='corte'){
    nome=(r.produto||'').trim();
@@ -65,7 +223,6 @@ function prepararDados(){
    desempenho=r.desempenho;
    data=r.data||'';
   }else{
-   // No Pacote, agrupar pelo nome do serviço/produto, não pelo lote.
    nome=(r.servico||'').trim();
    qtd=r.unidades;
    lote=r.lote;
@@ -74,42 +231,76 @@ function prepararDados(){
    data=r.data||'';
   }
 
-  if(!nome) nome='(sem identificação)';
-  // Chave de agrupamento: iguala apenas maiúsculas/minúsculas e espaços.
-  // Não remove partes do nome; produtos diferentes permanecem separados.
+  if(!nome)nome='(sem identificação)';
   const chave=nome.toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
   if(!mapa.has(chave)){
-   mapa.set(chave,{nome:nome,qtd:0,caixasSoma:0,loteSoma:0,loteValores:[],ritmoValores:[],desempenhoValores:[],datas:[],servico:nome});
+   mapa.set(chave,{
+    nome:nome,qtd:0,caixasSoma:0,loteSoma:0,
+    loteValores:[],ritmoValores:[],desempenhoValores:[],
+    datas:[],servico:nome
+   });
   }
+
   const item=mapa.get(chave);
 
-  if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
-  // Corte: a coluna 'Caixas' deve reproduzir os valores da coluna Y da aba CAPACIDADE PRODUÇÃO (campo unidades).
-  // Dobra mantém a regra original de somar o campo caixas.
-  if(setorAtual==='corte' && qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.caixasSoma+=Number(qtd);
-  if(setorAtual==='dobra' && lote!==null && lote!=='' && Number.isFinite(Number(lote))) item.caixasSoma+=Number(lote);
-  if(lote!==null && lote!=='' && Number.isFinite(Number(lote))) { item.loteValores.push(Number(lote)); item.loteSoma+=Number(lote); }
-  if(ritmo!==null && ritmo!=='' && Number.isFinite(Number(ritmo))) item.ritmoValores.push(Number(ritmo));
-  if(desempenho!==null && desempenho!=='' && Number.isFinite(Number(desempenho))) item.desempenhoValores.push(Number(desempenho));
-  if(data) item.datas.push(data);
+  if(qtd!==null&&qtd!==''&&Number.isFinite(Number(qtd)))item.qtd+=Number(qtd);
+
+  // Mantém o cálculo original das caixas para Dobra.
+  if(setorAtual==='dobra'&&lote!==null&&lote!==''&&Number.isFinite(Number(lote))){
+   item.caixasSoma+=Number(lote);
+  }
+
+  if(lote!==null&&lote!==''&&Number.isFinite(Number(lote))){
+   item.loteValores.push(Number(lote));
+   item.loteSoma+=Number(lote);
+  }
+  if(ritmo!==null&&ritmo!==''&&Number.isFinite(Number(ritmo)))item.ritmoValores.push(Number(ritmo));
+  if(desempenho!==null&&desempenho!==''&&Number.isFinite(Number(desempenho)))item.desempenhoValores.push(Number(desempenho));
+  if(data)item.datas.push(data);
  });
 
  return Array.from(mapa.values()).map(item=>({
   nome:item.nome,
   servico:item.servico,
   qtd:item.qtd,
-  // Corte/Dobra: soma as caixas registradas em todas as linhas do produto.
-  // Costura/Pacote: soma os valores de lote de todas as linhas agrupadas.
   caixas:item.caixasSoma,
-  lote:item.loteValores.length ? item.loteSoma : null,
-  ritmo:item.ritmoValores.length ? item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length : null,
-  desempenho:item.desempenhoValores.length ? item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length : null,
-  data:item.datas.length ? item.datas.sort()[item.datas.length-1] : ''
+  lote:item.loteValores.length?item.loteSoma:null,
+  ritmo:item.ritmoValores.length?item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length:null,
+  desempenho:item.desempenhoValores.length?item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length:null,
+  data:item.datas.length?item.datas.sort()[item.datas.length-1]:''
  }));
 }
-function chartOptions(horizontal=false){return {responsive:true,maintainAspectRatio:false,indexAxis:horizontal?'y':'x',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label||'Valor'}: ${fmtN(ctx.parsed.x??ctx.parsed.y)}`}}},scales:{x:{grid:{color:'#edf1f6'},ticks:{autoSkip:true,maxRotation:55,minRotation:0}},y:{beginAtZero:true,grid:{color:'#edf1f6'}}}};}
-function criarChart(id,type,labels,datasets,opts={}){const c=new Chart($(id),{type,data:{labels,datasets},options:{...chartOptions(opts.horizontal),...(opts.options||{}),plugins:{...chartOptions(opts.horizontal).plugins,...(opts.options?.plugins||{})}}});charts.push(c);return c;}
+
+function chartOptions(horizontal=false){
+ return {
+  responsive:true,
+  maintainAspectRatio:false,
+  indexAxis:horizontal?'y':'x',
+  plugins:{
+   legend:{display:false},
+   tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label||'Valor'}: ${fmtN(ctx.parsed.x??ctx.parsed.y)}`}}
+  },
+  scales:{
+   x:{grid:{color:'#edf1f6'},ticks:{autoSkip:true,maxRotation:55,minRotation:0}},
+   y:{beginAtZero:true,grid:{color:'#edf1f6'}}
+  }
+ };
+}
+
+function criarChart(id,type,labels,datasets,opts={}){
+ const c=new Chart($(id),{
+  type,
+  data:{labels,datasets},
+  options:{
+   ...chartOptions(opts.horizontal),
+   ...(opts.options||{}),
+   plugins:{...chartOptions(opts.horizontal).plugins,...(opts.options?.plugins||{})}
+  }
+ });
+ charts.push(c);
+}
+
 function render(){
  destroyCharts();
  const dados=prepararDados();
@@ -118,37 +309,74 @@ function render(){
  $('painelDesempenho').style.display=temDesempenho?'block':'none';
  $('rotulo1').textContent='PRODUTOS ÚNICOS';
  $('tituloUnidades').textContent='Unidades por produto';
- // Alterações visuais exclusivas da aba Costura.
- $('rotuloCaixas').textContent = setorAtual==='costura' ? 'LOTES' : 'CAIXAS';
- $('detalheCaixas').textContent = setorAtual==='costura' ? 'Soma dos lotes registrados em Montagem' : 'Soma das caixas registradas';
- $('kpiOutrosLinha').style.display = setorAtual==='costura' ? 'block' : 'none';
- $('detalheUnidades').textContent = setorAtual==='costura' ? 'Montagem' : 'Soma do setor selecionado';
+
+ // Ajustes visuais exclusivos da Costura.
+ $('rotuloCaixas').textContent=setorAtual==='costura'?'LOTES':'CAIXAS';
+ $('detalheCaixas').textContent=setorAtual==='costura'?'Soma dos lotes registrados em Montagem':'Soma das caixas registradas';
+ $('kpiOutrosLinha').style.display=setorAtual==='costura'?'block':'none';
+ $('detalheUnidades').textContent=setorAtual==='costura'?'Montagem':'Soma do setor selecionado';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
- const ehMontagem = r => {
-  const servico = String(r.servico || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLocaleUpperCase('pt-BR');
-  return servico === 'MONTAGEM';
+
+ const ehMontagem=r=>{
+  const servico=String(r.servico||'')
+   .normalize('NFD')
+   .replace(/[\u0300-\u036f]/g,'')
+   .replace(/\s+/g,' ')
+   .trim()
+   .toLocaleUpperCase('pt-BR');
+  return servico==='MONTAGEM';
  };
- // Os cartões de média devem usar TODOS os registros da planilha,
- // não a média das médias por produto. Os gráficos continuam agrupados por produto.
+
  const registrosOriginais=cache[setorAtual]||[];
- // Para os cartões de Costura, considerar somente os registros de MONTAGEM.
- const registrosKpi = setorAtual==='costura' ? registrosOriginais.filter(ehMontagem) : registrosOriginais;
- // Costura: somar somente a coluna de unidades dos registros cujo serviço (coluna I) é MONTAGEM.
- // A API entrega essa coluna no campo r.unidades; demais setores mantêm o cálculo anterior.
- const unidadesKpi = setorAtual==='costura'
-  ? registrosKpi.reduce((s,r)=>{
-      const n = r.unidades;
-      return s + (n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+ const registrosKpi=setorAtual==='costura'?registrosOriginais.filter(ehMontagem):registrosOriginais;
+
+ /*
+  CORTE:
+  A API atual entrega:
+  r.produto = coluna W (serviço/produto)
+  r.caixas  = coluna X
+  r.unidades = coluna Y
+
+  Portanto, o filtro de COLAGEM DE TIRA usa r.produto.
+  O cartão de unidades soma r.caixas (coluna X).
+  O cartão de caixas soma r.unidades (coluna Y).
+  Essa regra especial só é aplicada à aba Corte.
+ */
+
+ const ehColagemDeTira=r=>{
+  const servico=String(r.produto||'')
+   .normalize('NFD')
+   .replace(/[\u0300-\u036f]/g,'')
+   .replace(/\s+/g,' ')
+   .trim()
+   .toLocaleUpperCase('pt-BR');
+  return servico==='COLAGEM DE TIRA';
+ };
+
+ const registrosCorteColagem=setorAtual==='corte'
+  ?registrosOriginais.filter(ehColagemDeTira)
+  :[];
+
+ const unidadesKpi=setorAtual==='corte'
+  ?registrosCorteColagem.reduce((s,r)=>{
+     const n=r.caixas; // Coluna X
+     return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
     },0)
-  : somar('qtd');
+  :setorAtual==='costura'
+   ?registrosKpi.reduce((s,r)=>{
+      const n=r.unidades;
+      return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
+     },0)
+   :somar('qtd');
+
  const ritmosOriginais=registrosKpi
   .map(r=>r.ritmo)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
- // O cartão de desempenho da Costura considera todos os serviços da coluna M,
- // enquanto os demais cartões mantêm os filtros já definidos.
- const registrosDesempenho = setorAtual==='costura' ? registrosOriginais : registrosKpi;
+
+ // O cartão de desempenho da Costura mantém o cálculo original.
+ const registrosDesempenho=setorAtual==='costura'?registrosOriginais:registrosKpi;
  const desempenhosOriginais=registrosDesempenho
   .map(r=>r.desempenho)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
@@ -156,33 +384,44 @@ function render(){
 
  $('kpi1').textContent=fmtN(dados.length);
  $('kpi2').textContent=fmtN(unidadesKpi);
- // O campo Outros existe somente na aba Costura e soma unidades de todos os serviços exceto MONTAGEM.
- const unidadesOutros = setorAtual==='costura'
-  ? registrosOriginais.filter(r=>!ehMontagem(r)).reduce((s,r)=>{
-      const n=r.unidades;
-      return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
+
+ // Campo Outros existe somente na Costura.
+ const unidadesOutros=setorAtual==='costura'
+  ?registrosOriginais.filter(r=>!ehMontagem(r)).reduce((s,r)=>{
+     const n=r.unidades;
+     return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
     },0)
-  : null;
- if (setorAtual==='costura') $('kpiOutros').textContent=fmtN(unidadesOutros);
+  :null;
+
+ if(setorAtual==='costura')$('kpiOutros').textContent=fmtN(unidadesOutros);
+
  // CAIXAS:
- // Dobra mantém a soma da coluna de caixas.
- // Costura soma a coluna de lotes (J) somente nos registros de MONTAGEM.
- // Pacote mantém o comportamento anterior, sem valor neste cartão.
- const totalCaixas = (setorAtual === 'dobra' || setorAtual === 'corte')
-  ? registrosOriginais.reduce((s,r)=>s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
-  : setorAtual === 'costura'
-   ? registrosKpi.reduce((s,r)=>{
-       const n = r.lote;
-       if (n === null || n === undefined || n === '') return s;
-       const valor = Number(String(n).trim().replace(',', '.'));
-       return s + (Number.isFinite(valor) ? valor : 0);
-     },0)
-   : null;
- $('kpiCaixas').textContent = totalCaixas === null ? '—' : fmtN(totalCaixas);
+ // Corte: soma coluna Y apenas para COLAGEM DE TIRA.
+ // Dobra e Costura mantêm seus cálculos anteriores.
+ const totalCaixas=setorAtual==='corte'
+  ?registrosCorteColagem.reduce((s,r)=>{
+     const n=r.unidades; // Coluna Y
+     return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
+    },0)
+  :setorAtual==='dobra'
+   ?registrosOriginais.reduce((s,r)=>
+      s+(r.caixas!==null&&r.caixas!==''&&Number.isFinite(Number(r.caixas))?Number(r.caixas):0),0)
+   :setorAtual==='costura'
+    ?registrosKpi.reduce((s,r)=>{
+       const n=r.lote;
+       if(n===null||n===undefined||n==='')return s;
+       const valor=Number(String(n).trim().replace(',','.'));
+       return s+(Number.isFinite(valor)?valor:0);
+      },0)
+    :null;
+
+ $('kpiCaixas').textContent=totalCaixas===null?'—':fmtN(totalCaixas);
  $('kpi3').textContent=ritmosOriginais.length
-  ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length):'—';
+  ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length)
+  :'—';
  $('kpi4').textContent=desempenhosOriginais.length
-  ?fmtPct(desempenhosOriginais.reduce((a,b)=>a+b,0)/desempenhosOriginais.length):'N/D';
+  ?fmtPct(desempenhosOriginais.reduce((a,b)=>a+b,0)/desempenhosOriginais.length)
+  :'N/D';
 
  const labels=dados.map(r=>r.nome);
  const units=dados.map(r=>Number(r.qtd)||0);
@@ -218,55 +457,79 @@ function render(){
   somar('qtd'),
   ritmosOriginais.length?ritmosOriginais.reduce((a,b)=>a+Number(b),0)/ritmosOriginais.length:0
  ];
+
  criarChart('graficoResumo','bar',resumoLabels,[
   {label:'Indicador',data:resumoData,backgroundColor:['#f59e0b','#2879d0','#16a078'],borderRadius:6}
  ]);
 
- const colunas=(setorAtual==='dobra'||setorAtual==='corte')?
-  [['Produto','nome'],['Caixas','caixas'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
-  setorAtual==='costura'?
-  [['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]:
-  [['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo']];
+ const colunas=(setorAtual==='dobra'||setorAtual==='corte')
+  ?[['Produto','nome'],['Caixas','caixas'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]
+  :setorAtual==='costura'
+   ?[['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]
+   :[['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo']];
 
  let h='<table><thead><tr>'+colunas.map(c=>'<th>'+c[0]+'</th>').join('')+'</tr></thead><tbody>';
- if(!dados.length) h+='<tr><td colspan="'+colunas.length+'">Nenhum produto encontrado para este setor.</td></tr>';
+
+ if(!dados.length)h+='<tr><td colspan="'+colunas.length+'">Nenhum produto encontrado para este setor.</td></tr>';
 
  dados.forEach(r=>{
   h+='<tr>'+colunas.map(c=>{
    let v=r[c[1]];
-   if(c[1]==='desempenho') v=fmtPct(v);
-   else if(['qtd','lote','caixas','ritmo'].includes(c[1])) v=fmtN(v);
+   if(c[1]==='desempenho')v=fmtPct(v);
+   else if(['qtd','lote','caixas','ritmo'].includes(c[1]))v=fmtN(v);
    return '<td>'+esc(v===null||v===undefined?'—':v)+'</td>';
   }).join('')+'</tr>';
  });
+
  h+='</tbody></table>';
  $('tabela').innerHTML=h;
 }
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function selecionarSetor(s){setorAtual=s;document.querySelectorAll('[data-setor]').forEach(b=>b.classList.toggle('ativa',b.dataset.setor===s));render();}
+
+function esc(v){
+ return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function selecionarSetor(s){
+ setorAtual=s;
+ document.querySelectorAll('[data-setor]').forEach(b=>b.classList.toggle('ativa',b.dataset.setor===s));
+ render();
+}
+
 async function carregar(usandoDatasDigitadas=false){
  $('status').textContent='Consultando dados atualizados da planilha...';
+
  try{
   const inicio=usandoDatasDigitadas?$('dataInicio').value:'';
   const fim=usandoDatasDigitadas?$('dataFim').value:'';
+
   if(usandoDatasDigitadas&&(!inicio||!fim))throw new Error('Informe a data inicial e a data final.');
   if(usandoDatasDigitadas&&inicio>fim)throw new Error('A data inicial não pode ser posterior à data final.');
+
   const d=await chamarApi(inicio,fim);
   if(!d||!d.ok)throw new Error(d?.mensagem||'A API não retornou os dados.');
+
   Object.assign(cache,d.setores||{});
+
   const p=d.periodo||{};
   if(p.inicio)$('dataInicio').value=p.inicio;
   if(p.fim)$('dataFim').value=p.fim;
+
   $('periodo').textContent='Período: '+(p.inicio||'não informado')+' a '+(p.fim||'não informado');
   $('status').textContent='Dados carregados da planilha. Última consulta: '+new Date().toLocaleTimeString('pt-BR');
+
   render();
  }catch(e){
   $('status').textContent='Não foi possível carregar os relatórios: '+e.message;
-  if(!document.querySelector('#tabela table'))$('tabela').innerHTML='<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
+  if(!document.querySelector('#tabela table')){
+   $('tabela').innerHTML='<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
+  }
  }
 }
+
 document.querySelectorAll('[data-setor]').forEach(b=>b.addEventListener('click',()=>selecionarSetor(b.dataset.setor)));
 $('recarregar').addEventListener('click',()=>carregar(true));
 $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
 carregar();
-</script></body></html>
+</script>
+</body>
+</html>
