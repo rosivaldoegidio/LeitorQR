@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -54,6 +54,7 @@ td:first-child{font-weight:600}
  </div>
  <button class="btn voltar" onclick="if(history.length>1)history.back();else location.href='index.html'">← Voltar ao apontamento</button>
 </header>
+
 <main>
  <div class="topo">
   <div>
@@ -148,7 +149,6 @@ td:first-child{font-weight:600}
 <script>
 'use strict';
 
-// URL atual da API de relatórios.
 const REPORT_API_URL='https://script.google.com/macros/s/AKfycbw0DTeI-uzZcZcEIjkYNbhleSmyxEL4UhXYbok-ckLLqaSv1FBGTeuWwzo4iLc3b8Ng/exec';
 
 const cache={};
@@ -165,9 +165,11 @@ function chamarApi(inicio='',fim=''){
    reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));
    return;
   }
+
   const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
   const s=document.createElement('script');
   let done=false;
+
   const fimReq=(err,d)=>{
    if(done)return;
    done=true;
@@ -176,14 +178,17 @@ function chamarApi(inicio='',fim=''){
    s.remove();
    err?reject(err):resolve(d);
   };
+
   const t=setTimeout(()=>fimReq(new Error('Tempo esgotado ao consultar a planilha.')),30000);
   window[cb]=d=>fimReq(null,d);
   s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));
+
   const qs=new URLSearchParams({callback:cb,t:String(Date.now())});
   if(inicio&&fim){
    qs.set('inicio',inicio);
    qs.set('fim',fim);
   }
+
   s.src=REPORT_API_URL+'?'+qs.toString();
   document.body.appendChild(s);
  });
@@ -192,6 +197,28 @@ function chamarApi(inicio='',fim=''){
 function destroyCharts(){
  charts.forEach(c=>c.destroy());
  charts=[];
+}
+
+function ehColagemDeTira(r){
+ const servico=String(r.produto||'')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g,'')
+  .replace(/\s+/g,' ')
+  .trim()
+  .toLocaleUpperCase('pt-BR');
+
+ return servico==='COLAGEM DE TIRA';
+}
+
+function ehMontagem(r){
+ const servico=String(r.servico||'')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g,'')
+  .replace(/\s+/g,' ')
+  .trim()
+  .toLocaleUpperCase('pt-BR');
+
+ return servico==='MONTAGEM';
 }
 
 function prepararDados(){
@@ -246,7 +273,6 @@ function prepararDados(){
 
   if(qtd!==null&&qtd!==''&&Number.isFinite(Number(qtd)))item.qtd+=Number(qtd);
 
-  // Mantém o cálculo original das caixas para Dobra.
   if(setorAtual==='dobra'&&lote!==null&&lote!==''&&Number.isFinite(Number(lote))){
    item.caixasSoma+=Number(lote);
   }
@@ -255,8 +281,15 @@ function prepararDados(){
    item.loteValores.push(Number(lote));
    item.loteSoma+=Number(lote);
   }
-  if(ritmo!==null&&ritmo!==''&&Number.isFinite(Number(ritmo)))item.ritmoValores.push(Number(ritmo));
-  if(desempenho!==null&&desempenho!==''&&Number.isFinite(Number(desempenho)))item.desempenhoValores.push(Number(desempenho));
+
+  if(ritmo!==null&&ritmo!==''&&Number.isFinite(Number(ritmo))){
+   item.ritmoValores.push(Number(ritmo));
+  }
+
+  if(desempenho!==null&&desempenho!==''&&Number.isFinite(Number(desempenho))){
+   item.desempenhoValores.push(Number(desempenho));
+  }
+
   if(data)item.datas.push(data);
  });
 
@@ -269,6 +302,76 @@ function prepararDados(){
   ritmo:item.ritmoValores.length?item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length:null,
   desempenho:item.desempenhoValores.length?item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length:null,
   data:item.datas.length?item.datas.sort()[item.datas.length-1]:''
+ }));
+}
+
+/*
+ * Dados detalhados exclusivos de Corte.
+ * A API entrega:
+ * produto = coluna W
+ * caixas  = coluna X
+ * unidades = coluna Y
+ *
+ * Na tabela de Corte:
+ * Caixas = coluna Y.
+ * Unidades somadas = coluna X.
+ * Considera somente COLAGEM DE TIRA.
+ *
+ * Os gráficos continuam usando prepararDados(), sem alterar
+ * seu agrupamento original.
+ */
+function prepararTabelaCorte(registros){
+ const mapa=new Map();
+
+ registros.forEach(r=>{
+  const nome=String(r.produto||'').trim()||'(sem identificação)';
+  const chave=nome.normalize('NFD')
+   .replace(/[\u0300-\u036f]/g,'')
+   .replace(/\s+/g,' ')
+   .trim()
+   .toLocaleUpperCase('pt-BR');
+
+  if(!mapa.has(chave)){
+   mapa.set(chave,{
+    nome:nome,
+    qtd:0,
+    caixas:0,
+    ritmos:[],
+    desempenhos:[]
+   });
+  }
+
+  const item=mapa.get(chave);
+
+  // Coluna X = unidades somadas.
+  if(r.caixas!==null&&r.caixas!==''&&Number.isFinite(Number(r.caixas))){
+   item.qtd+=Number(r.caixas);
+  }
+
+  // Coluna Y = caixas.
+  if(r.unidades!==null&&r.unidades!==''&&Number.isFinite(Number(r.unidades))){
+   item.caixas+=Number(r.unidades);
+  }
+
+  if(r.ritmo!==null&&r.ritmo!==''&&Number.isFinite(Number(r.ritmo))){
+   item.ritmos.push(Number(r.ritmo));
+  }
+
+  if(r.desempenho!==null&&r.desempenho!==''&&Number.isFinite(Number(r.desempenho))){
+   item.desempenhos.push(Number(r.desempenho));
+  }
+ });
+
+ return Array.from(mapa.values()).map(item=>({
+  nome:item.nome,
+  qtd:item.qtd,
+  caixas:item.caixas,
+  ritmo:item.ritmos.length
+   ?item.ritmos.reduce((a,b)=>a+b,0)/item.ritmos.length
+   :null,
+  desempenho:item.desempenhos.length
+   ?item.desempenhos.reduce((a,b)=>a+b,0)/item.desempenhos.length
+   :null
  }));
 }
 
@@ -289,20 +392,24 @@ function chartOptions(horizontal=false){
 }
 
 function criarChart(id,type,labels,datasets,opts={}){
+ const base=chartOptions(opts.horizontal);
+
  const c=new Chart($(id),{
   type,
   data:{labels,datasets},
   options:{
-   ...chartOptions(opts.horizontal),
+   ...base,
    ...(opts.options||{}),
-   plugins:{...chartOptions(opts.horizontal).plugins,...(opts.options?.plugins||{})}
+   plugins:{...base.plugins,...(opts.options?.plugins||{})}
   }
  });
+
  charts.push(c);
 }
 
 function render(){
  destroyCharts();
+
  const dados=prepararDados();
  const temDesempenho=setorAtual!=='pacote';
 
@@ -312,55 +419,35 @@ function render(){
 
  // Ajustes visuais exclusivos da Costura.
  $('rotuloCaixas').textContent=setorAtual==='costura'?'LOTES':'CAIXAS';
- $('detalheCaixas').textContent=setorAtual==='costura'?'Soma dos lotes registrados em Montagem':'Soma das caixas registradas';
+ $('detalheCaixas').textContent=setorAtual==='costura'
+  ?'Soma dos lotes registrados em Montagem'
+  :'Soma das caixas registradas';
+
  $('kpiOutrosLinha').style.display=setorAtual==='costura'?'block':'none';
- $('detalheUnidades').textContent=setorAtual==='costura'?'Montagem':'Soma do setor selecionado';
+ $('detalheUnidades').textContent=setorAtual==='costura'
+  ?'Montagem'
+  :'Soma do setor selecionado';
 
  const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
 
- const ehMontagem=r=>{
-  const servico=String(r.servico||'')
-   .normalize('NFD')
-   .replace(/[\u0300-\u036f]/g,'')
-   .replace(/\s+/g,' ')
-   .trim()
-   .toLocaleUpperCase('pt-BR');
-  return servico==='MONTAGEM';
- };
-
  const registrosOriginais=cache[setorAtual]||[];
- const registrosKpi=setorAtual==='costura'?registrosOriginais.filter(ehMontagem):registrosOriginais;
 
- /*
-  CORTE:
-  A API atual entrega:
-  r.produto = coluna W (serviço/produto)
-  r.caixas  = coluna X
-  r.unidades = coluna Y
+ const registrosKpi=setorAtual==='costura'
+  ?registrosOriginais.filter(ehMontagem)
+  :registrosOriginais;
 
-  Portanto, o filtro de COLAGEM DE TIRA usa r.produto.
-  O cartão de unidades soma r.caixas (coluna X).
-  O cartão de caixas soma r.unidades (coluna Y).
-  Essa regra especial só é aplicada à aba Corte.
- */
-
- const ehColagemDeTira=r=>{
-  const servico=String(r.produto||'')
-   .normalize('NFD')
-   .replace(/[\u0300-\u036f]/g,'')
-   .replace(/\s+/g,' ')
-   .trim()
-   .toLocaleUpperCase('pt-BR');
-  return servico==='COLAGEM DE TIRA';
- };
-
+ // Corte: somente COLAGEM DE TIRA para os cartões especiais.
  const registrosCorteColagem=setorAtual==='corte'
   ?registrosOriginais.filter(ehColagemDeTira)
   :[];
 
+ // Unidades produzidas:
+ // Corte = coluna X (API: r.caixas), somente COLAGEM DE TIRA.
+ // Costura = unidades de MONTAGEM.
+ // Outros setores = cálculo original.
  const unidadesKpi=setorAtual==='corte'
   ?registrosCorteColagem.reduce((s,r)=>{
-     const n=r.caixas; // Coluna X
+     const n=r.caixas;
      return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
     },0)
   :setorAtual==='costura'
@@ -370,13 +457,24 @@ function render(){
      },0)
    :somar('qtd');
 
- const ritmosOriginais=registrosKpi
+ // Ritmo médio:
+ // Corte = somente COLAGEM DE TIRA.
+ // Costura = mantém MONTAGEM.
+ // Dobra e Pacote = cálculo original.
+ const registrosRitmo=setorAtual==='corte'
+  ?registrosCorteColagem
+  :registrosKpi;
+
+ const ritmosOriginais=registrosRitmo
   .map(r=>r.ritmo)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
   .map(Number);
 
- // O cartão de desempenho da Costura mantém o cálculo original.
- const registrosDesempenho=setorAtual==='costura'?registrosOriginais:registrosKpi;
+ // Desempenho da Costura mantém o cálculo original.
+ const registrosDesempenho=setorAtual==='costura'
+  ?registrosOriginais
+  :registrosKpi;
+
  const desempenhosOriginais=registrosDesempenho
   .map(r=>r.desempenho)
   .filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
@@ -393,14 +491,16 @@ function render(){
     },0)
   :null;
 
- if(setorAtual==='costura')$('kpiOutros').textContent=fmtN(unidadesOutros);
+ if(setorAtual==='costura'){
+  $('kpiOutros').textContent=fmtN(unidadesOutros);
+ }
 
- // CAIXAS:
- // Corte: soma coluna Y apenas para COLAGEM DE TIRA.
- // Dobra e Costura mantêm seus cálculos anteriores.
+ // Caixas:
+ // Corte = coluna Y (API: r.unidades), somente COLAGEM DE TIRA.
+ // Dobra e Costura mantêm os cálculos anteriores.
  const totalCaixas=setorAtual==='corte'
   ?registrosCorteColagem.reduce((s,r)=>{
-     const n=r.unidades; // Coluna Y
+     const n=r.unidades;
      return s+(n!==null&&n!==''&&Number.isFinite(Number(n))?Number(n):0);
     },0)
   :setorAtual==='dobra'
@@ -416,13 +516,16 @@ function render(){
     :null;
 
  $('kpiCaixas').textContent=totalCaixas===null?'—':fmtN(totalCaixas);
+
  $('kpi3').textContent=ritmosOriginais.length
   ?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length)
   :'—';
+
  $('kpi4').textContent=desempenhosOriginais.length
   ?fmtPct(desempenhosOriginais.reduce((a,b)=>a+b,0)/desempenhosOriginais.length)
   :'N/D';
 
+ // Gráficos permanecem com os dados agrupados originais.
  const labels=dados.map(r=>r.nome);
  const units=dados.map(r=>Number(r.qtd)||0);
  const rit=dados.map(r=>r.ritmo===null?0:Number(r.ritmo)||0);
@@ -437,6 +540,7 @@ function render(){
 
  if(temDesempenho){
   const perf=dados.map(r=>r.desempenho===null?null:Number(r.desempenho)*100);
+
   criarChart('graficoDesempenho','bar',labels,[
    {label:'Desempenho médio (%)',data:perf,backgroundColor:'#e05252',borderRadius:5}
   ],{
@@ -455,7 +559,9 @@ function render(){
  const resumoData=[
   dados.length,
   somar('qtd'),
-  ritmosOriginais.length?ritmosOriginais.reduce((a,b)=>a+Number(b),0)/ritmosOriginais.length:0
+  ritmosOriginais.length
+   ?ritmosOriginais.reduce((a,b)=>a+Number(b),0)/ritmosOriginais.length
+   :0
  ];
 
  criarChart('graficoResumo','bar',resumoLabels,[
@@ -468,15 +574,32 @@ function render(){
    ?[['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo'],['Desempenho médio','desempenho']]
    :[['Produto/serviço','nome'],['Lotes distintos','lote'],['Unidades somadas','qtd'],['Ritmo médio Qtd/Hora','ritmo']];
 
+ // Somente a tabela detalhada de Corte recebe a lista filtrada
+ // e o mapeamento específico X/Y. Os demais setores não mudam.
+ const dadosTabela=setorAtual==='corte'
+  ?prepararTabelaCorte(registrosCorteColagem)
+  :dados;
+
  let h='<table><thead><tr>'+colunas.map(c=>'<th>'+c[0]+'</th>').join('')+'</tr></thead><tbody>';
 
- if(!dados.length)h+='<tr><td colspan="'+colunas.length+'">Nenhum produto encontrado para este setor.</td></tr>';
+ if(!dadosTabela.length){
+  h+='<tr><td colspan="'+colunas.length+'">'+
+   (setorAtual==='corte'
+    ?'Nenhum registro de COLAGEM DE TIRA encontrado para este período.'
+    :'Nenhum produto encontrado para este setor.')+
+   '</td></tr>';
+ }
 
- dados.forEach(r=>{
+ dadosTabela.forEach(r=>{
   h+='<tr>'+colunas.map(c=>{
    let v=r[c[1]];
-   if(c[1]==='desempenho')v=fmtPct(v);
-   else if(['qtd','lote','caixas','ritmo'].includes(c[1]))v=fmtN(v);
+
+   if(c[1]==='desempenho'){
+    v=fmtPct(v);
+   }else if(['qtd','lote','caixas','ritmo'].includes(c[1])){
+    v=fmtN(v);
+   }
+
    return '<td>'+esc(v===null||v===undefined?'—':v)+'</td>';
   }).join('')+'</tr>';
  });
@@ -486,12 +609,20 @@ function render(){
 }
 
 function esc(v){
- return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ return String(v).replace(/[&<>"']/g,c=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+ }[c]));
 }
 
 function selecionarSetor(s){
  setorAtual=s;
- document.querySelectorAll('[data-setor]').forEach(b=>b.classList.toggle('ativa',b.dataset.setor===s));
+ document.querySelectorAll('[data-setor]').forEach(b=>
+  b.classList.toggle('ativa',b.dataset.setor===s)
+ );
  render();
 }
 
@@ -502,15 +633,24 @@ async function carregar(usandoDatasDigitadas=false){
   const inicio=usandoDatasDigitadas?$('dataInicio').value:'';
   const fim=usandoDatasDigitadas?$('dataFim').value:'';
 
-  if(usandoDatasDigitadas&&(!inicio||!fim))throw new Error('Informe a data inicial e a data final.');
-  if(usandoDatasDigitadas&&inicio>fim)throw new Error('A data inicial não pode ser posterior à data final.');
+  if(usandoDatasDigitadas&&(!inicio||!fim)){
+   throw new Error('Informe a data inicial e a data final.');
+  }
+
+  if(usandoDatasDigitadas&&inicio>fim){
+   throw new Error('A data inicial não pode ser posterior à data final.');
+  }
 
   const d=await chamarApi(inicio,fim);
-  if(!d||!d.ok)throw new Error(d?.mensagem||'A API não retornou os dados.');
+
+  if(!d||!d.ok){
+   throw new Error(d?.mensagem||'A API não retornou os dados.');
+  }
 
   Object.assign(cache,d.setores||{});
 
   const p=d.periodo||{};
+
   if(p.inicio)$('dataInicio').value=p.inicio;
   if(p.fim)$('dataFim').value=p.fim;
 
@@ -520,16 +660,22 @@ async function carregar(usandoDatasDigitadas=false){
   render();
  }catch(e){
   $('status').textContent='Não foi possível carregar os relatórios: '+e.message;
+
   if(!document.querySelector('#tabela table')){
    $('tabela').innerHTML='<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
   }
  }
 }
 
-document.querySelectorAll('[data-setor]').forEach(b=>b.addEventListener('click',()=>selecionarSetor(b.dataset.setor)));
+document.querySelectorAll('[data-setor]').forEach(b=>
+ b.addEventListener('click',()=>selecionarSetor(b.dataset.setor))
+);
+
 $('recarregar').addEventListener('click',()=>carregar(true));
 $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
+
 carregar();
 </script>
 </body>
 </html>
+```
