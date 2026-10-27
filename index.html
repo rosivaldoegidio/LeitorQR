@@ -68,6 +68,7 @@ button{
     <option value="Costura">Costura</option>
     <option value="Dobra">Dobra</option>
     <option value="Pacote">Pacote</option>
+    <option value="Embalagem">Embalagem</option>
 
 </select>
 
@@ -110,6 +111,7 @@ button{
     <button onclick="enviarSetor('Costura')">Costura</button>
     <button onclick="enviarSetor('Dobra')">Dobra</button>
     <button onclick="enviarSetor('Pacote')">Pacote</button>
+    <button onclick="enviarSetor('Embalagem')">Embalagem</button>
 
 </div>
 
@@ -136,7 +138,7 @@ new Audio(
 );
 
 
-// Mostra opções extras para Corte, Costura, Dobra e Pacote
+// Mostra opções de etapa para os setores de produção e Embalagem
 
 document.getElementById("setor").addEventListener("change", async function(){
 
@@ -152,7 +154,8 @@ document.getElementById("setor").addEventListener("change", async function(){
         this.value === "Corte" ||
         this.value === "Costura" ||
         this.value === "Dobra" ||
-        this.value === "Pacote"
+        this.value === "Pacote" ||
+        this.value === "Embalagem"
     ){
 
         opcaoCorte.style.display = "block";
@@ -173,7 +176,8 @@ document.getElementById("setor").addEventListener("change", async function(){
         this.value === "Corte" ||
         this.value === "Costura" ||
         this.value === "Dobra" ||
-        this.value === "Pacote"
+        this.value === "Pacote" ||
+        this.value === "Embalagem"
     ){
 
         await fecharCamera();
@@ -611,7 +615,8 @@ async function abrirCamera(){
         setor === "Corte" ||
         setor === "Costura" ||
         setor === "Dobra" ||
-        setor === "Pacote"
+        setor === "Pacote" ||
+        setor === "Embalagem"
     ){
 
         const tipo =
@@ -758,7 +763,7 @@ function iniciarLeitura(){
                     encodeURIComponent(setor);
 
 
-                if(setor === "Pacote"){
+                if(setor === "Pacote" || setor === "Embalagem"){
 
                     const tipo =
                         document
