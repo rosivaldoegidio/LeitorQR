@@ -8,34 +8,39 @@
 <title>📦 Leitor de Etq. de Caixa</title>
 
 <style>
-body{
-    font-family:Arial;
-    max-width:500px;
-    margin:40px auto;
-    padding:20px;
+body {
+    font-family: Arial;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
-h2{
-    margin:10px 0 20px 0;
-    text-align:center;
-    color:#333;
-    font-size:28px;
-    font-weight:bold;
+
+h2 {
+    margin: 10px 0 20px 0;
+    text-align: center;
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
 }
-input{
-    width:100%;
-    padding:12px;
-    font-size:18px;
-    box-sizing:border-box;
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    box-sizing: border-box;
 }
-button{
-    width:100%;
-    margin-top:15px;
-    padding:15px;
-    font-size:18px;
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    font-size: 18px;
 }
-#resultado{
-    margin-top:20px;
-    font-weight:bold;
+
+#resultado {
+    margin-top: 20px;
+    font-weight: bold;
 }
 </style>
 
@@ -51,17 +56,18 @@ button{
 
 <label><b>Setor:</b></label>
 
-<select id="setor" style="width:100%; padding:12px; font-size:18px; margin-bottom:15px;">
+<select id="setor" style="margin-bottom:15px;">
     <option value="">Selecione o setor</option>
     <option value="Corte">Corte</option>
     <option value="Costura">Costura</option>
     <option value="Dobra">Dobra</option>
     <option value="Pacote">Pacote</option>
+    <option value="Embalagem">Embalagem</option>
 </select>
 
 <div id="opcaoCorte" style="display:none; margin-bottom:15px;">
     <label><b>Etapa:</b></label>
-    <select id="tipoCorte" style="width:100%; padding:12px; font-size:18px;">
+    <select id="tipoCorte">
         <option value="">Selecione</option>
         <option value="producao">Produção</option>
         <option value="embalagem">Embalagem</option>
@@ -83,6 +89,7 @@ button{
     <button onclick="enviarSetor('Costura')">Costura</button>
     <button onclick="enviarSetor('Dobra')">Dobra</button>
     <button onclick="enviarSetor('Pacote')">Pacote</button>
+    <button onclick="enviarSetor('Embalagem')">Embalagem</button>
 </div>
 
 <div id="resultado"></div>
@@ -103,72 +110,79 @@ const audioMeta = new Audio(
     "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
 );
 
-const setoresValidos = ["Corte", "Costura", "Dobra", "Pacote"];
+const setoresValidos = [
+    "Corte",
+    "Costura",
+    "Dobra",
+    "Pacote",
+    "Embalagem"
+];
 
-document.getElementById("setor").addEventListener("change", async function(){
+document.getElementById("setor").addEventListener("change", async function() {
+    const setor = this.value;
     const opcaoCorte = document.getElementById("opcaoCorte");
     const campoLote = document.getElementById("campoLote");
 
     await fecharCamera();
 
-    if(setoresValidos.includes(this.value)){
+    if (setoresValidos.includes(setor)) {
         opcaoCorte.style.display = "block";
-    }else{
+    } else {
         opcaoCorte.style.display = "none";
         campoLote.style.display = "none";
         document.getElementById("tipoCorte").value = "";
         document.getElementById("loteManual").value = "";
     }
+
+    document.getElementById("resultado").innerHTML = "";
 });
 
-document.getElementById("tipoCorte").addEventListener("change", async function(){
+document.getElementById("tipoCorte").addEventListener("change", async function() {
+    const tipo = this.value;
     const campoLote = document.getElementById("campoLote");
 
-    if(this.value === "producao"){
+    if (tipo === "producao") {
         await fecharCamera();
         campoLote.style.display = "block";
         document.getElementById("loteManual").focus();
-
-    }else if(this.value === "embalagem"){
+    } else if (tipo === "embalagem") {
         campoLote.style.display = "none";
         await fecharCamera();
         await abrirCamera();
-
-    }else{
+    } else {
         campoLote.style.display = "none";
         await fecharCamera();
     }
 });
 
-document.getElementById("loteManual").addEventListener("keypress", async function(e){
-    if(e.key !== "Enter") return;
+document.getElementById("loteManual").addEventListener("keypress", async function(e) {
+    if (e.key !== "Enter") return;
 
     e.preventDefault();
 
     const lote = this.value.trim();
-    if(lote === "") return;
+    if (lote === "") return;
 
     const quantidade = prompt(
         "Digite a quantidade produzida:",
         "1"
     );
 
-    if(
+    if (
         quantidade === null ||
         quantidade.trim() === "" ||
         isNaN(quantidade)
-    ){
+    ) {
         document.getElementById("resultado").innerHTML =
             "Operação cancelada.";
         return;
     }
 
-    document.getElementById("resultado").innerHTML =
-        "Enviando lote...";
+    document.getElementById("resultado").innerHTML = "Enviando lote...";
 
     const setor = document.getElementById("setor").value;
 
-    try{
+    try {
         const resposta = await fetch(
             URL_API +
             "?setor=" + encodeURIComponent(setor) +
@@ -179,7 +193,7 @@ document.getElementById("loteManual").addEventListener("keypress", async functio
 
         const texto = await resposta.text();
 
-        if(texto.startsWith("OK|")){
+        if (texto.startsWith("OK|")) {
             const partes = texto.split("|");
 
             document.getElementById("resultado").innerHTML =
@@ -190,14 +204,12 @@ document.getElementById("loteManual").addEventListener("keypress", async functio
             confirmarLeitura();
             this.value = "";
             this.focus();
-        }else{
+        } else {
             document.getElementById("resultado").innerHTML = texto;
-            confirmarErro();
         }
-    }catch(e){
+    } catch (erro) {
         document.getElementById("resultado").innerHTML =
-            "ERRO: " + e;
-        confirmarErro();
+            "Erro ao enviar: " + erro;
     }
 });
 
@@ -207,18 +219,18 @@ let temporizadorInatividade = null;
 let ultimoCodigo = "";
 let ultimoHorario = 0;
 
-function confirmarLeitura(){
-    try{
+function confirmarLeitura() {
+    try {
         const AudioContextClass =
             window.AudioContext || window.webkitAudioContext;
 
-        if(!window.audioContext){
+        if (!window.audioContext) {
             window.audioContext = new AudioContextClass();
         }
 
         const ctx = window.audioContext;
 
-        if(ctx.state === "suspended"){
+        if (ctx.state === "suspended") {
             ctx.resume();
         }
 
@@ -227,8 +239,13 @@ function confirmarLeitura(){
 
         osc1.type = "sine";
         osc1.frequency.value = 650;
+
         gain1.gain.setValueAtTime(0.22, ctx.currentTime);
-        gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        gain1.gain.exponentialRampToValueAtTime(
+            0.01,
+            ctx.currentTime + 0.08
+        );
+
         osc1.connect(gain1);
         gain1.connect(ctx.destination);
         osc1.start();
@@ -239,284 +256,226 @@ function confirmarLeitura(){
 
         osc2.type = "sine";
         osc2.frequency.value = 950;
+
         gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.07);
-        gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
+        gain2.gain.exponentialRampToValueAtTime(
+            0.01,
+            ctx.currentTime + 0.18
+        );
+
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
         osc2.start(ctx.currentTime + 0.07);
         osc2.stop(ctx.currentTime + 0.18);
-
-    }catch(e){
+    } catch (e) {
         console.log("Erro ao emitir bip:", e);
     }
 
-    if(navigator.vibrate){
+    if (navigator.vibrate) {
         navigator.vibrate(120);
     }
 }
 
-function confirmarSucesso(){
+function confirmarSucesso() {
     audioSucesso.pause();
     audioSucesso.currentTime = 0;
-    audioSucesso.play().catch(()=>{});
+    audioSucesso.play().catch(() => {});
 }
 
-function confirmarErro(){
+function confirmarErro() {
     audioErro.pause();
     audioErro.currentTime = 0;
-    audioErro.play().catch(()=>{});
+    audioErro.play().catch(() => {});
 
-    if(navigator.vibrate){
-        navigator.vibrate([150,100,150]);
+    if (navigator.vibrate) {
+        navigator.vibrate([150, 100, 150]);
     }
 }
 
-function confirmarMeta(){
+function confirmarMeta() {
     audioMeta.pause();
     audioMeta.currentTime = 0;
-    audioMeta.play().catch(()=>{});
+    audioMeta.play().catch(() => {});
 
-    setTimeout(function(){
+    setTimeout(function() {
         audioMeta.currentTime = 0;
-        audioMeta.play().catch(()=>{});
-    },300);
+        audioMeta.play().catch(() => {});
+    }, 300);
 
-    setTimeout(function(){
+    setTimeout(function() {
         audioMeta.currentTime = 0;
-        audioMeta.play().catch(()=>{});
-    },600);
+        audioMeta.play().catch(() => {});
+    }, 600);
 
-    if(navigator.vibrate){
-        navigator.vibrate([250,120,250,120,250]);
+    if (navigator.vibrate) {
+        navigator.vibrate([250, 120, 250, 120, 250]);
     }
 }
 
-function reiniciarTemporizador(){
+function reiniciarTemporizador() {
     clearTimeout(temporizadorInatividade);
 
-    temporizadorInatividade = setTimeout(async function(){
-        try{
-            if(html5QrCode){
-                await fecharCamera();
+    temporizadorInatividade = setTimeout(async function() {
+        try {
+            if (html5QrCode) {
+                await html5QrCode.stop();
+                await html5QrCode.clear();
+                html5QrCode = null;
+
+                document.getElementById("reader").innerHTML = "";
             }
 
             document.getElementById("resultado").innerHTML =
                 "Câmera desligada por inatividade.";
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
-    },60000);
+    }, 60000);
 }
 
-async function fecharCamera(){
+async function fecharCamera() {
     clearTimeout(temporizadorInatividade);
 
-    if(!html5QrCode){
-        document.getElementById("reader").innerHTML = "";
-        return;
-    }
+    if (!html5QrCode) return;
 
-    const leitor = html5QrCode;
-
-    try{
-        await leitor.stop();
-    }catch(e){
+    try {
+        await html5QrCode.stop();
+        await html5QrCode.clear();
+    } catch (e) {
         console.log(e);
     }
 
-    try{
-        await leitor.clear();
-    }catch(e){
-        console.log(e);
-    }
-
-    if(html5QrCode === leitor){
-        html5QrCode = null;
-    }
-
+    html5QrCode = null;
     document.getElementById("reader").innerHTML = "";
 }
 
-async function abrirCamera(){
-    audioSucesso.play().then(()=>{
-        audioSucesso.pause();
-        audioSucesso.currentTime = 0;
-    }).catch(()=>{});
-
-    audioErro.play().then(()=>{
-        audioErro.pause();
-        audioErro.currentTime = 0;
-    }).catch(()=>{});
-
+async function abrirCamera() {
     const setor = document.getElementById("setor").value;
     const tipo = document.getElementById("tipoCorte").value;
 
-    if(setor === ""){
+    if (!setor) {
         alert("Selecione o setor antes de abrir a câmera.");
         return;
     }
 
-    if(setoresValidos.includes(setor)){
-        if(tipo === ""){
-            alert("Selecione Produção ou Embalagem.");
-            return;
-        }
-
-        if(tipo === "producao"){
-            document.getElementById("campoLote").style.display = "block";
-            document.getElementById("reader").innerHTML = "";
-            document.getElementById("resultado").innerHTML = "";
-            document.getElementById("loteManual").focus();
-            return;
-        }
-    }
-
-    if(html5QrCode){
+    if (setoresValidos.includes(setor) && !tipo) {
+        alert("Selecione Produção ou Embalagem.");
         return;
     }
 
-    html5QrCode = new Html5Qrcode("reader");
+    if (tipo === "producao") {
+        document.getElementById("campoLote").style.display = "block";
+        document.getElementById("reader").innerHTML = "";
+        document.getElementById("resultado").innerHTML = "";
+        document.getElementById("loteManual").focus();
+        return;
+    }
 
-    try{
-        await iniciarLeitura();
+    if (html5QrCode) return;
+
+    try {
+        html5QrCode = new Html5Qrcode("reader");
+
+        await html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 250 },
+            async function(decodedText) {
+                const agora = Date.now();
+
+                if (
+                    decodedText === ultimoCodigo &&
+                    (agora - ultimoHorario) < 2000
+                ) {
+                    document.getElementById("resultado").innerHTML =
+                        "⚠ Etiqueta já lida. Aguarde 2 segundos.";
+                    return;
+                }
+
+                if (!podeLer) return;
+                podeLer = false;
+
+                const setorAtual = document.getElementById("setor").value;
+                const tipoAtual = document.getElementById("tipoCorte").value;
+
+                if (!setorAtual) {
+                    alert("Selecione o setor.");
+                    podeLer = true;
+                    return;
+                }
+
+                confirmarLeitura();
+                reiniciarTemporizador();
+
+                document.getElementById("resultado").innerHTML = "Enviando...";
+
+                try {
+                    let urlLeitura =
+                        URL_API +
+                        "?codigo=" + encodeURIComponent(decodedText) +
+                        "&setor=" + encodeURIComponent(setorAtual) +
+                        "&tipo=" + encodeURIComponent(tipoAtual);
+
+                    const resposta = await fetch(urlLeitura);
+                    const texto = await resposta.text();
+
+                    if (texto.startsWith("OK|")) {
+                        const partes = texto.split("|");
+                        const linha = partes[1];
+                        const lote = partes[2];
+
+                        if (partes.length >= 4 && partes[3] === "META") {
+                            document.getElementById("resultado").innerHTML =
+                                "🎉 <b>LOTE FINALIZADO!</b><br><br>" +
+                                "✅ Meta de caixas atingida.<br><br>" +
+                                "📦 Lote: " + lote +
+                                "<br>📍 Linha: C" + linha;
+
+                            confirmarMeta();
+                        } else {
+                            document.getElementById("resultado").innerHTML =
+                                "✅ Leitura OK!<br><br>" +
+                                "📦 Lote: " + lote +
+                                "<br>📍 Linha: C" + linha;
+
+                            confirmarSucesso();
+                        }
+
+                        ultimoCodigo = decodedText;
+                        ultimoHorario = agora;
+                    } else {
+                        document.getElementById("resultado").innerHTML = texto;
+                        confirmarErro();
+                    }
+
+                    await fecharCamera();
+                    podeLer = true;
+
+                    setTimeout(async function() {
+                        if (
+                            document.getElementById("tipoCorte").value === "embalagem" &&
+                            document.getElementById("setor").value !== ""
+                        ) {
+                            await abrirCamera();
+                        }
+                    }, 2000);
+                } catch (e) {
+                    document.getElementById("resultado").innerHTML =
+                        "ERRO: " + e;
+
+                    confirmarErro();
+                    await fecharCamera();
+                    podeLer = true;
+                }
+            }
+        );
+
         reiniciarTemporizador();
-    }catch(e){
+    } catch (e) {
         document.getElementById("resultado").innerHTML =
             "Não foi possível abrir a câmera: " + e;
-        confirmarErro();
+
         html5QrCode = null;
     }
-}
-
-async function iniciarLeitura(){
-    if(!html5QrCode) return;
-
-    await html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        async function(decodedText){
-            const agora = Date.now();
-
-            if(
-                decodedText === ultimoCodigo &&
-                (agora - ultimoHorario) < 2000
-            ){
-                document.getElementById("resultado").innerHTML =
-                    "⚠ Etiqueta já lida. Aguarde 2 segundos.";
-                return;
-            }
-
-            if(!podeLer) return;
-
-            podeLer = false;
-
-            const setor = document.getElementById("setor").value;
-            const tipo = document.getElementById("tipoCorte").value;
-
-            if(setor === ""){
-                alert("Selecione o setor.");
-                podeLer = true;
-                return;
-            }
-
-            confirmarLeitura();
-            reiniciarTemporizador();
-
-            document.getElementById("resultado").innerHTML =
-                "Enviando...";
-
-            try{
-                let urlLeitura =
-                    URL_API +
-                    "?codigo=" + encodeURIComponent(decodedText) +
-                    "&setor=" + encodeURIComponent(setor);
-
-                // Correção: envia o tipo para Embalagem em qualquer
-                // setor selecionado e preserva o comportamento de Pacote.
-                if(tipo === "embalagem" || setor === "Pacote"){
-                    urlLeitura += "&tipo=" + encodeURIComponent(tipo);
-                }
-
-                const resposta = await fetch(urlLeitura);
-                const texto = await resposta.text();
-
-                if(texto.startsWith("OK|")){
-                    const partes = texto.split("|");
-                    const linha = partes[1];
-                    const lote = partes[2];
-
-                    if(partes.length >= 4 && partes[3] === "META"){
-                        document.getElementById("resultado").innerHTML =
-                            "🎉 <b>LOTE FINALIZADO!</b><br><br>" +
-                            "✅ Meta de caixas atingida.<br><br>" +
-                            "📦 Lote: " + lote +
-                            "<br>📍 Linha: C" + linha;
-
-                        confirmarMeta();
-                    }else{
-                        document.getElementById("resultado").innerHTML =
-                            "✅ Leitura OK!<br><br>" +
-                            "📦 Lote: " + lote +
-                            "<br>📍 Linha: C" + linha;
-
-                        confirmarSucesso();
-                    }
-
-                    ultimoCodigo = decodedText;
-                    ultimoHorario = agora;
-
-                }else{
-                    document.getElementById("resultado").innerHTML = texto;
-                    confirmarErro();
-                }
-
-                if(html5QrCode){
-                    await html5QrCode.stop();
-                }
-
-                podeLer = true;
-
-                setTimeout(async function(){
-                    if(html5QrCode){
-                        try{
-                            await iniciarLeitura();
-                            reiniciarTemporizador();
-                        }catch(e){
-                            document.getElementById("resultado").innerHTML =
-                                "Erro ao reiniciar a câmera: " + e;
-                        }
-                    }
-                },2000);
-
-            }catch(e){
-                document.getElementById("resultado").innerHTML =
-                    "ERRO: " + e;
-
-                confirmarErro();
-
-                try{
-                    if(html5QrCode){
-                        await html5QrCode.stop();
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-
-                podeLer = true;
-
-                setTimeout(async function(){
-                    if(html5QrCode){
-                        try{
-                            await iniciarLeitura();
-                            reiniciarTemporizador();
-                        }catch(err){
-                            console.log(err);
-                        }
-                    }
-                },2000);
-            }
-        }
-    );
 }
 </script>
 
