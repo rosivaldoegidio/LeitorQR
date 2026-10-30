@@ -283,10 +283,32 @@ async function abrirCamera(){
   reiniciarTemporizador();
 }
 
+function obterConfiguracaoLeitura(){
+  // Área de leitura proporcional à tela: adapta-se a celulares pequenos e grandes.
+  return {
+    fps: 12,
+    qrbox: function(largura, altura){
+      const menorLado = Math.min(largura, altura);
+      const tamanho = Math.max(180, Math.min(420, Math.floor(menorLado * 0.75)));
+      return { width: tamanho, height: tamanho };
+    },
+    aspectRatio: 1.0,
+    disableFlip: false,
+    // Resolução ideal, não obrigatória: aparelhos menos potentes podem usar outra.
+    videoConstraints: {
+      facingMode: { ideal: "environment" },
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
+      frameRate: { ideal: 24, max: 30 }
+    }
+  };
+}
+
 function iniciarLeitura(){
+  if (!html5QrCode) return;
   html5QrCode.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
+    obterConfiguracaoLeitura(),
     async function(decodedText){
       const agora = Date.now();
 
@@ -368,7 +390,9 @@ function iniciarLeitura(){
       }
     }
   ).catch(function(erro){
-    document.getElementById("resultado").innerHTML = "Não foi possível iniciar a câmera: " + erro;
+    document.getElementById("resultado").innerHTML =
+      "Não foi possível iniciar a câmera. Verifique a permissão de acesso, " +
+      "confirme que o aplicativo está aberto em HTTPS e tente novamente. Detalhe: " + erro;
     confirmarErro();
     html5QrCode = null;
   });
