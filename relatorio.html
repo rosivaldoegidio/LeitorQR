@@ -27,7 +27,7 @@
 <script>
 'use strict';
 // Depois de implantar codigo_relatorios.gs como Aplicativo da Web, cole aqui a URL terminada em /exec.
-const REPORT_API_URL='https://script.google.com/macros/s/AKfycbzJDjg9ilk0yz8CCd-p7zz1Wj1_pKOhRFWWjocAbtzJHGHnp-ZckKSkqpfdhSTorrMIsA/exec';
+const REPORT_API_URL='https://script.google.com/macros/s/AKfycbw0DTeI-uzZcZcEIjkYNbhleSmyxEL4UhXYbok-ckLLqaSv1FBGTeuWwzo4iLc3b8Ng/exec';
 const cache={};let setorAtual='costura';let charts=[];
 const $=id=>document.getElementById(id);
 const fmtN=n=>n===null||n===undefined||n===''?'—':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
@@ -307,30 +307,46 @@ function renderEmbalagem(dados){
  $('tituloUnidades').textContent='Unidades embaladas por produto';
  $('tituloRitmo').textContent='Lotes embalados';
  $('subtituloRitmo').textContent='Passe o mouse sobre cada linha para ver o produto e a quantidade de caixas';
- const mapa=new Map();
+ // GRÁFICO 1 — permanece como era: agrupado por PRODUTO (coluna AD),
+ // exibindo os nomes dos produtos e somando as unidades da coluna AG.
+ const mapaProdutos=new Map();
+ registros.forEach(r=>{
+  const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
+  const key=normalizar(produto);
+  if(!mapaProdutos.has(key))mapaProdutos.set(key,{produto:produto,unidades:0});
+  mapaProdutos.get(key).unidades+=Number(r.unidades)||0;
+ });
+ const produtosGrafico=Array.from(mapaProdutos.values());
+ const labelsProdutos=produtosGrafico.map(r=>r.produto);
+ criarChart('graficoUnidades','bar',labelsProdutos,[
+  {label:'Unidades embaladas (AG)',data:produtosGrafico.map(r=>r.unidades),backgroundColor:'#2879d0',borderRadius:5}
+ ],{horizontal:true});
+
+ // GRÁFICO 2 — alteração exclusiva: cada barra representa um LOTE da coluna AE.
+ // Mantém a ordem em que os lotes aparecem na planilha.
+ // As barras exibem somente o número do lote; o tooltip mostra produto(s) e caixas.
+ const mapaLotes=new Map();
  registros.forEach(r=>{
   const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
   const lote=String(r.lote||'').trim()||'(sem lote)';
   const key=normalizar(lote);
-  if(!mapa.has(key))mapa.set(key,{lote:lote,produtos:[],unidades:0,caixas:0});
-  const item=mapa.get(key);
+  if(!mapaLotes.has(key))mapaLotes.set(key,{lote:lote,produtos:[],caixas:0});
+  const item=mapaLotes.get(key);
   if(!item.produtos.includes(produto))item.produtos.push(produto);
-  item.unidades+=Number(r.unidades)||0;
   item.caixas+=Number(r.caixas)||0;
  });
- // Cada barra representa um lote da coluna AE. Produtos e quantidades ficam no tooltip.
- // Mantém a ordem em que os lotes aparecem na planilha (coluna AE).
- // Cada linha recebe numeração sequencial: 1º, 2º, 3º...
- const agrupados=Array.from(mapa.values());
- const labels=agrupados.map((r,i)=>(i+1)+'º '+r.lote);
+ const lotesGrafico=Array.from(mapaLotes.values());
+ const labelsLotes=lotesGrafico.map(r=>r.lote);
  const textoProdutos=r=>r.produtos.join(', ');
- criarChart('graficoUnidades','bar',labels,[{label:'Unidades embaladas (AG)',data:agrupados.map(r=>r.unidades),backgroundColor:'#2879d0',borderRadius:5}],{
+ criarChart('graficoRitmo','bar',labelsLotes,[
+  {label:'Caixas embaladas (AF)',data:lotesGrafico.map(r=>r.caixas),backgroundColor:'#16a078',borderRadius:5}
+ ],{
   horizontal:true,
-  options:{plugins:{tooltip:{callbacks:{title:items=>items.length?'Lote: '+agrupados[items[0].dataIndex].lote:'',label:c=>'Produto(s): '+textoProdutos(agrupados[c.dataIndex]),afterLabel:c=>'Unidades embaladas (AG): '+fmtN(c.parsed.x)}}}}
- });
- criarChart('graficoRitmo','bar',labels,[{label:'Caixas embaladas (AF)',data:agrupados.map(r=>r.caixas),backgroundColor:'#16a078',borderRadius:5}],{
-  horizontal:true,
-  options:{plugins:{tooltip:{callbacks:{title:items=>items.length?'Lote: '+agrupados[items[0].dataIndex].lote:'',label:c=>'Produto(s): '+textoProdutos(agrupados[c.dataIndex]),afterLabel:c=>'Caixas embaladas (AF): '+fmtN(c.parsed.x)}}}}
+  options:{plugins:{tooltip:{callbacks:{
+   title:()=>'',
+   label:c=>'Produto(s): '+textoProdutos(lotesGrafico[c.dataIndex]),
+   afterLabel:c=>'Caixas embaladas (AF): '+fmtN(c.parsed.x)
+  }}}}
  });
  criarChart('graficoResumo','bar',['Produtos únicos','Lotes diferentes','Unidades produzidas','Caixas embaladas'],[{label:'Indicadores',data:[produtos.size,lotes.size,totalUnidades,totalCaixas],backgroundColor:['#f59e0b','#e05252','#2879d0','#16a078'],borderRadius:6}]);
  let h='<table><thead><tr><th>Data</th><th>Produto</th><th>Lote</th><th>Caixas</th><th>Unidades</th></tr></thead><tbody>';
