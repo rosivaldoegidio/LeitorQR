@@ -3,82 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Relatórios de Produção</title>
-
+<title>Relatórios de Produção - Unidade Bahia</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root {
-    --navy: #19375d;
-    --blue: #2474d2;
-    --orange: #f59e0b;
-    --green: #159b72;
-    --red: #e05252;
-    --ink: #182230;
-    --muted: #64748b;
-    --bg: #f3f6fb;
-    --line: #e5eaf2;
+    --navy:#19375d;
+    --blue:#2474d2;
+    --orange:#f59e0b;
+    --green:#159b72;
+    --red:#e05252;
+    --ink:#182230;
+    --muted:#64748b;
+    --bg:#f3f6fb;
+    --line:#e5eaf2;
 }
 
 * {
-    box-sizing: border-box;
+    box-sizing:border-box;
 }
 
 body {
-    margin: 0;
-    background: var(--bg);
-    font-family: Arial, sans-serif;
-    color: var(--ink);
+    margin:0;
+    background:var(--bg);
+    font-family:Arial,sans-serif;
+    color:var(--ink);
 }
 
 /* =====================================================
-   CABEÇALHO — PADRÃO DA TELA BOLETIM DE PRODUÇÃO
+   CABEÇALHO - PIONG PLUS / UNIDADE BAHIA
 ===================================================== */
 
 header.cabecalho-relatorios {
-    width: 100%;
-    min-height: 77px;
-    padding: 12px 16px;
-    background: linear-gradient(115deg, #142b49, #214d7b);
-    color: #fff;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    width:100%;
+    min-height:77px;
+    padding:12px 16px;
+    background:linear-gradient(115deg,#142b49,#214d7b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
 }
 
 .cabecalho-relatorios .titulo-relatorios {
-    min-width: 0;
+    min-width:0;
 }
 
 .cabecalho-relatorios h1 {
-    margin: 0;
-    font-size: clamp(17px, 1.5vw, 21px);
-    font-weight: 700;
-    line-height: 1.2;
+    margin:0;
+    font-size:clamp(17px,1.5vw,21px);
+    font-weight:700;
+    line-height:1.2;
 }
 
 .cabecalho-relatorios p {
-    margin: 6px 0 0;
-    color: #d8e5f5;
-    font-size: clamp(10px, 0.9vw, 12px);
-    line-height: 1.3;
+    margin:6px 0 0;
+    color:#d8e5f5;
+    font-size:clamp(10px,.9vw,12px);
+    line-height:1.3;
 }
 
+/* LOGOMARCA E IDENTIFICAÇÃO DA UNIDADE */
+
 .cabecalho-relatorios .logo-relatorios {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-shrink: 0;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:14px;
+    flex-shrink:0;
 }
 
 .cabecalho-relatorios .logo-relatorios img {
-    display: block;
-    width: clamp(110px, 10vw, 185px);
-    max-height: 48px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
+    display:block;
+    width:clamp(110px,10vw,185px);
+    max-height:48px;
+    object-fit:contain;
+    filter:brightness(0) invert(1);
+}
+
+/* SELO UNIDADE BAHIA */
+
+.cabecalho-relatorios .identificacao-unidade {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:7px 13px;
+    min-width:100px;
+    border:1px solid rgba(255,255,255,.55);
+    border-radius:7px;
+    background:rgba(255,255,255,.08);
+    line-height:1.15;
+}
+
+.cabecalho-relatorios .identificacao-unidade span {
+    color:#d8e5f5;
+    font-size:9px;
+    font-weight:600;
+    letter-spacing:1.2px;
+}
+
+.cabecalho-relatorios .identificacao-unidade strong {
+    color:#fff;
+    font-size:15px;
+    letter-spacing:.7px;
+    margin-top:3px;
 }
 
 /* =====================================================
@@ -86,53 +116,53 @@ header.cabecalho-relatorios {
 ===================================================== */
 
 .btn {
-    border: 0;
-    border-radius: 9px;
-    padding: 11px 15px;
-    font-weight: bold;
-    cursor: pointer;
+    border:0;
+    border-radius:9px;
+    padding:11px 15px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 main {
-    max-width: 1500px;
-    margin: auto;
-    padding: 20px;
+    max-width:1500px;
+    margin:auto;
+    padding:20px;
 }
 
 .topo {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom:16px;
 }
 
 .periodo {
-    color: var(--muted);
-    font-size: 13px;
+    color:var(--muted);
+    font-size:13px;
 }
 
 .abas {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
 .aba {
-    background: #e4ebf5;
-    color: #24466d;
+    background:#e4ebf5;
+    color:#24466d;
 }
 
 .aba.ativa {
-    background: var(--navy);
-    color: #fff;
+    background:var(--navy);
+    color:#fff;
 }
 
 .status {
-    font-size: 13px;
-    color: var(--muted);
-    margin: 10px 0 16px;
+    font-size:13px;
+    color:var(--muted);
+    margin:10px 0 16px;
 }
 
 /* =====================================================
@@ -140,41 +170,41 @@ main {
 ===================================================== */
 
 .cards {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:16px;
 }
 
 .kpi,
 .painel {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px #19375d0a;
+    background:white;
+    border:1px solid var(--line);
+    border-radius:15px;
+    box-shadow:0 4px 15px #19375d0a;
 }
 
 .kpi {
-    padding: 17px;
+    padding:17px;
 }
 
 .kpi .rotulo {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: bold;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:bold;
 }
 
 .kpi .valor {
-    font-size: clamp(22px, 3vw, 30px);
-    font-weight: 800;
-    margin-top: 8px;
-    overflow-wrap: anywhere;
+    font-size:clamp(22px,3vw,30px);
+    font-weight:800;
+    margin-top:8px;
+    overflow-wrap:anywhere;
 }
 
 .kpi .detalhe {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 5px;
+    font-size:12px;
+    color:var(--muted);
+    margin-top:5px;
 }
 
 /* =====================================================
@@ -182,30 +212,30 @@ main {
 ===================================================== */
 
 .graficos {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
 }
 
 .painel {
-    padding: 17px;
-    min-width: 0;
+    padding:17px;
+    min-width:0;
 }
 
 .painel h2 {
-    font-size: 16px;
-    margin: 0 0 4px;
+    font-size:16px;
+    margin:0 0 4px;
 }
 
 .painel .sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin: 0 0 12px;
+    font-size:12px;
+    color:var(--muted);
+    margin:0 0 12px;
 }
 
 .canvas-wrap {
-    height: 340px;
-    position: relative;
+    height:340px;
+    position:relative;
 }
 
 /* =====================================================
@@ -213,156 +243,178 @@ main {
 ===================================================== */
 
 .tabela-painel {
-    margin-top: 14px;
+    margin-top:14px;
 }
 
 .tabela-wrap {
-    overflow: auto;
-    max-height: 480px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
+    overflow:auto;
+    max-height:480px;
+    border:1px solid var(--line);
+    border-radius:10px;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap;
-    font-size: 12px;
+    width:100%;
+    border-collapse:collapse;
+    white-space:nowrap;
+    font-size:12px;
 }
 
 th,
 td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--line);
-    text-align: right;
+    padding:10px 12px;
+    border-bottom:1px solid var(--line);
+    text-align:right;
 }
 
 th {
-    position: sticky;
-    top: 0;
-    background: #edf2f9;
-    color: #344966;
-    z-index: 1;
+    position:sticky;
+    top:0;
+    background:#edf2f9;
+    color:#344966;
+    z-index:1;
 }
 
 th:first-child,
 td:first-child {
-    text-align: left;
+    text-align:left;
 }
 
 td:first-child {
-    font-weight: 600;
+    font-weight:600;
 }
 
 .vazio {
-    padding: 28px;
-    text-align: center;
-    color: var(--muted);
+    padding:28px;
+    text-align:center;
+    color:var(--muted);
 }
 
 /* =====================================================
-   RESPONSIVIDADE — TABLETS
+   RESPONSIVIDADE - TABLETS
 ===================================================== */
 
-@media (max-width: 1100px) {
+@media(max-width:1100px) {
     .cards {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns:repeat(3,minmax(0,1fr));
     }
 }
 
 /* =====================================================
-   RESPONSIVIDADE — CELULARES
+   RESPONSIVIDADE - CELULARES
 ===================================================== */
 
-@media (max-width: 850px) {
+@media(max-width:850px) {
     main {
-        padding: 12px;
+        padding:12px;
     }
 
     .cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
     .graficos {
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
     }
 
     .canvas-wrap {
-        height: 300px;
+        height:300px;
     }
 
     header.cabecalho-relatorios {
-        min-height: 68px;
-        padding: 10px 12px;
-        gap: 8px;
+        min-height:68px;
+        padding:10px 12px;
+        gap:8px;
     }
 
     .cabecalho-relatorios h1 {
-        font-size: 17px;
+        font-size:17px;
     }
 
     .cabecalho-relatorios p {
-        font-size: 10px;
-        max-width: 250px;
-        line-height: 1.3;
+        font-size:10px;
+        max-width:250px;
+        line-height:1.3;
+    }
+
+    .cabecalho-relatorios .logo-relatorios {
+        gap:7px;
     }
 
     .cabecalho-relatorios .logo-relatorios img {
-        width: 105px;
-        max-height: 38px;
+        width:90px;
+        max-height:35px;
+    }
+
+    .cabecalho-relatorios .identificacao-unidade {
+        min-width:78px;
+        padding:6px 8px;
+    }
+
+    .cabecalho-relatorios .identificacao-unidade span {
+        font-size:8px;
+    }
+
+    .cabecalho-relatorios .identificacao-unidade strong {
+        font-size:12px;
     }
 }
 
 /* =====================================================
-   RESPONSIVIDADE — CELULARES ESTREITOS
+   CELULARES ESTREITOS
 ===================================================== */
 
-@media (max-width: 430px) {
+@media(max-width:430px) {
     .cards {
-        gap: 8px;
+        gap:8px;
     }
 
     .kpi {
-        padding: 12px;
+        padding:12px;
     }
 
     .kpi .valor {
-        font-size: 22px;
+        font-size:22px;
     }
 
     .painel {
-        padding: 12px;
+        padding:12px;
     }
 }
 
-@media (max-width: 380px) {
+@media(max-width:380px) {
     header.cabecalho-relatorios {
-        padding: 9px 10px;
-        gap: 5px;
+        padding:9px 10px;
+        gap:5px;
     }
 
     .cabecalho-relatorios h1 {
-        font-size: 15px;
+        font-size:15px;
     }
 
     .cabecalho-relatorios p {
-        font-size: 9px;
-        max-width: 205px;
+        font-size:9px;
+        max-width:205px;
     }
 
     .cabecalho-relatorios .logo-relatorios img {
-        width: 85px;
-        max-height: 32px;
+        width:75px;
+        max-height:32px;
+    }
+
+    .cabecalho-relatorios .identificacao-unidade {
+        min-width:70px;
+        padding:5px 6px;
+    }
+
+    .cabecalho-relatorios .identificacao-unidade strong {
+        font-size:11px;
     }
 }
 </style>
 </head>
 
 <body>
-
-<!-- =====================================================
-     CABEÇALHO
-===================================================== -->
 
 <header class="cabecalho-relatorios">
 
@@ -373,6 +425,11 @@ td:first-child {
 
     <div class="logo-relatorios">
         <img src="logo.png" alt="PIONG PLUS">
+
+        <div class="identificacao-unidade">
+            <span>UNIDADE</span>
+            <strong>BAHIA</strong>
+        </div>
     </div>
 
 </header>
@@ -380,96 +437,46 @@ td:first-child {
 <main>
 
 <div class="topo">
-
     <div>
-        <div id="periodo" class="periodo">
-            Período da planilha
-        </div>
-
-        <div id="status" class="status">
-            Carregando dados da planilha...
-        </div>
+        <div id="periodo" class="periodo">Período da planilha</div>
+        <div id="status" class="status">Carregando dados da planilha...</div>
     </div>
 
     <div class="abas">
-
-        <button class="btn aba" data-setor="corte">
-            Corte
-        </button>
-
-        <button class="btn aba ativa" data-setor="costura">
-            Costura
-        </button>
-
-        <button class="btn aba" data-setor="dobra">
-            Dobra
-        </button>
-
-        <button class="btn aba" data-setor="pacote">
-            Pacote
-        </button>
-
-        <button class="btn aba" data-setor="embalagem">
-            Embalagem
-        </button>
-
-        <button class="btn aba" id="recarregar">
-            ↻ Atualizar
-        </button>
-
+        <button class="btn aba" data-setor="corte">Corte</button>
+        <button class="btn aba ativa" data-setor="costura">Costura</button>
+        <button class="btn aba" data-setor="dobra">Dobra</button>
+        <button class="btn aba" data-setor="pacote">Pacote</button>
+        <button class="btn aba" data-setor="embalagem">Embalagem</button>
+        <button class="btn aba" id="recarregar">↻ Atualizar</button>
     </div>
-
 </div>
 
-<!-- =====================================================
-     FILTRO DE PERÍODO
-===================================================== -->
-
 <section class="painel" style="margin-bottom:16px;padding:14px 17px">
-
     <div style="display:flex;align-items:end;gap:12px;flex-wrap:wrap">
 
         <div>
-            <label for="dataInicio"
-                style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
+            <label for="dataInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
                 DATA INICIAL
             </label>
-
-            <input
-                id="dataInicio"
-                type="date"
-                style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"
-            >
+            <input id="dataInicio" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
         </div>
 
         <div>
-            <label for="dataFim"
-                style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
+            <label for="dataFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
                 DATA FINAL
             </label>
-
-            <input
-                id="dataFim"
-                type="date"
-                style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px"
-            >
+            <input id="dataFim" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
         </div>
 
-        <button class="btn aba ativa" id="aplicarPeriodo">
-            Aplicar período
-        </button>
+        <button class="btn aba ativa" id="aplicarPeriodo">Aplicar período</button>
 
         <span style="font-size:12px;color:var(--muted)">
             Escolha as datas e clique em “Aplicar período”.
         </span>
 
     </div>
-
 </section>
-
-<!-- =====================================================
-     CARTÕES DE INDICADORES
-===================================================== -->
 
 <section class="cards">
 
@@ -482,28 +489,16 @@ td:first-child {
     <article class="kpi">
         <div class="rotulo">UNIDADES PRODUZIDAS</div>
         <div class="valor" id="kpi2">—</div>
-
-        <div class="detalhe" id="detalheUnidades">
-            Soma do setor selecionado
-        </div>
-
-        <div class="detalhe"
-            id="kpiOutrosLinha"
-            style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">
-
-            <strong>Outros:</strong>
-            <span id="kpiOutros">—</span>
-
+        <div class="detalhe" id="detalheUnidades">Soma do setor selecionado</div>
+        <div class="detalhe" id="kpiOutrosLinha" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">
+            <strong>Outros:</strong> <span id="kpiOutros">—</span>
         </div>
     </article>
 
     <article class="kpi">
         <div class="rotulo" id="rotuloCaixas">CAIXAS</div>
         <div class="valor" id="kpiCaixas">—</div>
-
-        <div class="detalhe" id="detalheCaixas">
-            Soma das caixas registradas
-        </div>
+        <div class="detalhe" id="detalheCaixas">Soma das caixas registradas</div>
     </article>
 
     <article class="kpi">
@@ -520,88 +515,48 @@ td:first-child {
 
 </section>
 
-<!-- =====================================================
-     GRÁFICOS
-===================================================== -->
-
 <section class="graficos">
 
     <article class="painel">
-
         <h2 id="tituloUnidades">Produção por serviço</h2>
-
-        <p class="sub">
-            Quantidade produzida em cada item
-        </p>
-
+        <p class="sub">Quantidade produzida em cada item</p>
         <div class="canvas-wrap">
             <canvas id="graficoUnidades"></canvas>
         </div>
-
     </article>
 
     <article class="painel">
-
         <h2 id="tituloRitmo">Ritmo por hora</h2>
-
-        <p class="sub" id="subtituloRitmo">
-            Ritmo médio por produto, sem duplicar nomes
-        </p>
-
+        <p class="sub" id="subtituloRitmo">Ritmo médio por produto, sem duplicar nomes</p>
         <div class="canvas-wrap">
             <canvas id="graficoRitmo"></canvas>
         </div>
-
     </article>
 
     <article class="painel" id="painelDesempenho">
-
         <h2>Desempenho por item</h2>
-
-        <p class="sub">
-            Desempenho médio por produto, sem duplicar nomes
-        </p>
-
+        <p class="sub">Desempenho médio por produto, sem duplicar nomes</p>
         <div class="canvas-wrap">
             <canvas id="graficoDesempenho"></canvas>
         </div>
-
     </article>
 
     <article class="painel">
-
         <h2>Resumo dos indicadores</h2>
-
-        <p class="sub">
-            Produtos repetidos são agrupados; unidades somadas e indicadores médios
-        </p>
-
+        <p class="sub">Produtos repetidos são agrupados; unidades somadas e indicadores médios</p>
         <div class="canvas-wrap">
             <canvas id="graficoResumo"></canvas>
         </div>
-
     </article>
 
 </section>
 
-<!-- =====================================================
-     TABELA DETALHADA
-===================================================== -->
-
 <section class="painel tabela-painel">
-
     <h2>Dados detalhados</h2>
-
-    <p class="sub">
-        Todos os serviços do setor selecionado, com valores agrupados por serviço
-    </p>
-
+    <p class="sub">Todos os serviços do setor selecionado, com valores agrupados por serviço</p>
     <div id="tabela" class="tabela-wrap">
-        <div class="vazio">
-            Aguardando dados...
-        </div>
+        <div class="vazio">Aguardando dados...</div>
     </div>
-
 </section>
 
 </main>
@@ -612,326 +567,224 @@ td:first-child {
 // Depois de implantar codigo_relatorios.gs como Aplicativo da Web,
 // cole aqui a URL terminada em /exec.
 
-const REPORT_API_URL = 'https://script.google.com/macros/s/AKfycbzJDjg9ilk0yz8CCd-p7zz1Wj1_pKOhRFWWjocAbtzJHGHnp-ZckKSkqpfdhSTorrMIsA/exec';
+const REPORT_API_URL='https://script.google.com/macros/s/AKfycbzJDjg9ilk0yz8CCd-p7zz1Wj1_pKOhRFWWjocAbtzJHGHnp-ZckKSkqpfdhSTorrMIsA/exec';
 
-const cache = {};
-let setorAtual = 'costura';
-let charts = [];
+const cache={};
+let setorAtual='costura';
+let charts=[];
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
 
-const fmtN = n =>
-    n === null || n === undefined || n === ''
-        ? '—'
-        : Number(n).toLocaleString('pt-BR', {
-            maximumFractionDigits: 2
-        });
+const fmtN=n=>
+    n===null||n===undefined||n===''
+        ?'—'
+        :Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
 
-const fmtPct = n =>
-    n === null || n === undefined
-        ? '—'
-        : (Number(n) * 100).toLocaleString('pt-BR', {
-            maximumFractionDigits: 2
-        }) + '%';
+const fmtPct=n=>
+    n===null||n===undefined
+        ?'—'
+        :(Number(n)*100).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%';
 
 /* =====================================================
    CONEXÃO COM A API
 ===================================================== */
 
-function chamarApi(inicio = '', fim = '') {
+function chamarApi(inicio='',fim=''){
 
-    return new Promise((resolve, reject) => {
+return new Promise((resolve,reject)=>{
 
-        if (REPORT_API_URL.startsWith('COLE_AQUI')) {
-            reject(new Error(
-                'Falta configurar a URL da implantação no arquivo relatorio.html.'
-            ));
-            return;
-        }
+if(REPORT_API_URL.startsWith('COLE_AQUI')){
+reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.html.'));
+return;
+}
 
-        const cb = 'relatorio_cb_' +
-            Date.now() + '_' +
-            Math.random().toString(36).slice(2);
+const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+const s=document.createElement('script');
+let done=false;
 
-        const s = document.createElement('script');
+const fimReq=(err,d)=>{
+if(done)return;
+done=true;
+clearTimeout(t);
+delete window[cb];
+s.remove();
+err?reject(err):resolve(d);
+};
 
-        let done = false;
+const t=setTimeout(
+()=>fimReq(new Error('Tempo esgotado ao consultar a planilha.')),
+30000
+);
 
-        const fimReq = (err, d) => {
+window[cb]=d=>fimReq(null,d);
 
-            if (done) return;
+s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));
 
-            done = true;
+const qs=new URLSearchParams({
+callback:cb,
+t:String(Date.now())
+});
 
-            clearTimeout(t);
+if(inicio&&fim){
+qs.set('inicio',inicio);
+qs.set('fim',fim);
+}
 
-            delete window[cb];
+s.src=REPORT_API_URL+'?'+qs.toString();
 
-            s.remove();
+document.body.appendChild(s);
 
-            err ? reject(err) : resolve(d);
-        };
-
-        const t = setTimeout(
-            () => fimReq(new Error(
-                'Tempo esgotado ao consultar a planilha.'
-            )),
-            30000
-        );
-
-        window[cb] = d => fimReq(null, d);
-
-        s.onerror = () => fimReq(new Error(
-            'Falha de conexão com a API de relatórios.'
-        ));
-
-        const qs = new URLSearchParams({
-            callback: cb,
-            t: String(Date.now())
-        });
-
-        if (inicio && fim) {
-            qs.set('inicio', inicio);
-            qs.set('fim', fim);
-        }
-
-        s.src = REPORT_API_URL + '?' + qs.toString();
-
-        document.body.appendChild(s);
-
-    });
+});
 
 }
 
-/* =====================================================
-   CONTROLE DOS GRÁFICOS
-===================================================== */
-
-function destroyCharts() {
-
-    charts.forEach(c => c.destroy());
-
-    charts = [];
-
+function destroyCharts(){
+charts.forEach(c=>c.destroy());
+charts=[];
 }
 
 /* =====================================================
    PREPARAÇÃO DOS DADOS
 ===================================================== */
 
-function prepararDados() {
+function prepararDados(){
 
-    const origem = cache[setorAtual] || [];
+const origem=cache[setorAtual]||[];
 
-    // Cada produto/serviço aparece uma única vez,
-    // mesmo que exista em várias linhas.
-    // Unidades são somadas; ritmo e desempenho são médias
-    // dos registros daquele item.
+const mapa=new Map();
 
-    const mapa = new Map();
+origem.forEach(r=>{
 
-    origem.forEach(r => {
+let nome='', qtd=null, lote=null, ritmo=null, desempenho=null, data='';
 
-        let nome = '';
-        let qtd = null;
-        let lote = null;
-        let ritmo = null;
-        let desempenho = null;
-        let data = '';
+if(setorAtual==='corte'){
+nome=(r.produto||'').trim();
+qtd=r.unidades;
+lote=r.caixas;
+ritmo=r.ritmo;
+desempenho=r.desempenho;
+data=r.data||'';
 
-        if (setorAtual === 'corte') {
+}else if(setorAtual==='dobra'){
+nome=(r.produto||'').trim();
+qtd=r.unidades;
+lote=r.caixas;
+ritmo=r.ritmo;
+desempenho=r.desempenho;
+data=r.data||'';
 
-            nome = (r.produto || '').trim();
-            qtd = r.unidades;
-            lote = r.caixas;
-            ritmo = r.ritmo;
-            desempenho = r.desempenho;
-            data = r.data || '';
+}else if(setorAtual==='costura'){
+nome=(r.servico||'').trim();
+qtd=r.unidades;
+lote=r.lote;
+ritmo=r.ritmo;
+desempenho=r.desempenho;
+data=r.data||'';
 
-        } else if (setorAtual === 'dobra') {
+}else if(setorAtual==='embalagem'){
+nome=(r.produto||'').trim();
+qtd=r.unidades;
+lote=r.lote;
+ritmo=r.caixas;
+desempenho=null;
+data=r.data||'';
 
-            nome = (r.produto || '').trim();
-            qtd = r.unidades;
-            lote = r.caixas;
-            ritmo = r.ritmo;
-            desempenho = r.desempenho;
-            data = r.data || '';
+}else{
+nome=(r.servico||'').trim();
+qtd=r.unidades;
+lote=r.lote;
+ritmo=r.ritmo;
+desempenho=r.desempenho;
+data=r.data||'';
+}
 
-        } else if (setorAtual === 'costura') {
+if(!nome) nome='(sem identificação)';
 
-            nome = (r.servico || '').trim();
-            qtd = r.unidades;
-            lote = r.lote;
-            ritmo = r.ritmo;
-            desempenho = r.desempenho;
-            data = r.data || '';
+const chave=nome.toLocaleUpperCase('pt-BR').replace(/\s+/g,' ').trim();
 
-        } else if (setorAtual === 'embalagem') {
+if(!mapa.has(chave)){
+mapa.set(chave,{
+nome:nome,
+qtd:0,
+unidadesXSoma:0,
+caixasSoma:0,
+loteSoma:0,
+loteValores:[],
+ritmoValores:[],
+desempenhoValores:[],
+datas:[],
+servico:nome
+});
+}
 
-            nome = (r.produto || '').trim();
-            qtd = r.unidades;
-            lote = r.lote;
-            ritmo = r.caixas;
-            desempenho = null;
-            data = r.data || '';
+const item=mapa.get(chave);
 
-        } else {
+if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))){
+item.qtd+=Number(qtd);
+}
 
-            // No Pacote, agrupar pelo nome do serviço/produto,
-            // não pelo lote.
+// Corte: Unidades somadas recebe a coluna X.
+if(
+setorAtual==='corte' &&
+r.caixas!==null &&
+r.caixas!==undefined &&
+r.caixas!=='' &&
+Number.isFinite(Number(r.caixas))
+){
+item.unidadesXSoma+=Number(r.caixas);
+}
 
-            nome = (r.servico || '').trim();
-            qtd = r.unidades;
-            lote = r.lote;
-            ritmo = r.ritmo;
-            desempenho = r.desempenho;
-            data = r.data || '';
+// Corte: Caixas reproduz a coluna Y.
+if(setorAtual==='corte' && qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))){
+item.caixasSoma+=Number(qtd);
+}
 
-        }
+if(setorAtual==='dobra' && lote!==null && lote!=='' && Number.isFinite(Number(lote))){
+item.caixasSoma+=Number(lote);
+}
 
-        if (!nome) nome = '(sem identificação)';
+if(lote!==null && lote!=='' && Number.isFinite(Number(lote))){
+item.loteValores.push(Number(lote));
+item.loteSoma+=Number(lote);
+}
 
-        // Chave de agrupamento: iguala apenas maiúsculas/minúsculas
-        // e espaços. Produtos diferentes permanecem separados.
+if(ritmo!==null && ritmo!=='' && Number.isFinite(Number(ritmo))){
+item.ritmoValores.push(Number(ritmo));
+}
 
-        const chave = nome
-            .toLocaleUpperCase('pt-BR')
-            .replace(/\s+/g, ' ')
-            .trim();
+if(desempenho!==null && desempenho!=='' && Number.isFinite(Number(desempenho))){
+item.desempenhoValores.push(Number(desempenho));
+}
 
-        if (!mapa.has(chave)) {
+if(data) item.datas.push(data);
 
-            mapa.set(chave, {
-                nome: nome,
-                qtd: 0,
-                unidadesXSoma: 0,
-                caixasSoma: 0,
-                loteSoma: 0,
-                loteValores: [],
-                ritmoValores: [],
-                desempenhoValores: [],
-                datas: [],
-                servico: nome
-            });
+});
 
-        }
+return Array.from(mapa.values()).map(item=>({
 
-        const item = mapa.get(chave);
+nome:item.nome,
+servico:item.servico,
+qtd:item.qtd,
+unidadesX:item.unidadesXSoma,
+caixas:item.caixasSoma,
 
-        if (
-            qtd !== null &&
-            qtd !== '' &&
-            Number.isFinite(Number(qtd))
-        ) {
-            item.qtd += Number(qtd);
-        }
+lote:item.loteValores.length
+    ?item.loteSoma
+    :null,
 
-        // Corte: 'Unidades somadas' na tabela detalhada
-        // recebe a coluna X (campo caixas) da aba CAPACIDADE PRODUÇÃO.
+ritmo:item.ritmoValores.length
+    ?item.ritmoValores.reduce((a,b)=>a+b,0)/item.ritmoValores.length
+    :null,
 
-        if (
-            setorAtual === 'corte' &&
-            r.caixas !== null &&
-            r.caixas !== undefined &&
-            r.caixas !== '' &&
-            Number.isFinite(Number(r.caixas))
-        ) {
-            item.unidadesXSoma += Number(r.caixas);
-        }
+desempenho:item.desempenhoValores.length
+    ?item.desempenhoValores.reduce((a,b)=>a+b,0)/item.desempenhoValores.length
+    :null,
 
-        // Corte: a coluna 'Caixas' reproduz os valores da coluna Y
-        // da aba CAPACIDADE PRODUÇÃO (campo unidades).
-        // Dobra mantém a regra original de somar o campo caixas.
+data:item.datas.length
+    ?item.datas.sort()[item.datas.length-1]
+    :''
 
-        if (
-            setorAtual === 'corte' &&
-            qtd !== null &&
-            qtd !== '' &&
-            Number.isFinite(Number(qtd))
-        ) {
-            item.caixasSoma += Number(qtd);
-        }
-
-        if (
-            setorAtual === 'dobra' &&
-            lote !== null &&
-            lote !== '' &&
-            Number.isFinite(Number(lote))
-        ) {
-            item.caixasSoma += Number(lote);
-        }
-
-        if (
-            lote !== null &&
-            lote !== '' &&
-            Number.isFinite(Number(lote))
-        ) {
-            item.loteValores.push(Number(lote));
-            item.loteSoma += Number(lote);
-        }
-
-        if (
-            ritmo !== null &&
-            ritmo !== '' &&
-            Number.isFinite(Number(ritmo))
-        ) {
-            item.ritmoValores.push(Number(ritmo));
-        }
-
-        if (
-            desempenho !== null &&
-            desempenho !== '' &&
-            Number.isFinite(Number(desempenho))
-        ) {
-            item.desempenhoValores.push(Number(desempenho));
-        }
-
-        if (data) {
-            item.datas.push(data);
-        }
-
-    });
-
-    return Array.from(mapa.values()).map(item => ({
-
-        nome: item.nome,
-
-        servico: item.servico,
-
-        qtd: item.qtd,
-
-        unidadesX: item.unidadesXSoma,
-
-        // Corte/Dobra: soma as caixas registradas em todas
-        // as linhas do produto.
-        // Costura/Pacote: soma os valores de lote de todas
-        // as linhas agrupadas.
-
-        caixas: item.caixasSoma,
-
-        lote: item.loteValores.length
-            ? item.loteSoma
-            : null,
-
-        ritmo: item.ritmoValores.length
-            ? item.ritmoValores.reduce((a, b) => a + b, 0) /
-                item.ritmoValores.length
-            : null,
-
-        desempenho: item.desempenhoValores.length
-            ? item.desempenhoValores.reduce((a, b) => a + b, 0) /
-                item.desempenhoValores.length
-            : null,
-
-        data: item.datas.length
-            ? item.datas.sort()[item.datas.length - 1]
-            : ''
-
-    })).sort((a, b) =>
-        a.nome.localeCompare(b.nome, 'pt-BR', {
-            sensitivity: 'base'
-        })
-    );
+})).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));
 
 }
 
@@ -939,97 +792,58 @@ function prepararDados() {
    CONFIGURAÇÃO DOS GRÁFICOS
 ===================================================== */
 
-function chartOptions(horizontal = false) {
+function chartOptions(horizontal=false){
 
-    return {
+return {
+responsive:true,
+maintainAspectRatio:false,
+indexAxis:horizontal?'y':'x',
 
-        responsive: true,
+plugins:{
+legend:{display:false},
+tooltip:{
+callbacks:{
+label:ctx=>`${ctx.dataset.label||'Valor'}: ${fmtN(ctx.parsed.x??ctx.parsed.y)}`
+}
+}
+},
 
-        maintainAspectRatio: false,
+scales:{
+x:{
+grid:{color:'#edf1f6'},
+ticks:{autoSkip:true,maxRotation:55,minRotation:0}
+},
+y:{
+beginAtZero:true,
+grid:{color:'#edf1f6'}
+}
+}
 
-        indexAxis: horizontal ? 'y' : 'x',
-
-        plugins: {
-
-            legend: {
-                display: false
-            },
-
-            tooltip: {
-
-                callbacks: {
-
-                    label: ctx =>
-                        `${ctx.dataset.label || 'Valor'}: ${
-                            fmtN(ctx.parsed.x ?? ctx.parsed.y)
-                        }`
-
-                }
-
-            }
-
-        },
-
-        scales: {
-
-            x: {
-                grid: {
-                    color: '#edf1f6'
-                },
-
-                ticks: {
-                    autoSkip: true,
-                    maxRotation: 55,
-                    minRotation: 0
-                }
-            },
-
-            y: {
-                beginAtZero: true,
-
-                grid: {
-                    color: '#edf1f6'
-                }
-            }
-
-        }
-
-    };
+};
 
 }
 
-function criarChart(id, type, labels, datasets, opts = {}) {
+function criarChart(id,type,labels,datasets,opts={}){
 
-    const c = new Chart($(id), {
+const c=new Chart($(id),{
 
-        type,
+type,
 
-        data: {
-            labels,
-            datasets
-        },
+data:{labels,datasets},
 
-        options: {
+options:{
+...chartOptions(opts.horizontal),
+...(opts.options||{}),
+plugins:{
+...chartOptions(opts.horizontal).plugins,
+...(opts.options?.plugins||{})
+}
+}
 
-            ...chartOptions(opts.horizontal),
+});
 
-            ...(opts.options || {}),
-
-            plugins: {
-
-                ...chartOptions(opts.horizontal).plugins,
-
-                ...(opts.options?.plugins || {})
-
-            }
-
-        }
-
-    });
-
-    charts.push(c);
-
-    return c;
+charts.push(c);
+return c;
 
 }
 
@@ -1037,859 +851,516 @@ function criarChart(id, type, labels, datasets, opts = {}) {
    RENDERIZAÇÃO PRINCIPAL
 ===================================================== */
 
-function render() {
+function render(){
 
-    destroyCharts();
+destroyCharts();
 
-    const dados = prepararDados();
+const dados=prepararDados();
 
-    const temDesempenho =
-        setorAtual !== 'pacote' &&
-        setorAtual !== 'embalagem';
+const temDesempenho=setorAtual!=='pacote' && setorAtual!=='embalagem';
 
-    document.querySelectorAll('.kpi')[4].style.display = '';
+document.querySelectorAll('.kpi')[4].style.display='';
+document.querySelectorAll('.kpi')[4].querySelector('.rotulo').textContent='DESEMPENHO MÉDIO';
+document.querySelectorAll('.kpi')[4].querySelector('.detalhe').textContent='Média de todos os registros da planilha';
 
-    document.querySelectorAll('.kpi')[4]
-        .querySelector('.rotulo')
-        .textContent = 'DESEMPENHO MÉDIO';
+$('painelDesempenho').style.display=temDesempenho?'block':'none';
 
-    document.querySelectorAll('.kpi')[4]
-        .querySelector('.detalhe')
-        .textContent = 'Média de todos os registros da planilha';
+$('rotulo1').textContent='PRODUTOS ÚNICOS';
 
-    $('painelDesempenho').style.display =
-        temDesempenho ? 'block' : 'none';
+if(setorAtual==='embalagem'){
+renderEmbalagem(dados);
+return;
+}
 
-    $('rotulo1').textContent = 'PRODUTOS ÚNICOS';
+const cards=document.querySelectorAll('.kpi');
 
-    if (setorAtual === 'embalagem') {
-        renderEmbalagem(dados);
-        return;
-    }
+cards[3].querySelector('.rotulo').textContent='RITMO MÉDIO';
+cards[3].querySelector('.detalhe').textContent='Unidades por hora';
 
-    // Restaura o cartão original dos demais setores;
-    // 'CAIXAS EMBALADAS' é exclusivo da Embalagem.
+$('tituloUnidades').textContent='Unidades por produto';
+$('tituloRitmo').textContent='Ritmo por hora';
+$('subtituloRitmo').textContent='Ritmo médio por produto, sem duplicar nomes';
 
-    const cards = document.querySelectorAll('.kpi');
+$('rotuloCaixas').textContent =
+    setorAtual==='costura' ? 'LOTES' : 'CAIXAS';
 
-    cards[3].querySelector('.rotulo').textContent = 'RITMO MÉDIO';
+$('detalheCaixas').textContent =
+    setorAtual==='costura'
+        ? 'Soma dos lotes registrados em Montagem'
+        : 'Soma das caixas registradas';
 
-    cards[3].querySelector('.detalhe').textContent = 'Unidades por hora';
+$('kpiOutrosLinha').style.display =
+    setorAtual==='costura' ? 'block' : 'none';
 
-    $('tituloUnidades').textContent = 'Unidades por produto';
+$('detalheUnidades').textContent =
+    setorAtual==='costura'
+        ? 'Montagem'
+        : 'Soma do setor selecionado';
 
-    $('tituloRitmo').textContent = 'Ritmo por hora';
+const somar=key=>dados.reduce((s,r)=>s+(Number(r[key])||0),0);
 
-    $('subtituloRitmo').textContent =
-        'Ritmo médio por produto, sem duplicar nomes';
+const ehMontagem=r=>{
 
-    // Alterações visuais exclusivas da aba Costura.
+const servico=String(r.servico||'')
+.normalize('NFD')
+.replace(/[\u0300-\u036f]/g,'')
+.replace(/\s+/g,' ')
+.trim()
+.toLocaleUpperCase('pt-BR');
 
-    $('rotuloCaixas').textContent =
-        setorAtual === 'costura' ? 'LOTES' : 'CAIXAS';
+return servico==='MONTAGEM';
 
-    $('detalheCaixas').textContent =
-        setorAtual === 'costura'
-            ? 'Soma dos lotes registrados em Montagem'
-            : 'Soma das caixas registradas';
+};
 
-    $('kpiOutrosLinha').style.display =
-        setorAtual === 'costura' ? 'block' : 'none';
+const registrosOriginais=cache[setorAtual]||[];
 
-    $('detalheUnidades').textContent =
-        setorAtual === 'costura'
-            ? 'Montagem'
-            : 'Soma do setor selecionado';
-
-    const somar = key =>
-        dados.reduce((s, r) => s + (Number(r[key]) || 0), 0);
-
-    const ehMontagem = r => {
-
-        const servico = String(r.servico || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toLocaleUpperCase('pt-BR');
-
-        return servico === 'MONTAGEM';
-
-    };
-
-    // Os cartões de média devem usar TODOS os registros
-    // da planilha, não a média das médias por produto.
-    // Os gráficos continuam agrupados por produto.
-
-    const registrosOriginais = cache[setorAtual] || [];
-
-    // Para os cartões de Costura, considerar somente
-    // os registros de MONTAGEM.
-
-    const registrosKpi = setorAtual === 'costura'
+const registrosKpi =
+    setorAtual==='costura'
         ? registrosOriginais.filter(ehMontagem)
         : registrosOriginais;
 
-    // Costura: somar somente a coluna de unidades dos registros
-    // cujo serviço (coluna I) é MONTAGEM.
+const normalizarNome=v=>
+String(v||'')
+.normalize('NFD')
+.replace(/[\u0300-\u036f]/g,'')
+.replace(/\s+/g,' ')
+.trim()
+.toUpperCase();
 
-    const normalizarNome = v =>
-        String(v || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toUpperCase();
+const unidadesKpi = setorAtual==='corte'
 
-    const unidadesKpi = setorAtual === 'corte'
+? registrosOriginais.reduce((s,r)=>{
 
-        ? registrosOriginais.reduce((s, r) => {
+if(normalizarNome(r.produto)!=='COLAGEM DE TIRA') return s;
 
-            if (normalizarNome(r.produto) !== 'COLAGEM DE TIRA') {
-                return s;
-            }
+const n=r.caixas;
 
-            const n = r.caixas; // Coluna X da aba CAPACIDADE PRODUÇÃO
+return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
 
-            return s + (
-                n !== null &&
-                n !== '' &&
-                Number.isFinite(Number(n))
-                    ? Number(n)
-                    : 0
-            );
+},0)
 
-        }, 0)
+: setorAtual==='costura'
 
-        : setorAtual === 'costura'
+? registrosKpi.reduce((s,r)=>{
 
-            ? registrosKpi.reduce((s, r) => {
+const n=r.unidades;
 
-                const n = r.unidades;
+return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
 
-                return s + (
-                    n !== null &&
-                    n !== '' &&
-                    Number.isFinite(Number(n))
-                        ? Number(n)
-                        : 0
-                );
+},0)
 
-            }, 0)
+: somar('qtd');
 
-            : somar('qtd');
+const ritmosOriginais=registrosKpi
+.map(r=>r.ritmo)
+.filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
+.map(Number);
 
-    const ritmosOriginais = registrosKpi
-
-        .map(r => r.ritmo)
-
-        .filter(v =>
-            v !== null &&
-            v !== '' &&
-            Number.isFinite(Number(v))
-        )
-
-        .map(Number);
-
-    // O cartão de desempenho da Costura considera todos
-    // os serviços da coluna M, enquanto os demais cartões
-    // mantêm os filtros já definidos.
-
-    const registrosDesempenho = setorAtual === 'costura'
+const registrosDesempenho =
+    setorAtual==='costura'
         ? registrosOriginais
         : registrosKpi;
 
-    const desempenhosOriginais = registrosDesempenho
+const desempenhosOriginais=registrosDesempenho
+.map(r=>r.desempenho)
+.filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v)))
+.map(Number);
 
-        .map(r => r.desempenho)
+$('kpi1').textContent=fmtN(dados.length);
+$('kpi2').textContent=fmtN(unidadesKpi);
 
-        .filter(v =>
-            v !== null &&
-            v !== '' &&
-            Number.isFinite(Number(v))
-        )
+const unidadesOutros = setorAtual==='costura'
 
-        .map(Number);
+? registrosOriginais.filter(r=>!ehMontagem(r)).reduce((s,r)=>{
 
-    $('kpi1').textContent = fmtN(dados.length);
+const n=r.unidades;
 
-    $('kpi2').textContent = fmtN(unidadesKpi);
+return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
 
-    // O campo Outros existe somente na aba Costura
-    // e soma unidades de todos os serviços exceto MONTAGEM.
+},0)
 
-    const unidadesOutros = setorAtual === 'costura'
+: null;
 
-        ? registrosOriginais
-            .filter(r => !ehMontagem(r))
-            .reduce((s, r) => {
+if(setorAtual==='costura'){
+$('kpiOutros').textContent=fmtN(unidadesOutros);
+}
 
-                const n = r.unidades;
+const totalCaixas = setorAtual==='corte'
 
-                return s + (
-                    n !== null &&
-                    n !== '' &&
-                    Number.isFinite(Number(n))
-                        ? Number(n)
-                        : 0
-                );
+? registrosOriginais.reduce((s,r)=>{
 
-            }, 0)
+if(normalizarNome(r.produto)!=='COLAGEM DE TIRA') return s;
 
-        : null;
+const n=r.unidades;
 
-    if (setorAtual === 'costura') {
-        $('kpiOutros').textContent = fmtN(unidadesOutros);
-    }
+return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
 
-    // CAIXAS:
-    // Dobra mantém a soma da coluna de caixas.
-    // Costura soma a coluna de lotes (J) somente nos registros
-    // de MONTAGEM.
-    // Pacote mantém o comportamento anterior, sem valor neste cartão.
+},0)
 
-    const totalCaixas = setorAtual === 'corte'
+: setorAtual==='dobra'
 
-        ? registrosOriginais.reduce((s, r) => {
+? registrosOriginais.reduce((s,r)=>
+s+(r.caixas!==null && r.caixas!=='' && Number.isFinite(Number(r.caixas)) ? Number(r.caixas) : 0),0)
 
-            if (normalizarNome(r.produto) !== 'COLAGEM DE TIRA') {
-                return s;
-            }
+: setorAtual==='costura'
 
-            const n = r.unidades; // Coluna Y da aba CAPACIDADE PRODUÇÃO
+? registrosKpi.reduce((s,r)=>{
 
-            return s + (
-                n !== null &&
-                n !== '' &&
-                Number.isFinite(Number(n))
-                    ? Number(n)
-                    : 0
-            );
+const n=r.lote;
 
-        }, 0)
+if(n===null || n===undefined || n==='') return s;
 
-        : setorAtual === 'dobra'
+const valor=Number(String(n).trim().replace(',','.'));
 
-            ? registrosOriginais.reduce((s, r) =>
-                s + (
-                    r.caixas !== null &&
-                    r.caixas !== '' &&
-                    Number.isFinite(Number(r.caixas))
-                        ? Number(r.caixas)
-                        : 0
-                ), 0)
+return s+(Number.isFinite(valor) ? valor : 0);
 
-            : setorAtual === 'costura'
+},0)
 
-                ? registrosKpi.reduce((s, r) => {
+: null;
 
-                    const n = r.lote;
+$('kpiCaixas').textContent=totalCaixas===null?'—':fmtN(totalCaixas);
 
-                    if (
-                        n === null ||
-                        n === undefined ||
-                        n === ''
-                    ) {
-                        return s;
-                    }
+$('kpi3').textContent=ritmosOriginais.length
+?fmtN(ritmosOriginais.reduce((a,b)=>a+b,0)/ritmosOriginais.length)
+:'—';
 
-                    const valor = Number(
-                        String(n).trim().replace(',', '.')
-                    );
+$('kpi4').textContent=desempenhosOriginais.length
+?fmtPct(desempenhosOriginais.reduce((a,b)=>a+b,0)/desempenhosOriginais.length)
+:'N/D';
 
-                    return s + (
-                        Number.isFinite(valor) ? valor : 0
-                    );
-
-                }, 0)
-
-                : null;
-
-    $('kpiCaixas').textContent =
-        totalCaixas === null ? '—' : fmtN(totalCaixas);
-
-    $('kpi3').textContent = ritmosOriginais.length
-
-        ? fmtN(
-            ritmosOriginais.reduce((a, b) => a + b, 0) /
-            ritmosOriginais.length
-        )
-
-        : '—';
-
-    $('kpi4').textContent = desempenhosOriginais.length
-
-        ? fmtPct(
-            desempenhosOriginais.reduce((a, b) => a + b, 0) /
-            desempenhosOriginais.length
-        )
-
-        : 'N/D';
-
-    if (setorAtual === 'corte') {
-
-        dados.sort((a, b) =>
-            a.nome.localeCompare(b.nome, 'pt-BR', {
-                sensitivity: 'base'
-            })
-        );
-
-    }
-
-    const labels = dados.map(r => r.nome);
-
-    const units = dados.map(r => Number(r.qtd) || 0);
-
-    const rit = dados.map(r =>
-        r.ritmo === null ? 0 : Number(r.ritmo) || 0
-    );
+if(setorAtual==='corte'){
+dados.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));
+}
 
-    // GRÁFICO DE UNIDADES
+const labels=dados.map(r=>r.nome);
+const units=dados.map(r=>Number(r.qtd)||0);
+const rit=dados.map(r=>r.ritmo===null?0:Number(r.ritmo)||0);
 
-    criarChart(
-        'graficoUnidades',
-        'bar',
-        labels,
-        [
-            {
-                label: 'Unidades produzidas',
-                data: units,
-                backgroundColor: '#2879d0',
-                borderRadius: 5
-            }
-        ],
-        {
-            horizontal: true
-        }
-    );
+criarChart('graficoUnidades','bar',labels,[
+{
+label:'Unidades produzidas',
+data:units,
+backgroundColor:'#2879d0',
+borderRadius:5
+}
+],{horizontal:true});
 
-    // GRÁFICO DE RITMO
+criarChart('graficoRitmo','bar',labels,[
+{
+label:'Ritmo médio Qtd/Hora',
+data:rit,
+backgroundColor:'#16a078',
+borderRadius:5
+}
+],{horizontal:true});
 
-    criarChart(
-        'graficoRitmo',
-        'bar',
-        labels,
-        [
-            {
-                label: 'Ritmo médio Qtd/Hora',
-                data: rit,
-                backgroundColor: '#16a078',
-                borderRadius: 5
-            }
-        ],
-        {
-            horizontal: true
-        }
-    );
+if(temDesempenho){
 
-    // GRÁFICO DE DESEMPENHO
+const perf=dados.map(r=>
+r.desempenho===null?null:Number(r.desempenho)*100
+);
 
-    if (temDesempenho) {
-
-        const perf = dados.map(r =>
-            r.desempenho === null
-                ? null
-                : Number(r.desempenho) * 100
-        );
-
-        criarChart(
-            'graficoDesempenho',
-            'bar',
-            labels,
-            [
-                {
-                    label: 'Desempenho médio (%)',
-                    data: perf,
-                    backgroundColor: '#e05252',
-                    borderRadius: 5
-                }
-            ],
-            {
-                horizontal: true,
-
-                options: {
-
-                    scales: {
-
-                        x: {
-                            beginAtZero: true,
-
-                            ticks: {
-                                callback: v => v + '%'
-                            }
-                        },
-
-                        y: {
-                            grid: {
-                                display: false
-                            }
-                        }
-
-                    },
-
-                    plugins: {
-
-                        tooltip: {
-
-                            callbacks: {
-
-                                label: c =>
-                                    c.raw === null
-                                        ? 'Sem indicador'
-                                        : fmtN(c.raw) + '%'
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-        );
-
-    }
-
-    // GRÁFICO RESUMO
-
-    const resumoLabels = [
-        'Produtos únicos',
-        'Unidades',
-        'Ritmo médio'
-    ];
-
-    const resumoData = [
-
-        dados.length,
-
-        somar('qtd'),
-
-        ritmosOriginais.length
-            ? ritmosOriginais.reduce((a, b) => a + Number(b), 0) /
-                ritmosOriginais.length
-            : 0
-
-    ];
-
-    criarChart(
-        'graficoResumo',
-        'bar',
-        resumoLabels,
-        [
-            {
-                label: 'Indicador',
-                data: resumoData,
-                backgroundColor: [
-                    '#f59e0b',
-                    '#2879d0',
-                    '#16a078'
-                ],
-                borderRadius: 6
-            }
-        ]
-    );
-
-    // COLUNAS DA TABELA
-
-    const colunas = (
-        setorAtual === 'dobra' ||
-        setorAtual === 'corte'
-    )
-
-        ? [
-            ['Produto', 'nome'],
-            ['Caixas', 'caixas'],
-            [
-                'Unidades somadas',
-                setorAtual === 'corte' ? 'unidadesX' : 'qtd'
-            ],
-            ['Ritmo médio Qtd/Hora', 'ritmo'],
-            ['Desempenho médio', 'desempenho']
-        ]
-
-        : setorAtual === 'costura'
-
-            ? [
-                ['Produto/serviço', 'nome'],
-                ['Lotes distintos', 'lote'],
-                ['Unidades somadas', 'qtd'],
-                ['Ritmo médio Qtd/Hora', 'ritmo'],
-                ['Desempenho médio', 'desempenho']
-            ]
-
-            : [
-                ['Produto/serviço', 'nome'],
-                ['Lotes distintos', 'lote'],
-                ['Unidades somadas', 'qtd'],
-                ['Ritmo médio Qtd/Hora', 'ritmo']
-            ];
-
-    let h = '<table><thead><tr>' +
-        colunas.map(c => '<th>' + c[0] + '</th>').join('') +
-        '</tr></thead><tbody>';
-
-    if (!dados.length) {
-
-        h += '<tr><td colspan="' + colunas.length +
-            '">Nenhum produto encontrado para este setor.</td></tr>';
-
-    }
-
-    dados.forEach(r => {
-
-        h += '<tr>' +
-
-            colunas.map(c => {
-
-                let v = r[c[1]];
-
-                if (c[1] === 'desempenho') {
-                    v = fmtPct(v);
-                } else if (
-                    [
-                        'qtd',
-                        'unidadesX',
-                        'lote',
-                        'caixas',
-                        'ritmo'
-                    ].includes(c[1])
-                ) {
-                    v = fmtN(v);
-                }
-
-                return '<td>' +
-                    esc(v === null || v === undefined ? '—' : v) +
-                    '</td>';
-
-            }).join('') +
-
-            '</tr>';
-
-    });
-
-    h += '</tbody></table>';
-
-    $('tabela').innerHTML = h;
+criarChart('graficoDesempenho','bar',labels,[
+{
+label:'Desempenho médio (%)',
+data:perf,
+backgroundColor:'#e05252',
+borderRadius:5
+}
+],{
+
+horizontal:true,
+
+options:{
+
+scales:{
+x:{
+beginAtZero:true,
+ticks:{callback:v=>v+'%'}
+},
+y:{grid:{display:false}}
+},
+
+plugins:{
+tooltip:{
+callbacks:{
+label:c=>c.raw===null?'Sem indicador':fmtN(c.raw)+'%'
+}
+}
+}
+
+}
+
+});
+
+}
+
+const resumoLabels=[
+'Produtos únicos',
+'Unidades',
+'Ritmo médio'
+];
+
+const resumoData=[
+dados.length,
+somar('qtd'),
+ritmosOriginais.length
+?ritmosOriginais.reduce((a,b)=>a+Number(b),0)/ritmosOriginais.length
+:0
+];
+
+criarChart('graficoResumo','bar',resumoLabels,[
+{
+label:'Indicador',
+data:resumoData,
+backgroundColor:['#f59e0b','#2879d0','#16a078'],
+borderRadius:6
+}
+]);
+
+const colunas=(setorAtual==='dobra'||setorAtual==='corte')
+
+?[
+['Produto','nome'],
+['Caixas','caixas'],
+['Unidades somadas',setorAtual==='corte'?'unidadesX':'qtd'],
+['Ritmo médio Qtd/Hora','ritmo'],
+['Desempenho médio','desempenho']
+]
+
+: setorAtual==='costura'
+
+?[
+['Produto/serviço','nome'],
+['Lotes distintos','lote'],
+['Unidades somadas','qtd'],
+['Ritmo médio Qtd/Hora','ritmo'],
+['Desempenho médio','desempenho']
+]
+
+:[
+['Produto/serviço','nome'],
+['Lotes distintos','lote'],
+['Unidades somadas','qtd'],
+['Ritmo médio Qtd/Hora','ritmo']
+];
+
+let h='<table><thead><tr>'+
+colunas.map(c=>'<th>'+c[0]+'</th>').join('')+
+'</tr></thead><tbody>';
+
+if(!dados.length){
+h+='<tr><td colspan="'+colunas.length+'">Nenhum produto encontrado para este setor.</td></tr>';
+}
+
+dados.forEach(r=>{
+
+h+='<tr>'+colunas.map(c=>{
+
+let v=r[c[1]];
+
+if(c[1]==='desempenho'){
+v=fmtPct(v);
+}else if(['qtd','unidadesX','lote','caixas','ritmo'].includes(c[1])){
+v=fmtN(v);
+}
+
+return '<td>'+esc(v===null||v===undefined?'—':v)+'</td>';
+
+}).join('')+'</tr>';
+
+});
+
+h+='</tbody></table>';
+
+$('tabela').innerHTML=h;
 
 }
 
 /* =====================================================
-   RENDERIZAÇÃO ESPECIAL — EMBALAGEM
+   RENDERIZAÇÃO ESPECIAL - EMBALAGEM
 ===================================================== */
 
-function renderEmbalagem(dados) {
+function renderEmbalagem(dados){
 
-    // Regras exclusivas da Embalagem:
-    // AD = produto
-    // AE = lote
-    // AF = caixas
-    // AG = unidades
+const registros=cache.embalagem||[];
 
-    const registros = cache.embalagem || [];
+const normalizar=v=>
+String(v??'').trim().toLocaleUpperCase('pt-BR');
 
-    const normalizar = v =>
-        String(v ?? '').trim().toLocaleUpperCase('pt-BR');
+const produtos=new Set(
+registros.map(r=>normalizar(r.produto)).filter(Boolean)
+);
 
-    const produtos = new Set(
-        registros
-            .map(r => normalizar(r.produto))
-            .filter(Boolean)
-    );
+const lotes=new Set(
+registros.map(r=>normalizar(r.lote)).filter(Boolean)
+);
 
-    const lotes = new Set(
-        registros
-            .map(r => normalizar(r.lote))
-            .filter(Boolean)
-    );
+const soma=campo=>registros.reduce((s,r)=>{
 
-    const soma = campo =>
-        registros.reduce((s, r) => {
+const n=Number(r[campo]);
 
-            const n = Number(r[campo]);
+return s+(r[campo]!==null&&r[campo]!==''&&Number.isFinite(n)?n:0);
 
-            return s + (
-                r[campo] !== null &&
-                r[campo] !== '' &&
-                Number.isFinite(n)
-                    ? n
-                    : 0
-            );
+},0);
 
-        }, 0);
+const totalUnidades=soma('unidades');
+const totalCaixas=soma('caixas');
 
-    const totalUnidades = soma('unidades');
+$('rotulo1').textContent='PRODUTOS ÚNICOS';
+$('kpi1').textContent=fmtN(produtos.size);
 
-    const totalCaixas = soma('caixas');
+$('kpi2').textContent=fmtN(totalUnidades);
+$('detalheUnidades').textContent='Soma da coluna AG';
 
-    $('rotulo1').textContent = 'PRODUTOS ÚNICOS';
+$('rotuloCaixas').textContent='LOTES';
+$('kpiCaixas').textContent=fmtN(lotes.size);
+$('detalheCaixas').textContent='Quantidade de lotes diferentes da coluna AE';
 
-    $('kpi1').textContent = fmtN(produtos.size);
+$('kpi3').textContent=fmtN(totalCaixas);
+$('kpi4').textContent=fmtN(cache.indicadores?.ritmoMedioEmbalagem);
 
-    $('kpi2').textContent = fmtN(totalUnidades);
+const cards=document.querySelectorAll('.kpi');
 
-    $('detalheUnidades').textContent = 'Soma da coluna AG';
+cards[2].querySelector('.rotulo').textContent='LOTES';
+cards[2].querySelector('.detalhe').textContent='Lotes diferentes';
 
-    $('rotuloCaixas').textContent = 'LOTES';
+cards[3].querySelector('.rotulo').textContent='CAIXAS EMBALADAS';
+cards[3].querySelector('.detalhe').textContent='Soma da coluna AF';
 
-    $('kpiCaixas').textContent = fmtN(lotes.size);
+cards[4].style.display='block';
+cards[4].querySelector('.rotulo').textContent='RITMO MÉDIO';
+cards[4].querySelector('.detalhe').textContent='Valor da célula AH7';
 
-    $('detalheCaixas').textContent =
-        'Quantidade de lotes diferentes da coluna AE';
+$('kpiOutrosLinha').style.display='none';
+$('painelDesempenho').style.display='none';
 
-    $('kpi3').textContent = fmtN(totalCaixas);
+$('tituloUnidades').textContent='Unidades embaladas por produto';
+$('tituloRitmo').textContent='Lotes embalados';
 
-    $('kpi4').textContent =
-        fmtN(cache.indicadores?.ritmoMedioEmbalagem);
+$('subtituloRitmo').textContent=
+'Passe o mouse sobre cada linha para ver o produto e a quantidade de caixas';
 
-    const cards = document.querySelectorAll('.kpi');
+// GRÁFICO 1 - AGRUPADO POR PRODUTO
 
-    cards[2].querySelector('.rotulo').textContent = 'LOTES';
+const mapaProdutos=new Map();
 
-    cards[2].querySelector('.detalhe').textContent = 'Lotes diferentes';
+registros.forEach(r=>{
 
-    cards[3].querySelector('.rotulo').textContent = 'CAIXAS EMBALADAS';
+const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
+const key=normalizar(produto);
 
-    cards[3].querySelector('.detalhe').textContent = 'Soma da coluna AF';
+if(!mapaProdutos.has(key)){
+mapaProdutos.set(key,{produto:produto,unidades:0});
+}
 
-    cards[4].style.display = 'block';
+mapaProdutos.get(key).unidades+=Number(r.unidades)||0;
 
-    cards[4].querySelector('.rotulo').textContent = 'RITMO MÉDIO';
+});
 
-    cards[4].querySelector('.detalhe').textContent =
-        'Valor da célula AH7';
+const produtosGrafico=Array.from(mapaProdutos.values());
+const labelsProdutos=produtosGrafico.map(r=>r.produto);
 
-    $('kpiOutrosLinha').style.display = 'none';
+criarChart('graficoUnidades','bar',labelsProdutos,[
+{
+label:'Unidades embaladas (AG)',
+data:produtosGrafico.map(r=>r.unidades),
+backgroundColor:'#2879d0',
+borderRadius:5
+}
+],{horizontal:true});
 
-    $('painelDesempenho').style.display = 'none';
+// GRÁFICO 2 - LOTES
 
-    $('tituloUnidades').textContent =
-        'Unidades embaladas por produto';
+const mapaLotes=new Map();
 
-    $('tituloRitmo').textContent = 'Lotes embalados';
+registros.forEach(r=>{
 
-    $('subtituloRitmo').textContent =
-        'Passe o mouse sobre cada linha para ver o produto e a quantidade de caixas';
+const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
+const lote=String(r.lote||'').trim()||'(sem lote)';
+const key=normalizar(lote);
 
-    // GRÁFICO 1 — agrupado por PRODUTO (coluna AD),
-    // exibindo os nomes dos produtos e somando as unidades da coluna AG.
-
-    const mapaProdutos = new Map();
-
-    registros.forEach(r => {
-
-        const produto =
-            String(r.produto || '(sem identificação)').trim() ||
-            '(sem identificação)';
-
-        const key = normalizar(produto);
-
-        if (!mapaProdutos.has(key)) {
-
-            mapaProdutos.set(key, {
-                produto: produto,
-                unidades: 0
-            });
-
-        }
-
-        mapaProdutos.get(key).unidades += Number(r.unidades) || 0;
-
-    });
-
-    const produtosGrafico = Array.from(mapaProdutos.values());
-
-    const labelsProdutos = produtosGrafico.map(r => r.produto);
-
-    criarChart(
-        'graficoUnidades',
-        'bar',
-        labelsProdutos,
-        [
-            {
-                label: 'Unidades embaladas (AG)',
-                data: produtosGrafico.map(r => r.unidades),
-                backgroundColor: '#2879d0',
-                borderRadius: 5
-            }
-        ],
-        {
-            horizontal: true
-        }
-    );
-
-    // GRÁFICO 2 — cada barra representa um LOTE da coluna AE.
-    // Mantém a ordem em que os lotes aparecem na planilha.
-    // As barras exibem somente o número do lote;
-    // o tooltip mostra produto(s) e caixas.
-
-    const mapaLotes = new Map();
-
-    registros.forEach(r => {
-
-        const produto =
-            String(r.produto || '(sem identificação)').trim() ||
-            '(sem identificação)';
-
-        const lote = String(r.lote || '').trim() || '(sem lote)';
-
-        const key = normalizar(lote);
-
-        if (!mapaLotes.has(key)) {
-
-            mapaLotes.set(key, {
-                lote: lote,
-                produtos: [],
-                caixas: 0
-            });
-
-        }
-
-        const item = mapaLotes.get(key);
-
-        if (!item.produtos.includes(produto)) {
-            item.produtos.push(produto);
-        }
-
-        item.caixas += Number(r.caixas) || 0;
-
-    });
-
-    const lotesGrafico = Array.from(mapaLotes.values());
-
-    const labelsLotes = lotesGrafico.map(r => r.lote);
-
-    const textoProdutos = r => r.produtos.join(', ');
-
-    criarChart(
-        'graficoRitmo',
-        'bar',
-        labelsLotes,
-        [
-            {
-                label: 'Caixas embaladas (AF)',
-                data: lotesGrafico.map(r => r.caixas),
-                backgroundColor: '#16a078',
-                borderRadius: 5
-            }
-        ],
-        {
-            horizontal: true,
-
-            options: {
-
-                plugins: {
-
-                    tooltip: {
-
-                        callbacks: {
-
-                            title: () => '',
-
-                            label: c =>
-                                'Produto(s): ' +
-                                textoProdutos(lotesGrafico[c.dataIndex]),
-
-                            afterLabel: c =>
-                                'Caixas embaladas (AF): ' +
-                                fmtN(c.parsed.x)
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-    );
-
-    // GRÁFICO RESUMO
-
-    criarChart(
-        'graficoResumo',
-        'bar',
-        [
-            'Produtos únicos',
-            'Lotes diferentes',
-            'Unidades produzidas',
-            'Caixas embaladas'
-        ],
-        [
-            {
-                label: 'Indicadores',
-
-                data: [
-                    produtos.size,
-                    lotes.size,
-                    totalUnidades,
-                    totalCaixas
-                ],
-
-                backgroundColor: [
-                    '#f59e0b',
-                    '#e05252',
-                    '#2879d0',
-                    '#16a078'
-                ],
-
-                borderRadius: 6
-            }
-        ]
-    );
-
-    // TABELA DETALHADA
-
-    let h =
-        '<table><thead><tr>' +
-        '<th>Data</th>' +
-        '<th>Produto</th>' +
-        '<th>Lote</th>' +
-        '<th>Caixas</th>' +
-        '<th>Unidades</th>' +
-        '</tr></thead><tbody>';
-
-    if (!registros.length) {
-
-        h +=
-            '<tr><td colspan="5">' +
-            'Nenhum registro de Embalagem no período selecionado.' +
-            '</td></tr>';
-
-    }
-
-    registros.forEach(r => {
-
-        h += '<tr>' +
-
-            [
-                r.data,
-                r.produto,
-                r.lote,
-                fmtN(r.caixas),
-                fmtN(r.unidades)
-            ]
-
-                .map(v =>
-                    '<td>' +
-                    esc(
-                        v === null ||
-                        v === undefined ||
-                        v === ''
-                            ? '—'
-                            : v
-                    ) +
-                    '</td>'
-                )
-
-                .join('') +
-
-            '</tr>';
-
-    });
-
-    $('tabela').innerHTML = h + '</tbody></table>';
+if(!mapaLotes.has(key)){
+mapaLotes.set(key,{lote:lote,produtos:[],caixas:0});
+}
+
+const item=mapaLotes.get(key);
+
+if(!item.produtos.includes(produto)){
+item.produtos.push(produto);
+}
+
+item.caixas+=Number(r.caixas)||0;
+
+});
+
+const lotesGrafico=Array.from(mapaLotes.values());
+const labelsLotes=lotesGrafico.map(r=>r.lote);
+const textoProdutos=r=>r.produtos.join(', ');
+
+criarChart('graficoRitmo','bar',labelsLotes,[
+{
+label:'Caixas embaladas (AF)',
+data:lotesGrafico.map(r=>r.caixas),
+backgroundColor:'#16a078',
+borderRadius:5
+}
+],{
+
+horizontal:true,
+
+options:{
+plugins:{
+tooltip:{
+callbacks:{
+title:()=>'',
+label:c=>'Produto(s): '+textoProdutos(lotesGrafico[c.dataIndex]),
+afterLabel:c=>'Caixas embaladas (AF): '+fmtN(c.parsed.x)
+}
+}
+}
+}
+
+});
+
+criarChart(
+'graficoResumo',
+'bar',
+[
+'Produtos únicos',
+'Lotes diferentes',
+'Unidades produzidas',
+'Caixas embaladas'
+],
+[
+{
+label:'Indicadores',
+data:[produtos.size,lotes.size,totalUnidades,totalCaixas],
+backgroundColor:['#f59e0b','#e05252','#2879d0','#16a078'],
+borderRadius:6
+}
+]
+);
+
+let h='<table><thead><tr>'+
+'<th>Data</th><th>Produto</th><th>Lote</th><th>Caixas</th><th>Unidades</th>'+
+'</tr></thead><tbody>';
+
+if(!registros.length){
+h+='<tr><td colspan="5">Nenhum registro de Embalagem no período selecionado.</td></tr>';
+}
+
+registros.forEach(r=>{
+
+h+='<tr>'+
+[r.data,r.produto,r.lote,fmtN(r.caixas),fmtN(r.unidades)]
+.map(v=>'<td>'+esc(v===null||v===undefined||v===''?'—':v)+'</td>')
+.join('')+
+'</tr>';
+
+});
+
+$('tabela').innerHTML=h+'</tbody></table>';
 
 }
 
@@ -1897,38 +1368,29 @@ function renderEmbalagem(dados) {
    FUNÇÕES AUXILIARES
 ===================================================== */
 
-function esc(v) {
+function esc(v){
 
-    return String(v).replace(/[&<>"']/g, c => ({
+return String(v).replace(/[&<>"']/g,c=>({
 
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
 
-    }[c]));
+}[c]));
 
 }
 
-/* =====================================================
-   SELEÇÃO DO SETOR
-===================================================== */
+function selecionarSetor(s){
 
-function selecionarSetor(s) {
+setorAtual=s;
 
-    setorAtual = s;
+document.querySelectorAll('[data-setor]').forEach(b=>
+b.classList.toggle('ativa',b.dataset.setor===s)
+);
 
-    document.querySelectorAll('[data-setor]').forEach(b => {
-
-        b.classList.toggle(
-            'ativa',
-            b.dataset.setor === s
-        );
-
-    });
-
-    render();
+render();
 
 }
 
@@ -1936,89 +1398,66 @@ function selecionarSetor(s) {
    CARREGAMENTO DOS DADOS
 ===================================================== */
 
-async function carregar(usandoDatasDigitadas = false) {
+async function carregar(usandoDatasDigitadas=false){
 
-    $('status').textContent =
-        'Consultando dados atualizados da planilha...';
+$('status').textContent='Consultando dados atualizados da planilha...';
 
-    try {
+try{
 
-        const inicio = usandoDatasDigitadas
-            ? $('dataInicio').value
-            : '';
+const inicio=usandoDatasDigitadas?$('dataInicio').value:'';
+const fim=usandoDatasDigitadas?$('dataFim').value:'';
 
-        const fim = usandoDatasDigitadas
-            ? $('dataFim').value
-            : '';
+if(usandoDatasDigitadas&&(!inicio||!fim)){
+throw new Error('Informe a data inicial e a data final.');
+}
 
-        if (usandoDatasDigitadas && (!inicio || !fim)) {
+if(usandoDatasDigitadas&&inicio>fim){
+throw new Error('A data inicial não pode ser posterior à data final.');
+}
 
-            throw new Error(
-                'Informe a data inicial e a data final.'
-            );
+const d=await chamarApi(inicio,fim);
 
-        }
+if(!d||!d.ok){
+throw new Error(d?.mensagem||'A API não retornou os dados.');
+}
 
-        if (usandoDatasDigitadas && inicio > fim) {
+Object.assign(cache,d.setores||{});
 
-            throw new Error(
-                'A data inicial não pode ser posterior à data final.'
-            );
+cache.indicadores=d.indicadores||{};
 
-        }
+const p=d.periodo||{};
 
-        const d = await chamarApi(inicio, fim);
+if(p.inicio){
+$('dataInicio').value=p.inicio;
+}
 
-        if (!d || !d.ok) {
+if(p.fim){
+$('dataFim').value=p.fim;
+}
 
-            throw new Error(
-                d?.mensagem || 'A API não retornou os dados.'
-            );
+$('periodo').textContent=
+'Período: '+(p.inicio||'não informado')+
+' a '+(p.fim||'não informado');
 
-        }
+$('status').textContent=
+'Dados carregados da planilha. Última consulta: '+
+new Date().toLocaleTimeString('pt-BR');
 
-        Object.assign(cache, d.setores || {});
+render();
 
-        cache.indicadores = d.indicadores || {};
+}catch(e){
 
-        const p = d.periodo || {};
+$('status').textContent=
+'Não foi possível carregar os relatórios: '+e.message;
 
-        if (p.inicio) {
-            $('dataInicio').value = p.inicio;
-        }
+if(!document.querySelector('#tabela table')){
 
-        if (p.fim) {
-            $('dataFim').value = p.fim;
-        }
+$('tabela').innerHTML=
+'<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
 
-        $('periodo').textContent =
-            'Período: ' +
-            (p.inicio || 'não informado') +
-            ' a ' +
-            (p.fim || 'não informado');
+}
 
-        $('status').textContent =
-            'Dados carregados da planilha. Última consulta: ' +
-            new Date().toLocaleTimeString('pt-BR');
-
-        render();
-
-    } catch (e) {
-
-        $('status').textContent =
-            'Não foi possível carregar os relatórios: ' +
-            e.message;
-
-        if (!document.querySelector('#tabela table')) {
-
-            $('tabela').innerHTML =
-                '<div class="vazio">' +
-                'Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.' +
-                '</div>';
-
-        }
-
-    }
+}
 
 }
 
@@ -2026,21 +1465,13 @@ async function carregar(usandoDatasDigitadas = false) {
    EVENTOS
 ===================================================== */
 
-document.querySelectorAll('[data-setor]').forEach(b => {
-
-    b.addEventListener('click', () =>
-        selecionarSetor(b.dataset.setor)
-    );
-
-});
-
-$('recarregar').addEventListener('click', () =>
-    carregar(true)
+document.querySelectorAll('[data-setor]').forEach(b=>
+b.addEventListener('click',()=>selecionarSetor(b.dataset.setor))
 );
 
-$('aplicarPeriodo').addEventListener('click', () =>
-    carregar(true)
-);
+$('recarregar').addEventListener('click',()=>carregar(true));
+
+$('aplicarPeriodo').addEventListener('click',()=>carregar(true));
 
 // INICIALIZAÇÃO
 
