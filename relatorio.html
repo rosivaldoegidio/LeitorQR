@@ -93,7 +93,7 @@ function prepararDados(){
 
   if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
   // Corte: 'Unidades somadas' na tabela detalhada recebe a coluna X (campo caixas) da aba CAPACIDADE PRODUÇÃO.
-                ```html
+                ``
   if(setorAtual==='corte' && r.caixas!==null && r.caixas!==undefined && r.caixas!=='' && Number.isFinite(Number(r.caixas))) item.unidadesXSoma+=Number(r.caixas);
   // Corte: a coluna 'Caixas' deve reproduzir os valores da coluna Y da aba CAPACIDADE PRODUÇÃO (campo unidades).
   // Dobra mantém a regra original de somar o campo caixas.
