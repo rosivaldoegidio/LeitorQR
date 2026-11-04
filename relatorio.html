@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,7 +27,7 @@
 <script>
 'use strict';
 // Depois de implantar codigo_relatorios.gs como Aplicativo da Web, cole aqui a URL terminada em /exec.
-const REPORT_API_URL='https://script.google.com/macros/s/AKfycbzJDjg9ilk0yz8CCd-p7zz1Wj1_pKOhRFWWjocAbtzJHGHnp-ZckKSkqpfdhSTorrMIsA/exec';
+const REPORT_API_URL='https://script.google.com/macros/s/AKfycbw0DTeI-uzZcZcEIjkYNbhleSmyxEL4UhXYbok-ckLLqaSv1FBGTeuWwzo4iLc3b8Ng/exec';
 const cache={};let setorAtual='costura';let charts=[];
 const $=id=>document.getElementById(id);
 const fmtN=n=>n===null||n===undefined||n===''?'—':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:2});
@@ -94,7 +93,7 @@ function prepararDados(){
 
   if(qtd!==null && qtd!=='' && Number.isFinite(Number(qtd))) item.qtd+=Number(qtd);
   // Corte: 'Unidades somadas' na tabela detalhada recebe a coluna X (campo caixas) da aba CAPACIDADE PRODUÇÃO.
- ```html
+                ```html
   if(setorAtual==='corte' && r.caixas!==null && r.caixas!==undefined && r.caixas!=='' && Number.isFinite(Number(r.caixas))) item.unidadesXSoma+=Number(r.caixas);
   // Corte: a coluna 'Caixas' deve reproduzir os valores da coluna Y da aba CAPACIDADE PRODUÇÃO (campo unidades).
   // Dobra mantém a regra original de somar o campo caixas.
@@ -189,8 +188,7 @@ function render(){
  const unidadesOutros = setorAtual==='costura'
   ? registrosOriginais.filter(r=>!ehMontagem(r)).reduce((s,r)=>{
       const n=r.unidades;
-      return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);
-      ```html
+      return s+(n!==null && n!=='' && Number.isFinite(Number(n)) ? Number(n) : 0);      
     },0)
   : null;
  if (setorAtual==='costura') $('kpiOutros').textContent=fmtN(unidadesOutros);
