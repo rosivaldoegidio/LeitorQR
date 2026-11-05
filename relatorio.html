@@ -176,6 +176,27 @@ main {
     margin-bottom:16px;
 }
 
+/* Indicadores acumulados exclusivos da Embalagem */
+.cards-acumulados {
+    display:none;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin:0 0 16px;
+}
+
+.kpi-acumulado {
+    border-radius:15px;
+    padding:20px;
+    color:#fff;
+    box-shadow:0 7px 20px #19375d18;
+}
+
+.kpi-acumulado.caixas { background:linear-gradient(135deg,#087f62,#16a078); }
+.kpi-acumulado.unidades { background:linear-gradient(135deg,#1d5fae,#2879d0); }
+.kpi-acumulado .rotulo { font-size:12px; font-weight:700; letter-spacing:.5px; opacity:.95; }
+.kpi-acumulado .valor { font-size:clamp(27px,3.5vw,38px); font-weight:800; margin-top:8px; overflow-wrap:anywhere; }
+.kpi-acumulado .detalhe { font-size:12px; margin-top:5px; opacity:.9; }
+
 .kpi,
 .painel {
     background:white;
@@ -311,6 +332,10 @@ td:first-child {
 
     .cards {
         grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .cards-acumulados {
+        grid-template-columns:1fr;
     }
 
     .graficos {
@@ -513,6 +538,19 @@ td:first-child {
         <div class="detalhe">Média de todos os registros da planilha</div>
     </article>
 
+</section>
+
+<section class="cards-acumulados" id="cardsAcumuladosEmbalagem">
+    <article class="kpi-acumulado caixas">
+        <div class="rotulo">TOTAL ACUMULADO DE CAIXAS</div>
+        <div class="valor" id="kpiCaixasAcumuladas">—</div>
+        <div class="detalhe">Acumulado dos lotes identificados no período selecionado (coluna AI)</div>
+    </article>
+    <article class="kpi-acumulado unidades">
+        <div class="rotulo">TOTAL ACUMULADO DE UNIDADES</div>
+        <div class="valor" id="kpiUnidadesAcumuladas">—</div>
+        <div class="detalhe">Acumulado dos lotes identificados no período selecionado (coluna AJ)</div>
+    </article>
 </section>
 
 <section class="graficos">
@@ -859,6 +897,8 @@ const dados=prepararDados();
 
 const temDesempenho=setorAtual!=='pacote' && setorAtual!=='embalagem';
 
+$('cardsAcumuladosEmbalagem').style.display = setorAtual==='embalagem' ? 'grid' : 'none';
+
 document.querySelectorAll('.kpi')[4].style.display='';
 document.querySelectorAll('.kpi')[4].querySelector('.rotulo').textContent='DESEMPENHO MÉDIO';
 document.querySelectorAll('.kpi')[4].querySelector('.detalhe').textContent='Média de todos os registros da planilha';
@@ -1183,7 +1223,15 @@ $('tabela').innerHTML=h;
 
 function renderEmbalagem(dados){
 
-const registros=cache.embalagem||[];
+const todosRegistros=cache.embalagem||[];
+const periodoAtual=cache.periodo||{};
+const inicioPeriodo=periodoAtual.inicio||'';
+const fimPeriodo=periodoAtual.fim||'';
+const registros=todosRegistros.filter(r=>{
+    const dia=String(r.data||'').slice(0,10);
+    if(!dia) return false;
+    return (!inicioPeriodo || dia>=inicioPeriodo) && (!fimPeriodo || dia<=fimPeriodo);
+});
 
 const normalizar=v=>
 String(v??'').trim().toLocaleUpperCase('pt-BR');
@@ -1206,6 +1254,29 @@ return s+(r[campo]!==null&&r[campo]!==''&&Number.isFinite(n)?n:0);
 
 const totalUnidades=soma('unidades');
 const totalCaixas=soma('caixas');
+
+// Cada lote do período entra uma única vez. AI/AJ já contêm o acumulado
+// do lote; por isso selecionamos um valor por lote e nunca somamos duplicatas.
+const acumuladosPorLote=new Map();
+registros.forEach(r=>{
+    const lote=normalizar(r.lote);
+    if(!lote) return;
+    if(!acumuladosPorLote.has(lote)){
+        acumuladosPorLote.set(lote,{caixas:null,unidades:null});
+    }
+    const item=acumuladosPorLote.get(lote);
+    if(item.caixas===null && r.caixasAcumuladas!==null && r.caixasAcumuladas!==undefined && r.caixasAcumuladas!==''){
+        item.caixas=Number(r.caixasAcumuladas);
+    }
+    if(item.unidades===null && r.unidadesAcumuladas!==null && r.unidadesAcumuladas!==undefined && r.unidadesAcumuladas!==''){
+        item.unidades=Number(r.unidadesAcumuladas);
+    }
+});
+const acumulados=Array.from(acumuladosPorLote.values());
+const totalCaixasAcumuladas=acumulados.reduce((s,r)=>s+(Number.isFinite(r.caixas)?r.caixas:0),0);
+const totalUnidadesAcumuladas=acumulados.reduce((s,r)=>s+(Number.isFinite(r.unidades)?r.unidades:0),0);
+$('kpiCaixasAcumuladas').textContent=fmtN(totalCaixasAcumuladas);
+$('kpiUnidadesAcumuladas').textContent=fmtN(totalUnidadesAcumuladas);
 
 $('rotulo1').textContent='PRODUTOS ÚNICOS';
 $('kpi1').textContent=fmtN(produtos.size);
@@ -1426,6 +1497,7 @@ Object.assign(cache,d.setores||{});
 cache.indicadores=d.indicadores||{};
 
 const p=d.periodo||{};
+cache.periodo=p;
 
 if(p.inicio){
 $('dataInicio').value=p.inicio;
