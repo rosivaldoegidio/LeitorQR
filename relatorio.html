@@ -1298,7 +1298,9 @@ registros.forEach(r=>{
             produtos:[],
             caixasPeriodo:0,
             caixasAcumuladas:null,
-            unidadesAcumuladas:null
+            caixasAcumuladasTexto:null,
+            unidadesAcumuladas:null,
+            unidadesAcumuladasTexto:null
         });
     }
 
@@ -1309,10 +1311,14 @@ registros.forEach(r=>{
     // AI/AJ já são acumulados por lote. Guardar apenas o primeiro
     // valor disponível para não repetir o mesmo acumulado em cada linha.
     if(item.caixasAcumuladas===null && r.caixasAcumuladas!==null && r.caixasAcumuladas!==undefined && r.caixasAcumuladas!==''){
-        item.caixasAcumuladas=Number(r.caixasAcumuladas);
+        const partesAI=String(r.caixasAcumuladas).split('/');
+        item.caixasAcumuladas=Number(partesAI[0].trim());
+        item.caixasAcumuladasTexto=partesAI.length>1?partesAI[0].trim()+' / '+partesAI.slice(1).join('/').trim():String(r.caixasAcumuladas).trim();
     }
     if(item.unidadesAcumuladas===null && r.unidadesAcumuladas!==null && r.unidadesAcumuladas!==undefined && r.unidadesAcumuladas!==''){
-        item.unidadesAcumuladas=Number(r.unidadesAcumuladas);
+        const partesAJ=String(r.unidadesAcumuladas).split('/');
+        item.unidadesAcumuladas=Number(partesAJ[0].trim());
+        item.unidadesAcumuladasTexto=partesAJ.length>1?partesAJ[0].trim()+' / '+partesAJ.slice(1).join('/').trim():String(r.unidadesAcumuladas).trim();
     }
 });
 
@@ -1370,7 +1376,7 @@ criarChart('graficoRitmo','bar',labelsLotes,[
                 callbacks:{
                     title:items=>items.length?'Lote: '+labelsLotes[items[0].dataIndex]:'',
                     beforeBody:items=>'Produto(s): '+produtosDoLote(items[0].dataIndex),
-                    label:c=>c.dataset.label+': '+fmtN(c.parsed.x)
+                    label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].caixasAcumuladasTexto??fmtN(c.parsed.x)):c.datasetIndex===2?(lotesGrafico[c.dataIndex].unidadesAcumuladasTexto??fmtN(c.parsed.x)):fmtN(c.parsed.x))
                 }
             }
         }
