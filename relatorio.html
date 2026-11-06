@@ -305,6 +305,10 @@ td:first-child {
 ===================================================== */
 
 @media(max-width:850px) {
+    .painel { padding:14px 12px; }
+    .painel .sub { font-size:11px; line-height:1.4; }
+    .canvas-wrap { min-width:0; }
+
     main {
         padding:12px;
     }
@@ -1340,10 +1344,12 @@ const labelsLotes=lotesGrafico.map(r=>r.lote);
 const produtosDoLote=i=>lotesGrafico[i]?.produtos.join(', ')||'—';
 const valorOuZero=v=>Number.isFinite(v)?v:0;
 
-// Aumenta somente a área do gráfico de lotes: 48 px por lote no celular
-// e 42 px por lote em telas maiores, com altura mínima para poucos lotes.
+// Reserva mais altura para cada lote, separando visualmente as três barras.
+// No celular o espaço é ainda maior para facilitar a leitura e o toque.
 const mobileGraficoLotes=window.matchMedia('(max-width:850px)').matches;
-const alturaGraficoLotes=Math.max(mobileGraficoLotes?420:360,lotesGrafico.length*(mobileGraficoLotes?48:42));
+const alturaPorLote=mobileGraficoLotes?76:64;
+const alturaMinima=mobileGraficoLotes?460:400;
+const alturaGraficoLotes=Math.max(alturaMinima,lotesGrafico.length*alturaPorLote);
 const canvasLotes=$('graficoRitmo').parentElement;
 canvasLotes.style.height=alturaGraficoLotes+'px';
 
@@ -1354,7 +1360,9 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#16a078',
         borderRadius:5,
         minBarLength:24,
-        barThickness:12
+        barThickness:10,
+        categoryPercentage:0.72,
+        barPercentage:0.82
     },
     {
         label:'Total acumulado de caixas (AI)',
@@ -1362,7 +1370,9 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#2879d0',
         borderRadius:5,
         minBarLength:24,
-        barThickness:12
+        barThickness:10,
+        categoryPercentage:0.72,
+        barPercentage:0.82
     },
     {
         label:'Total acumulado de unidades (AJ)',
@@ -1370,7 +1380,9 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#e69a2a',
         borderRadius:5,
         minBarLength:24,
-        barThickness:12
+        barThickness:10,
+        categoryPercentage:0.72,
+        barPercentage:0.82
     }
 ],{
     horizontal:true,
@@ -1386,8 +1398,16 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         plugins:{
             legend:{display:true,position:'bottom'},
             tooltip:{
+                padding:7,
+                boxPadding:3,
+                titleFont:{size:11},
+                bodyFont:{size:10},
+                displayColors:true,
+                boxWidth:8,
+                boxHeight:8,
                 callbacks:{
-                    title:items=>items.length?'Lote: '+labelsLotes[items[0].dataIndex]:'',
+                    // O lote já aparece no eixo do gráfico; não repetir no banner.
+                    title:()=>[],
                     beforeBody:items=>'Produto(s): '+produtosDoLote(items[0].dataIndex),
                     label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].caixasAcumuladasTexto??fmtN(c.parsed.x)):c.datasetIndex===2?(lotesGrafico[c.dataIndex].unidadesAcumuladasTexto??fmtN(c.parsed.x)):fmtN(c.parsed.x))
                 }
