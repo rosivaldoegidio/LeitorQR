@@ -1023,6 +1023,20 @@ return s+(Number.isFinite(valor) ? valor : 0);
 
 },0)
 
+: setorAtual==='pacote'
+
+? registrosOriginais.reduce((s,r)=>{
+
+const n=r.lote; // Coluna Q da aba CAPACIDADE PRODUÇÃO, a partir da linha 7.
+
+if(n===null || n===undefined || n==='') return s;
+
+const valor=Number(String(n).trim().replace(',','.'));
+
+return s+(Number.isFinite(valor) ? valor : 0);
+
+},0)
+
 : null;
 
 $('kpiCaixas').textContent=totalCaixas===null?'—':fmtN(totalCaixas);
