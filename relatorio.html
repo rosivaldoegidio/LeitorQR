@@ -1308,17 +1308,30 @@ registros.forEach(r=>{
     if(!item.produtos.includes(produto)) item.produtos.push(produto);
     item.caixasPeriodo+=Number(r.caixas)||0;
 
-    // AI/AJ já são acumulados por lote. Guardar apenas o primeiro
-    // valor disponível para não repetir o mesmo acumulado em cada linha.
-    if(item.caixasAcumuladas===null && r.caixasAcumuladas!==null && r.caixasAcumuladas!==undefined && r.caixasAcumuladas!==''){
-        const partesAI=String(r.caixasAcumuladas).split('/');
-        item.caixasAcumuladas=Number(partesAI[0].trim());
-        item.caixasAcumuladasTexto=partesAI.length>1?partesAI[0].trim()+' / '+partesAI.slice(1).join('/').trim():String(r.caixasAcumuladas).trim();
+    // AI/AJ são acumulados por lote. Algumas linhas do mesmo lote podem
+    // trazer zero antes do valor acumulado efetivo; manter o maior valor
+    // numérico encontrado e o texto correspondente para o tooltip.
+    const lerAcumulado=(valor)=>{
+        const texto=String(valor??'').trim();
+        if(!texto) return null;
+        const partes=texto.split('/');
+        const numeroTexto=partes[0].trim().replace(/\./g,'').replace(',','.');
+        const numero=Number(numeroTexto);
+        if(!Number.isFinite(numero)) return null;
+        return {
+            numero:numero,
+            texto:partes.length>1?partes[0].trim()+' / '+partes.slice(1).join('/').trim():texto
+        };
+    };
+    const acumuladoAI=lerAcumulado(r.caixasAcumuladas);
+    if(acumuladoAI && (item.caixasAcumuladas===null || acumuladoAI.numero>item.caixasAcumuladas)){
+        item.caixasAcumuladas=acumuladoAI.numero;
+        item.caixasAcumuladasTexto=acumuladoAI.texto;
     }
-    if(item.unidadesAcumuladas===null && r.unidadesAcumuladas!==null && r.unidadesAcumuladas!==undefined && r.unidadesAcumuladas!==''){
-        const partesAJ=String(r.unidadesAcumuladas).split('/');
-        item.unidadesAcumuladas=Number(partesAJ[0].trim());
-        item.unidadesAcumuladasTexto=partesAJ.length>1?partesAJ[0].trim()+' / '+partesAJ.slice(1).join('/').trim():String(r.unidadesAcumuladas).trim();
+    const acumuladoAJ=lerAcumulado(r.unidadesAcumuladas);
+    if(acumuladoAJ && (item.unidadesAcumuladas===null || acumuladoAJ.numero>item.unidadesAcumuladas)){
+        item.unidadesAcumuladas=acumuladoAJ.numero;
+        item.unidadesAcumuladasTexto=acumuladoAJ.texto;
     }
 });
 
