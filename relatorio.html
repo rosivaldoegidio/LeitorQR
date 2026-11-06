@@ -813,12 +813,12 @@ label:ctx=>`${ctx.dataset.label||'Valor'}: ${fmtN(ctx.parsed.x??ctx.parsed.y)}`
 
 scales:{
 x:{
-grid:{color:'#edf1f6'},
+grid:{display:false},
 ticks:{autoSkip:true,maxRotation:55,minRotation:0}
 },
 y:{
 beginAtZero:true,
-grid:{color:'#edf1f6'}
+grid:{display:false}
 }
 }
 
@@ -1079,6 +1079,7 @@ options:{
 scales:{
 x:{
 beginAtZero:true,
+grid:{display:false},
 ticks:{callback:v=>v+'%'}
 },
 y:{grid:{display:false}}
@@ -1356,8 +1357,9 @@ criarChart('graficoRitmo','bar',labelsLotes,[
     horizontal:true,
     options:{
         scales:{
-            x:{beginAtZero:true},
+            x:{beginAtZero:true,grid:{display:false}},
             y:{
+                grid:{display:false},
                 stacked:false,
                 ticks:{autoSkip:false}
             }
