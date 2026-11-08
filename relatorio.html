@@ -474,10 +474,25 @@ td:first-child {
             <input id="dataFim" type="date" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
         </div>
 
+        <div id="filtroHorarios" style="display:none;gap:10px;align-items:end;flex-wrap:wrap">
+            <div>
+                <label for="horaInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
+                    HORA INICIAL
+                </label>
+                <input id="horaInicio" type="time" step="1" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+            </div>
+            <div>
+                <label for="horaFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
+                    HORA FINAL
+                </label>
+                <input id="horaFim" type="time" step="1" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+            </div>
+        </div>
+
         <button class="btn aba ativa" id="aplicarPeriodo">Aplicar período</button>
 
         <span style="font-size:12px;color:var(--muted)">
-            Escolha as datas e clique em “Aplicar período”.
+            Escolha as datas e clique em “Aplicar período”. No setor Embalagem, também é possível filtrar por horário.
         </span>
 
     </div>
@@ -1203,16 +1218,39 @@ $('tabela').innerHTML=h;
    RENDERIZAÇÃO ESPECIAL - EMBALAGEM
 ===================================================== */
 
+// Converte data/hora ISO ou brasileira (dd/mm/aaaa hh:mm:ss) em timestamp.
+function dataHoraEmbalagemMs(valor){
+    if(valor===null || valor===undefined || valor==='') return null;
+    const s=String(valor).trim();
+    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/);
+    if(m){
+        const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),Number(m[4]),Number(m[5]),Number(m[6]||0));
+        return isNaN(d.getTime())?null:d.getTime();
+    }
+    m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})[ ,T]+(\d{2}):(\d{2})(?::(\d{2}))?/);
+    if(m){
+        const d=new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),Number(m[4]),Number(m[5]),Number(m[6]||0));
+        return isNaN(d.getTime())?null:d.getTime();
+    }
+    const fallback=Date.parse(s);
+    return Number.isNaN(fallback)?null:fallback;
+}
+
 function renderEmbalagem(dados){
 
 const todosRegistros=cache.embalagem||[];
 const periodoAtual=cache.periodo||{};
 const inicioPeriodo=periodoAtual.inicio||'';
 const fimPeriodo=periodoAtual.fim||'';
+const horaInicio=$('horaInicio').value||'00:00:00';
+const horaFim=$('horaFim').value||'23:59:59';
+const limiteInicio=inicioPeriodo?dataHoraEmbalagemMs(inicioPeriodo+'T'+horaInicio):null;
+const limiteFim=fimPeriodo?dataHoraEmbalagemMs(fimPeriodo+'T'+horaFim):null;
 const registros=todosRegistros.filter(r=>{
-    const dia=String(r.data||'').slice(0,10);
-    if(!dia) return false;
-    return (!inicioPeriodo || dia>=inicioPeriodo) && (!fimPeriodo || dia<=fimPeriodo);
+    const instante=dataHoraEmbalagemMs(r.data);
+    if(instante===null) return false;
+    return (limiteInicio===null || instante>=limiteInicio) &&
+           (limiteFim===null || instante<=limiteFim);
 });
 
 const normalizar=v=>
@@ -1493,6 +1531,8 @@ function selecionarSetor(s){
 
 setorAtual=s;
 
+$('filtroHorarios').style.display=s==='embalagem'?'flex':'none';
+
 document.querySelectorAll('[data-setor]').forEach(b=>
 b.classList.toggle('ativa',b.dataset.setor===s)
 );
@@ -1520,6 +1560,10 @@ throw new Error('Informe a data inicial e a data final.');
 
 if(usandoDatasDigitadas&&inicio>fim){
 throw new Error('A data inicial não pode ser posterior à data final.');
+}
+
+if(setorAtual==='embalagem' && inicio===fim && $('horaInicio').value && $('horaFim').value && $('horaInicio').value>$('horaFim').value){
+throw new Error('A hora inicial não pode ser posterior à hora final quando a consulta é para o mesmo dia.');
 }
 
 const d=await chamarApi(inicio,fim);
