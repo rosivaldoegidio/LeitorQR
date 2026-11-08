@@ -479,13 +479,17 @@ td:first-child {
                 <label for="horaInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
                     HORA INICIAL
                 </label>
-                <input id="horaInicio" type="time" step="1" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+                <select id="horaInicio" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px;min-width:190px">
+                    <option value="">Todos os horários</option>
+                </select>
             </div>
             <div>
                 <label for="horaFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
                     HORA FINAL
                 </label>
-                <input id="horaFim" type="time" step="1" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
+                <select id="horaFim" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px;min-width:190px">
+                    <option value="">Todos os horários</option>
+                </select>
             </div>
         </div>
 
@@ -1236,21 +1240,85 @@ function dataHoraEmbalagemMs(valor){
     return Number.isNaN(fallback)?null:fallback;
 }
 
+function dataEmbalagemISO(valor){
+    if(valor===null || valor===undefined || valor==='') return '';
+    const s=String(valor).trim();
+    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(m) return `${m[1]}-${m[2]}-${m[3]}`;
+    m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if(m) return `${m[3]}-${m[2]}-${m[1]}`;
+    const ms=dataHoraEmbalagemMs(valor);
+    if(ms===null) return '';
+    const d=new Date(ms);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatarOpcaoHorario(ms,mostrarData){
+    const d=new Date(ms);
+    const hora=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+    if(!mostrarData) return hora;
+    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${hora}`;
+}
+
+// As opções são montadas exclusivamente com data/hora existentes nos registros de AC.
+function atualizarOpcoesHorarios(){
+    const inicioDia=$('dataInicio').value || cache.periodo?.inicio || '';
+    const fimDia=$('dataFim').value || cache.periodo?.fim || '';
+    const inicioAnterior=$('horaInicio').value;
+    const fimAnterior=$('horaFim').value;
+    const registros=cache.embalagem||[];
+    const timestamps=[...new Set(registros.map(r=>{
+        const ms=dataHoraEmbalagemMs(r.data);
+        if(ms===null) return null;
+        const dia=dataEmbalagemISO(r.data);
+        if(inicioDia && dia && dia<inicioDia) return null;
+        if(fimDia && dia && dia>fimDia) return null;
+        return ms;
+    }).filter(ms=>ms!==null))].sort((a,b)=>a-b);
+    const mostrarData=inicioDia!==fimDia;
+
+    [['horaInicio',inicioAnterior],['horaFim',fimAnterior]].forEach(([id,anterior])=>{
+        const select=$(id);
+        select.innerHTML='';
+        const padrao=document.createElement('option');
+        padrao.value='';
+        padrao.textContent='Todos os horários';
+        select.appendChild(padrao);
+        timestamps.forEach(ms=>{
+            const op=document.createElement('option');
+            op.value=String(ms);
+            op.textContent=formatarOpcaoHorario(ms,mostrarData);
+            select.appendChild(op);
+        });
+        select.disabled=timestamps.length===0;
+        if(anterior && timestamps.includes(Number(anterior))) select.value=anterior;
+        else select.value='';
+    });
+}
+
 function renderEmbalagem(dados){
+
+atualizarOpcoesHorarios();
 
 const todosRegistros=cache.embalagem||[];
 const periodoAtual=cache.periodo||{};
-const inicioPeriodo=periodoAtual.inicio||'';
-const fimPeriodo=periodoAtual.fim||'';
-const horaInicio=$('horaInicio').value||'00:00:00';
-const horaFim=$('horaFim').value||'23:59:59';
-const limiteInicio=inicioPeriodo?dataHoraEmbalagemMs(inicioPeriodo+'T'+horaInicio):null;
-const limiteFim=fimPeriodo?dataHoraEmbalagemMs(fimPeriodo+'T'+horaFim):null;
+const inicioSelecionado=$('horaInicio').value ? Number($('horaInicio').value) : null;
+const fimSelecionado=$('horaFim').value ? Number($('horaFim').value) : null;
+const dataInicial=$('dataInicio').value || periodoAtual.inicio || '';
+const dataFinal=$('dataFim').value || periodoAtual.fim || '';
+
+// As datas sempre delimitam a consulta. Os horários são opcionais:
+// sem horários, considera o dia inteiro; com horários, aplica os limites escolhidos.
 const registros=todosRegistros.filter(r=>{
     const instante=dataHoraEmbalagemMs(r.data);
+    const dia=dataEmbalagemISO(r.data);
+    if(!dia) return false;
+    if(dataInicial && dia<dataInicial) return false;
+    if(dataFinal && dia>dataFinal) return false;
+    if(inicioSelecionado===null && fimSelecionado===null) return true;
     if(instante===null) return false;
-    return (limiteInicio===null || instante>=limiteInicio) &&
-           (limiteFim===null || instante<=limiteFim);
+    return (inicioSelecionado===null || instante>=inicioSelecionado) &&
+           (fimSelecionado===null || instante<=fimSelecionado);
 });
 
 const normalizar=v=>
@@ -1533,6 +1601,8 @@ setorAtual=s;
 
 $('filtroHorarios').style.display=s==='embalagem'?'flex':'none';
 
+if(s==='embalagem') atualizarOpcoesHorarios();
+
 document.querySelectorAll('[data-setor]').forEach(b=>
 b.classList.toggle('ativa',b.dataset.setor===s)
 );
@@ -1562,8 +1632,8 @@ if(usandoDatasDigitadas&&inicio>fim){
 throw new Error('A data inicial não pode ser posterior à data final.');
 }
 
-if(setorAtual==='embalagem' && inicio===fim && $('horaInicio').value && $('horaFim').value && $('horaInicio').value>$('horaFim').value){
-throw new Error('A hora inicial não pode ser posterior à hora final quando a consulta é para o mesmo dia.');
+if(setorAtual==='embalagem' && $('horaInicio').value && $('horaFim').value && Number($('horaInicio').value)>Number($('horaFim').value)){
+throw new Error('O horário inicial não pode ser posterior ao horário final.');
 }
 
 const d=await chamarApi(inicio,fim);
@@ -1624,6 +1694,11 @@ b.addEventListener('click',()=>selecionarSetor(b.dataset.setor))
 $('recarregar').addEventListener('click',()=>carregar(true));
 
 $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
+
+$('horaInicio').addEventListener('change',()=>{if(setorAtual==='embalagem') render();});
+$('horaFim').addEventListener('change',()=>{if(setorAtual==='embalagem') render();});
+$('dataInicio').addEventListener('change',()=>{if(setorAtual==='embalagem') atualizarOpcoesHorarios();});
+$('dataFim').addEventListener('change',()=>{if(setorAtual==='embalagem') atualizarOpcoesHorarios();});
 
 // INICIALIZAÇÃO
 
