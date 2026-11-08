@@ -305,10 +305,6 @@ td:first-child {
 ===================================================== */
 
 @media(max-width:850px) {
-    .painel { padding:14px 12px; }
-    .painel .sub { font-size:11px; line-height:1.4; }
-    .canvas-wrap { min-width:0; }
-
     main {
         padding:12px;
     }
@@ -476,27 +472,19 @@ td:first-child {
 
         <div id="filtroHorarios" style="display:none;gap:10px;align-items:end;flex-wrap:wrap">
             <div>
-                <label for="horaInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
-                    HORA INICIAL
-                </label>
-                <select id="horaInicio" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px;min-width:190px">
-                    <option value="">Todos os horários</option>
-                </select>
+                <label for="horaInicio" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">HORA INICIAL</label>
+                <input id="horaInicio" type="time" step="1" placeholder="HH:MM:SS" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
             </div>
             <div>
-                <label for="horaFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">
-                    HORA FINAL
-                </label>
-                <select id="horaFim" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px;min-width:190px">
-                    <option value="">Todos os horários</option>
-                </select>
+                <label for="horaFim" style="display:block;font-size:12px;font-weight:bold;color:var(--muted);margin-bottom:6px">HORA FINAL</label>
+                <input id="horaFim" type="time" step="1" placeholder="HH:MM:SS" style="padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);min-height:40px">
             </div>
         </div>
 
         <button class="btn aba ativa" id="aplicarPeriodo">Aplicar período</button>
 
         <span style="font-size:12px;color:var(--muted)">
-            Escolha as datas e clique em “Aplicar período”. No setor Embalagem, também é possível filtrar por horário.
+            Escolha as datas e clique em “Aplicar período”.
         </span>
 
     </div>
@@ -1046,13 +1034,10 @@ return s+(Number.isFinite(valor) ? valor : 0);
 
 ? registrosOriginais.reduce((s,r)=>{
 
-const n=r.lote; // Coluna Q da aba CAPACIDADE PRODUÇÃO, a partir da linha 7.
-
+const n=r.lote; // Coluna Q da aba CAPACIDADE PRODUÇÃO.
 if(n===null || n===undefined || n==='') return s;
-
 const valor=Number(String(n).trim().replace(',','.'));
-
-return s+(Number.isFinite(valor) ? valor : 0);
+return s+(Number.isFinite(valor)?valor:0);
 
 },0)
 
@@ -1222,103 +1207,51 @@ $('tabela').innerHTML=h;
    RENDERIZAÇÃO ESPECIAL - EMBALAGEM
 ===================================================== */
 
-// Converte data/hora ISO ou brasileira (dd/mm/aaaa hh:mm:ss) em timestamp.
-function dataHoraEmbalagemMs(valor){
-    if(valor===null || valor===undefined || valor==='') return null;
-    const s=String(valor).trim();
-    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/);
-    if(m){
-        const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),Number(m[4]),Number(m[5]),Number(m[6]||0));
-        return isNaN(d.getTime())?null:d.getTime();
-    }
-    m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})[ ,T]+(\d{2}):(\d{2})(?::(\d{2}))?/);
-    if(m){
-        const d=new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),Number(m[4]),Number(m[5]),Number(m[6]||0));
-        return isNaN(d.getTime())?null:d.getTime();
-    }
-    const fallback=Date.parse(s);
-    return Number.isNaN(fallback)?null:fallback;
-}
-
-function dataEmbalagemISO(valor){
-    if(valor===null || valor===undefined || valor==='') return '';
-    const s=String(valor).trim();
-    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if(m) return `${m[1]}-${m[2]}-${m[3]}`;
-    m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-    if(m) return `${m[3]}-${m[2]}-${m[1]}`;
-    const ms=dataHoraEmbalagemMs(valor);
-    if(ms===null) return '';
-    const d=new Date(ms);
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function formatarOpcaoHorario(ms,mostrarData){
-    const d=new Date(ms);
-    const hora=[d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
-    if(!mostrarData) return hora;
-    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${hora}`;
-}
-
-// As opções são montadas exclusivamente com data/hora existentes nos registros de AC.
-function atualizarOpcoesHorarios(){
-    const inicioDia=$('dataInicio').value || cache.periodo?.inicio || '';
-    const fimDia=$('dataFim').value || cache.periodo?.fim || '';
-    const inicioAnterior=$('horaInicio').value;
-    const fimAnterior=$('horaFim').value;
-    const registros=cache.embalagem||[];
-    const timestamps=[...new Set(registros.map(r=>{
-        const ms=dataHoraEmbalagemMs(r.data);
-        if(ms===null) return null;
-        const dia=dataEmbalagemISO(r.data);
-        if(inicioDia && dia && dia<inicioDia) return null;
-        if(fimDia && dia && dia>fimDia) return null;
-        return ms;
-    }).filter(ms=>ms!==null))].sort((a,b)=>a-b);
-    const mostrarData=inicioDia!==fimDia;
-
-    [['horaInicio',inicioAnterior],['horaFim',fimAnterior]].forEach(([id,anterior])=>{
-        const select=$(id);
-        select.innerHTML='';
-        const padrao=document.createElement('option');
-        padrao.value='';
-        padrao.textContent='Todos os horários';
-        select.appendChild(padrao);
-        timestamps.forEach(ms=>{
-            const op=document.createElement('option');
-            op.value=String(ms);
-            op.textContent=formatarOpcaoHorario(ms,mostrarData);
-            select.appendChild(op);
-        });
-        select.disabled=timestamps.length===0;
-        if(anterior && timestamps.includes(Number(anterior))) select.value=anterior;
-        else select.value='';
-    });
-}
-
 function renderEmbalagem(dados){
-
-atualizarOpcoesHorarios();
 
 const todosRegistros=cache.embalagem||[];
 const periodoAtual=cache.periodo||{};
-const inicioSelecionado=$('horaInicio').value ? Number($('horaInicio').value) : null;
-const fimSelecionado=$('horaFim').value ? Number($('horaFim').value) : null;
-const dataInicial=$('dataInicio').value || periodoAtual.inicio || '';
-const dataFinal=$('dataFim').value || periodoAtual.fim || '';
+const inicioPeriodo=$('dataInicio').value || periodoAtual.inicio || '';
+const fimPeriodo=$('dataFim').value || periodoAtual.fim || '';
 
-// As datas sempre delimitam a consulta. Os horários são opcionais:
-// sem horários, considera o dia inteiro; com horários, aplica os limites escolhidos.
+// A coluna AC contém data e hora (ex.: 05/11/2026 07:36:55).
+// A conversão é exclusiva da Embalagem e não interfere nos demais setores.
+const lerDataHoraAC=valor=>{
+    if(valor===null || valor===undefined || valor==='') return null;
+    const texto=String(valor).trim();
+    let m=texto.match(/^(\d{2})\/(\d{2})\/(\d{4})[ ,T]+(\d{2}):(\d{2})(?::(\d{2}))?/);
+    if(m) return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),Number(m[4]),Number(m[5]),Number(m[6]||0)).getTime();
+    m=texto.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/);
+    if(m) return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]),Number(m[4]),Number(m[5]),Number(m[6]||0)).getTime();
+    return null;
+};
+const dataISO=valor=>{
+    const texto=String(valor||'').trim();
+    let m=texto.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+    if(m) return `${m[3]}-${m[2]}-${m[1]}`;
+    m=texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return m?`${m[1]}-${m[2]}-${m[3]}`:'';
+};
+const limiteDataHora=(dia,hora,final)=>{
+    if(!dia || !hora) return null;
+    const [ano,mes,d]=dia.split('-').map(Number);
+    const partes=hora.split(':').map(Number);
+    return new Date(ano,mes-1,d,partes[0]||0,partes[1]||0,partes[2]??(final?59:0)).getTime();
+};
+const horaInicial=$('horaInicio').value;
+const horaFinal=$('horaFim').value;
+const limiteInicial=limiteDataHora(inicioPeriodo,horaInicial,false);
+const limiteFinal=limiteDataHora(fimPeriodo,horaFinal,true);
 const registros=todosRegistros.filter(r=>{
-    const instante=dataHoraEmbalagemMs(r.data);
-    const dia=dataEmbalagemISO(r.data);
+    const dia=dataISO(r.data);
     if(!dia) return false;
-    if(dataInicial && dia<dataInicial) return false;
-    if(dataFinal && dia>dataFinal) return false;
-    if(inicioSelecionado===null && fimSelecionado===null) return true;
-    if(instante===null) return false;
-    return (inicioSelecionado===null || instante>=inicioSelecionado) &&
-           (fimSelecionado===null || instante<=fimSelecionado);
+    if(inicioPeriodo && dia<inicioPeriodo) return false;
+    if(fimPeriodo && dia>fimPeriodo) return false;
+    if(!horaInicial && !horaFinal) return true; // Datas sem horário = dia inteiro.
+    const instante=lerDataHoraAC(r.data);
+    if(instante===null || !Number.isFinite(instante)) return false;
+    return (limiteInicial===null || instante>=limiteInicial) &&
+           (limiteFinal===null || instante<=limiteFinal);
 });
 
 const normalizar=v=>
@@ -1464,12 +1397,10 @@ const labelsLotes=lotesGrafico.map(r=>r.lote);
 const produtosDoLote=i=>lotesGrafico[i]?.produtos.join(', ')||'—';
 const valorOuZero=v=>Number.isFinite(v)?v:0;
 
-// Reserva mais altura para cada lote, separando visualmente as três barras.
-// No celular o espaço é ainda maior para facilitar a leitura e o toque.
+// Aumenta somente a área do gráfico de lotes: 48 px por lote no celular
+// e 42 px por lote em telas maiores, com altura mínima para poucos lotes.
 const mobileGraficoLotes=window.matchMedia('(max-width:850px)').matches;
-const alturaPorLote=mobileGraficoLotes?76:64;
-const alturaMinima=mobileGraficoLotes?460:400;
-const alturaGraficoLotes=Math.max(alturaMinima,lotesGrafico.length*alturaPorLote);
+const alturaGraficoLotes=Math.max(mobileGraficoLotes?420:360,lotesGrafico.length*(mobileGraficoLotes?48:42));
 const canvasLotes=$('graficoRitmo').parentElement;
 canvasLotes.style.height=alturaGraficoLotes+'px';
 
@@ -1480,9 +1411,7 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#16a078',
         borderRadius:5,
         minBarLength:24,
-        barThickness:10,
-        categoryPercentage:0.72,
-        barPercentage:0.82
+        barThickness:12
     },
     {
         label:'Total acumulado de caixas (AI)',
@@ -1490,9 +1419,7 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#2879d0',
         borderRadius:5,
         minBarLength:24,
-        barThickness:10,
-        categoryPercentage:0.72,
-        barPercentage:0.82
+        barThickness:12
     },
     {
         label:'Total acumulado de unidades (AJ)',
@@ -1500,9 +1427,7 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         backgroundColor:'#e69a2a',
         borderRadius:5,
         minBarLength:24,
-        barThickness:10,
-        categoryPercentage:0.72,
-        barPercentage:0.82
+        barThickness:12
     }
 ],{
     horizontal:true,
@@ -1518,16 +1443,8 @@ criarChart('graficoRitmo','bar',labelsLotes,[
         plugins:{
             legend:{display:true,position:'bottom'},
             tooltip:{
-                padding:7,
-                boxPadding:3,
-                titleFont:{size:11},
-                bodyFont:{size:10},
-                displayColors:true,
-                boxWidth:8,
-                boxHeight:8,
                 callbacks:{
-                    // O lote já aparece no eixo do gráfico; não repetir no banner.
-                    title:()=>[],
+                    title:items=>items.length?'Lote: '+labelsLotes[items[0].dataIndex]:'',
                     beforeBody:items=>'Produto(s): '+produtosDoLote(items[0].dataIndex),
                     label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].caixasAcumuladasTexto??fmtN(c.parsed.x)):c.datasetIndex===2?(lotesGrafico[c.dataIndex].unidadesAcumuladasTexto??fmtN(c.parsed.x)):fmtN(c.parsed.x))
                 }
@@ -1601,8 +1518,6 @@ setorAtual=s;
 
 $('filtroHorarios').style.display=s==='embalagem'?'flex':'none';
 
-if(s==='embalagem') atualizarOpcoesHorarios();
-
 document.querySelectorAll('[data-setor]').forEach(b=>
 b.classList.toggle('ativa',b.dataset.setor===s)
 );
@@ -1630,10 +1545,6 @@ throw new Error('Informe a data inicial e a data final.');
 
 if(usandoDatasDigitadas&&inicio>fim){
 throw new Error('A data inicial não pode ser posterior à data final.');
-}
-
-if(setorAtual==='embalagem' && $('horaInicio').value && $('horaFim').value && Number($('horaInicio').value)>Number($('horaFim').value)){
-throw new Error('O horário inicial não pode ser posterior ao horário final.');
 }
 
 const d=await chamarApi(inicio,fim);
@@ -1697,8 +1608,6 @@ $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
 
 $('horaInicio').addEventListener('change',()=>{if(setorAtual==='embalagem') render();});
 $('horaFim').addEventListener('change',()=>{if(setorAtual==='embalagem') render();});
-$('dataInicio').addEventListener('change',()=>{if(setorAtual==='embalagem') atualizarOpcoesHorarios();});
-$('dataFim').addEventListener('change',()=>{if(setorAtual==='embalagem') atualizarOpcoesHorarios();});
 
 // INICIALIZAÇÃO
 
