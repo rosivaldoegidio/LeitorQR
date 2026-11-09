@@ -32,7 +32,7 @@ color:var(--ink);
 
 /* =====================================================
 CABEÇALHO - PIONG PLUS / UNIDADE BAHIA
-#ERROR!
+*/
 
 header.cabecalho-relatorios {
 width:100%;
@@ -113,7 +113,7 @@ margin-top:3px;
 
 /* =====================================================
 BOTÕES E CONTEÚDO
-#ERROR!
+*/
 
 .btn {
 border:0;
@@ -167,7 +167,7 @@ margin:10px 0 16px;
 
 /* =====================================================
 INDICADORES
-#ERROR!
+*/
 
 .cards {
 display:grid;
@@ -209,7 +209,7 @@ margin-top:5px;
 
 /* =====================================================
 GRÁFICOS
-#ERROR!
+*/
 
 .graficos {
 display:grid;
@@ -240,7 +240,7 @@ position:relative;
 
 /* =====================================================
 TABELAS
-#ERROR!
+*/
 
 .tabela-painel {
 margin-top:14px;
@@ -292,7 +292,7 @@ color:var(--muted);
 
 /* =====================================================
 RESPONSIVIDADE - TABLETS
-#ERROR!
+*/
 
 @media(max-width:1100px) {
 .cards {
@@ -302,7 +302,7 @@ grid-template-columns:repeat(3,minmax(0,1fr));
 
 /* =====================================================
 RESPONSIVIDADE - CELULARES
-#ERROR!
+*/
 
 @media(max-width:850px) {
 .painel { padding:14px 12px; }
@@ -367,7 +367,7 @@ font-size:12px;
 
 /* =====================================================
 CELULARES ESTREITOS
-#ERROR!
+*/
 
 @media(max-width:430px) {
 .cards {
@@ -569,7 +569,7 @@ Escolha as datas e clique em “Aplicar período”.
 </main>
 
 <script>
-use strict';
+'use strict';
 
 // Depois de implantar codigo_relatorios.gs como Aplicativo da Web,
 // cole aqui a URL terminada em /exec.
@@ -594,7 +594,7 @@ n===null||n===undefined
 
 /* =====================================================
 CONEXÃO COM A API
-#ERROR!
+*/
 
 function chamarApi(inicio='',fim=''){
 
@@ -605,7 +605,7 @@ reject(new Error('Falta configurar a URL da implantação no arquivo relatorio.h
 return;
 }
 
-const cb='relatorio_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+const cb='relatorio_cb_'+Date.now()+'\_'+Math.random().toString(36).slice(2);
 const s=document.createElement('script');
 let done=false;
 
@@ -652,7 +652,7 @@ charts=[];
 
 /* =====================================================
 PREPARAÇÃO DOS DADOS
-#ERROR!
+*/
 
 function prepararDados(){
 
@@ -797,7 +797,7 @@ data:item.datas.length
 
 /* =====================================================
 CONFIGURAÇÃO DOS GRÁFICOS
-#ERROR!
+*/
 
 function chartOptions(horizontal=false){
 
@@ -856,7 +856,7 @@ return c;
 
 /* =====================================================
 RENDERIZAÇÃO PRINCIPAL
-#ERROR!
+*/
 
 function render(){
 
@@ -878,6 +878,9 @@ if(setorAtual==='embalagem'){
 renderEmbalagem(dados);
 return;
 }
+
+// Restaura a altura padrão ao sair do setor Embalagem.
+$('graficoRitmo').parentElement.style.height='340px';
 
 const cards=document.querySelectorAll('.kpi');
 
@@ -1117,11 +1120,7 @@ label:c=>c.raw===null?'Sem indicador':fmtN(c.raw)+'%'
 
 }
 
-const resumoLabels=[
-Produtos únicos',
-Unidades',
-Ritmo médio'
-];
+const resumoLabels=['Produtos únicos','Unidades','Ritmo médio'];
 
 const resumoData=[
 dados.length,
@@ -1169,7 +1168,7 @@ const colunas=(setorAtual==='dobra'||setorAtual==='corte')
 
 let h='<table><thead><tr>'+
 colunas.map(c=>'<th>'+c[0]+'</th>').join('')+
-</tr></thead><tbody>';
+'</tr></thead><tbody>';
 
 if(!dados.length){
 h+='<tr><td colspan="'+colunas.length+'">Nenhum produto encontrado para este setor.</td></tr>';
@@ -1201,7 +1200,7 @@ $('tabela').innerHTML=h;
 
 /* =====================================================
 RENDERIZAÇÃO ESPECIAL - EMBALAGEM
-#ERROR!
+*/
 
 function renderEmbalagem(dados){
 
@@ -1269,7 +1268,7 @@ $('tituloUnidades').textContent='Unidades embaladas por produto';
 $('tituloRitmo').textContent='Lotes embalados';
 
 $('subtituloRitmo').textContent=
-Três barras por lote: caixas do período, acumulado de caixas e acumulado de unidades. Toque nas barras para ver os detalhes';
+'Três barras por lote: caixas do período, acumulado de caixas e acumulado de unidades. Toque nas barras para ver os detalhes';
 
 // GRÁFICO 1 - AGRUPADO POR PRODUTO
 
@@ -1431,13 +1430,13 @@ label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].cai
 });
 
 criarChart(
-graficoResumo',
-bar',
+'graficoResumo',
+'bar',
 [
-Produtos únicos',
-Lotes diferentes',
-Unidades produzidas',
-Caixas embaladas'
+'Produtos únicos',
+'Lotes diferentes',
+'Unidades produzidas',
+'Caixas embaladas'
 ],
 [
 {
@@ -1450,8 +1449,8 @@ borderRadius:6
 );
 
 let h='<table><thead><tr>'+
-<th>Data</th><th>Produto</th><th>Lote</th><th>Caixas</th><th>Unidades</th>'+
-</tr></thead><tbody>';
+'<th>Data</th><th>Produto</th><th>Lote</th><th>Caixas</th><th>Unidades</th>'+
+'</tr></thead><tbody>';
 
 if(!registros.length){
 h+='<tr><td colspan="5">Nenhum registro de Embalagem no período selecionado.</td></tr>';
@@ -1463,7 +1462,7 @@ h+='<tr>'+
 [r.data,r.produto,r.lote,fmtN(r.caixas),fmtN(r.unidades)]
 .map(v=>'<td>'+esc(v===null||v===undefined||v===''?'—':v)+'</td>')
 .join('')+
-</tr>';
+'</tr>';
 
 });
 
@@ -1473,20 +1472,16 @@ $('tabela').innerHTML=h+'</tbody></table>';
 
 /* =====================================================
 FUNÇÕES AUXILIARES
-#ERROR!
+*/
 
 function esc(v){
-
 return String(v).replace(/[&<>"']/g,c=>({
-
-&':'&amp;',
-<':'&lt;',
->':'&gt;',
-"':'&quot;',
-:'&#39;'
-
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
 }[c]));
-
 }
 
 function selecionarSetor(s){
@@ -1503,7 +1498,7 @@ render();
 
 /* =====================================================
 CARREGAMENTO DOS DADOS
-#ERROR!
+*/
 
 async function carregar(usandoDatasDigitadas=false){
 
@@ -1544,11 +1539,10 @@ $('dataFim').value=p.fim;
 }
 
 $('periodo').textContent=
-Período: '+(p.inicio||'não informado')+
- a '+(p.fim||'não informado');
+'Período: '+(p.inicio||'não informado')+' a '+(p.fim||'não informado');
 
 $('status').textContent=
-Dados carregados da planilha. Última consulta: '+
+'Dados carregados da planilha. Última consulta: '+
 new Date().toLocaleTimeString('pt-BR');
 
 render();
@@ -1556,12 +1550,12 @@ render();
 }catch(e){
 
 $('status').textContent=
-Não foi possível carregar os relatórios: '+e.message;
+'Não foi possível carregar os relatórios: '+e.message;
 
 if(!document.querySelector('#tabela table')){
 
 $('tabela').innerHTML=
-<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
+'<div class="vazio">Confira a implantação do Apps Script e a URL configurada no arquivo relatorio.html.</div>';
 
 }
 
@@ -1571,7 +1565,7 @@ $('tabela').innerHTML=
 
 /* =====================================================
 EVENTOS
-#ERROR!
+*/
 
 document.querySelectorAll('[data-setor]').forEach(b=>
 b.addEventListener('click',()=>selecionarSetor(b.dataset.setor))
@@ -1584,7 +1578,6 @@ $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
 // INICIALIZAÇÃO
 
 carregar();
-
 </script>
 
 </body>
