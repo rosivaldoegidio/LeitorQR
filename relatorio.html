@@ -611,7 +611,7 @@ n===null||n===undefined
 CONEXÃO COM A API
 */
 
-function chamarApi(inicio='',fim=''){
+function chamarApi(inicio='',fim='',setor='costura'){
 
 return new Promise((resolve,reject)=>{
 
@@ -644,7 +644,8 @@ s.onerror=()=>fimReq(new Error('Falha de conexão com a API de relatórios.'));
 
 const qs=new URLSearchParams({
 callback:cb,
-t:String(Date.now())
+t:String(Date.now()),
+setor:setor
 });
 
 if(inicio&&fim){
@@ -1577,7 +1578,7 @@ document.querySelectorAll('[data-setor]').forEach(b=>
 b.classList.toggle('ativa',b.dataset.setor===s)
 );
 
-render();
+carregar();
 
 }
 
@@ -1602,7 +1603,7 @@ if(usandoDatasDigitadas&&inicio>fim){
 throw new Error('A data inicial não pode ser posterior à data final.');
 }
 
-const d=await chamarApi(inicio,fim);
+const d=await chamarApi(inicio,fim,setorAtual);
 
 if(!d||!d.ok){
 throw new Error(d?.mensagem||'A API não retornou os dados.');
@@ -1615,13 +1616,8 @@ cache.indicadores=d.indicadores||{};
 const p=d.periodo||{};
 cache.periodo=p;
 
-if(p.inicio){
-$('dataInicio').value=p.inicio;
-}
-
-if(p.fim){
-$('dataFim').value=p.fim;
-}
+$('dataInicio').value=p.inicio||'';
+$('dataFim').value=p.fim||'';
 
 $('periodo').textContent=
 'Período: '+(p.inicio||'não informado')+' a '+(p.fim||'não informado');
