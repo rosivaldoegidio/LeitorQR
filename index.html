@@ -46,7 +46,7 @@ button{width:100%;margin-top:15px;padding:15px;font-size:18px}
 
 <div id="ativacaoOperador" style="display:none; margin:15px 0; padding:15px; border:1px solid #ccc; border-radius:8px;">
   <b>Identificação do operador — EMBALAGEM</b>
-  <p style="margin:8px 0;">Este celular será vinculado ao operador <b>Italo Adriel</b>.</p>
+  <p style="margin:8px 0;">Digite o código individual fornecido pela supervisão para vincular este celular ao operador.</p>
   <label for="codigoAtivacao"><b>Código de ativação:</b></label>
   <input id="codigoAtivacao" type="password" autocomplete="off" placeholder="Digite o código fornecido pela supervisão">
   <button type="button" onclick="ativarCelularEmbalagem()">Cadastrar este celular</button>
@@ -99,7 +99,7 @@ async function verificarVinculoEmbalagem() {
   try {
     const resposta = await fetch(URL_API + "?acao=verificarEmbalagem&deviceId=" + encodeURIComponent(deviceId));
     const texto = await resposta.text();
-    if (texto.startsWith("OK|Italo Adriel")) {
+    if (texto.startsWith("OK|")) {
       painel.style.display = "none";
       status.textContent = "";
       return true;
@@ -130,14 +130,17 @@ async function ativarCelularEmbalagem() {
       "&codigoAtivacao=" + encodeURIComponent(codigo);
     const resposta = await fetch(url);
     const texto = await resposta.text();
-    if (texto.startsWith("OK|Italo Adriel")) {
+    if (texto.startsWith("OK|")) {
+      const operador = texto.substring(3);
       localStorage.setItem(CHAVE_DEVICE_EMBALAGEM, deviceId);
       document.getElementById("codigoAtivacao").value = "";
       document.getElementById("ativacaoOperador").style.display = "none";
-      status.textContent = "Celular cadastrado para Italo Adriel.";
-      document.getElementById("resultado").innerHTML = "✅ Celular cadastrado. Selecione a etapa de Embalagem para iniciar as leituras.";
-    } else if (texto === "CELULAR_JA_VINCULADO_AO_PILOTO") {
-      status.textContent = "O piloto já está vinculado a outro celular. Procure a supervisão.";
+      status.textContent = "Celular cadastrado para " + operador + ".";
+      document.getElementById("resultado").innerHTML = "✅ Celular cadastrado para <b>" + operador + "</b>. Selecione a etapa de Embalagem para iniciar as leituras.";
+    } else if (texto === "OPERADOR_JA_VINCULADO_A_OUTRO_CELULAR") {
+      status.textContent = "Este operador já está vinculado a outro celular. Procure a supervisão.";
+    } else if (texto === "SISTEMA_OCUPADO_TENTE_NOVAMENTE") {
+      status.textContent = "Sistema ocupado. Aguarde alguns segundos e tente novamente.";
     } else if (texto === "CODIGO_ATIVACAO_INVALIDO") {
       status.textContent = "Código de ativação incorreto.";
     } else {
