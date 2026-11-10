@@ -44,6 +44,15 @@ button{width:100%;margin-top:15px;padding:15px;font-size:18px}
   <input id="loteManual" type="text" placeholder="Digite o lote">
 </div>
 
+<div id="ativacaoOperador" style="display:none; margin:15px 0; padding:15px; border:1px solid #ccc; border-radius:8px;">
+  <b>Identificação do operador — EMBALAGEM</b>
+  <p style="margin:8px 0;">Este celular será vinculado ao operador <b>Italo Adriel</b>.</p>
+  <label for="codigoAtivacao"><b>Código de ativação:</b></label>
+  <input id="codigoAtivacao" type="password" autocomplete="off" placeholder="Digite o código fornecido pela supervisão">
+  <button type="button" onclick="ativarCelularEmbalagem()">Cadastrar este celular</button>
+  <div id="statusAtivacao" style="margin-top:10px;"></div>
+</div>
+
 <button onclick="abrirCamera()">Abrir câmera</button>
 <div id="reader"></div>
 
@@ -60,6 +69,85 @@ button{width:100%;margin-top:15px;padding:15px;font-size:18px}
 
 <script>
 const URL_API = "https://script.google.com/macros/s/AKfycbzSzPQ4juT8DqWycGJFvyjylz6YmXpvoYsk2nMGHLQJlGIYdMdBOZHcgIIaPl6sZawKCQ/exec";
+
+// Identificador persistente do navegador usado somente no piloto EMBALAGEM.
+const CHAVE_DEVICE_EMBALAGEM = "bahia_embalagem_device_id_v1";
+
+function obterDeviceIdEmbalagem() {
+  let id = localStorage.getItem(CHAVE_DEVICE_EMBALAGEM);
+  if (!id) {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      id = window.crypto.randomUUID();
+    } else {
+      id = "dev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+    }
+  }
+  return id;
+}
+
+async function verificarVinculoEmbalagem() {
+  const painel = document.getElementById("ativacaoOperador");
+  const status = document.getElementById("statusAtivacao");
+  const deviceId = localStorage.getItem(CHAVE_DEVICE_EMBALAGEM);
+
+  if (!deviceId) {
+    painel.style.display = "block";
+    status.textContent = "Este celular ainda não foi cadastrado.";
+    return false;
+  }
+
+  try {
+    const resposta = await fetch(URL_API + "?acao=verificarEmbalagem&deviceId=" + encodeURIComponent(deviceId));
+    const texto = await resposta.text();
+    if (texto.startsWith("OK|Italo Adriel")) {
+      painel.style.display = "none";
+      status.textContent = "";
+      return true;
+    }
+    painel.style.display = "block";
+    status.textContent = "Vínculo não confirmado. Solicite a regularização à supervisão.";
+    return false;
+  } catch (erro) {
+    painel.style.display = "block";
+    status.textContent = "Não foi possível verificar o cadastro. Confira a conexão.";
+    return false;
+  }
+}
+
+async function ativarCelularEmbalagem() {
+  const codigo = document.getElementById("codigoAtivacao").value.trim();
+  const status = document.getElementById("statusAtivacao");
+  if (!codigo) {
+    status.textContent = "Digite o código de ativação.";
+    return;
+  }
+
+  status.textContent = "Cadastrando este celular...";
+  const deviceId = obterDeviceIdEmbalagem();
+  try {
+    const url = URL_API + "?acao=ativarEmbalagem" +
+      "&deviceId=" + encodeURIComponent(deviceId) +
+      "&codigoAtivacao=" + encodeURIComponent(codigo);
+    const resposta = await fetch(url);
+    const texto = await resposta.text();
+    if (texto.startsWith("OK|Italo Adriel")) {
+      localStorage.setItem(CHAVE_DEVICE_EMBALAGEM, deviceId);
+      document.getElementById("codigoAtivacao").value = "";
+      document.getElementById("ativacaoOperador").style.display = "none";
+      status.textContent = "Celular cadastrado para Italo Adriel.";
+      document.getElementById("resultado").innerHTML = "✅ Celular cadastrado. Selecione a etapa de Embalagem para iniciar as leituras.";
+    } else if (texto === "CELULAR_JA_VINCULADO_AO_PILOTO") {
+      status.textContent = "O piloto já está vinculado a outro celular. Procure a supervisão.";
+    } else if (texto === "CODIGO_ATIVACAO_INVALIDO") {
+      status.textContent = "Código de ativação incorreto.";
+    } else {
+      status.textContent = "Não foi possível cadastrar: " + texto;
+    }
+  } catch (erro) {
+    status.textContent = "Erro ao cadastrar o celular. Confira a conexão e tente novamente.";
+  }
+}
+
 const audioSucesso = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
 const audioErro = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 const audioMeta = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
@@ -90,6 +178,15 @@ document.getElementById("setor").addEventListener("change", async function(){
     document.getElementById("loteManual").value = "";
   }
   document.getElementById("resultado").innerHTML = "";
+
+  // Identificação automática somente para EMBALAGEM.
+  // Nenhuma alteração é feita na seleção dos demais setores.
+  const painelAtivacao = document.getElementById("ativacaoOperador");
+  if (setor === "Embalagem") {
+    await verificarVinculoEmbalagem();
+  } else {
+    painelAtivacao.style.display = "none";
+  }
 });
 
 document.getElementById("tipoCorte").addEventListener("change", async function(){
@@ -101,6 +198,10 @@ document.getElementById("tipoCorte").addEventListener("change", async function()
   } else if (this.value === "embalagem" || this.value === "selagem") {
     campoLote.style.display = "none";
     await fecharCamera();
+    if (document.getElementById("setor").value === "Embalagem") {
+      const autorizado = await verificarVinculoEmbalagem();
+      if (!autorizado) return;
+    }
     await abrirCamera();
   } else {
     campoLote.style.display = "none";
@@ -338,6 +439,18 @@ function iniciarLeitura(){
 
         if (setor === "Pacote" || setor === "Embalagem") {
           urlLeitura += "&tipo=" + encodeURIComponent(tipo);
+        }
+
+        // Envia o ID do navegador somente nas leituras QR da EMBALAGEM.
+        if (setor === "Embalagem") {
+          const deviceId = localStorage.getItem(CHAVE_DEVICE_EMBALAGEM);
+          if (!deviceId) {
+            document.getElementById("resultado").innerHTML = "Cadastre este celular para o operador antes de ler.";
+            confirmarErro();
+            podeLer = true;
+            return;
+          }
+          urlLeitura += "&deviceId=" + encodeURIComponent(deviceId);
         }
 
         const resposta = await fetch(urlLeitura);
