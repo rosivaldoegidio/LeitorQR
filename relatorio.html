@@ -772,17 +772,28 @@ async function executarConsultaLoteEmbalagem(){
     }
     const percentualTexto=String(resposta.percentual||'0%').trim();
     const percentualNumero=Math.max(0,Math.min(100,parseFloat(percentualTexto.replace(',','.'))||0));
+    const converterQuantidade=valor=>{
+      const texto=String(valor??'').trim().replace(/\s/g,'');
+      if(!texto) return 0;
+      const normalizado=texto.includes(',')
+        ?texto.replace(/\./g,'').replace(',','.')
+        :texto;
+      const numero=Number(normalizado);
+      return Number.isFinite(numero)?numero:0;
+    };
+    const embaladasNumero=converterQuantidade(resposta.embaladas);
+    const solicitadasNumero=converterQuantidade(resposta.solicitadas);
+    const faltamNumero=Math.max(0,solicitadasNumero-embaladasNumero);
+    const faltamTexto=faltamNumero.toLocaleString('pt-BR',{maximumFractionDigits:2});
     resultado.innerHTML=
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">'+
         '<div style="font-size:12px;color:var(--muted);font-weight:bold">LOTE '+esc(resposta.lote)+'</div>'+
-        '<div style="font-size:13px;font-weight:700;color:var(--green)">'+esc(percentualTexto)+' concluído</div>'+
+        '<div style="font-size:13px;font-weight:700;color:var(--green);text-align:right">'+esc(percentualTexto)+' concluído</div>'+
       '</div>'+
-      '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">'+
-        '<div class="valor-consulta">'+esc(resposta.embaladas)+' / '+esc(resposta.solicitadas)+'</div>'+
-        '<div style="font-size:22px;font-weight:800;color:var(--green)">'+esc(percentualTexto)+'</div>'+
-      '</div>'+
-      '<div style="font-size:12px;color:var(--muted);margin-top:2px">Quantidade embalada (G) / quantidade solicitada (F)</div>'+
-      '<div class="consulta-progresso" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+percentualNumero+'"><span style="width:'+percentualNumero+'%"></span></div>';
+      '<div class="valor-consulta">'+esc(resposta.embaladas)+' / '+esc(resposta.solicitadas)+'</div>'+
+      '<div style="font-size:12px;color:var(--muted);margin-top:2px">Quantidade embalada: '+esc(resposta.embaladas)+'</div>'+
+      '<div class="consulta-progresso" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+percentualNumero+'"><span style="width:'+percentualNumero+'%"></span></div>'+
+      '<div style="display:flex;justify-content:flex-end;margin-top:6px;font-size:12px;color:var(--muted);font-weight:600;text-align:right">Faltam: '+esc(faltamTexto)+'</div>';
   }catch(e){
     resultado.classList.add('erro');
     resultado.textContent='Erro na consulta: '+e.message;
