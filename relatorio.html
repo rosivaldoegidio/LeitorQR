@@ -416,6 +416,31 @@ padding:5px 6px;
 font-size:11px;
 }
 }
+
+
+/* CONSULTA RÁPIDA DE LOTE - EXCLUSIVA DA EMBALAGEM */
+.consulta-lote-cabecalho {
+display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.consulta-lote-controles {
+display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;min-width:min(100%,320px);
+}
+.consulta-lote-controles input {
+width:min(100%,340px);min-width:190px;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);
+}
+.resultado-consulta-lote {
+margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#f7f9fc;color:var(--ink);
+}
+.resultado-consulta-lote .valor-consulta {
+font-size:clamp(25px,4vw,34px);font-weight:800;color:var(--green);line-height:1.2;margin-top:3px;
+}
+.resultado-consulta-lote.erro {color:#b42318;background:#fff7f6;border-color:#f3c7c3;}
+@media(max-width:600px) {
+.consulta-lote-controles {justify-content:stretch;flex-wrap:wrap;}
+.consulta-lote-controles input {width:100%;min-width:0;flex:1 1 100%;}
+.consulta-lote-controles button {width:100%;}
+}
+
 </style>
 </head>
 
@@ -496,6 +521,21 @@ Escolha as datas e clique em “Aplicar período”.
 </span>
 
 </div>
+</section>
+
+<!-- CONSULTA RÁPIDA DE LOTE: recurso exclusivo do setor Embalagem. -->
+<section id="consultaLoteEmbalagem" class="painel consulta-lote" style="display:none;margin-bottom:16px;padding:14px 17px">
+  <div class="consulta-lote-cabecalho">
+    <div>
+      <h2 style="margin:0 0 4px">🔎 Consulta rápida de lote</h2>
+      <p class="sub" style="margin:0">Consulte a quantidade embalada e a quantidade total solicitada.</p>
+    </div>
+    <div class="consulta-lote-controles">
+      <input id="loteConsultaEmbalagem" type="text" autocomplete="off" placeholder="Digite o lote (ex.: 45673 - 001)" aria-label="Lote para consulta">
+      <button type="button" class="btn aba ativa" id="btnConsultarLoteEmbalagem" aria-label="Consultar lote">🔍 Consultar</button>
+    </div>
+  </div>
+  <div id="resultadoConsultaLoteEmbalagem" class="resultado-consulta-lote" aria-live="polite" style="display:none"></div>
 </section>
 
 <section class="cards">
@@ -659,6 +699,76 @@ document.body.appendChild(s);
 
 });
 
+}
+
+/* =====================================================
+CONSULTA RÁPIDA DE LOTE - SOMENTE EMBALAGEM
+*/
+
+function consultarLoteNaApi(lote){
+  return new Promise((resolve,reject)=>{
+    const cb='consulta_lote_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    let done=false;
+    const finalizar=(err,d)=>{
+      if(done)return;
+      done=true;
+      clearTimeout(timer);
+      delete window[cb];
+      s.remove();
+      err?reject(err):resolve(d);
+    };
+    const timer=setTimeout(()=>finalizar(new Error('Tempo esgotado ao consultar o lote.')),20000);
+    window[cb]=d=>finalizar(null,d);
+    s.onerror=()=>finalizar(new Error('Falha de conexão ao consultar o lote.'));
+    const qs=new URLSearchParams({
+      callback:cb,
+      acao:'consultarLote',
+      setor:'embalagem',
+      lote:String(lote||'').trim(),
+      t:String(Date.now())
+    });
+    s.src=REPORT_API_URL+'?'+qs.toString();
+    document.body.appendChild(s);
+  });
+}
+
+async function executarConsultaLoteEmbalagem(){
+  if(setorAtual!=='embalagem') return;
+  const campo=$('loteConsultaEmbalagem');
+  const resultado=$('resultadoConsultaLoteEmbalagem');
+  const lote=campo.value.trim();
+  resultado.style.display='block';
+  resultado.classList.remove('erro');
+  if(!lote){
+    resultado.classList.add('erro');
+    resultado.textContent='Digite um lote para realizar a consulta.';
+    campo.focus();
+    return;
+  }
+  const botao=$('btnConsultarLoteEmbalagem');
+  botao.disabled=true;
+  botao.textContent='Consultando...';
+  resultado.textContent='Consultando lote na aba Pedidos...';
+  try{
+    const resposta=await consultarLoteNaApi(lote);
+    if(!resposta||!resposta.ok) throw new Error(resposta?.mensagem||'Não foi possível consultar o lote.');
+    if(!resposta.encontrado){
+      resultado.classList.add('erro');
+      resultado.textContent='Lote não encontrado na coluna C da aba Pedidos.';
+      return;
+    }
+    resultado.innerHTML=
+      '<div style="font-size:12px;color:var(--muted);font-weight:bold">LOTE '+esc(resposta.lote)+'</div>'+
+      '<div class="valor-consulta">'+esc(resposta.embaladas)+' / '+esc(resposta.solicitadas)+'</div>'+
+      '<div style="font-size:12px;color:var(--muted);margin-top:4px">Quantidade embalada (G) / quantidade solicitada (F)</div>';
+  }catch(e){
+    resultado.classList.add('erro');
+    resultado.textContent='Erro na consulta: '+e.message;
+  }finally{
+    botao.disabled=false;
+    botao.textContent='🔍 Consultar';
+  }
 }
 
 function destroyCharts(){
@@ -880,6 +990,7 @@ destroyCharts();
 
 // O filtro de horário existe exclusivamente no setor Embalagem.
 $('filtroHorarioEmbalagem').style.display=setorAtual==='embalagem'?'flex':'none';
+$('consultaLoteEmbalagem').style.display=setorAtual==='embalagem'?'block':'none';
 
 const dados=prepararDados();
 
@@ -1655,6 +1766,11 @@ b.addEventListener('click',()=>selecionarSetor(b.dataset.setor))
 $('recarregar').addEventListener('click',()=>carregar(true));
 
 $('aplicarPeriodo').addEventListener('click',()=>carregar(true));
+
+$('btnConsultarLoteEmbalagem').addEventListener('click',executarConsultaLoteEmbalagem);
+$('loteConsultaEmbalagem').addEventListener('keydown',e=>{
+  if(e.key==='Enter') executarConsultaLoteEmbalagem();
+});
 
 // Mudanças de horário atualizam somente os dados do setor Embalagem,
 // sem nova consulta à API e sem interferir nos demais setores.
