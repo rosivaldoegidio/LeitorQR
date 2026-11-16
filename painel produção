@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07182b"><title>Central de Produção | Unidade Bahia</title>
+<style>
+:root{--bg:#07182b;--panel:#102943;--line:#29465f;--txt:#f4f8fc;--muted:#a9bfd2;--blue:#35b9ed;--green:#22b879;--gold:#e2a52e;--purple:#a78bfa}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#123653 0,#07182b 58%);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 3vw;border-bottom:1px solid #ffffff18;background:#061426dd;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{font-weight:900;letter-spacing:.12em;font-size:clamp(17px,2vw,27px)}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.2em;margin-top:4px}
+.live{color:#8cf0bd;border:1px solid #22b87988;background:#22b87918;border-radius:30px;padding:8px 13px;font-size:11px;font-weight:800}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 3vw 0}button{border:1px solid var(--line);background:#102943;color:var(--muted);padding:11px 15px;border-radius:10px;font-weight:750;cursor:pointer}button.active{background:#17608b;color:white;border-color:#35b9ed}
+main{padding:22px 3vw 48px;max-width:1800px;margin:auto}.view{display:none}.view.active{display:block}
+h1{font-size:clamp(22px,3vw,38px);margin:4px 0 8px}.sub{color:var(--muted);margin:0 0 22px}.card{background:linear-gradient(145deg,#14334e,#0d2339);border:1px solid #294760;border-radius:18px;padding:20px;box-shadow:0 14px 35px #0002}
+.formgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:11px;font-weight:800;letter-spacing:.08em;color:#b9cde0}.field input,.field select{width:100%;background:#071a2d;border:1px solid #34536d;color:white;padding:13px;border-radius:10px;font:inherit;min-width:0}.span2{grid-column:span 2}.span3{grid-column:span 3}.readonly{background:#1b3b56!important}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.primary{background:linear-gradient(110deg,#087fb6,#1765a1);border:0;color:white}.danger{background:#512b3b;border-color:#8b4056;color:#ffdce4}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}.metric{background:#0b2137;border:1px solid var(--line);padding:16px;border-radius:14px}.metric small{display:block;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.1em}.metric strong{font-size:clamp(22px,3vw,34px);display:block;margin-top:5px}
+.list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:16px}.item{background:#102943;border:1px solid #294760;border-radius:16px;padding:17px}.itemtop{display:flex;justify-content:space-between;gap:8px}.item h3{margin:0 0 5px;font-size:17px}.muted{color:var(--muted);font-size:12px}.pill{font-size:10px;font-weight:900;padding:6px 9px;border-radius:20px;background:#ffffff12;color:#cde8fa}
+.bar{height:10px;background:#29445d;border-radius:20px;overflow:hidden;margin:12px 0}.bar span{height:100%;display:block;border-radius:20px;transition:width .7s ease}
+.gaugegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.gauge{background:linear-gradient(145deg,#14334e,#0b2035);border:1px solid #294760;border-radius:18px;padding:18px;text-align:center}.gauge svg{width:min(100%,300px);display:block;margin:auto}.gauge .pct{font-size:34px;font-weight:900;fill:#fff}.gauge .glabel{font-size:11px;fill:#a9bfd2}.gauge h3{margin:4px 0}.numbers{display:flex;justify-content:space-around;color:var(--muted);font-size:12px;gap:6px}.numbers b{display:block;color:white;font-size:17px;margin-top:3px}
+.sectorhead{display:flex;justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap;margin-bottom:18px}.datepick{background:#0b2137;border:1px solid var(--line);color:white;padding:11px;border-radius:10px}
+.tablewrap{overflow:auto;margin-top:18px}table{border-collapse:collapse;width:100%;min-width:760px}th,td{text-align:left;padding:12px;border-bottom:1px solid #29445d;font-size:13px}th{color:#a9bfd2;font-size:10px;letter-spacing:.1em}
+.notice{padding:12px 14px;border-radius:10px;background:#173c56;color:#cceaff;margin:14px 0;font-size:13px}.error{background:#4a2433;color:#ffdbe3}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed #35516a;border-radius:14px}
+@media(max-width:850px){.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.span2,.span3{grid-column:span 1}}
+@media(max-width:560px){header{padding:14px}.formgrid{grid-template-columns:1fr}.span2,.span3{grid-column:1}.metrics{grid-template-columns:1fr 1fr}main{padding:18px 14px 35px}nav{padding:12px 14px}.brand{font-size:15px}}
+</style></head>
+<body>
+<header><div class="brand">UNIDADE BAHIA<small>CENTRAL DE MONITORAMENTO DA PRODUÇÃO</small></div><div class="live">● ATUALIZAÇÃO AUTOMÁTICA</div></header>
+<nav>
+<button class="active" data-view="programacao">Programação</button><button data-view="COSTURA">Costura</button>
+<button data-view="DOBRA">Dobra</button><button data-view="PACOTE">Pacote</button><button data-view="GERAL">Visão geral</button>
+</nav>
+<main>
+<section id="programacao" class="view active">
+<h1>Programação diária</h1><p class="sub">Cadastre os lotes, setores e metas que serão acompanhados no dia.</p>
+<div class="card"><div class="formgrid">
+<div class="field span2"><label>DATA DA PRODUÇÃO</label><input id="data" type="date"></div>
+<div class="field span2"><label>SETOR</label><select id="setor"><option value="COSTURA">Costura</option><option value="DOBRA">Dobra</option><option value="PACOTE">Pacote</option><option value="CORTE">Corte</option></select></div>
+<div class="field span2"><label>NÚMERO DO LOTE</label><input id="lote" placeholder="Digite o lote" autocomplete="off"></div>
+<div class="field span3"><label>PRODUTO (AUTOMÁTICO)</label><input id="produto" class="readonly" readonly placeholder="Aguardando lote válido..."></div>
+<div class="field span3"><label>UNIDADES POR CAIXA (COLUNA D)</label><input id="unPorCaixa" class="readonly" readonly placeholder="—"></div>
+<div class="field span3"><label>META DO DIA — UNIDADES</label><input id="meta" type="number" min="1" step="1" placeholder="Ex.: 3000"></div>
+<div class="field span3"><label>META CALCULADA — CAIXAS</label><input id="metaCaixas" class="readonly" readonly placeholder="—"></div>
+</div><div class="actions"><button class="primary" id="add">＋ Adicionar à programação</button><button id="limpar">Limpar campos</button></div><div id="msg" class="notice" style="display:none"></div></div>
+<div class="sectorhead" style="margin-top:26px"><div><h2>Programação cadastrada</h2><p class="sub" style="margin:0">Registros da data selecionada.</p></div><input id="filtroData" class="datepick" type="date"></div>
+<div id="programacaoLista" class="tablewrap"></div>
+</section>
+<section id="COSTURA" class="view"><div class="sectorhead"><div><h1>Costura</h1><p class="sub">Indicadores por lote e consolidado do setor.</p></div><input class="datepick dataPainel" type="date"></div><div id="painelCOSTURA"></div></section>
+<section id="DOBRA" class="view"><div class="sectorhead"><div><h1>Dobra</h1><p class="sub">Indicadores por lote e consolidado do setor.</p></div><input class="datepick dataPainel" type="date"></div><div id="painelDOBRA"></div></section>
+<section id="PACOTE" class="view"><div class="sectorhead"><div><h1>Pacote</h1><p class="sub">Indicadores por lote e consolidado do setor.</p></div><input class="datepick dataPainel" type="date"></div><div id="painelPACOTE"></div></section>
+<section id="GERAL" class="view"><div class="sectorhead"><div><h1>Visão geral da produção</h1><p class="sub">Consolidado diário dos três setores.</p></div><input class="datepick dataPainel" type="date"></div><div id="painelGERAL"></div></section>
+</main>
+<script>
+/* IMPORTANTE: substitua pelo endereço /exec da implantação do Apps Script. */
+const API_URL='https://script.google.com/a/macros/piong.com.br/s/AKfycbxQoZtRNj99JKbRIR7RD6ThG0xrLwxDFGqgNqU_N_ERr2t8vlg7SCzgolnHqUD1dUtWng/exec';
+const $=id=>document.getElementById(id);
+let loteValido=null,buscaTimer=null;
+const hoje=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+$('data').value=hoje;$('filtroData').value=hoje;document.querySelectorAll('.dataPainel').forEach(x=>x.value=hoje);
+
+function api(params){return new Promise((resolve,reject)=>{
+ if(!API_URL||API_URL.includes('COLE_AQUI'))return reject(new Error('Configure a URL /exec do Apps Script no HTML.'));
+ const cb='cp_cb_'+Date.now()+'_'+Math.floor(Math.random()*100000),script=document.createElement('script');
+ const timeout=setTimeout(()=>{cleanup();reject(new Error('Tempo esgotado ao consultar a planilha.'))},20000);
+ function cleanup(){clearTimeout(timeout);delete window[cb];script.remove()}
+ window[cb]=d=>{cleanup();d&&d.ok?resolve(d):reject(new Error(d?.error||'Falha na API.'))};
+ script.onerror=()=>{cleanup();reject(new Error('Falha de acesso. Confira a URL e a implantação do Apps Script.'))};
+ const q=new URLSearchParams({...params,callback:cb,_:Date.now()});script.src=API_URL+'?'+q.toString();document.head.appendChild(script);
+})}
+function aviso(t,erro=false){const e=$('msg');e.textContent=t;e.className='notice'+(erro?' error':'');e.style.display='block'}
+function limpar(){$('lote').value='';$('produto').value='';$('unPorCaixa').value='';$('meta').value='';$('metaCaixas').value='';loteValido=null}
+$('limpar').onclick=limpar;
+$('lote').addEventListener('input',()=>{
+ clearTimeout(buscaTimer);loteValido=null;$('produto').value='';$('unPorCaixa').value='';$('metaCaixas').value='';
+ const lote=$('lote').value.trim();if(!lote)return;
+ buscaTimer=setTimeout(async()=>{try{const r=await api({action:'buscarLote',lote});loteValido=r;$('produto').value=r.produto;$('unPorCaixa').value=r.unidadesPorCaixa;calcularCaixas()}catch(e){$('produto').value='Lote não validado';aviso(e.message,true)}},450)
+});
+function calcularCaixas(){const m=Number($('meta').value),u=Number($('unPorCaixa').value);$('metaCaixas').value=m>0&&u>0?(m/u).toLocaleString('pt-BR',{maximumFractionDigits:2}):''}
+$('meta').addEventListener('input',calcularCaixas);
+$('add').onclick=async()=>{try{
+ if(!loteValido||loteValido.lote!==$('lote').value.trim())throw new Error('Informe e aguarde a validação de um lote válido.');
+ const r=await api({action:'salvar',data:$('data').value,setor:$('setor').value,lote:$('lote').value.trim(),metaUnidades:$('meta').value});
+ aviso(r.message);$('filtroData').value=$('data').value;limpar();await carregarProgramacao();await atualizarPainel();
+}catch(e){aviso(e.message,true)}};
+$('filtroData').onchange=carregarProgramacao;
+async function carregarProgramacao(){try{
+ const r=await api({action:'listar',data:$('filtroData').value}),el=$('programacaoLista');
+ if(!r.itens.length){el.innerHTML='<div class="empty">Nenhum lote programado para esta data.</div>';return}
+ el.innerHTML='<table><thead><tr><th>SETOR</th><th>LOTE</th><th>PRODUTO</th><th>META UN.</th><th>META CX.</th><th>COLUNA</th><th></th></tr></thead><tbody>'+
+ r.itens.map(x=>`<tr><td>${esc(x.setor)}</td><td>${esc(x.lote)}</td><td>${esc(x.produto)}</td><td>${fmt(x.metaUnidades)}</td><td>${fmt(x.metaCaixas)}</td><td>${x.coluna}</td><td><button class="danger" onclick="excluir('${x.id}')">Excluir</button></td></tr>`).join('')+'</tbody></table>';
+}catch(e){$('programacaoLista').innerHTML='<div class="empty">'+esc(e.message)+'</div>'}}
+window.excluir=async id=>{if(!confirm('Remover este item da programação?'))return;try{await api({action:'excluir',id});await carregarProgramacao();await atualizarPainel()}catch(e){alert(e.message)}};
+function fmt(n){return Number(n||0).toLocaleString('pt-BR',{maximumFractionDigits:2})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const cores={COSTURA:'#35b9ed',DOBRA:'#22b879',PACOTE:'#e2a52e',CORTE:'#a78bfa'};
+function gauge(t,pct,prod,meta,cor){
+ const p=Math.max(0,Math.min(100,pct));
+ return `<div class="gauge"><h3>${esc(t)}</h3><svg viewBox="0 0 220 145"><path d="M27 119 A83 83 0 0 1 193 119" fill="none" stroke="#29445d" stroke-width="15" stroke-linecap="round"/><path d="M27 119 A83 83 0 0 1 193 119" fill="none" stroke="${cor}" stroke-width="15" stroke-linecap="round" pathLength="261" stroke-dasharray="${261*p/100} 261" style="transition:stroke-dasharray .8s ease"/><text x="110" y="91" text-anchor="middle" class="pct">${fmt(p)}%</text><text x="110" y="111" text-anchor="middle" class="glabel">CONCLUÍDO</text></svg><div class="numbers"><span>PRODUZIDAS<b>${fmt(prod)}</b></span><span>META<b>${fmt(meta)}</b></span><span>FALTAM<b>${fmt(Math.max(0,meta-prod))}</b></span></div></div>`;
+}
+function cardItem(x){const p=x.percentual||0,c=cores[x.setor]||'#35b9ed';return `<article class="item"><div class="itemtop"><div><h3>${esc(x.produto)}</h3><div class="muted">LOTE ${esc(x.lote)}</div></div><span class="pill">${fmt(x.metaCaixas)} CAIXAS</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><strong style="font-size:25px;color:${c}">${fmt(p)}%</strong><span class="muted">${fmt(x.caixasProduzidas)} / ${fmt(x.metaCaixas)} caixas</span></div><div class="bar"><span style="width:${Math.max(0,Math.min(100,p))}%;background:${c}"></span></div><div class="muted">Restam ${fmt(x.caixasRestantes)} caixas${x.erroLeitura?' · '+esc(x.erroLeitura):''}</div></article>`}
+async function atualizarPainel(){const data=$('data').value||hoje;try{
+ const r=await api({action:'painel',data});
+ ['COSTURA','DOBRA','PACOTE'].forEach(s=>{const d=r.setores[s],c=cores[s];$('painel'+s).innerHTML=
+ `<div class="metrics"><div class="metric"><small>CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong></div><div class="metric"><small>META TOTAL · CAIXAS</small><strong>${fmt(d.metaCaixas)}</strong></div><div class="metric"><small>PROGRESSO DO SETOR</small><strong>${fmt(d.percentual)}%</strong></div></div>${gauge('RESULTADO GERAL · '+s,d.percentual,d.caixasProduzidas,d.metaCaixas,c)}<h2 style="margin-top:28px">Progresso por item</h2><div class="list">${d.itens.length?d.itens.map(cardItem).join(''):'<div class="empty">Nenhum lote programado para este setor nesta data.</div>'}</div>`});
+ $('painelGERAL').innerHTML=`<div class="gaugegrid">${['COSTURA','DOBRA','PACOTE'].map(s=>{const d=r.setores[s];return gauge(s,d.percentual,d.caixasProduzidas,d.metaCaixas,cores[s])}).join('')}</div><div class="metrics">${['COSTURA','DOBRA','PACOTE'].map(s=>{const d=r.setores[s];return `<div class="metric"><small>${s} · CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong><span class="muted">Meta: ${fmt(d.metaCaixas)} · ${fmt(d.percentual)}%</span></div>`}).join('')}</div>`;
+}catch(e){['COSTURA','DOBRA','PACOTE','GERAL'].forEach(s=>{const el=$('painel'+s);if(el)el.innerHTML='<div class="notice error">'+esc(e.message)+'</div>'})}}
+function abrir(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v!=='programacao')atualizarPainel()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>abrir(b.dataset.view));
+document.querySelectorAll('.dataPainel').forEach(x=>x.onchange=atualizarPainel);
+setInterval(()=>{if(document.querySelector('.view.active')?.id!=='programacao')atualizarPainel()},15000);
+carregarProgramacao();
+</script></body></html>
