@@ -359,7 +359,7 @@ window.excluir=async id=>{
 
 function fmt(n){return Math.round(Number(n)||0).toLocaleString('pt-BR',{maximumFractionDigits:0});}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-const cores={COSTURA:'#35b9ed',DOBRA:'#22b879,PACOTE:'#e2a52e',CORTE:'#a78bfa'};
+const cores={COSTURA:'#35b9ed',DOBRA:'#22b879',PACOTE:'#e2a52e',CORTE:'#a78bfa'};
 
 /* VELOCÍMETRO: recebe sempre a mesma unidade para produção e meta */
 function gauge(t,pct,prod,meta,cor,unidade='unidades'){
