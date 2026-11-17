@@ -9,1198 +9,494 @@
 
 <style>
 :root{
- --bg:#07182b;
- --panel:#102943;
- --line:#29465f;
- --txt:#f4f8fc;
- --muted:#a9bfd2;
- --blue:#35b9ed;
- --green:#22b879;
- --gold:#e2a52e;
- --purple:#a78bfa;
+ --bg:#07182b;--panel:#102943;--line:#29465f;
+ --txt:#f4f8fc;--muted:#a9bfd2;--blue:#35b9ed;
+ --green:#22b879;--gold:#e2a52e;--purple:#a78bfa
 }
-
 *{box-sizing:border-box}
-
 body{
  margin:0;
  background:radial-gradient(ellipse at top,#123653 0,#07182b 58%);
  color:var(--txt);
  font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
- min-height:100vh;
+ min-height:100vh
 }
-
-/* CABEÇALHO */
-
 header{
- display:grid;
- grid-template-columns:1fr minmax(240px,1.2fr) auto;
- align-items:center;
- gap:22px;
- padding:16px 3vw;
- border-bottom:1px solid #ffffff18;
- background:#061426ee;
- position:sticky;
- top:0;
- z-index:5;
- backdrop-filter:blur(12px);
- min-height:94px;
+ display:grid;grid-template-columns:1fr minmax(240px,1.2fr) auto;
+ align-items:center;gap:22px;padding:16px 3vw;border-bottom:1px solid #ffffff18;
+ background:#061426ee;position:sticky;top:0;z-index:5;
+ backdrop-filter:blur(12px);min-height:94px
 }
-
-.brand{
- display:flex;
- align-items:center;
- min-width:0;
+.brand{font-weight:850;letter-spacing:.08em;font-size:clamp(20px,2vw,28px);white-space:nowrap}
+.brand small{
+ display:block;color:#a9bfd2;font-size:8px;
+ letter-spacing:.16em;margin-top:3px
 }
-
-.brand-logo{
- display:block;
- width:270px;
- max-width:100%;
- height:64px;
- object-fit:contain;
- object-position:left center;
-
- /* Logo branca para destacar no fundo escuro */
- filter:brightness(0) invert(1);
-
-}
-
-/* CENTRALIZAÇÃO DO TÍTULO */
-
-.header-caption{
- text-align:center;
- color:#d7e6f4;
- font-size:11px;
- font-weight:800;
- letter-spacing:.2em;
- text-transform:uppercase;
- line-height:1.5;
-}
-
-/* ÁREA DIREITA */
-
-.header-right{
- display:flex;
- align-items:center;
- gap:14px;
-}
-
-.unit-card{
- border:1px solid #9aafc5;
- border-radius:10px;
- padding:8px 17px;
- text-align:center;
- min-width:112px;
- background:#ffffff0b;
- line-height:1.15;
-}
-
-.unit-card small{
- display:block;
- font-size:9px;
- letter-spacing:.13em;
- color:#d5e2ef;
- font-weight:800;
-}
-
-.unit-card strong{
- display:block;
- font-size:17px;
- letter-spacing:.04em;
- margin-top:4px;
-}
-
+.brand-mark{display:inline-flex;align-items:center;gap:10px}
+.brand-orbit{font-size:31px;font-weight:300;letter-spacing:-.12em;color:#fff}
+.header-caption{text-align:center;color:#d7e6f4;font-size:11px;font-weight:800;
+ letter-spacing:.2em;text-transform:uppercase;line-height:1.5}
+.header-right{display:flex;align-items:center;gap:14px}
+.unit-card{border:1px solid #9aafc5;border-radius:10px;padding:8px 17px;text-align:center;
+ min-width:112px;background:#ffffff0b;line-height:1.15}
+.unit-card small{display:block;font-size:9px;letter-spacing:.13em;color:#d5e2ef;font-weight:800}
+.unit-card strong{display:block;font-size:17px;letter-spacing:.04em;margin-top:4px}
 .live{
- color:#8cf0bd;
- border:1px solid #22b87988;
- background:#22b87918;
- border-radius:30px;
- padding:8px 13px;
- font-size:11px;
- font-weight:800;
- white-space:nowrap;
+ color:#8cf0bd;border:1px solid #22b87988;
+ background:#22b87918;border-radius:30px;padding:8px 13px;
+ font-size:11px;font-weight:800;white-space:nowrap
 }
-
-/* NAVEGAÇÃO */
-
-nav{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
- padding:16px 3vw 0;
-}
-
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 3vw 0}
 button{
- border:1px solid var(--line);
- background:#102943;
- color:var(--muted);
- padding:11px 15px;
- border-radius:10px;
- font-weight:750;
- cursor:pointer;
+ border:1px solid var(--line);background:#102943;color:var(--muted);
+ padding:11px 15px;border-radius:10px;font-weight:750;cursor:pointer
 }
-
-button.active{
- background:#17608b;
- color:white;
- border-color:#35b9ed;
-}
-
-button:disabled{
- opacity:.5;
- cursor:not-allowed;
-}
-
-/* ESTRUTURA */
-
-main{
- padding:22px 3vw 48px;
- max-width:1800px;
- margin:auto;
-}
-
+button.active{background:#17608b;color:white;border-color:#35b9ed}
+button:disabled{opacity:.5;cursor:not-allowed}
+main{padding:22px 3vw 48px;max-width:1800px;margin:auto}
 .view{display:none}
 .view.active{display:block}
-
-h1{
- font-size:clamp(22px,3vw,38px);
- margin:4px 0 8px;
-}
-
-.sub{
- color:var(--muted);
- margin:0 0 22px;
-}
-
+h1{font-size:clamp(22px,3vw,38px);margin:4px 0 8px}
+.sub{color:var(--muted);margin:0 0 22px}
 .card{
  background:linear-gradient(145deg,#14334e,#0d2339);
- border:1px solid #294760;
- border-radius:18px;
- padding:20px;
- box-shadow:0 14px 35px #0002;
+ border:1px solid #294760;border-radius:18px;padding:20px;
+ box-shadow:0 14px 35px #0002
 }
-
-/* FORMULÁRIOS */
-
 .formgrid{
- display:grid;
- grid-template-columns:repeat(6,minmax(0,1fr));
- gap:14px;
+ display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px
 }
-
-.field{
- display:flex;
- flex-direction:column;
- gap:7px;
-}
-
+.field{display:flex;flex-direction:column;gap:7px}
 .field label{
- font-size:11px;
- font-weight:800;
- letter-spacing:.08em;
- color:#b9cde0;
+ font-size:11px;font-weight:800;letter-spacing:.08em;color:#b9cde0
 }
-
-.field input,
-.field select{
- width:100%;
- background:#071a2d;
- border:1px solid #34536d;
- color:white;
- padding:13px;
- border-radius:10px;
- font:inherit;
- min-width:0;
+.field input,.field select{
+ width:100%;background:#071a2d;border:1px solid #34536d;
+ color:white;padding:13px;border-radius:10px;font:inherit;min-width:0
 }
-
 .span2{grid-column:span 2}
 .span3{grid-column:span 3}
-
-.readonly{
- background:#1b3b56!important;
-}
-
-.actions{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- margin-top:16px;
-}
-
+.readonly{background:#1b3b56!important}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .primary{
  background:linear-gradient(110deg,#087fb6,#1765a1);
- border:0;
- color:white;
+ border:0;color:white
 }
-
-.danger{
- background:#512b3b;
- border-color:#8b4056;
- color:#ffdce4;
-}
-
-.edit{
- background:#174b68;
- border-color:#287ba5;
- color:#e3f6ff;
-}
-
-/* INDICADORES */
-
+.danger{background:#512b3b;border-color:#8b4056;color:#ffdce4}
+.edit{background:#174b68;border-color:#287ba5;color:#e3f6ff}
 .metrics{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:14px;
- margin:18px 0;
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:14px;margin:18px 0
 }
-
 .metric{
- background:#0b2137;
- border:1px solid var(--line);
- padding:16px;
- border-radius:14px;
+ background:#0b2137;border:1px solid var(--line);
+ padding:16px;border-radius:14px
 }
-
 .metric small{
- display:block;
- color:var(--muted);
- font-size:10px;
- font-weight:800;
- letter-spacing:.1em;
+ display:block;color:var(--muted);font-size:10px;
+ font-weight:800;letter-spacing:.1em
 }
-
 .metric strong{
- font-size:clamp(22px,3vw,34px);
- display:block;
- margin-top:5px;
+ font-size:clamp(22px,3vw,34px);display:block;margin-top:5px
 }
-
-/* LISTAGEM */
-
 .list{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
- gap:14px;
- margin-top:16px;
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+ gap:14px;margin-top:16px
 }
-
 .item{
- background:#102943;
- border:1px solid #294760;
- border-radius:16px;
- padding:17px;
+ background:#102943;border:1px solid #294760;
+ border-radius:16px;padding:17px
 }
-
-.itemtop{
- display:flex;
- justify-content:space-between;
- gap:8px;
-}
-
-.item h3{
- margin:0 0 5px;
- font-size:17px;
-}
-
-.muted{
- color:var(--muted);
- font-size:12px;
-}
-
+.itemtop{display:flex;justify-content:space-between;gap:8px}
+.item h3{margin:0 0 5px;font-size:17px}
+.muted{color:var(--muted);font-size:12px}
 .pill{
- font-size:10px;
- font-weight:900;
- padding:6px 9px;
- border-radius:20px;
- background:#ffffff12;
- color:#cde8fa;
- white-space:nowrap;
+ font-size:10px;font-weight:900;padding:6px 9px;
+ border-radius:20px;background:#ffffff12;color:#cde8fa;
+ white-space:nowrap
 }
-
 .bar{
- height:10px;
- background:#29445d;
- border-radius:20px;
- overflow:hidden;
- margin:12px 0;
+ height:10px;background:#29445d;border-radius:20px;
+ overflow:hidden;margin:12px 0
 }
-
 .bar span{
- height:100%;
- display:block;
- border-radius:20px;
- transition:width .7s ease;
+ height:100%;display:block;border-radius:20px;
+ transition:width .7s ease
 }
-
-/* VELOCÍMETROS */
-
 .gaugegrid{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
- gap:16px;
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:16px
 }
-
 .gauge{
  background:linear-gradient(145deg,#14334e,#0b2035);
- border:1px solid #294760;
- border-radius:18px;
- padding:18px;
- text-align:center;
+ border:1px solid #294760;border-radius:18px;
+ padding:18px;text-align:center
 }
-
-.gauge svg{
- width:min(100%,300px);
- display:block;
- margin:auto;
-}
-
-.gauge .pct{
- font-size:34px;
- font-weight:900;
- fill:#fff;
-}
-
-.gauge .glabel{
- font-size:11px;
- fill:#a9bfd2;
-}
-
-.gauge h3{
- margin:4px 0;
-}
-
+.gauge svg{width:min(100%,300px);display:block;margin:auto}
+.gauge .pct{font-size:34px;font-weight:900;fill:#fff}
+.gauge .glabel{font-size:11px;fill:#a9bfd2}
+.gauge h3{margin:4px 0}
 .numbers{
- display:flex;
- justify-content:space-around;
- color:var(--muted);
- font-size:12px;
- gap:6px;
+ display:flex;justify-content:space-around;color:var(--muted);
+ font-size:12px;gap:6px
 }
-
 .numbers b{
- display:block;
- color:white;
- font-size:17px;
- margin-top:3px;
+ display:block;color:white;font-size:17px;margin-top:3px
 }
-
-/* CABEÇALHOS DE SETOR */
-
 .sectorhead{
- display:flex;
- justify-content:space-between;
- align-items:end;
- gap:15px;
- flex-wrap:wrap;
- margin-bottom:18px;
+ display:flex;justify-content:space-between;align-items:end;
+ gap:15px;flex-wrap:wrap;margin-bottom:18px
 }
-
 .datepick{
- background:#0b2137;
- border:1px solid var(--line);
- color:white;
- padding:11px;
- border-radius:10px;
+ background:#0b2137;border:1px solid var(--line);
+ color:white;padding:11px;border-radius:10px
 }
-
-/* TABELAS */
-
-.tablewrap{
- overflow:auto;
- margin-top:18px;
-}
-
-table{
- border-collapse:collapse;
- width:100%;
- min-width:850px;
-}
-
+.tablewrap{overflow:auto;margin-top:18px}
+table{border-collapse:collapse;width:100%;min-width:850px}
 th,td{
- text-align:left;
- padding:12px;
- border-bottom:1px solid #29445d;
- font-size:13px;
+ text-align:left;padding:12px;border-bottom:1px solid #29445d;
+ font-size:13px
 }
-
-th{
- color:#a9bfd2;
- font-size:10px;
- letter-spacing:.1em;
-}
-
-.table-actions{
- display:flex;
- gap:7px;
- flex-wrap:wrap;
-}
-
-.table-actions button{
- padding:8px 11px;
- font-size:11px;
-}
-
-/* AVISOS */
-
+th{color:#a9bfd2;font-size:10px;letter-spacing:.1em}
 .notice{
- padding:12px 14px;
- border-radius:10px;
- background:#173c56;
- color:#cceaff;
- margin:14px 0;
- font-size:13px;
+ padding:12px 14px;border-radius:10px;background:#173c56;
+ color:#cceaff;margin:14px 0;font-size:13px
 }
-
-.error{
- background:#4a2433;
- color:#ffdbe3;
-}
-
+.error{background:#4a2433;color:#ffdbe3}
 .empty{
- padding:25px;
- text-align:center;
- color:var(--muted);
- border:1px dashed #35516a;
- border-radius:14px;
+ padding:25px;text-align:center;color:var(--muted);
+ border:1px dashed #35516a;border-radius:14px
 }
-
-/* MÉTRICAS DOS ITENS */
-
 .itemmetrics{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
- margin-top:13px;
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px
 }
-
 .itemmetric{
- background:#0b2137;
- border:1px solid #29465f;
- border-radius:11px;
- padding:12px;
+ background:#0b2137;border:1px solid #29465f;
+ border-radius:11px;padding:12px
 }
-
 .itemmetric small{
- display:block;
- color:var(--muted);
- font-size:9px;
- font-weight:800;
- letter-spacing:.08em;
+ display:block;color:var(--muted);font-size:9px;
+ font-weight:800;letter-spacing:.08em
 }
-
-.itemmetric strong{
- display:block;
- font-size:21px;
- margin-top:5px;
-}
-
-/* RESPONSIVIDADE */
-
+.itemmetric strong{display:block;font-size:21px;margin-top:5px}
+.table-actions{display:flex;gap:7px;flex-wrap:wrap}
+.table-actions button{padding:8px 11px;font-size:11px}
 @media(max-width:850px){
-
- .formgrid{
-  grid-template-columns:repeat(2,minmax(0,1fr));
- }
-
- .span2,.span3{
-  grid-column:span 1;
- }
-
- header{
-  grid-template-columns:1fr auto;
-  gap:12px;
- }
-
- .header-caption{
-  grid-column:1/-1;
-  grid-row:2;
-  text-align:center;
- }
-
- .header-right{
-  grid-column:2;
-  grid-row:1;
- }
-
- .brand-logo{
-  width:220px;
- }
-
+ .formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .span2,.span3{grid-column:span 1}
 }
-
+@media(max-width:850px){
+ header{grid-template-columns:1fr auto;gap:12px}
+ .header-caption{grid-column:1/-1;grid-row:2;text-align:left}
+ .header-right{grid-column:2;grid-row:1}
+}
 @media(max-width:560px){
-
- header{
-  padding:14px;
-  grid-template-columns:1fr;
-  gap:12px;
- }
-
- .brand{
-  justify-content:center;
- }
-
- .brand-logo{
-  width:230px;
-  height:55px;
-  object-position:center;
- }
-
- .header-right{
-  grid-column:1;
-  grid-row:auto;
-  justify-content:center;
-  flex-wrap:wrap;
- }
-
- .header-caption{
-  grid-column:1;
-  grid-row:auto;
-  text-align:center;
-  font-size:10px;
- }
-
- .live{
-  font-size:10px;
-  padding:7px 9px;
- }
-
- .formgrid{
-  grid-template-columns:1fr;
- }
-
- .span2,.span3{
-  grid-column:1;
- }
-
- .metrics{
-  grid-template-columns:1fr 1fr;
- }
-
- main{
-  padding:18px 14px 35px;
- }
-
- nav{
-  padding:12px 14px;
- }
-
+ header{padding:14px;grid-template-columns:1fr;}
+ .header-right{grid-column:1;grid-row:auto;justify-content:space-between}
+ .header-caption{grid-column:1;grid-row:auto;text-align:center}
+ .brand{font-size:18px}
+ .live{font-size:10px;padding:7px 9px}
+ .formgrid{grid-template-columns:1fr}
+ .span2,.span3{grid-column:1}
+ .metrics{grid-template-columns:1fr 1fr}
+ main{padding:18px 14px 35px}
+ nav{padding:12px 14px}
+ .brand{font-size:15px}
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
- <div class="brand" aria-label="PionG Plus">
-
-  <!-- LOGOMARCA DIRETAMENTE DO GITHUB -->
-  <img
-   src="logo.png"
-   alt="PionG Plus"
-   class="brand-logo"
-  >
-
+ <div class="brand brand-mark" aria-label="PionG Plus">
+  <span class="brand-orbit">PION◉</span><span>PLUS</span>
+  <small>PARAMENTAÇÃO PROFISSIONAL DE USO ÚNICO</small>
  </div>
-
- <div class="header-caption">
-  Central de Monitoramento da Produção
- </div>
-
+ <div class="header-caption">Central de Monitoramento da Produção</div>
  <div class="header-right">
-
-  <div class="live" id="ultimaAtualizacao">
-   ● ÚLTIMA ATUALIZAÇÃO: --/--/---- --:--:--
-  </div>
-
-  <div class="unit-card">
-   <small>UNIDADE</small>
-   <strong>BAHIA</strong>
-  </div>
-
+  <div class="live" id="ultimaAtualizacao">● ÚLTIMA ATUALIZAÇÃO: --/--/---- --:--:--</div>
+  <div class="unit-card"><small>UNIDADE</small><strong>BAHIA</strong></div>
  </div>
-
 </header>
 
 <nav>
-
- <button class="active" data-view="programacao">
-  Programação
- </button>
-
- <button data-view="COSTURA">
-  Costura
- </button>
-
- <button data-view="DOBRA">
-  Dobra
- </button>
-
- <button data-view="PACOTE">
-  Pacote
- </button>
-
- <button data-view="GERAL">
-  Visão geral
- </button>
-
+ <button class="active" data-view="programacao">Programação</button>
+ <button data-view="COSTURA">Costura</button>
+ <button data-view="DOBRA">Dobra</button>
+ <button data-view="PACOTE">Pacote</button>
+ <button data-view="GERAL">Visão geral</button>
 </nav>
 
 <main>
 
-<!-- =========================================
-     PROGRAMAÇÃO
-========================================= -->
-
+<!-- PROGRAMAÇÃO -->
 <section id="programacao" class="view active">
 
- <h1>Programação diária</h1>
+<h1>Programação diária</h1>
+<p class="sub">
+ Cadastre os lotes, setores e metas que serão acompanhados no dia.
+</p>
 
- <p class="sub">
-  Cadastre os lotes, setores e metas que serão acompanhados no dia.
- </p>
+<div class="card">
 
- <div class="card">
+ <div class="formgrid">
 
-  <div class="formgrid">
-
-   <div class="field span2">
-
-    <label>DATA DA PRODUÇÃO</label>
-
-    <input id="data" type="date">
-
-   </div>
-
-   <div class="field span2">
-
-    <label>SETOR</label>
-
-    <select id="setor">
-
-     <option value="COSTURA">Costura</option>
-     <option value="DOBRA">Dobra</option>
-     <option value="PACOTE">Pacote</option>
-     <option value="CORTE">Corte</option>
-
-    </select>
-
-   </div>
-
-   <div class="field span2">
-
-    <label>NÚMERO DO LOTE</label>
-
-    <input
-     id="lote"
-     placeholder="Digite o lote"
-     autocomplete="off"
-    >
-
-   </div>
-
-   <div class="field span3">
-
-    <label>PRODUTO (AUTOMÁTICO)</label>
-
-    <input
-     id="produto"
-     class="readonly"
-     readonly
-     placeholder="Aguardando lote válido..."
-    >
-
-   </div>
-
-   <div class="field span3">
-
-    <label>UNIDADES POR CAIXA (COLUNA D)</label>
-
-    <input
-     id="unPorCaixa"
-     class="readonly"
-     readonly
-     placeholder="—"
-    >
-
-   </div>
-
-   <div class="field span3">
-
-    <label>META DO DIA — UNIDADES</label>
-
-    <input
-     id="meta"
-     type="number"
-     min="1"
-     step="1"
-     placeholder="Ex.: 3000"
-    >
-
-   </div>
-
-   <div class="field span3">
-
-    <label>META CALCULADA — CAIXAS</label>
-
-    <input
-     id="metaCaixas"
-     class="readonly"
-     readonly
-     placeholder="—"
-    >
-
-   </div>
-
+  <div class="field span2">
+   <label>DATA DA PRODUÇÃO</label>
+   <input id="data" type="date">
   </div>
 
-  <div class="actions">
-
-   <button class="primary" id="add">
-    ＋ Adicionar à programação
-   </button>
-
-   <button id="limpar">
-    Limpar campos
-   </button>
-
+  <div class="field span2">
+   <label>SETOR</label>
+   <select id="setor">
+    <option value="COSTURA">Costura</option>
+    <option value="DOBRA">Dobra</option>
+    <option value="PACOTE">Pacote</option>
+    <option value="CORTE">Corte</option>
+   </select>
   </div>
 
-  <div id="msg" class="notice" style="display:none"></div>
+  <div class="field span2">
+   <label>NÚMERO DO LOTE</label>
+   <input id="lote" placeholder="Digite o lote" autocomplete="off">
+  </div>
+
+  <div class="field span3">
+   <label>PRODUTO (AUTOMÁTICO)</label>
+   <input id="produto" class="readonly" readonly placeholder="Aguardando lote válido...">
+  </div>
+
+  <div class="field span3">
+   <label>UNIDADES POR CAIXA (COLUNA D)</label>
+   <input id="unPorCaixa" class="readonly" readonly placeholder="—">
+  </div>
+
+  <div class="field span3">
+   <label>META DO DIA — UNIDADES</label>
+   <input id="meta" type="number" min="1" step="1" placeholder="Ex.: 3000">
+  </div>
+
+  <div class="field span3">
+   <label>META CALCULADA — CAIXAS</label>
+   <input id="metaCaixas" class="readonly" readonly placeholder="—">
+  </div>
 
  </div>
 
- <div class="sectorhead" style="margin-top:26px">
-
-  <div>
-
-   <h2>Programação cadastrada</h2>
-
-   <p class="sub" style="margin:0">
-    Registros da data selecionada.
-   </p>
-
-  </div>
-
-  <input
-   id="filtroData"
-   class="datepick"
-   type="date"
-  >
-
+ <div class="actions">
+  <button class="primary" id="add">＋ Adicionar à programação</button>
+  <button id="limpar">Limpar campos</button>
  </div>
 
- <div id="programacaoLista" class="tablewrap"></div>
+ <div id="msg" class="notice" style="display:none"></div>
+</div>
+
+<div class="sectorhead" style="margin-top:26px">
+ <div>
+  <h2>Programação cadastrada</h2>
+  <p class="sub" style="margin:0">Registros da data selecionada.</p>
+ </div>
+ <input id="filtroData" class="datepick" type="date">
+</div>
+
+<div id="programacaoLista" class="tablewrap"></div>
 
 </section>
 
-
-<!-- =========================================
-     COSTURA
-========================================= -->
-
+<!-- COSTURA -->
 <section id="COSTURA" class="view">
-
  <div class="sectorhead">
-
   <div>
-
    <h1>Costura</h1>
-
-   <p class="sub">
-    Indicadores por lote e consolidado do setor.
-   </p>
-
+   <p class="sub">Indicadores por lote e consolidado do setor.</p>
   </div>
-
   <input class="datepick dataPainel" type="date">
-
  </div>
-
  <div id="painelCOSTURA"></div>
-
 </section>
 
-
-<!-- =========================================
-     DOBRA
-========================================= -->
-
+<!-- DOBRA -->
 <section id="DOBRA" class="view">
-
  <div class="sectorhead">
-
   <div>
-
    <h1>Dobra</h1>
-
-   <p class="sub">
-    Indicadores por lote e consolidado do setor.
-   </p>
-
+   <p class="sub">Indicadores por lote e consolidado do setor.</p>
   </div>
-
   <input class="datepick dataPainel" type="date">
-
  </div>
-
  <div id="painelDOBRA"></div>
-
 </section>
 
-
-<!-- =========================================
-     PACOTE
-========================================= -->
-
+<!-- PACOTE -->
 <section id="PACOTE" class="view">
-
  <div class="sectorhead">
-
   <div>
-
    <h1>Pacote</h1>
-
-   <p class="sub">
-    Indicadores por lote e consolidado do setor.
-   </p>
-
+   <p class="sub">Indicadores por lote e consolidado do setor.</p>
   </div>
-
   <input class="datepick dataPainel" type="date">
-
  </div>
-
  <div id="painelPACOTE"></div>
-
 </section>
 
-
-<!-- =========================================
-     VISÃO GERAL
-========================================= -->
-
+<!-- VISÃO GERAL -->
 <section id="GERAL" class="view">
-
  <div class="sectorhead">
-
   <div>
-
    <h1>Visão geral da produção</h1>
-
-   <p class="sub">
-    Consolidado diário dos três setores.
-   </p>
-
+   <p class="sub">Consolidado diário dos três setores.</p>
   </div>
-
   <input class="datepick dataPainel" type="date">
-
  </div>
-
  <div id="painelGERAL"></div>
-
 </section>
 
 </main>
 
-
 <script>
 
-/* =========================================
-   ENDEREÇO DO APPS SCRIPT
-========================================= */
+/* ENDEREÇO DA IMPLANTAÇÃO DO APPS SCRIPT */
+const API_URL='https://script.google.com/a/macros/piong.com.br/s/AKfycbxQoZtRNj99JKbRIR7RD6ThG0xrLwxDFGqgNqU_N_ERr2t8vlg7SCzgolnHqUD1dUtWng/exec';
 
-const API_URL =
-'https://script.google.com/a/macros/piong.com.br/s/AKfycbxQoZtRNj99JKbRIR7RD6ThG0xrLwxDFGqgNqU_N_ERr2t8vlg7SCzgolnHqUD1dUtWng/exec';
+const $=id=>document.getElementById(id);
 
-const $ = id => document.getElementById(id);
+let loteValido=null;
+let buscaTimer=null;
 
-let loteValido = null;
-let buscaTimer = null;
-
-
-/* =========================================
-   DATA ATUAL
-========================================= */
-
-const hoje = new Date(
- Date.now() - new Date().getTimezoneOffset() * 60000
+const hoje=new Date(
+ Date.now()-new Date().getTimezoneOffset()*60000
 ).toISOString().slice(0,10);
 
-$('data').value = hoje;
-$('filtroData').value = hoje;
+$('data').value=hoje;
+$('filtroData').value=hoje;
 
-document.querySelectorAll('.dataPainel').forEach(x => {
- x.value = hoje;
-});
+document.querySelectorAll('.dataPainel').forEach(x=>x.value=hoje);
 
 
-/* =========================================
-   ÚLTIMA ATUALIZAÇÃO
-========================================= */
-
+/* RELÓGIO DA ÚLTIMA SINCRONIZAÇÃO */
 function marcarAtualizacao(){
-
- const agora = new Date();
-
- const data = agora.toLocaleDateString('pt-BR');
-
- const hora = agora.toLocaleTimeString(
-  'pt-BR',
-  {hour12:false}
- );
-
- const el = $('ultimaAtualizacao');
-
- if(el){
-
-  el.textContent =
-   '● ÚLTIMA ATUALIZAÇÃO: ' + data + ' ' + hora;
-
- }
-
+ const agora=new Date();
+ const data=agora.toLocaleDateString('pt-BR');
+ const hora=agora.toLocaleTimeString('pt-BR',{hour12:false});
+ const el=$('ultimaAtualizacao');
+ if(el) el.textContent='● ÚLTIMA ATUALIZAÇÃO: '+data+' '+hora;
 }
-
-
-/* =========================================
-   FORMATAÇÃO DE DATA E HORA
-========================================= */
-
 function formatarDataHora(valor){
-
- if(
-  valor === undefined ||
-  valor === null ||
-  valor === ''
- ){
-  return '—';
- }
-
+ if(valor===undefined||valor===null||valor==='') return '—';
  let d;
-
- if(valor instanceof Date){
-
-  d = valor;
-
- }else if(typeof valor === 'number'){
-
-  d = new Date(valor);
-
- }else{
-
-  const texto = String(valor).trim();
-
-  // A API já envia dd/MM/yyyy HH:mm:ss.
-  if(/^\d{2}\/\d{2}\/\d{4}/.test(texto)){
-   return texto;
-  }
-
-  d = new Date(texto);
-
+ if(valor instanceof Date) d=valor;
+ else if(typeof valor==='number') d=new Date(valor);
+ else {
+  const texto=String(valor).trim();
+  if(/^\d{2}\/\d{2}\/\d{4}/.test(texto)) return texto;
+  d=new Date(texto);
  }
-
- return Number.isNaN(d.getTime())
-  ? String(valor)
-  : d.toLocaleString(
-     'pt-BR',
-     {
-      dateStyle:'short',
-      timeStyle:'medium'
-     }
-    );
-
+ return Number.isNaN(d.getTime())?String(valor):d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
 }
 
-
-/* =========================================
-   COMUNICAÇÃO COM O APPS SCRIPT
-========================================= */
-
+/* COMUNICAÇÃO COM O APPS SCRIPT */
 function api(params){
-
  return new Promise((resolve,reject)=>{
 
-  if(!API_URL || API_URL.includes('COLE_AQUI')){
-
-   return reject(
-    new Error('Configure a URL /exec do Apps Script no HTML.')
-   );
-
+  if(!API_URL||API_URL.includes('COLE_AQUI')){
+   return reject(new Error('Configure a URL /exec do Apps Script no HTML.'));
   }
 
-  const cb =
-   'cp_cb_' +
-   Date.now() +
-   '_' +
-   Math.floor(Math.random()*100000);
+  const cb='cp_cb_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+  const script=document.createElement('script');
 
-  const script = document.createElement('script');
-
-  const timeout = setTimeout(()=>{
-
+  const timeout=setTimeout(()=>{
    cleanup();
-
-   reject(
-    new Error('Tempo esgotado ao consultar a planilha.')
-   );
-
+   reject(new Error('Tempo esgotado ao consultar a planilha.'));
   },20000);
 
-
   function cleanup(){
-
    clearTimeout(timeout);
-
    delete window[cb];
-
    script.remove();
-
   }
 
-
-  window[cb] = d => {
-
+  window[cb]=d=>{
    cleanup();
-
-   if(d && d.ok){
-
-    marcarAtualizacao();
-
-    resolve(d);
-
-   }else{
-
-    reject(
-     new Error(d?.error || 'Falha na API.')
-    );
-
-   }
-
+   if(d&&d.ok){marcarAtualizacao();resolve(d);}
+   else reject(new Error(d?.error||'Falha na API.'));
   };
 
-
-  script.onerror = ()=>{
-
+  script.onerror=()=>{
    cleanup();
-
-   reject(
-    new Error(
-     'Falha de acesso. Confira a URL e a implantação do Apps Script.'
-    )
-   );
-
+   reject(new Error('Falha de acesso. Confira a URL e a implantação do Apps Script.'));
   };
 
-
-  const q = new URLSearchParams({
-
+  const q=new URLSearchParams({
    ...params,
-
    callback:cb,
-
    _:Date.now()
-
   });
 
-  script.src = API_URL + '?' + q.toString();
-
+  script.src=API_URL+'?'+q.toString();
   document.head.appendChild(script);
 
  });
-
 }
 
 
-/* =========================================
-   MENSAGENS
-========================================= */
-
+/* MENSAGENS */
 function aviso(t,erro=false){
-
- const e = $('msg');
-
- e.textContent = t;
-
- e.className = 'notice' + (erro ? ' error' : '');
-
- e.style.display = 'block';
-
+ const e=$('msg');
+ e.textContent=t;
+ e.className='notice'+(erro?' error':'');
+ e.style.display='block';
 }
 
 
-/* =========================================
-   LIMPAR FORMULÁRIO
-========================================= */
-
+/* LIMPAR FORMULÁRIO */
 function limpar(){
-
- $('lote').value = '';
-
- $('produto').value = '';
-
- $('unPorCaixa').value = '';
-
- $('meta').value = '';
-
- $('metaCaixas').value = '';
-
- loteValido = null;
-
- $('msg').style.display = 'none';
-
+ $('lote').value='';
+ $('produto').value='';
+ $('unPorCaixa').value='';
+ $('meta').value='';
+ $('metaCaixas').value='';
+ loteValido=null;
+ $('msg').style.display='none';
 }
 
-$('limpar').onclick = limpar;
+$('limpar').onclick=limpar;
 
 
-/* =========================================
-   BUSCAR LOTE
-========================================= */
-
+/* BUSCAR LOTE */
 $('lote').addEventListener('input',()=>{
 
  clearTimeout(buscaTimer);
 
- loteValido = null;
+ loteValido=null;
+ $('produto').value='';
+ $('unPorCaixa').value='';
+ $('metaCaixas').value='';
 
- $('produto').value = '';
+ const lote=$('lote').value.trim();
 
- $('unPorCaixa').value = '';
+ if(!lote)return;
 
- $('metaCaixas').value = '';
-
- const lote = $('lote').value.trim();
-
- if(!lote) return;
-
- buscaTimer = setTimeout(async()=>{
+ buscaTimer=setTimeout(async()=>{
 
   try{
 
-   const r = await api({
-
+   const r=await api({
     action:'buscarLote',
-
     lote
-
    });
 
-   loteValido = r;
+   loteValido=r;
 
-   $('produto').value = r.produto;
-
-   $('unPorCaixa').value = r.unidadesPorCaixa;
+   $('produto').value=r.produto;
+   $('unPorCaixa').value=r.unidadesPorCaixa;
 
    calcularCaixas();
 
   }catch(e){
 
-   $('produto').value = 'Lote não validado';
-
+   $('produto').value='Lote não validado';
    aviso(e.message,true);
 
   }
@@ -1210,86 +506,52 @@ $('lote').addEventListener('input',()=>{
 });
 
 
-/* =========================================
-   META EM CAIXAS
-========================================= */
-
+/* META EM CAIXAS: ARREDONDAMENTO PARA INTEIRO */
 function calcularCaixas(){
 
- const m = Math.round(
-  Number($('meta').value)
- );
+ const m=Math.round(Number($('meta').value));
+ const u=Number($('unPorCaixa').value);
 
- const u = Number(
-  $('unPorCaixa').value
- );
-
- $('metaCaixas').value =
-
-  m > 0 && u > 0
-
-   ? Math.round(m/u).toLocaleString('pt-BR')
-
-   : '';
+ $('metaCaixas').value=
+  m>0&&u>0
+   ?Math.round(m/u).toLocaleString('pt-BR')
+   :'';
 
 }
 
 $('meta').addEventListener('input',calcularCaixas);
 
 
-/* =========================================
-   CADASTRAR ITEM
-========================================= */
-
-$('add').onclick = async()=>{
+/* CADASTRAR ITEM */
+$('add').onclick=async()=>{
 
  try{
 
-  if(
-   !loteValido ||
-   loteValido.lote !== $('lote').value.trim()
-  ){
-
-   throw new Error(
-    'Informe e aguarde a validação de um lote válido.'
-   );
-
+  if(!loteValido||loteValido.lote!==$('lote').value.trim()){
+   throw new Error('Informe e aguarde a validação de um lote válido.');
   }
 
-  const meta = Math.round(
-   Number($('meta').value)
-  );
+  const meta=Math.round(Number($('meta').value));
 
-  if(!Number.isFinite(meta) || meta <= 0){
-
-   throw new Error(
-    'Informe uma meta em unidades maior que zero.'
-   );
-
+  if(!Number.isFinite(meta)||meta<=0){
+   throw new Error('Informe uma meta em unidades maior que zero.');
   }
 
-  const r = await api({
-
+  const r=await api({
    action:'salvar',
-
    data:$('data').value,
-
    setor:$('setor').value,
-
    lote:$('lote').value.trim(),
-
    metaUnidades:String(meta)
-
   });
 
   aviso(r.message);
 
-  $('filtroData').value = $('data').value;
+  $('filtroData').value=$('data').value;
 
   limpar();
 
   await carregarProgramacao();
-
   await atualizarPainel();
 
  }catch(e){
@@ -1301,189 +563,111 @@ $('add').onclick = async()=>{
 };
 
 
-/* =========================================
-   CARREGAR PROGRAMAÇÃO CADASTRADA
-========================================= */
-
-$('filtroData').onchange = carregarProgramacao;
-
+/* CARREGAR PROGRAMAÇÃO CADASTRADA */
+$('filtroData').onchange=carregarProgramacao;
 
 async function carregarProgramacao(){
 
  try{
 
-  const r = await api({
-
+  const r=await api({
    action:'listar',
-
    data:$('filtroData').value
-
   });
 
-  const el = $('programacaoLista');
+  const el=$('programacaoLista');
 
   if(!r.itens.length){
-
-   el.innerHTML =
-    '<div class="empty">Nenhum lote programado para esta data.</div>';
-
+   el.innerHTML='<div class="empty">Nenhum lote programado para esta data.</div>';
    return;
-
   }
 
-
-  el.innerHTML = `
-
+  el.innerHTML=`
    <table>
-
     <thead>
-
      <tr>
-
       <th>Nº ITEM</th>
-
       <th>SETOR</th>
-
       <th>LOTE</th>
-
       <th>PRODUTO</th>
-
       <th>META UN.</th>
-
       <th>META CX.</th>
-
       <th>COLUNA</th>
-
       <th>DATA E HORA (J)</th>
-
       <th>AÇÕES</th>
-
      </tr>
-
     </thead>
-
     <tbody>
-
      ${
-
       r.itens.map(x=>`
-
        <tr>
-
-        <td>
-         <strong>${fmt(x.numeroItem)}</strong>
-        </td>
-
+        <td><strong>${fmt(x.numeroItem)}</strong></td>
         <td>${esc(x.setor)}</td>
-
         <td>${esc(x.lote)}</td>
-
         <td>${esc(x.produto)}</td>
-
         <td>${fmt(x.metaUnidades)}</td>
-
         <td>${fmt(x.metaCaixas)}</td>
-
         <td>${esc(x.coluna)}</td>
-
-        <!-- DATA E HORA DA COLUNA J -->
+        <td>${esc(formatarDataHora(x.dataHora ?? x.dataHoraJ ?? x.dataHoraCriacao))}</td>
         <td>
-         ${esc(
-          formatarDataHora(
-           x.dataHora ??
-           x.dataHoraJ ??
-           x.dataHoraCriacao
-          )
-         )}
-        </td>
-
-        <td>
-
          <div class="table-actions">
-
-          <button
-           class="edit"
-           onclick="editar('${esc(x.id)}',${Number(x.metaUnidades)||0})"
-          >
+          <button class="edit"
+           onclick="editar('${esc(x.id)}',${Number(x.metaUnidades)||0})">
            Editar
           </button>
-
-          <button
-           class="danger"
-           onclick="excluir('${esc(x.id)}')"
-          >
+          <button class="danger"
+           onclick="excluir('${esc(x.id)}')">
            Excluir
           </button>
-
          </div>
-
         </td>
-
        </tr>
-
       `).join('')
-
      }
-
     </tbody>
-
    </table>
-
   `;
 
  }catch(e){
 
-  $('programacaoLista').innerHTML =
-   '<div class="empty">' + esc(e.message) + '</div>';
+  $('programacaoLista').innerHTML=
+   '<div class="empty">'+esc(e.message)+'</div>';
 
  }
 
 }
 
 
-/* =========================================
-   EDITAR META
-========================================= */
+/* EDITAR META */
+window.editar=async(id,metaAtual)=>{
 
-window.editar = async(id,metaAtual)=>{
-
- const entrada = prompt(
+ const entrada=prompt(
   'Informe a nova meta diária em UNIDADES:',
   metaAtual
  );
 
- if(entrada === null) return;
+ if(entrada===null)return;
 
- const valor = Math.round(
-  Number(
-   String(entrada).trim().replace(',','.')
-  )
+ const valor=Math.round(
+  Number(String(entrada).trim().replace(',','.'))
  );
 
- if(!Number.isFinite(valor) || valor <= 0){
-
+ if(!Number.isFinite(valor)||valor<=0){
   alert('Informe uma meta válida maior que zero.');
-
   return;
-
  }
 
  try{
 
-  const r = await api({
-
+  const r=await api({
    action:'editar',
-
    id,
-
    metaUnidades:String(valor)
-
   });
 
   alert(r.message);
 
   await carregarProgramacao();
-
   await atualizarPainel();
 
  }catch(e){
@@ -1495,26 +679,19 @@ window.editar = async(id,metaAtual)=>{
 };
 
 
-/* =========================================
-   EXCLUIR ITEM
-========================================= */
+/* EXCLUIR ITEM */
+window.excluir=async id=>{
 
-window.excluir = async id=>{
-
- if(!confirm('Remover este item da programação?')) return;
+ if(!confirm('Remover este item da programação?'))return;
 
  try{
 
   await api({
-
    action:'excluir',
-
    id
-
   });
 
   await carregarProgramacao();
-
   await atualizarPainel();
 
  }catch(e){
@@ -1526,71 +703,46 @@ window.excluir = async id=>{
 };
 
 
-/* =========================================
-   FORMATAÇÃO DE NÚMEROS
-========================================= */
-
+/* FORMATAÇÃO */
 function fmt(n){
-
- return Math.round(Number(n)||0).toLocaleString(
-  'pt-BR',
-  {
-   maximumFractionDigits:0
-  }
- );
-
+ return Math.round(Number(n)||0).toLocaleString('pt-BR',{
+  maximumFractionDigits:0
+ });
 }
-
 
 function esc(s){
-
  return String(s??'').replace(/[&<>"']/g,c=>({
-
   '&':'&amp;',
-
   '<':'&lt;',
-
   '>':'&gt;',
-
   '"':'&quot;',
-
   "'":'&#39;'
-
  }[c]));
-
 }
 
-
-/* =========================================
-   CORES DOS SETORES
-========================================= */
-
-const cores = {
-
+const cores={
  COSTURA:'#35b9ed',
-
  DOBRA:'#22b879',
-
  PACOTE:'#e2a52e',
-
  CORTE:'#a78bfa'
-
 };
 
 
-/* =========================================
-   VELOCÍMETRO
-========================================= */
+/* PERCENTUAL DE PROGRESSO CALCULADO EM UNIDADES */
+function percentualUnidades(d){
+ const meta=Number(d?.metaUnidades)||0;
+ const produzidas=Number(d?.unidadesProduzidas)||0;
 
+ return meta>0?(produzidas/meta)*100:0;
+}
+
+
+/* VELOCÍMETRO — APRESENTAÇÃO EM UNIDADES */
 function gauge(t,pct,prod,meta,cor){
 
- const p = Math.max(
-  0,
-  Math.min(100,pct)
- );
+ const p=Math.max(0,Math.min(100,pct));
 
  return `
-
   <div class="gauge">
 
    <h3>${esc(t)}</h3>
@@ -1616,86 +768,47 @@ function gauge(t,pct,prod,meta,cor){
      style="transition:stroke-dasharray .8s ease"
     />
 
-    <text
-     x="110"
-     y="91"
-     text-anchor="middle"
-     class="pct"
-    >
+    <text x="110" y="91" text-anchor="middle" class="pct">
      ${fmt(p)}%
     </text>
 
-    <text
-     x="110"
-     y="111"
-     text-anchor="middle"
-     class="glabel"
-    >
+    <text x="110" y="111" text-anchor="middle" class="glabel">
      CONCLUÍDO
     </text>
 
    </svg>
 
    <div class="numbers">
-
-    <span>
-     PRODUZIDAS
-     <b>${fmt(prod)}</b>
-    </span>
-
-    <span>
-     META
-     <b>${fmt(meta)}</b>
-    </span>
-
-    <span>
-     FALTAM
-     <b>${fmt(Math.max(0,meta-prod))}</b>
-    </span>
-
+    <span>PRODUZIDAS (UN.)<b>${fmt(prod)}</b></span>
+    <span>META (UN.)<b>${fmt(meta)}</b></span>
+    <span>FALTAM (UN.)<b>${fmt(Math.max(0,meta-prod))}</b></span>
    </div>
 
   </div>
-
  `;
 
 }
 
 
-/* =========================================
-   CARTÃO DE PROGRESSO POR ITEM
-   PERCENTUAL EM UNIDADES
-========================================= */
-
+/* CARTÃO DE PROGRESSO POR ITEM */
 function cardItem(x){
 
- const unidadesProduzidas =
-  Number(x.unidadesProduzidas)||0;
-
- const metaUnidades =
-  Number(x.metaUnidades)||0;
-
- // Cálculo em UNIDADES, não em caixas.
- const p = metaUnidades > 0
-  ? (unidadesProduzidas/metaUnidades)*100
-  : 0;
-
- const c = cores[x.setor]||'#35b9ed';
+ const unidadesProduzidas=Number(x.unidadesProduzidas)||0;
+ const metaUnidades=Number(x.metaUnidades)||0;
+ const p=metaUnidades>0?(unidadesProduzidas/metaUnidades)*100:0;
+ const c=cores[x.setor]||'#35b9ed';
 
  return `
-
   <article class="item">
 
    <div class="itemtop">
 
     <div>
-
      <div class="muted">
       ITEM ${fmt(x.numeroItem)} · LOTE ${esc(x.lote)}
      </div>
 
      <h3>${esc(x.produto)}</h3>
-
     </div>
 
     <span class="pill">
@@ -1722,157 +835,104 @@ function cardItem(x){
    </div>
 
    <div class="bar">
-
     <span style="
      width:${Math.max(0,Math.min(100,p))}%;
      background:${c}
     "></span>
-
    </div>
 
    <div class="itemmetrics">
 
     <div class="itemmetric">
-
      <small>UNIDADES PRODUZIDAS</small>
-
      <strong>${fmt(unidadesProduzidas)}</strong>
-
-     <span class="muted">
-      Meta: ${fmt(metaUnidades)}
-     </span>
-
+     <span class="muted">Meta: ${fmt(metaUnidades)}</span>
     </div>
 
     <div class="itemmetric">
-
      <small>CAIXAS PRODUZIDAS</small>
-
      <strong>${fmt(x.caixasProduzidas)}</strong>
-
-     <span class="muted">
-      Meta: ${fmt(x.metaCaixas)}
-     </span>
-
+     <span class="muted">Meta: ${fmt(x.metaCaixas)}</span>
     </div>
 
    </div>
 
    <div class="muted" style="margin-top:12px">
-
-    Restam
-    ${fmt(Math.max(0,metaUnidades-unidadesProduzidas))}
-    unidades
-
-    ·
-
-    ${fmt(x.caixasRestantes)}
-    caixas restantes
-
+    Restam ${fmt(Math.max(0,metaUnidades-unidadesProduzidas))} unidades
+    · ${fmt(x.caixasRestantes)} caixas restantes
     ${x.erroLeitura?' · '+esc(x.erroLeitura):''}
-
    </div>
 
   </article>
-
  `;
 
 }
 
 
-/* =========================================
-   DATA UTILIZADA PELO PAINEL
-========================================= */
-
+/* DATA UTILIZADA PELO PAINEL */
 function dataPainelAtiva(){
 
- const ativa = document.querySelector('.view.active');
+ const ativa=document.querySelector('.view.active');
 
- const seletor = ativa?.querySelector('.dataPainel');
+ const seletor=ativa?.querySelector('.dataPainel');
 
- if(seletor && seletor.value){
-  return seletor.value;
- }
+ if(seletor&&seletor.value)return seletor.value;
 
- return $('filtroData').value || hoje;
+ return $('filtroData').value||hoje;
 
 }
 
 
-/* =========================================
-   ATUALIZAÇÃO DOS PAINÉIS
-========================================= */
-
+/* ATUALIZAÇÃO DOS PAINÉIS */
 async function atualizarPainel(){
 
- const data = dataPainelAtiva();
+ const data=dataPainelAtiva();
 
  try{
 
-  const r = await api({
-
+  const r=await api({
    action:'painel',
-
    data
-
   });
 
-
   /* PAINÉIS INDIVIDUAIS */
-
   ['COSTURA','DOBRA','PACOTE'].forEach(s=>{
 
-   const d = r.setores[s];
+   const d=r.setores[s];
+   const c=cores[s];
 
-   const c = cores[s];
+   // O percentual e o velocímetro agora usam unidades.
+   const pctUnidades=percentualUnidades(d);
 
-   $('painel'+s).innerHTML = `
+   $('painel'+s).innerHTML=`
 
     <div class="metrics">
 
      <div class="metric">
-
       <small>CAIXAS PRODUZIDAS</small>
-
       <strong>${fmt(d.caixasProduzidas)}</strong>
-
-      <span class="muted">
-       Meta: ${fmt(d.metaCaixas)}
-      </span>
-
+      <span class="muted">Meta: ${fmt(d.metaCaixas)}</span>
      </div>
 
      <div class="metric">
-
       <small>UNIDADES PRODUZIDAS</small>
-
       <strong>${fmt(d.unidadesProduzidas)}</strong>
-
-      <span class="muted">
-       Meta: ${fmt(d.metaUnidades)}
-      </span>
-
+      <span class="muted">Meta: ${fmt(d.metaUnidades)}</span>
      </div>
 
      <div class="metric">
-
       <small>PROGRESSO DO SETOR</small>
-
-      <strong>${fmt(d.percentual)}%</strong>
-
-      <span class="muted">
-       Consolidado em caixas
-      </span>
-
+      <strong>${fmt(pctUnidades)}%</strong>
+      <span class="muted">Consolidado em unidades</span>
      </div>
 
     </div>
 
     ${gauge(
      'RESULTADO GERAL · '+s,
-     d.percentual,
-     d.caixasProduzidas,
-     d.metaCaixas,
+     pctUnidades,
+     d.unidadesProduzidas,
+     d.metaUnidades,
      c
     )}
 
@@ -1883,13 +943,9 @@ async function atualizarPainel(){
     <div class="list">
 
      ${
-
       d.itens.length
-
-       ? d.itens.map(cardItem).join('')
-
-       : '<div class="empty">Nenhum lote programado para este setor nesta data.</div>'
-
+       ?d.itens.map(cardItem).join('')
+       :'<div class="empty">Nenhum lote programado para este setor nesta data.</div>'
      }
 
     </div>
@@ -1899,28 +955,26 @@ async function atualizarPainel(){
   });
 
 
-  /* VISÃO GERAL DOS SETORES */
-
-  $('painelGERAL').innerHTML = `
+  /* VISÃO GERAL DOS SETORES — VELOCÍMETROS EM UNIDADES */
+  $('painelGERAL').innerHTML=`
 
    <div class="gaugegrid">
 
     ${
-
      ['COSTURA','DOBRA','PACOTE'].map(s=>{
 
-      const d = r.setores[s];
+      const d=r.setores[s];
+      const pctUnidades=percentualUnidades(d);
 
       return gauge(
        s,
-       d.percentual,
-       d.caixasProduzidas,
-       d.metaCaixas,
+       pctUnidades,
+       d.unidadesProduzidas,
+       d.metaUnidades,
        cores[s]
       );
 
      }).join('')
-
     }
 
    </div>
@@ -1932,50 +986,38 @@ async function atualizarPainel(){
    <div class="metrics">
 
     ${
-
      ['COSTURA','DOBRA','PACOTE'].map(s=>{
 
-      const d = r.setores[s];
+      const d=r.setores[s];
+      const pctUnidades=percentualUnidades(d);
 
       return `
 
        <div class="metric">
 
-        <small>
-         ${s} · CAIXAS PRODUZIDAS
-        </small>
-
-        <strong>
-         ${fmt(d.caixasProduzidas)}
-        </strong>
-
-        <span class="muted">
-
-         Meta: ${fmt(d.metaCaixas)}
-
-         · ${fmt(d.percentual)}%
-
-        </span>
-
-        <div class="bar">
-
-         <span style="
-          width:${Math.max(0,Math.min(100,d.percentual))}%;
-          background:${cores[s]}
-         "></span>
-
-        </div>
-
-        <small style="margin-top:12px">
-         UNIDADES PRODUZIDAS
-        </small>
-
-        <strong>
-         ${fmt(d.unidadesProduzidas)}
-        </strong>
+        <small>${s} · UNIDADES PRODUZIDAS</small>
+        <strong>${fmt(d.unidadesProduzidas)}</strong>
 
         <span class="muted">
          Meta: ${fmt(d.metaUnidades)}
+         · ${fmt(pctUnidades)}%
+        </span>
+
+        <div class="bar">
+         <span style="
+          width:${Math.max(0,Math.min(100,pctUnidades))}%;
+          background:${cores[s]}
+         "></span>
+        </div>
+
+        <small style="margin-top:12px">
+         CAIXAS PRODUZIDAS
+        </small>
+
+        <strong>${fmt(d.caixasProduzidas)}</strong>
+
+        <span class="muted">
+         Meta: ${fmt(d.metaCaixas)}
         </span>
 
        </div>
@@ -1983,7 +1025,6 @@ async function atualizarPainel(){
       `;
 
      }).join('')
-
     }
 
    </div>
@@ -1994,15 +1035,11 @@ async function atualizarPainel(){
 
   ['COSTURA','DOBRA','PACOTE','GERAL'].forEach(s=>{
 
-   const el = $('painel'+s);
+   const el=$('painel'+s);
 
    if(el){
-
-    el.innerHTML =
-     '<div class="notice error">' +
-     esc(e.message) +
-     '</div>';
-
+    el.innerHTML=
+     '<div class="notice error">'+esc(e.message)+'</div>';
    }
 
   });
@@ -2012,83 +1049,43 @@ async function atualizarPainel(){
 }
 
 
-/* =========================================
-   NAVEGAÇÃO ENTRE TELAS
-========================================= */
-
+/* NAVEGAÇÃO ENTRE TELAS */
 function abrir(v){
 
  document.querySelectorAll('.view').forEach(x=>{
-
-  x.classList.toggle(
-   'active',
-   x.id === v
-  );
-
+  x.classList.toggle('active',x.id===v);
  });
 
  document.querySelectorAll('nav button').forEach(x=>{
-
-  x.classList.toggle(
-   'active',
-   x.dataset.view === v
-  );
-
+  x.classList.toggle('active',x.dataset.view===v);
  });
 
- if(v !== 'programacao'){
-
+ if(v!=='programacao'){
   atualizarPainel();
-
  }
 
 }
 
-
 document.querySelectorAll('nav button').forEach(b=>{
-
- b.onclick = ()=>abrir(b.dataset.view);
-
+ b.onclick=()=>abrir(b.dataset.view);
 });
 
 
-/* =========================================
-   FILTRO DE DATA DE CADA SETOR
-========================================= */
-
+/* FILTRO DE DATA DE CADA SETOR */
 document.querySelectorAll('.dataPainel').forEach(x=>{
-
- x.onchange = atualizarPainel;
-
+ x.onchange=atualizarPainel;
 });
 
 
-/* =========================================
-   SINCRONIZAÇÃO AUTOMÁTICA
-   INTERVALO: 15 SEGUNDOS
-========================================= */
-
+/* SINCRONIZAÇÃO AUTOMÁTICA A CADA 15 SEGUNDOS */
 setInterval(()=>{
-
- const tela = document.querySelector('.view.active')?.id;
-
- if(tela === 'programacao'){
-
-  carregarProgramacao();
-
- }else if(tela){
-
-  atualizarPainel();
-
- }
-
+ const tela=document.querySelector('.view.active')?.id;
+ if(tela==='programacao') carregarProgramacao();
+ else if(tela) atualizarPainel();
 },15000);
 
 
-/* =========================================
-   INICIALIZAÇÃO
-========================================= */
-
+/* INICIALIZAÇÃO */
 carregarProgramacao();
 
 </script>
