@@ -25,9 +25,17 @@ header{
  border-bottom:1px solid #ffffff18;background:#061426ee;
  position:sticky;top:0;z-index:5;backdrop-filter:blur(12px);min-height:94px
 }
+
+/* LOGO PIONG: ARQUIVO ORIGINAL DO GITHUB, EXIBIDO EM BRANCO */
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brand img{width:145px;height:auto;max-height:58px;object-fit:contain}
-.brand small{display:block;color:#a9bfd2;font-size:8px;letter-spacing:.16em;margin-top:3px}
+.brand img{
+ width:145px;
+ height:auto;
+ max-height:58px;
+ object-fit:contain;
+ filter:brightness(0) invert(1);
+}
+
 .header-caption{text-align:center;color:#d7e6f4;font-size:11px;font-weight:800;
  letter-spacing:.2em;text-transform:uppercase;line-height:1.5}
 .header-right{display:flex;align-items:center;gap:14px}
@@ -116,6 +124,7 @@ body.tv-mode .itemmetric strong{font-size:26px}
 body.tv-mode .sub{font-size:14px}
 body.tv-mode .datepick{font-size:15px;padding:12px 16px}
 body.tv-mode .live{font-size:12px}
+
 @media(max-width:1000px){
  header{grid-template-columns:1fr auto;gap:12px}
  .header-caption{grid-column:1/-1;grid-row:2;text-align:left}
@@ -150,7 +159,6 @@ body.tv-mode .live{font-size:12px}
  <div class="brand">
   <img src="logo.png" alt="PionG Plus"
        onerror="this.style.display='none'">
-  <small>PARAMENTAÇÃO PROFISSIONAL DE USO ÚNICO</small>
  </div>
  <div class="header-caption">Central de Monitoramento da Produção</div>
  <div class="header-right">
@@ -351,7 +359,7 @@ window.excluir=async id=>{
 
 function fmt(n){return Math.round(Number(n)||0).toLocaleString('pt-BR',{maximumFractionDigits:0});}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-const cores={COSTURA:'#35b9ed',DOBRA:'#22b879',PACOTE:'#e2a52e',CORTE:'#a78bfa'};
+const cores={COSTURA:'#35b9ed',DOBRA:'#22b879,PACOTE:'#e2a52e',CORTE:'#a78bfa'};
 
 /* VELOCÍMETRO: recebe sempre a mesma unidade para produção e meta */
 function gauge(t,pct,prod,meta,cor,unidade='unidades'){
