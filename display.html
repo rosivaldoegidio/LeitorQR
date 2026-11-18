@@ -104,6 +104,17 @@ header{
  font-weight:800;
  white-space:nowrap
 }
+/* CRONÔMETRO REGRESSIVO — EXCLUSIVO DO CICLO TV PACOTE */
+.rotation-timer{
+ display:none;align-items:center;gap:9px;
+ border:1px solid #35b9ed88;background:#35b9ed18;color:#bfeeff;
+ border-radius:30px;padding:7px 13px;white-space:nowrap;line-height:1.15
+}
+body.tv-pacote .rotation-timer{display:flex}
+.rotation-timer-label{font-size:9px;font-weight:850;letter-spacing:.08em;color:#a9bfd2}
+.rotation-timer-value{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums;color:#35b9ed;min-width:48px;text-align:center}
+.rotation-timer.warning{border-color:#e2a52e99;background:#e2a52e18}
+.rotation-timer.warning .rotation-timer-value{color:#e2a52e}
 nav{
  display:flex;
  gap:8px;
@@ -480,6 +491,10 @@ body.tv-mode .metric .muted{font-size:13px;color:#d0dfeb}
  <div class="header-caption">🖥️ Central de Monitoramento da Produção</div>
  <div class="header-right">
   <div class="live" id="ultimaAtualizacao">● ÚLTIMA ATUALIZAÇÃO: --/--/---- --:--:--</div>
+  <div class="rotation-timer" id="cronometroCiclo" aria-live="off" title="Tempo restante da apresentação atual">
+   <span aria-hidden="true">⏱</span><span class="rotation-timer-label">PRÓXIMA TELA EM</span>
+   <span class="rotation-timer-value" id="tempoRestante">04:00</span>
+  </div>
   <div class="unit-card"><small>UNIDADE</small><strong>BAHIA</strong></div>
   <button class="fullscreen-btn" id="btnTelaCheia" type="button">⛶ Tela cheia</button>
  </div>
@@ -561,6 +576,7 @@ const telasTV={costura:'COSTURA',dobra:'DOBRA',pacote:'PACOTE',geral:'GERAL'};
 const telaTV=telasTV[modoTV]||null;
 
 if(telaTV) document.body.classList.add('tv-mode');
+if(modoTV==='pacote') document.body.classList.add('tv-pacote');
 
 function marcarAtualizacao(){
  const agora=new Date();
@@ -800,12 +816,26 @@ if(telaTV){
 
 /* CICLO AUTOMÁTICO EXCLUSIVO PARA ?tv=pacote
    PACOTE: 4 minutos | GESTÃO À VISTA (GERAL): 1 minuto
-   A alternância ocorre sem recarregar a página. */
+   O cronômetro acompanha os mesmos prazos da alternância, sem recarregar a página. */
 if(modoTV==='pacote'){
  let exibindoGeral=false;
+ let fimDaApresentacao=0;
+ const elementoCronometro=$('cronometroCiclo');
+ const elementoTempo=$('tempoRestante');
+ function atualizarCronometro(){
+  const restante=Math.max(0,Math.ceil((fimDaApresentacao-Date.now())/1000));
+  const minutos=String(Math.floor(restante/60)).padStart(2,'0');
+  const segundos=String(restante%60).padStart(2,'0');
+  elementoTempo.textContent=minutos+':'+segundos;
+  elementoCronometro.classList.toggle('warning',restante<=30);
+ }
  function alternarPacoteGeral(){
   const duracao=exibindoGeral?60000:240000;
+  fimDaApresentacao=Date.now()+duracao;
+  atualizarCronometro();
+  const intervaloCronometro=setInterval(atualizarCronometro,250);
   setTimeout(()=>{
+   clearInterval(intervaloCronometro);
    exibindoGeral=!exibindoGeral;
    abrir(exibindoGeral?'GERAL':'PACOTE');
    alternarPacoteGeral();
