@@ -7,452 +7,164 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-:root {
---navy:#19375d;
---blue:#2474d2;
---orange:#f59e0b;
---green:#159b72;
---red:#e05252;
---ink:#182230;
---muted:#64748b;
---bg:#f3f6fb;
---line:#e5eaf2;
-}
-
-* {
-box-sizing:border-box;
-}
-
-body {
-margin:0;
-background:var(--bg);
-font-family:Arial,sans-serif;
-color:var(--ink);
-}
-
-/* =====================================================
-CABEÇALHO - PIONG PLUS / UNIDADE BAHIA
-*/
-
-header.cabecalho-relatorios {
-width:100%;
-min-height:77px;
-padding:12px 16px;
-background:#142b49;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:16px;
-}
-
-.cabecalho-relatorios .titulo-relatorios {
-min-width:0;
-}
-
-.cabecalho-relatorios h1 {
-margin:0;
-font-size:clamp(17px,1.5vw,21px);
-font-weight:700;
-line-height:1.2;
-}
-
-.cabecalho-relatorios p {
-margin:6px 0 0;
-color:#d8e5f5;
-font-size:clamp(10px,.9vw,12px);
-line-height:1.3;
-}
-
-/* LOGOMARCA E IDENTIFICAÇÃO DA UNIDADE */
-
-.cabecalho-relatorios .logo-relatorios {
-display:flex;
-align-items:center;
-justify-content:flex-end;
-gap:14px;
-flex-shrink:0;
-}
-
-.cabecalho-relatorios .logo-relatorios img {
-display:block;
-width:clamp(110px,10vw,185px);
-max-height:48px;
-object-fit:contain;
-filter:brightness(0) invert(1);
-}
-
-/* SELO UNIDADE BAHIA */
-
-.cabecalho-relatorios .identificacao-unidade {
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:7px 13px;
-min-width:100px;
-border:1px solid rgba(255,255,255,.55);
-border-radius:7px;
-background:rgba(255,255,255,.08);
-line-height:1.15;
-}
-
-.cabecalho-relatorios .identificacao-unidade span {
-color:#d8e5f5;
-font-size:9px;
-font-weight:600;
-letter-spacing:1.2px;
-}
-
-.cabecalho-relatorios .identificacao-unidade strong {
-color:#fff;
-font-size:15px;
-letter-spacing:.7px;
-margin-top:3px;
-}
-
-/* =====================================================
-BOTÕES E CONTEÚDO
-*/
-
-.btn {
-border:0;
-border-radius:9px;
-padding:11px 15px;
-font-weight:bold;
-cursor:pointer;
-}
-
-main {
-max-width:1500px;
-margin:auto;
-padding:20px;
-}
-
-.topo {
-display:flex;
-gap:12px;
-align-items:center;
-justify-content:space-between;
-flex-wrap:wrap;
-margin-bottom:16px;
-}
-
-.periodo {
-color:var(--muted);
-font-size:13px;
-}
-
-.abas {
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
-
-.aba {
-background:#e4ebf5;
-color:#24466d;
-}
-
-.aba.ativa {
-background:var(--navy);
-color:#fff;
-}
-
-.status {
-font-size:13px;
-color:var(--muted);
-margin:10px 0 16px;
-}
-
-/* =====================================================
-INDICADORES
-*/
-
-.cards {
-display:grid;
-grid-template-columns:repeat(5,minmax(0,1fr));
-gap:12px;
-margin-bottom:16px;
-}
-
-.kpi,
-.painel {
-background:white;
-border:1px solid var(--line);
-border-radius:15px;
-box-shadow:0 4px 15px #19375d0a;
-}
-
-.kpi {
-padding:17px;
-}
-
-.kpi .rotulo {
-font-size:12px;
-color:var(--muted);
-font-weight:bold;
-}
-
-.kpi .valor {
-font-size:clamp(22px,3vw,30px);
-font-weight:800;
-margin-top:8px;
-overflow-wrap:anywhere;
-}
-
-.kpi .detalhe {
-font-size:12px;
-color:var(--muted);
-margin-top:5px;
-}
-
-/* =====================================================
-GRÁFICOS
-*/
-
-.graficos {
-display:grid;
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:14px;
-}
-
-.painel {
-padding:17px;
-min-width:0;
-}
-
-.painel h2 {
-font-size:16px;
-margin:0 0 4px;
-}
-
-.painel .sub {
-font-size:12px;
-color:var(--muted);
-margin:0 0 12px;
-}
-
-.canvas-wrap {
-height:340px;
-position:relative;
-}
-
-/* =====================================================
-TABELAS
-*/
-
-.tabela-painel {
-margin-top:14px;
-}
-
-.tabela-wrap {
-overflow:auto;
-max-height:480px;
-border:1px solid var(--line);
-border-radius:10px;
-}
-
-table {
-width:100%;
-border-collapse:collapse;
-white-space:nowrap;
-font-size:12px;
-}
-
-th,
-td {
-padding:10px 12px;
-border-bottom:1px solid var(--line);
-text-align:right;
-}
-
-th {
-position:sticky;
-top:0;
-background:#edf2f9;
-color:#344966;
-z-index:1;
-}
-
-th:first-child,
-td:first-child {
-text-align:left;
-}
-
-td:first-child {
-font-weight:600;
-}
-
-.vazio {
-padding:28px;
-text-align:center;
-color:var(--muted);
-}
-
-/* =====================================================
-RESPONSIVIDADE - TABLETS
-*/
-
-@media(max-width:1100px) {
-.cards {
-grid-template-columns:repeat(3,minmax(0,1fr));
-}
-}
-
-/* =====================================================
-RESPONSIVIDADE - CELULARES
-*/
-
-@media(max-width:850px) {
-.painel { padding:14px 12px; }
-.painel .sub { font-size:11px; line-height:1.4; }
-.canvas-wrap { min-width:0; }
-
-main {
-padding:12px;
-}
-
-.cards {
-grid-template-columns:repeat(2,minmax(0,1fr));
-}
-
-
-.graficos {
-grid-template-columns:1fr;
-}
-
-.canvas-wrap {
-height:300px;
-}
-
-header.cabecalho-relatorios {
-min-height:68px;
-padding:10px 12px;
-gap:8px;
-}
-
-.cabecalho-relatorios h1 {
-font-size:17px;
-}
-
-.cabecalho-relatorios p {
-font-size:10px;
-max-width:250px;
-line-height:1.3;
-}
-
-.cabecalho-relatorios .logo-relatorios {
-gap:7px;
-}
-
-.cabecalho-relatorios .logo-relatorios img {
-width:90px;
-max-height:35px;
-}
-
-.cabecalho-relatorios .identificacao-unidade {
-min-width:78px;
-padding:6px 8px;
-}
-
-.cabecalho-relatorios .identificacao-unidade span {
-font-size:8px;
-}
-
-.cabecalho-relatorios .identificacao-unidade strong {
-font-size:12px;
-}
-}
-
-/* =====================================================
-CELULARES ESTREITOS
-*/
-
-@media(max-width:430px) {
-.cards {
-gap:8px;
-}
-
-.kpi {
-padding:12px;
-}
-
-.kpi .valor {
-font-size:22px;
-}
-
-.painel {
-padding:12px;
-}
-}
-
-@media(max-width:380px) {
-header.cabecalho-relatorios {
-padding:9px 10px;
-gap:5px;
-}
-
-.cabecalho-relatorios h1 {
-font-size:15px;
-}
-
-.cabecalho-relatorios p {
-font-size:9px;
-max-width:205px;
-}
-
-.cabecalho-relatorios .logo-relatorios img {
-width:75px;
-max-height:32px;
-}
-
-.cabecalho-relatorios .identificacao-unidade {
-min-width:70px;
-padding:5px 6px;
-}
-
-.cabecalho-relatorios .identificacao-unidade strong {
-font-size:11px;
-}
-}
-
 
-/* CONSULTA RÁPIDA DE LOTE - EXCLUSIVA DA EMBALAGEM */
-.consulta-lote-integrada {
-  display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;
-  margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
-}
-.consulta-lote-integrada-titulo {
-  display:flex;flex-direction:column;gap:3px;min-width:220px;
-}
-.consulta-lote-integrada-titulo strong {font-size:15px;color:var(--ink);}
-.consulta-lote-integrada-titulo span {font-size:12px;color:var(--muted);}
-.consulta-lote-controles {
-  display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;min-width:min(100%,320px);
-}
-.consulta-lote-controles input {
-  width:min(100%,340px);min-width:190px;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);
-}
-.resultado-consulta-lote {
-  flex:1 1 100%;margin-top:0;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#f7f9fc;color:var(--ink);
-}
-.resultado-consulta-lote .valor-consulta {
-  font-size:clamp(25px,4vw,34px);font-weight:800;color:var(--green);line-height:1.2;margin-top:3px;
-}
-.resultado-consulta-lote.erro {color:#b42318;background:#fff7f6;border-color:#f3c7c3;}
-.resultado-consulta-lote .consulta-progresso {
-  height:8px;margin-top:8px;overflow:hidden;border-radius:20px;background:#e5eaf2;
-}
-.resultado-consulta-lote .consulta-progresso span {
-  display:block;height:100%;border-radius:20px;background:var(--green);transition:width .25s ease;
-}
-@media(max-width:700px) {
-  .consulta-lote-integrada {align-items:stretch;}
-  .consulta-lote-integrada-titulo,.consulta-lote-controles {flex:1 1 100%;min-width:0;}
-  .consulta-lote-controles {justify-content:stretch;flex-wrap:wrap;}
-  .consulta-lote-controles input {width:100%;min-width:0;flex:1 1 100%;}
-  .consulta-lote-controles button {width:100%;}
+:root{
+ --bg:#07182b;--panel:#102943;--panel2:#0b2137;--line:#29465f;
+ --txt:#f4f8fc;--muted:#a9bfd2;--blue:#35b9ed;
+ --green:#22b879;--gold:#e2a52e;--red:#e05252;--purple:#a78bfa;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:radial-gradient(ellipse at top,#123653 0,#07182b 58%);
+ color:var(--txt);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh
+}
+
+/* CABEÇALHO PADRONIZADO COM O DISPLAY */
+header.cabecalho-relatorios{
+ display:grid;grid-template-columns:minmax(210px,1.1fr) minmax(280px,1.5fr) auto;
+ align-items:center;gap:22px;padding:17px 3vw;border-bottom:1px solid #ffffff18;
+ background:#061426ee;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px);min-height:125px
+}
+.cabecalho-relatorios .logo-relatorios{display:flex;align-items:center;justify-content:flex-start;min-width:0;min-height:90px}
+.cabecalho-relatorios .logo-relatorios img{
+ display:block;width:clamp(210px,17vw,270px);height:auto;max-height:90px;object-fit:contain;
+ object-position:left center;filter:brightness(0) invert(1) contrast(1.08)
+}
+.cabecalho-relatorios .titulo-relatorios{
+ grid-column:2;grid-row:1;text-align:center;min-width:0;color:#d7e6f4;
+}
+.cabecalho-relatorios h1{
+ margin:0;font-size:clamp(19px,2vw,27px);font-weight:850;letter-spacing:.035em;line-height:1.25
+}
+.cabecalho-relatorios p{
+ margin:7px 0 0;color:#a9bfd2;font-size:11px;font-weight:750;letter-spacing:.15em;
+ line-height:1.5;text-transform:uppercase
+}
+.cabecalho-relatorios .identificacao-unidade{
+ grid-column:3;grid-row:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ border:1px solid #9aafc5;border-radius:10px;padding:9px 18px;text-align:center;min-width:112px;
+ background:#ffffff0b;line-height:1.15
+}
+.cabecalho-relatorios .identificacao-unidade span{
+ display:block;font-size:9px;letter-spacing:.13em;color:#d5e2ef;font-weight:800
+}
+.cabecalho-relatorios .identificacao-unidade strong{
+ display:block;font-size:17px;letter-spacing:.04em;margin-top:4px;color:#fff
+}
+
+/* ÁREA PRINCIPAL E NAVEGAÇÃO */
+main{max-width:1800px;margin:auto;padding:22px 3vw 48px}
+.topo{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.periodo{color:#d7e6f4;font-size:13px;font-weight:750}
+.status{font-size:12px;color:var(--muted);margin:7px 0 0;line-height:1.5}
+.abas{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+ border:1px solid var(--line);background:#102943;color:var(--muted);padding:11px 15px;
+ border-radius:10px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.18s ease
+}
+.btn:hover{border-color:var(--blue);color:#fff;transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.aba{background:#102943;color:#b9cde0}
+.aba.ativa{background:#17608b;color:#fff;border:1px solid var(--blue);box-shadow:0 5px 16px #35b9ed20}
+
+/* PAINÉIS, FILTROS E CAMPOS */
+.kpi,.painel{
+ background:linear-gradient(145deg,#14334e,#0d2339);border:1px solid #294760;
+ border-radius:18px;box-shadow:0 14px 35px #0002;color:var(--txt)
+}
+.painel{padding:18px;min-width:0}
+input,select{
+ background:#071a2d;border:1px solid #34536d;color:#fff;padding:11px 12px;
+ border-radius:10px;font:inherit;min-width:0;outline:none;color-scheme:dark
+}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #35b9ed20}
+label{color:#b9cde0}
+.painel h2{font-size:16px;font-weight:800;margin:0 0 6px;color:#f4f8fc}
+.painel .sub{font-size:12px;color:var(--muted);margin:0 0 13px;line-height:1.5}
+
+/* INDICADORES */
+.cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{padding:17px;min-width:0}
+.kpi .rotulo{font-size:10px;color:#a9bfd2;font-weight:850;letter-spacing:.09em}
+.kpi .valor{font-size:clamp(22px,3vw,30px);font-weight:900;margin-top:9px;overflow-wrap:anywhere;color:#fff}
+.kpi .detalhe{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+/* GRÁFICOS */
+.graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.canvas-wrap{height:340px;position:relative;min-width:0}
+
+/* TABELAS */
+.tabela-painel{margin-top:14px}
+.tabela-wrap{overflow:auto;max-height:480px;border:1px solid #29465f;border-radius:12px}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px;color:#e7f0f8}
+th,td{padding:11px 13px;border-bottom:1px solid #29445d;text-align:right}
+th{position:sticky;top:0;background:#173c56;color:#d7e6f4;z-index:1;font-size:10px;letter-spacing:.08em;font-weight:850}
+th:first-child,td:first-child{text-align:left}
+td:first-child{font-weight:700}
+tbody tr:hover{background:#ffffff08}
+.vazio{padding:28px;text-align:center;color:var(--muted)}
+
+/* CONSULTA RÁPIDA DE LOTE — EXCLUSIVA DA EMBALAGEM */
+.consulta-lote-integrada{
+ display:flex;align-items:center;gap:12px 18px;flex-wrap:wrap;margin-top:12px;padding-top:14px;border-top:1px solid var(--line)
+}
+.consulta-lote-integrada-titulo{display:flex;flex-direction:column;gap:4px;min-width:220px}
+.consulta-lote-integrada-titulo strong{font-size:15px;color:var(--txt)}
+.consulta-lote-integrada-titulo span{font-size:12px;color:var(--muted)}
+.consulta-lote-controles{display:flex;align-items:center;gap:8px;flex:1;justify-content:flex-end;min-width:min(100%,320px)}
+.consulta-lote-controles input{width:min(100%,340px);min-width:190px;min-height:42px}
+.resultado-consulta-lote{flex:1 1 100%;margin-top:0;padding:12px 14px;border:1px solid #34536d;border-radius:12px;background:#0b2137;color:var(--txt)}
+.resultado-consulta-lote .valor-consulta{font-size:clamp(25px,4vw,34px);font-weight:900;color:#22b879;line-height:1.2;margin-top:3px}
+.resultado-consulta-lote.erro{color:#ffdbe3;background:#4a2433;border-color:#8b4056}
+.resultado-consulta-lote .consulta-progresso{height:8px;margin-top:8px;overflow:hidden;border-radius:20px;background:#29445d}
+.resultado-consulta-lote .consulta-progresso span{display:block;height:100%;border-radius:20px;background:var(--green);transition:width .25s ease}
+
+/* RESPONSIVIDADE */
+@media(max-width:1100px){
+ .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+ header.cabecalho-relatorios{grid-template-columns:minmax(190px,1fr) auto;gap:12px}
+ .cabecalho-relatorios .titulo-relatorios{grid-column:1/-1;grid-row:2}
+ .cabecalho-relatorios .logo-relatorios{grid-column:1;grid-row:1}
+ .cabecalho-relatorios .identificacao-unidade{grid-column:2;grid-row:1}
+}
+@media(max-width:850px){
+ .painel{padding:14px 12px}
+ .painel .sub{font-size:11px;line-height:1.4}
+ main{padding:16px 14px 35px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .graficos{grid-template-columns:1fr}
+ .canvas-wrap{height:300px}
+}
+@media(max-width:700px){
+ .consulta-lote-integrada{align-items:stretch}
+ .consulta-lote-integrada-titulo,.consulta-lote-controles{flex:1 1 100%;min-width:0}
+ .consulta-lote-controles{justify-content:stretch;flex-wrap:wrap}
+ .consulta-lote-controles input{width:100%;min-width:0;flex:1 1 100%}
+ .consulta-lote-controles button{width:100%}
+}
+@media(max-width:560px){
+ header.cabecalho-relatorios{padding:14px;grid-template-columns:1fr;min-height:auto;gap:9px}
+ .cabecalho-relatorios .logo-relatorios{grid-column:1;grid-row:1;justify-content:center;min-height:70px}
+ .cabecalho-relatorios .logo-relatorios img{width:220px;max-height:75px;object-position:center}
+ .cabecalho-relatorios .titulo-relatorios{grid-column:1;grid-row:2;text-align:center}
+ .cabecalho-relatorios h1{font-size:20px}
+ .cabecalho-relatorios p{font-size:9px;letter-spacing:.1em}
+ .cabecalho-relatorios .identificacao-unidade{grid-column:1;grid-row:3;justify-self:center;padding:8px 16px}
+ .topo{align-items:stretch}
+ .abas{width:100%}
+ .abas .btn{flex:1 1 auto}
+ .cards{gap:9px}
+}
+@media(max-width:430px){
+ .kpi{padding:12px}
+ .kpi .valor{font-size:22px}
+ .painel{padding:12px}
+ .abas .btn{padding:10px 9px;font-size:11px}
+}
+@media(max-width:380px){
+ .cabecalho-relatorios .logo-relatorios img{width:195px;max-height:65px}
+ .cabecalho-relatorios h1{font-size:18px}
+ .cabecalho-relatorios p{font-size:8px}
 }
 
 </style>
@@ -461,21 +173,19 @@ font-size:11px;
 <body>
 
 <header class="cabecalho-relatorios">
+  <div class="logo-relatorios">
+    <img src="logo.png" alt="PionG Plus" onerror="this.style.display='none'">
+  </div>
 
-<div class="titulo-relatorios">
-<h1>📊 Relatórios de Produção</h1>
-<p>Indicadores de Corte, Costura, Dobra, Pacote e Embalagem</p>
-</div>
+  <div class="titulo-relatorios">
+    <h1>📊 Relatórios de Produção</h1>
+    <p>Indicadores de Corte, Costura, Dobra, Pacote e Embalagem</p>
+  </div>
 
-<div class="logo-relatorios">
-<img src="logo.png" alt="PIONG PLUS">
-
-<div class="identificacao-unidade">
-<span>UNIDADE</span>
-<strong>BAHIA</strong>
-</div>
-</div>
-
+  <div class="identificacao-unidade">
+    <span>UNIDADE</span>
+    <strong>BAHIA</strong>
+  </div>
 </header>
 
 <main>
@@ -646,6 +356,11 @@ const REPORT_API_URL='https://script.google.com/macros/s/AKfycbzJDjg9ilk0yz8CCd-
 const cache={};
 let setorAtual='costura';
 let charts=[];
+
+// Identidade visual dos gráficos: mantém dados e regras, ajustando apenas a leitura no tema escuro.
+Chart.defaults.color='#a9bfd2';
+Chart.defaults.borderColor='#29465f';
+Chart.defaults.font.family='Inter, system-ui, Segoe UI, Arial, sans-serif';
 
 const $=id=>document.getElementById(id);
 
