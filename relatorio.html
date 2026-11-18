@@ -34,11 +34,14 @@ header.cabecalho-relatorios{
  grid-column:2;grid-row:1;text-align:center;min-width:0;color:#d7e6f4;
 }
 .cabecalho-relatorios h1{
- margin:0;font-size:clamp(19px,2vw,27px);font-weight:850;letter-spacing:.035em;line-height:1.25
+ margin:0;font-size:clamp(21px,2.15vw,29px);font-weight:850;letter-spacing:.025em;line-height:1.25
 }
-.cabecalho-relatorios p{
- margin:7px 0 0;color:#a9bfd2;font-size:11px;font-weight:750;letter-spacing:.15em;
- line-height:1.5;text-transform:uppercase
+.cabecalho-relatorios .cabecalho-direito{
+ grid-column:3;grid-row:1;display:flex;align-items:center;justify-content:flex-end;gap:14px;min-width:0
+}
+.ultima-atualizacao{
+ color:#8cf0bd;border:1px solid #22b87988;background:#22b87918;border-radius:30px;
+ padding:8px 13px;font-size:11px;font-weight:800;white-space:nowrap
 }
 .cabecalho-relatorios .identificacao-unidade{
  grid-column:3;grid-row:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -54,7 +57,8 @@ header.cabecalho-relatorios{
 
 /* ÁREA PRINCIPAL E NAVEGAÇÃO */
 main{max-width:1800px;margin:auto;padding:22px 3vw 48px}
-.topo{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.topo{display:flex;gap:14px;align-items:center;justify-content:flex-start;flex-wrap:wrap;margin-bottom:16px}
+.metadados-ocultos{display:none!important}
 .periodo{color:#d7e6f4;font-size:13px;font-weight:750}
 .status{font-size:12px;color:var(--muted);margin:7px 0 0;line-height:1.5}
 .abas{display:flex;gap:8px;flex-wrap:wrap}
@@ -123,9 +127,10 @@ tbody tr:hover{background:#ffffff08}
 @media(max-width:1100px){
  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
  header.cabecalho-relatorios{grid-template-columns:minmax(190px,1fr) auto;gap:12px}
- .cabecalho-relatorios .titulo-relatorios{grid-column:1/-1;grid-row:2}
  .cabecalho-relatorios .logo-relatorios{grid-column:1;grid-row:1}
- .cabecalho-relatorios .identificacao-unidade{grid-column:2;grid-row:1}
+ .cabecalho-relatorios .titulo-relatorios{grid-column:1/-1;grid-row:2}
+ .cabecalho-relatorios .cabecalho-direito{grid-column:2;grid-row:1;gap:8px}
+ .ultima-atualizacao{font-size:9px;padding:7px 9px}
 }
 @media(max-width:850px){
  .painel{padding:14px 12px}
@@ -148,8 +153,8 @@ tbody tr:hover{background:#ffffff08}
  .cabecalho-relatorios .logo-relatorios img{width:220px;max-height:75px;object-position:center}
  .cabecalho-relatorios .titulo-relatorios{grid-column:1;grid-row:2;text-align:center}
  .cabecalho-relatorios h1{font-size:20px}
- .cabecalho-relatorios p{font-size:9px;letter-spacing:.1em}
- .cabecalho-relatorios .identificacao-unidade{grid-column:1;grid-row:3;justify-self:center;padding:8px 16px}
+ .cabecalho-relatorios .cabecalho-direito{grid-column:1;grid-row:3;justify-content:center;flex-wrap:wrap}
+ .cabecalho-relatorios .identificacao-unidade{justify-self:center;padding:8px 16px}
  .topo{align-items:stretch}
  .abas{width:100%}
  .abas .btn{flex:1 1 auto}
@@ -164,7 +169,7 @@ tbody tr:hover{background:#ffffff08}
 @media(max-width:380px){
  .cabecalho-relatorios .logo-relatorios img{width:195px;max-height:65px}
  .cabecalho-relatorios h1{font-size:18px}
- .cabecalho-relatorios p{font-size:8px}
+ .ultima-atualizacao{font-size:8px;padding:6px 8px}
 }
 
 </style>
@@ -178,24 +183,21 @@ tbody tr:hover{background:#ffffff08}
   </div>
 
   <div class="titulo-relatorios">
-    <h1>📊 Relatórios de Produção</h1>
-    <p>Indicadores de Corte, Costura, Dobra, Pacote e Embalagem</p>
+    <h1>📊 Indicadores de Produção</h1>
   </div>
 
-  <div class="identificacao-unidade">
-    <span>UNIDADE</span>
-    <strong>BAHIA</strong>
+  <div class="cabecalho-direito">
+    <div class="ultima-atualizacao" id="ultimaAtualizacao">● ÚLTIMA ATUALIZAÇÃO: --/--/---- --:--:--</div>
+    <div class="identificacao-unidade">
+      <span>UNIDADE</span>
+      <strong>BAHIA</strong>
+    </div>
   </div>
 </header>
 
 <main>
 
 <div class="topo">
-<div>
-<div id="periodo" class="periodo">Período da planilha</div>
-<div id="status" class="status">Carregando dados da planilha...</div>
-</div>
-
 <div class="abas">
 <button class="btn aba" data-setor="corte">Corte</button>
 <button class="btn aba ativa" data-setor="costura">Costura</button>
@@ -203,6 +205,10 @@ tbody tr:hover{background:#ffffff08}
 <button class="btn aba" data-setor="pacote">Pacote</button>
 <button class="btn aba" data-setor="embalagem">Embalagem</button>
 <button class="btn aba" id="recarregar">↻ Atualizar</button>
+</div>
+<div class="metadados-ocultos" aria-hidden="true">
+  <div id="periodo" class="periodo">Período da planilha</div>
+  <div id="status" class="status">Carregando dados da planilha...</div>
 </div>
 </div>
 
@@ -1483,6 +1489,11 @@ $('periodo').textContent=
 $('status').textContent=
 'Dados carregados da planilha. Última consulta: '+
 new Date().toLocaleTimeString('pt-BR');
+
+const agora=new Date();
+$('ultimaAtualizacao').textContent='● ÚLTIMA ATUALIZAÇÃO: '+
+  agora.toLocaleDateString('pt-BR')+' '+
+  agora.toLocaleTimeString('pt-BR',{hour12:false});
 
 render();
 
