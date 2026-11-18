@@ -340,8 +340,8 @@ body.tv-mode .brand img{
  max-height:100px
 }
 body.tv-mode .header-caption{
- font-size:13px;
- letter-spacing:.2em
+ font-size:clamp(21px,2.15vw,29px);
+ letter-spacing:.025em
 }
 body.tv-mode .view.active{display:block}
 body.tv-mode .sectorhead h1{font-size:clamp(28px,3vw,44px)}
@@ -357,6 +357,38 @@ body.tv-mode .itemmetric strong{font-size:26px}
 body.tv-mode .sub{font-size:14px}
 body.tv-mode .datepick{font-size:15px;padding:12px 16px}
 body.tv-mode .live{font-size:12px}
+/* LEGIBILIDADE DOS TEXTOS PEQUENOS NA TV */
+body.tv-mode .gauge .glabel{font-size:13px;fill:#d7e6f4}
+body.tv-mode .gauge .numbers{font-size:14px;color:#d0dfeb}
+body.tv-mode .gauge .numbers b{font-size:18px}
+body.tv-mode .gauge .muted{font-size:13px;color:#d0dfeb}
+body.tv-mode .metric small{font-size:11px;color:#d7e6f4}
+body.tv-mode .metric .muted{font-size:13px;color:#d0dfeb}
+
+/* AJUSTE EXCLUSIVO PARA TV FULL HD (1920x1080) EM ZOOM DE 100% */
+@media screen and (min-width:1600px) and (min-height:900px){
+ body.tv-mode header{
+  min-height:128px;
+  padding-top:15px;
+  padding-bottom:15px
+ }
+ body.tv-mode main{
+  padding:22px 3vw 30px
+ }
+ body.tv-mode .gaugegrid{gap:14px}
+ body.tv-mode .gauge{padding:20px}
+ body.tv-mode .gauge svg{width:min(100%,345px)}
+ body.tv-mode .gauge h3{font-size:19px}
+ body.tv-mode .gauge .glabel{font-size:14px;fill:#e3edf6}
+ body.tv-mode .numbers{font-size:15px;color:#e0eaf3}
+ body.tv-mode .numbers b{font-size:19px}
+ body.tv-mode .gauge .muted{font-size:14px;color:#dbe7f1}
+ body.tv-mode .metrics{gap:14px;margin:16px 0}
+ body.tv-mode .metric small{font-size:12px;color:#e3edf6}
+ body.tv-mode .metric .muted{font-size:14px;color:#dbe7f1}
+ body.tv-mode .item .muted{font-size:14px;color:#dbe7f1}
+ body.tv-mode .itemmetric small{font-size:11px;color:#e3edf6}
+}
 
 /* RESPONSIVIDADE */
 @media(max-width:1100px){
@@ -445,7 +477,7 @@ body.tv-mode .live{font-size:12px}
   <img src="logo.png" alt="PionG Plus"
        onerror="this.style.display='none'">
  </div>
- <div class="header-caption">Central de Monitoramento da Produção</div>
+ <div class="header-caption">🖥️ Central de Monitoramento da Produção</div>
  <div class="header-right">
   <div class="live" id="ultimaAtualizacao">● ÚLTIMA ATUALIZAÇÃO: --/--/---- --:--:--</div>
   <div class="unit-card"><small>UNIDADE</small><strong>BAHIA</strong></div>
@@ -458,7 +490,7 @@ body.tv-mode .live{font-size:12px}
  <button data-view="COSTURA">Costura</button>
  <button data-view="DOBRA">Dobra</button>
  <button data-view="PACOTE">Pacote</button>
- <button data-view="GERAL">Visão geral</button>
+ <button data-view="GERAL">Gestão à vista</button>
 </nav>
 
 <main>
