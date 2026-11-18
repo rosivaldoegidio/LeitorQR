@@ -797,6 +797,22 @@ if(telaTV){
 }else{
  carregarProgramacao();
 }
+
+/* CICLO AUTOMÁTICO EXCLUSIVO PARA ?tv=pacote
+   PACOTE: 4 minutos | GESTÃO À VISTA (GERAL): 1 minuto
+   A alternância ocorre sem recarregar a página. */
+if(modoTV==='pacote'){
+ let exibindoGeral=false;
+ function alternarPacoteGeral(){
+  const duracao=exibindoGeral?60000:240000;
+  setTimeout(()=>{
+   exibindoGeral=!exibindoGeral;
+   abrir(exibindoGeral?'GERAL':'PACOTE');
+   alternarPacoteGeral();
+  },duracao);
+ }
+ alternarPacoteGeral();
+}
 </script>
 </body>
 </html>
