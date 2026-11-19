@@ -93,6 +93,11 @@ label{color:#b9cde0}
 .kpi .valor{font-size:clamp(22px,3vw,30px);font-weight:900;margin-top:9px;overflow-wrap:anywhere;color:#fff}
 .kpi .detalhe{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.45}
 
+/* INDICADORES E/NE — EXCLUSIVOS DA EMBALAGEM */
+.grupo-cards-embalagem{margin:0 0 16px}
+.titulo-tipo-embalagem{font-size:13px;font-weight:900;letter-spacing:.08em;color:#d7e6f4;margin:0 0 9px;padding-left:3px}
+.cards-embalagem{margin-bottom:12px}
+
 /* GRÁFICOS */
 .graficos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .canvas-wrap{height:340px;position:relative;min-width:0}
@@ -303,7 +308,29 @@ Escolha as datas e clique em “Aplicar período”.
 
 </section>
 
-
+<!-- Indicadores separados por classificação: somente no setor Embalagem. -->
+<section id="cardsEmbalagemSeparados" style="display:none">
+  <div class="grupo-cards-embalagem">
+    <h2 class="titulo-tipo-embalagem">ESTÉRIL (E)</h2>
+    <div class="cards cards-embalagem">
+      <article class="kpi"><div class="rotulo">PRODUTOS ÚNICOS</div><div class="valor" id="kpiEProdutos">—</div><div class="detalhe">Produtos estéreis diferentes</div></article>
+      <article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpiEUnidades">—</div><div class="detalhe">Soma da coluna AG</div></article>
+      <article class="kpi"><div class="rotulo">LOTES</div><div class="valor" id="kpiELotes">—</div><div class="detalhe">Lotes estéreis diferentes</div></article>
+      <article class="kpi"><div class="rotulo">CAIXAS EMBALADAS</div><div class="valor" id="kpiECaixas">—</div><div class="detalhe">Soma da coluna AF</div></article>
+      <article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpiERitmo">—</div><div class="detalhe">Média da coluna AH</div></article>
+    </div>
+  </div>
+  <div class="grupo-cards-embalagem">
+    <h2 class="titulo-tipo-embalagem">NÃO ESTÉRIL (NE)</h2>
+    <div class="cards cards-embalagem">
+      <article class="kpi"><div class="rotulo">PRODUTOS ÚNICOS</div><div class="valor" id="kpiNEProdutos">—</div><div class="detalhe">Produtos não estéreis diferentes</div></article>
+      <article class="kpi"><div class="rotulo">UNIDADES PRODUZIDAS</div><div class="valor" id="kpiNEUnidades">—</div><div class="detalhe">Soma da coluna AG</div></article>
+      <article class="kpi"><div class="rotulo">LOTES</div><div class="valor" id="kpiNELotes">—</div><div class="detalhe">Lotes não estéreis diferentes</div></article>
+      <article class="kpi"><div class="rotulo">CAIXAS EMBALADAS</div><div class="valor" id="kpiNECaixas">—</div><div class="detalhe">Soma da coluna AF</div></article>
+      <article class="kpi"><div class="rotulo">RITMO MÉDIO</div><div class="valor" id="kpiNERitmo">—</div><div class="detalhe">Média da coluna AH</div></article>
+    </div>
+  </div>
+</section>
 
 <section class="graficos">
 
@@ -320,6 +347,14 @@ Escolha as datas e clique em “Aplicar período”.
 <p class="sub" id="subtituloRitmo">Ritmo médio por produto, sem duplicar nomes</p>
 <div class="canvas-wrap">
 <canvas id="graficoRitmo"></canvas>
+</div>
+</article>
+
+<article class="painel" id="painelLotesNE" style="display:none">
+<h2 id="tituloLotesNE">Lotes embalados NE</h2>
+<p class="sub" id="subtituloLotesNE">Caixas do período e acumulados por lote não estéril</p>
+<div class="canvas-wrap">
+<canvas id="graficoRitmoNE"></canvas>
 </div>
 </article>
 
@@ -745,6 +780,12 @@ destroyCharts();
 $('filtroHorarioEmbalagem').style.display=setorAtual==='embalagem'?'flex':'none';
 $('consultaLoteEmbalagem').style.display=setorAtual==='embalagem'?'block':'none';
 
+// Os dois grupos E/NE e o segundo gráfico existem somente na Embalagem.
+document.querySelector('.cards').style.display='';
+$('cardsEmbalagemSeparados').style.display='none';
+$('painelLotesNE').style.display='none';
+$('graficoRitmoNE').parentElement.style.height='340px';
+
 const dados=prepararDados();
 
 const temDesempenho=setorAtual!=='pacote' && setorAtual!=='embalagem';
@@ -1134,6 +1175,99 @@ montar(inicioSelect,anteriorInicio,0);
 montar(fimSelect,anteriorFim,Math.max(0,ordenadas.length-1));
 }
 
+function desenharGraficoLotesEmbalagem(canvasId, registrosTipo, descricaoTipo){
+const mapaLotes=new Map();
+
+registrosTipo.forEach(r=>{
+const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
+const lote=String(r.lote||'').trim()||'(sem lote)';
+const key=String(lote).trim().toLocaleUpperCase('pt-BR');
+
+if(!mapaLotes.has(key)){
+mapaLotes.set(key,{
+lote:lote,
+produtos:[],
+caixasPeriodo:0,
+caixasAcumuladas:null,
+caixasAcumuladasTexto:null,
+unidadesAcumuladas:null,
+unidadesAcumuladasTexto:null
+});
+}
+
+const item=mapaLotes.get(key);
+if(!item.produtos.includes(produto)) item.produtos.push(produto);
+item.caixasPeriodo+=Number(r.caixas)||0;
+
+const lerAcumulado=valor=>{
+const texto=String(valor??'').trim();
+if(!texto) return null;
+const partes=texto.split('/');
+const numeroTexto=partes[0].trim().replace(/\./g,'').replace(',','.');
+const numero=Number(numeroTexto);
+if(!Number.isFinite(numero)) return null;
+return {numero:numero,texto:partes.length>1?partes[0].trim()+' / '+partes.slice(1).join('/').trim():texto};
+};
+const acumuladoAI=lerAcumulado(r.caixasAcumuladas);
+if(acumuladoAI && (item.caixasAcumuladas===null || acumuladoAI.numero>item.caixasAcumuladas)){
+item.caixasAcumuladas=acumuladoAI.numero;
+item.caixasAcumuladasTexto=acumuladoAI.texto;
+}
+const acumuladoAJ=lerAcumulado(r.unidadesAcumuladas);
+if(acumuladoAJ && (item.unidadesAcumuladas===null || acumuladoAJ.numero>item.unidadesAcumuladas)){
+item.unidadesAcumuladas=acumuladoAJ.numero;
+item.unidadesAcumuladasTexto=acumuladoAJ.texto;
+}
+});
+
+const lotesGrafico=Array.from(mapaLotes.values());
+const labelsLotes=lotesGrafico.map(r=>r.lote);
+const produtosDoLote=i=>lotesGrafico[i]?.produtos.join(', ')||'—';
+const valorOuZero=v=>Number.isFinite(v)?v:0;
+const mobileGraficoLotes=window.matchMedia('(max-width:850px)').matches;
+const alturaPorLote=mobileGraficoLotes?76:64;
+const alturaMinima=mobileGraficoLotes?460:400;
+const alturaGraficoLotes=Math.max(alturaMinima,lotesGrafico.length*alturaPorLote);
+$(canvasId).parentElement.style.height=alturaGraficoLotes+'px';
+
+criarChart(canvasId,'bar',labelsLotes,[
+{
+label:'Caixas embaladas no período (AF)',
+data:lotesGrafico.map(r=>r.caixasPeriodo),
+backgroundColor:'#16a078',borderRadius:5,minBarLength:24,barThickness:10,categoryPercentage:0.72,barPercentage:0.82
+},
+{
+label:'Total acumulado de caixas (AI)',
+data:lotesGrafico.map(r=>valorOuZero(r.caixasAcumuladas)),
+backgroundColor:'#2879d0',borderRadius:5,minBarLength:24,barThickness:10,categoryPercentage:0.72,barPercentage:0.82
+},
+{
+label:'Total acumulado de unidades (AJ)',
+data:lotesGrafico.map(r=>valorOuZero(r.unidadesAcumuladas)),
+backgroundColor:'#e69a2a',borderRadius:5,minBarLength:24,barThickness:10,categoryPercentage:0.72,barPercentage:0.82
+}
+],{
+horizontal:true,
+options:{
+scales:{
+x:{beginAtZero:true,grid:{display:false}},
+y:{grid:{display:false},stacked:false,ticks:{autoSkip:false}}
+},
+plugins:{
+legend:{display:true,position:'bottom'},
+tooltip:{
+padding:7,boxPadding:3,titleFont:{size:11},bodyFont:{size:10},displayColors:true,boxWidth:8,boxHeight:8,
+callbacks:{
+title:()=>[],
+beforeBody:items=>'Classificação: '+descricaoTipo+' | Produto(s): '+produtosDoLote(items[0].dataIndex),
+label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].caixasAcumuladasTexto??fmtN(c.parsed.x)):c.datasetIndex===2?(lotesGrafico[c.dataIndex].unidadesAcumuladasTexto??fmtN(c.parsed.x)):fmtN(c.parsed.x))
+}
+}
+}
+}
+});
+}
+
 function renderEmbalagem(dados){
 
 const todosRegistros=cache.embalagem||[];
@@ -1166,6 +1300,50 @@ $('status').textContent='No setor Embalagem, o horário inicial deve ser anterio
 
 const normalizar=v=>
 String(v??'').trim().toLocaleUpperCase('pt-BR');
+
+// O código de produto recebido em r.produto vem de CAPACIDADE PRODUÇÃO!AD.
+// AN* e IN* são Não Estéril; todos os demais códigos são Estéril.
+const ehNaoEsteril=r=>{
+const codigo=normalizar(r.produto);
+return codigo.startsWith('AN') || codigo.startsWith('IN');
+};
+const registrosE=registros.filter(r=>!ehNaoEsteril(r));
+const registrosNE=registros.filter(ehNaoEsteril);
+
+const indicadoresTipo=lista=>{
+const produtosTipo=new Set(lista.map(r=>normalizar(r.produto)).filter(Boolean));
+const lotesTipo=new Set(lista.map(r=>normalizar(r.lote)).filter(Boolean));
+const somarTipo=campo=>lista.reduce((s,r)=>{
+const n=Number(r[campo]);
+return s+(r[campo]!==null&&r[campo]!==''&&Number.isFinite(n)?n:0);
+},0);
+const ritmos=lista.map(r=>r.ritmo).filter(v=>v!==null&&v!==''&&Number.isFinite(Number(v))).map(Number);
+return {
+produtos:produtosTipo.size,
+unidades:somarTipo('unidades'),
+lotes:lotesTipo.size,
+caixas:somarTipo('caixas'),
+ritmo:ritmos.length?ritmos.reduce((a,b)=>a+b,0)/ritmos.length:null
+};
+};
+const indicadoresE=indicadoresTipo(registrosE);
+const indicadoresNE=indicadoresTipo(registrosNE);
+
+$('cardsEmbalagemSeparados').style.display='block';
+document.querySelector('.cards').style.display='none';
+$('painelLotesNE').style.display='block';
+
+$('kpiEProdutos').textContent=fmtN(indicadoresE.produtos);
+$('kpiEUnidades').textContent=fmtN(indicadoresE.unidades);
+$('kpiELotes').textContent=fmtN(indicadoresE.lotes);
+$('kpiECaixas').textContent=fmtN(indicadoresE.caixas);
+$('kpiERitmo').textContent=indicadoresE.ritmo===null?'—':fmtN(indicadoresE.ritmo);
+
+$('kpiNEProdutos').textContent=fmtN(indicadoresNE.produtos);
+$('kpiNEUnidades').textContent=fmtN(indicadoresNE.unidades);
+$('kpiNELotes').textContent=fmtN(indicadoresNE.lotes);
+$('kpiNECaixas').textContent=fmtN(indicadoresNE.caixas);
+$('kpiNERitmo').textContent=indicadoresNE.ritmo===null?'—':fmtN(indicadoresNE.ritmo);
 
 const produtos=new Set(
 registros.map(r=>normalizar(r.produto)).filter(Boolean)
@@ -1214,11 +1392,13 @@ cards[4].querySelector('.detalhe').textContent='Valor da célula AH7';
 $('kpiOutrosLinha').style.display='none';
 $('painelDesempenho').style.display='none';
 
-$('tituloUnidades').textContent='Unidades embaladas por produto';
-$('tituloRitmo').textContent='Lotes embalados';
+$('tituloUnidades').textContent='Unidades embaladas por produto (E + NE)';
+$('tituloRitmo').textContent='Lotes embalados E';
+$('tituloLotesNE').textContent='Lotes embalados NE';
+$('subtituloLotesNE').textContent='Não Estéril: caixas do período, acumulado de caixas e acumulado de unidades por lote';
 
 $('subtituloRitmo').textContent=
-'Três barras por lote: caixas do período, acumulado de caixas e acumulado de unidades. Toque nas barras para ver os detalhes';
+'Estéril: caixas do período, acumulado de caixas e acumulado de unidades por lote. Toque nas barras para ver os detalhes';
 
 // GRÁFICO 1 - AGRUPADO POR PRODUTO
 
@@ -1249,135 +1429,9 @@ borderRadius:5
 }
 ],{horizontal:true});
 
-// GRÁFICO 2 - LOTES: três barras agrupadas por lote.
-// minBarLength mantém uma área visível e fácil de tocar no celular,
-// mesmo quando o valor do indicador é pequeno.
-const mapaLotes=new Map();
-
-registros.forEach(r=>{
-const produto=String(r.produto||'(sem identificação)').trim()||'(sem identificação)';
-const lote=String(r.lote||'').trim()||'(sem lote)';
-const key=normalizar(lote);
-
-if(!mapaLotes.has(key)){
-mapaLotes.set(key,{
-lote:lote,
-produtos:[],
-caixasPeriodo:0,
-caixasAcumuladas:null,
-caixasAcumuladasTexto:null,
-unidadesAcumuladas:null,
-unidadesAcumuladasTexto:null
-});
-}
-
-const item=mapaLotes.get(key);
-if(!item.produtos.includes(produto)) item.produtos.push(produto);
-item.caixasPeriodo+=Number(r.caixas)||0;
-
-// AI/AJ são acumulados por lote. Algumas linhas do mesmo lote podem
-// trazer zero antes do valor acumulado efetivo; manter o maior valor
-// numérico encontrado e o texto correspondente para o tooltip.
-const lerAcumulado=(valor)=>{
-const texto=String(valor??'').trim();
-if(!texto) return null;
-const partes=texto.split('/');
-const numeroTexto=partes[0].trim().replace(/\./g,'').replace(',','.');
-const numero=Number(numeroTexto);
-if(!Number.isFinite(numero)) return null;
-return {
-numero:numero,
-texto:partes.length>1?partes[0].trim()+' / '+partes.slice(1).join('/').trim():texto
-};
-};
-const acumuladoAI=lerAcumulado(r.caixasAcumuladas);
-if(acumuladoAI && (item.caixasAcumuladas===null || acumuladoAI.numero>item.caixasAcumuladas)){
-item.caixasAcumuladas=acumuladoAI.numero;
-item.caixasAcumuladasTexto=acumuladoAI.texto;
-}
-const acumuladoAJ=lerAcumulado(r.unidadesAcumuladas);
-if(acumuladoAJ && (item.unidadesAcumuladas===null || acumuladoAJ.numero>item.unidadesAcumuladas)){
-item.unidadesAcumuladas=acumuladoAJ.numero;
-item.unidadesAcumuladasTexto=acumuladoAJ.texto;
-}
-});
-
-const lotesGrafico=Array.from(mapaLotes.values());
-const labelsLotes=lotesGrafico.map(r=>r.lote);
-const produtosDoLote=i=>lotesGrafico[i]?.produtos.join(', ')||'—';
-const valorOuZero=v=>Number.isFinite(v)?v:0;
-
-// Reserva mais altura para cada lote, separando visualmente as três barras.
-// No celular o espaço é ainda maior para facilitar a leitura e o toque.
-const mobileGraficoLotes=window.matchMedia('(max-width:850px)').matches;
-const alturaPorLote=mobileGraficoLotes?76:64;
-const alturaMinima=mobileGraficoLotes?460:400;
-const alturaGraficoLotes=Math.max(alturaMinima,lotesGrafico.length*alturaPorLote);
-const canvasLotes=$('graficoRitmo').parentElement;
-canvasLotes.style.height=alturaGraficoLotes+'px';
-
-criarChart('graficoRitmo','bar',labelsLotes,[
-{
-label:'Caixas embaladas no período (AF)',
-data:lotesGrafico.map(r=>r.caixasPeriodo),
-backgroundColor:'#16a078',
-borderRadius:5,
-minBarLength:24,
-barThickness:10,
-categoryPercentage:0.72,
-barPercentage:0.82
-},
-{
-label:'Total acumulado de caixas (AI)',
-data:lotesGrafico.map(r=>valorOuZero(r.caixasAcumuladas)),
-backgroundColor:'#2879d0',
-borderRadius:5,
-minBarLength:24,
-barThickness:10,
-categoryPercentage:0.72,
-barPercentage:0.82
-},
-{
-label:'Total acumulado de unidades (AJ)',
-data:lotesGrafico.map(r=>valorOuZero(r.unidadesAcumuladas)),
-backgroundColor:'#e69a2a',
-borderRadius:5,
-minBarLength:24,
-barThickness:10,
-categoryPercentage:0.72,
-barPercentage:0.82
-}
-],{
-horizontal:true,
-options:{
-scales:{
-x:{beginAtZero:true,grid:{display:false}},
-y:{
-grid:{display:false},
-stacked:false,
-ticks:{autoSkip:false}
-}
-},
-plugins:{
-legend:{display:true,position:'bottom'},
-tooltip:{
-padding:7,
-boxPadding:3,
-titleFont:{size:11},
-bodyFont:{size:10},
-displayColors:true,
-boxWidth:8,
-boxHeight:8,
-callbacks:{
-// O lote já aparece no eixo do gráfico; não repetir no banner.
-title:()=>[],
-beforeBody:items=>'Produto(s): '+produtosDoLote(items[0].dataIndex),
-label:c=>c.dataset.label+': '+(c.datasetIndex===1?(lotesGrafico[c.dataIndex].caixasAcumuladasTexto??fmtN(c.parsed.x)):c.datasetIndex===2?(lotesGrafico[c.dataIndex].unidadesAcumuladasTexto??fmtN(c.parsed.x)):fmtN(c.parsed.x))
-}
-}
-}
-}
-});
+// GRÁFICOS 2 E 3 - LOTES SEPARADOS POR CLASSIFICAÇÃO.
+desenharGraficoLotesEmbalagem('graficoRitmo', registrosE, 'Estéril');
+desenharGraficoLotesEmbalagem('graficoRitmoNE', registrosNE, 'Não Estéril');
 
 criarChart(
 'graficoResumo',
