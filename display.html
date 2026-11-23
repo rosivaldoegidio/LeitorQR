@@ -564,6 +564,7 @@ body.tv-mode .metric .muted{font-size:13px;color:#d0dfeb}
 const API_URL='https://script.google.com/a/macros/piong.com.br/s/AKfycbxQoZtRNj99JKbRIR7RD6ThG0xrLwxDFGqgNqU_N_ERr2t8vlg7SCzgolnHqUD1dUtWng/exec';
 const $=id=>document.getElementById(id);
 let loteValido=null,buscaTimer=null;
+let podeEditarProgramacao=false;
 
 const hoje=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
 $('data').value=hoje;$('filtroData').value=hoje;
@@ -615,6 +616,20 @@ function api(params){
 }
 function aviso(t,erro=false){
  $('msg').textContent=t;$('msg').className='notice'+(erro?' error':'');$('msg').style.display='block';
+}
+async function carregarPermissaoProgramacao(){
+ try{
+  const r=await api({action:'permissaoEdicao'});
+  podeEditarProgramacao=!!r.podeEditar;
+ }catch(e){
+  podeEditarProgramacao=false;
+ }
+ ['data','setor','lote','meta','add','limpar'].forEach(id=>{
+  const el=$(id);if(el)el.disabled=!podeEditarProgramacao;
+ });
+ if(!podeEditarProgramacao){
+  aviso('Acesso somente para consulta. Sua conta Google não está autorizada a editar a Programação.',true);
+ }
 }
 function limpar(){
  $('lote').value='';$('produto').value='';$('unPorCaixa').value='';
@@ -668,14 +683,15 @@ async function carregarProgramacao(){
    <td>${esc(x.lote)}</td><td>${esc(x.produto)}</td><td>${fmt(x.metaUnidades)}</td>
    <td>${fmt(x.metaCaixas)}</td><td>${esc(x.coluna)}</td>
    <td>${esc(formatarDataHora(x.dataHora??x.dataHoraJ??x.dataHoraCriacao))}</td>
-   <td><div class="table-actions">
+   <td>${podeEditarProgramacao?`<div class="table-actions">
    <button class="edit" onclick="editar('${esc(x.id)}',${Number(x.metaUnidades)||0})">Editar</button>
    <button class="danger" onclick="excluir('${esc(x.id)}')">Excluir</button>
-   </div></td></tr>`).join('')}</tbody></table>`;
+   </div>`:'Somente consulta'}</td></tr>`).join('')}</tbody></table>`;
  }catch(e){$('programacaoLista').innerHTML='<div class="empty">'+esc(e.message)+'</div>';}
 }
 
 window.editar=async(id,metaAtual)=>{
+ if(!podeEditarProgramacao){alert('Sua conta Google não está autorizada a editar a Programação.');return;}
  const entrada=prompt('Informe a nova meta diária em UNIDADES:',metaAtual);
  if(entrada===null)return;
  const valor=Math.round(Number(String(entrada).trim().replace(',','.')));
@@ -685,6 +701,7 @@ window.editar=async(id,metaAtual)=>{
  }catch(e){alert(e.message);}
 };
 window.excluir=async id=>{
+ if(!podeEditarProgramacao){alert('Sua conta Google não está autorizada a editar a Programação.');return;}
  if(!confirm('Remover este item da programação?'))return;
  try{await api({action:'excluir',id});await carregarProgramacao();await atualizarPainel();}
  catch(e){alert(e.message);}
@@ -695,12 +712,18 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 const cores={COSTURA:'#35b9ed',DOBRA:'#22b879',PACOTE:'#e2a52e',CORTE:'#a78bfa'};
 
 /* VELOCÍMETRO: recebe sempre a mesma unidade para produção e meta */
+function corVelocimetro(p){
+ if(p<75)return '#ef4444';
+ if(p<85)return '#eab308';
+ return '#22c55e';
+}
 function gauge(t,pct,prod,meta,cor,unidade='unidades'){
  const p=Math.max(0,Math.min(100,pct));
+ const corArco=corVelocimetro(p);
  return `<div class="gauge"><h3>${esc(t)}</h3>
  <svg viewBox="0 0 220 145">
  <path d="M27 119 A83 83 0 0 1 193 119" fill="none" stroke="#29445d" stroke-width="15" stroke-linecap="round"/>
- <path d="M27 119 A83 83 0 0 1 193 119" fill="none" stroke="${cor}" stroke-width="15"
+ <path d="M27 119 A83 83 0 0 1 193 119" fill="none" stroke="${corArco}" stroke-width="15"
  pathLength="261" stroke-dasharray="${261*p/100} 261" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
  <text x="110" y="91" text-anchor="middle" class="pct">${fmt(p)}%</text>
  <text x="110" y="111" text-anchor="middle" class="glabel">CONCLUÍDO</text>
@@ -811,7 +834,10 @@ setInterval(()=>{
 if(telaTV){
  abrir(telaTV);
 }else{
- carregarProgramacao();
+ (async()=>{
+  await carregarPermissaoProgramacao();
+  carregarProgramacao();
+ })();
 }
 
 /* CICLO AUTOMÁTICO EXCLUSIVO PARA ?tv=pacote
