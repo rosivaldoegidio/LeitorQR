@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -225,17 +226,56 @@ document.getElementById("loteManual").addEventListener("keypress", async functio
     return;
   }
 
-  document.getElementById("resultado").innerHTML = "Enviando lote...";
   const setor = document.getElementById("setor").value;
 
+  // ========================================================
+  // CORREÇÃO: IDENTIFICAÇÃO DO OPERADOR NO MODO MANUAL
+  // SOMENTE PARA EMBALAGEM.
+  // Utiliza o mesmo deviceId do leitor QR.
+  // ========================================================
+
+  let deviceId = "";
+
+  if (setor === "Embalagem") {
+
+    const autorizado = await verificarVinculoEmbalagem();
+
+    if (!autorizado) {
+      document.getElementById("resultado").innerHTML =
+        "⚠ Operador não identificado. Cadastre ou regularize o vínculo deste celular antes de registrar a produção.";
+
+      confirmarErro();
+      return;
+    }
+
+    deviceId = localStorage.getItem(CHAVE_DEVICE_EMBALAGEM);
+
+    if (!deviceId) {
+      document.getElementById("resultado").innerHTML =
+        "⚠ Identificador do celular não encontrado. Verifique o cadastro do operador.";
+
+      confirmarErro();
+      return;
+    }
+  }
+
+  document.getElementById("resultado").innerHTML = "Enviando lote...";
+
   try {
-    const resposta = await fetch(
+
+    let urlProducao =
       URL_API +
       "?setor=" + encodeURIComponent(setor) +
       "&tipo=producao" +
       "&lote=" + encodeURIComponent(lote) +
-      "&quantidade=" + encodeURIComponent(quantidade)
-    );
+      "&quantidade=" + encodeURIComponent(quantidade);
+
+    // Envia o identificador do operador também no modo manual.
+    if (setor === "Embalagem") {
+      urlProducao += "&deviceId=" + encodeURIComponent(deviceId);
+    }
+
+    const resposta = await fetch(urlProducao);
     const texto = await resposta.text();
 
     if (texto.startsWith("OK|")) {
