@@ -105,13 +105,13 @@ header{
  white-space:nowrap
 }
 
-/* CRONÔMETRO REGRESSIVO — EXCLUSIVO DO CICLO TV PACOTE */
+/* CRONÔMETRO REGRESSIVO — CICLO AUTOMÁTICO DAS TVs */
 .rotation-timer{
  display:none;align-items:center;gap:9px;
  border:1px solid #35b9ed88;background:#35b9ed18;color:#bfeeff;
  border-radius:30px;padding:7px 13px;white-space:nowrap;line-height:1.15
 }
-body.tv-pacote .rotation-timer{display:flex}
+body.tv-mode .rotation-timer{display:flex}
 .rotation-timer-label{font-size:9px;font-weight:850;letter-spacing:.08em;color:#a9bfd2}
 .rotation-timer-value{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums;color:#35b9ed;min-width:48px;text-align:center}
 .rotation-timer.warning{border-color:#e2a52e99;background:#e2a52e18}
@@ -673,7 +673,7 @@ const modoTV=String(parametrosURL.get('tv')||'').trim().toLowerCase();
 const telasTV={costura:'COSTURA',dobra:'DOBRA',pacote:'PACOTE'};
 const telaTV=telasTV[modoTV]||null;
 const modoTVValido=!!telaTV;
-let podeVisualizarGestaoVista=(modoTV==='pacote');
+let podeVisualizarGestaoVista=modoTVValido;
 
 if(modoTVValido) document.body.classList.add('tv-mode');
 if(modoTV==='pacote') document.body.classList.add('tv-pacote');
@@ -1109,10 +1109,10 @@ if(modoTVValido){
  })();
 }
 
-/* CICLO AUTOMÁTICO EXCLUSIVO PARA ?tv=pacote
-   PACOTE: 4 minutos | GESTÃO À VISTA (GERAL): 1 minuto
+/* CICLO AUTOMÁTICO PARA AS TVs DE COSTURA, DOBRA E PACOTE
+   SETOR: 4 minutos | GESTÃO À VISTA (GERAL): 1 minuto
    O cronômetro acompanha os mesmos prazos da alternância, sem recarregar a página. */
-if(modoTV==='pacote'){
+if(modoTVValido){
  let exibindoGeral=false;
  let fimDaApresentacao=0;
  const elementoCronometro=$('cronometroCiclo');
@@ -1126,7 +1126,7 @@ if(modoTV==='pacote'){
   elementoCronometro.classList.toggle('warning',restante<=30);
  }
 
- function alternarPacoteGeral(){
+ function alternarSetorGeral(){
   const duracao=exibindoGeral?60000:240000;
   fimDaApresentacao=Date.now()+duracao;
   atualizarCronometro();
@@ -1135,12 +1135,12 @@ if(modoTV==='pacote'){
   setTimeout(()=>{
    clearInterval(intervaloCronometro);
    exibindoGeral=!exibindoGeral;
-   abrir(exibindoGeral?'GERAL':'PACOTE');
-   alternarPacoteGeral();
+   abrir(exibindoGeral?'GERAL':telaTV);
+   alternarSetorGeral();
   },duracao);
  }
 
- alternarPacoteGeral();
+ alternarSetorGeral();
 }
 </script>
 </body>
