@@ -104,6 +104,7 @@ header{
  font-weight:800;
  white-space:nowrap
 }
+
 /* CRONÔMETRO REGRESSIVO — EXCLUSIVO DO CICLO TV PACOTE */
 .rotation-timer{
  display:none;align-items:center;gap:9px;
@@ -115,6 +116,7 @@ body.tv-pacote .rotation-timer{display:flex}
 .rotation-timer-value{font-size:19px;font-weight:900;font-variant-numeric:tabular-nums;color:#35b9ed;min-width:48px;text-align:center}
 .rotation-timer.warning{border-color:#e2a52e99;background:#e2a52e18}
 .rotation-timer.warning .rotation-timer-value{color:#e2a52e}
+
 nav{
  display:flex;
  gap:8px;
@@ -329,6 +331,38 @@ th{color:#a9bfd2;font-size:10px;letter-spacing:.1em}
 .table-actions{display:flex;gap:7px;flex-wrap:wrap}
 .table-actions button{padding:8px 11px;font-size:11px}
 
+/* NOVA FUNCIONALIDADE — COLUNA IMAGEM */
+.produto-preview{
+ background:#174b68;
+ border:1px solid #287ba5;
+ color:#e3f6ff;
+ padding:7px 11px;
+ border-radius:8px;
+ font-size:11px;
+ font-weight:800;
+ white-space:nowrap
+}
+.produto-preview-popup{
+ position:fixed;
+ z-index:10000;
+ width:420px;
+ height:300px;
+ max-width:calc(100vw - 24px);
+ background:#ffffff;
+ border:2px solid #35b9ed;
+ border-radius:12px;
+ box-shadow:0 12px 35px #0009;
+ overflow:hidden;
+ pointer-events:none
+}
+.produto-preview-popup iframe{
+ display:block;
+ width:100%;
+ height:100%;
+ border:0;
+ background:#fff
+}
+
 /* MODO TV */
 .fullscreen-btn{
  display:none;
@@ -368,6 +402,7 @@ body.tv-mode .itemmetric strong{font-size:26px}
 body.tv-mode .sub{font-size:14px}
 body.tv-mode .datepick{font-size:15px;padding:12px 16px}
 body.tv-mode .live{font-size:12px}
+
 /* LEGIBILIDADE DOS TEXTOS PEQUENOS NA TV */
 body.tv-mode .gauge .glabel{font-size:13px;fill:#d7e6f4}
 body.tv-mode .gauge .numbers{font-size:14px;color:#d0dfeb}
@@ -670,25 +705,139 @@ $('add').onclick=async()=>{
 
 $('filtroData').onchange=carregarProgramacao;
 
+
+/* =====================================================
+   NOVA FUNCIONALIDADE — PRÉVIA DO DESENHO DO PRODUTO
+   Exclusiva da coluna IMAGEM da Programação.
+===================================================== */
+
+function urlPreviaProduto(url){
+
+ const original=String(url||'').trim();
+
+ // Links padrão do Google Drive.
+ const encontrado=
+  original.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i) ||
+  original.match(/[?&]id=([^&#]+)/i);
+
+ if(encontrado){
+  return 'https://drive.google.com/file/d/'+
+   encontrado[1]+'/preview';
+ }
+
+ return original;
+}
+
+
+function configurarPreviaProdutos(){
+
+ document.querySelectorAll('.produto-preview').forEach(botao=>{
+
+  botao.addEventListener('mouseenter',()=>{
+
+   const endereco=botao.dataset.previewUrl;
+
+   if(!endereco)return;
+
+   // Evita criar duas prévias para o mesmo botão.
+   if(botao._popupImagem)return;
+
+   const popup=document.createElement('div');
+   popup.className='produto-preview-popup';
+
+   const iframe=document.createElement('iframe');
+   iframe.src=endereco;
+   iframe.title='Prévia do desenho do produto';
+   iframe.loading='lazy';
+
+   popup.appendChild(iframe);
+   document.body.appendChild(popup);
+
+   const largura=Math.min(420,window.innerWidth-24);
+   const altura=300;
+   const rect=botao.getBoundingClientRect();
+
+   const esquerda=Math.max(
+    12,
+    Math.min(rect.left,window.innerWidth-largura-12)
+   );
+
+   let topo=rect.bottom+8;
+
+   if(topo+altura>window.innerHeight){
+    topo=Math.max(12,rect.top-altura-8);
+   }
+
+   popup.style.width=largura+'px';
+   popup.style.left=esquerda+'px';
+   popup.style.top=topo+'px';
+
+   botao._popupImagem=popup;
+
+  });
+
+  botao.addEventListener('mouseleave',()=>{
+
+   if(botao._popupImagem){
+    botao._popupImagem.remove();
+    botao._popupImagem=null;
+   }
+
+  });
+
+ });
+
+}
+
+
+/* =====================================================
+   LISTAR PROGRAMAÇÃO
+   ÚNICA ALTERAÇÃO VISUAL: NOVA COLUNA IMAGEM.
+===================================================== */
+
 async function carregarProgramacao(){
  try{
   const r=await api({action:'listar',data:$('filtroData').value});
   const el=$('programacaoLista');
-  if(!r.itens.length){el.innerHTML='<div class="empty">Nenhum lote programado para esta data.</div>';return;}
+
+  if(!r.itens.length){
+   el.innerHTML='<div class="empty">Nenhum lote programado para esta data.</div>';
+   return;
+  }
+
   el.innerHTML=`<table><thead><tr>
    <th>Nº ITEM</th><th>SETOR</th><th>LOTE</th><th>PRODUTO</th>
+   <th>IMAGEM</th>
    <th>META UN.</th><th>META CX.</th><th>COLUNA</th><th>DATA E HORA (J)</th><th>AÇÕES</th>
    </tr></thead><tbody>${r.itens.map(x=>`
    <tr><td><strong>${fmt(x.numeroItem)}</strong></td><td>${esc(x.setor)}</td>
-   <td>${esc(x.lote)}</td><td>${esc(x.produto)}</td><td>${fmt(x.metaUnidades)}</td>
+   <td>${esc(x.lote)}</td>
+   <td>${esc(x.produto)}</td>
+   <td>${
+    x.imagemUrl
+    ? `<button type="button"
+         class="produto-preview"
+         data-preview-url="${esc(urlPreviaProduto(x.imagemUrl))}">
+         Visualizar
+       </button>`
+    : '<span class="muted">Sem imagem</span>'
+   }</td>
+   <td>${fmt(x.metaUnidades)}</td>
    <td>${fmt(x.metaCaixas)}</td><td>${esc(x.coluna)}</td>
    <td>${esc(formatarDataHora(x.dataHora??x.dataHoraJ??x.dataHoraCriacao))}</td>
    <td>${podeEditarProgramacao?`<div class="table-actions">
    <button class="edit" onclick="editar('${esc(x.id)}',${Number(x.metaUnidades)||0})">Editar</button>
    <button class="danger" onclick="excluir('${esc(x.id)}')">Excluir</button>
    </div>`:'Somente consulta'}</td></tr>`).join('')}</tbody></table>`;
- }catch(e){$('programacaoLista').innerHTML='<div class="empty">'+esc(e.message)+'</div>';}
+
+  // Ativa a prévia somente nos botões da nova coluna.
+  configurarPreviaProdutos();
+
+ }catch(e){
+  $('programacaoLista').innerHTML='<div class="empty">'+esc(e.message)+'</div>';
+ }
 }
+
 
 window.editar=async(id,metaAtual)=>{
  if(!podeEditarProgramacao){alert('Sua conta Google não está autorizada a editar a Programação.');return;}
@@ -848,6 +997,7 @@ if(modoTV==='pacote'){
  let fimDaApresentacao=0;
  const elementoCronometro=$('cronometroCiclo');
  const elementoTempo=$('tempoRestante');
+
  function atualizarCronometro(){
   const restante=Math.max(0,Math.ceil((fimDaApresentacao-Date.now())/1000));
   const minutos=String(Math.floor(restante/60)).padStart(2,'0');
@@ -855,11 +1005,13 @@ if(modoTV==='pacote'){
   elementoTempo.textContent=minutos+':'+segundos;
   elementoCronometro.classList.toggle('warning',restante<=30);
  }
+
  function alternarPacoteGeral(){
   const duracao=exibindoGeral?60000:240000;
   fimDaApresentacao=Date.now()+duracao;
   atualizarCronometro();
   const intervaloCronometro=setInterval(atualizarCronometro,250);
+
   setTimeout(()=>{
    clearInterval(intervaloCronometro);
    exibindoGeral=!exibindoGeral;
@@ -867,6 +1019,7 @@ if(modoTV==='pacote'){
    alternarPacoteGeral();
   },duracao);
  }
+
  alternarPacoteGeral();
 }
 </script>
