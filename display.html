@@ -331,7 +331,7 @@ th{color:#a9bfd2;font-size:10px;letter-spacing:.1em}
 .table-actions{display:flex;gap:7px;flex-wrap:wrap}
 .table-actions button{padding:8px 11px;font-size:11px}
 
-/* NOVA FUNCIONALIDADE — COLUNA IMAGEM */
+/* NOVA FUNCIONALIDADE — VISUALIZAÇÃO AMPLIADA DO PDF NA COLUNA IMAGEM */
 .produto-preview{
  background:#174b68;
  border:1px solid #287ba5;
@@ -342,25 +342,85 @@ th{color:#a9bfd2;font-size:10px;letter-spacing:.1em}
  font-weight:800;
  white-space:nowrap
 }
-.produto-preview-popup{
+.produto-pdf-modal{
  position:fixed;
+ inset:0;
  z-index:10000;
- width:420px;
- height:300px;
- max-width:calc(100vw - 24px);
- background:#ffffff;
- border:2px solid #35b9ed;
- border-radius:12px;
- box-shadow:0 12px 35px #0009;
- overflow:hidden;
- pointer-events:none
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ background:rgba(0,0,0,.82);
 }
-.produto-preview-popup iframe{
+.produto-pdf-conteudo{
+ position:relative;
+ display:flex;
+ flex-direction:column;
+ width:min(1200px,96vw);
+ height:min(900px,94vh);
+ min-height:0;
+ background:#102943;
+ border:2px solid #35b9ed;
+ border-radius:14px;
+ box-shadow:0 16px 50px #000b;
+ overflow:hidden;
+}
+.produto-pdf-cabecalho{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ padding:10px 14px;
+ background:#07182b;
+ color:#f4f8fc;
+ flex:0 0 auto;
+}
+.produto-pdf-titulo{
+ font-size:13px;
+ font-weight:800;
+}
+.produto-pdf-fechar{
+ flex:0 0 auto;
+ padding:8px 13px;
+ background:#512b3b;
+ border:1px solid #8b4056;
+ color:#ffdce4;
+ border-radius:8px;
+ font-size:13px;
+ font-weight:800;
+}
+.produto-pdf-frame{
  display:block;
  width:100%;
  height:100%;
+ min-height:0;
+ flex:1 1 auto;
  border:0;
- background:#fff
+ background:#fff;
+}
+body.produto-pdf-aberto{
+ overflow:hidden;
+}
+@media(max-width:600px){
+ .produto-pdf-modal{
+  padding:0;
+  align-items:stretch;
+ }
+ .produto-pdf-conteudo{
+  width:100vw;
+  height:100dvh;
+  max-height:100dvh;
+  border:0;
+  border-radius:0;
+ }
+ .produto-pdf-cabecalho{
+  padding:9px 10px;
+ }
+ .produto-pdf-titulo{font-size:12px}
+ .produto-pdf-fechar{
+  padding:9px 12px;
+  min-height:40px;
+ }
 }
 
 /* MODO TV */
@@ -729,64 +789,80 @@ function urlPreviaProduto(url){
 }
 
 
-function configurarPreviaProdutos(){
+function fecharVisualizacaoPDF(){
+ const modal=document.getElementById('produtoPdfModal');
+ if(modal)modal.remove();
+ document.body.classList.remove('produto-pdf-aberto');
+ document.removeEventListener('keydown',teclaFecharPDF);
+}
 
- document.querySelectorAll('.produto-preview').forEach(botao=>{
+function teclaFecharPDF(evento){
+ if(evento.key==='Escape')fecharVisualizacaoPDF();
+}
 
-  botao.addEventListener('mouseenter',()=>{
+function abrirVisualizacaoPDF(endereco){
+ if(!endereco)return;
 
-   const endereco=botao.dataset.previewUrl;
+ // Fecha qualquer visualização anterior antes de abrir outra.
+ fecharVisualizacaoPDF();
 
-   if(!endereco)return;
+ const modal=document.createElement('div');
+ modal.id='produtoPdfModal';
+ modal.className='produto-pdf-modal';
+ modal.setAttribute('role','dialog');
+ modal.setAttribute('aria-modal','true');
+ modal.setAttribute('aria-label','Visualização do PDF do produto');
 
-   // Evita criar duas prévias para o mesmo botão.
-   if(botao._popupImagem)return;
+ const conteudo=document.createElement('div');
+ conteudo.className='produto-pdf-conteudo';
 
-   const popup=document.createElement('div');
-   popup.className='produto-preview-popup';
+ const cabecalho=document.createElement('div');
+ cabecalho.className='produto-pdf-cabecalho';
 
-   const iframe=document.createElement('iframe');
-   iframe.src=endereco;
-   iframe.title='Prévia do desenho do produto';
-   iframe.loading='lazy';
+ const titulo=document.createElement('span');
+ titulo.className='produto-pdf-titulo';
+ titulo.textContent='Visualização do desenho do produto (PDF)';
 
-   popup.appendChild(iframe);
-   document.body.appendChild(popup);
+ const fechar=document.createElement('button');
+ fechar.type='button';
+ fechar.className='produto-pdf-fechar';
+ fechar.textContent='✕ Fechar';
+ fechar.addEventListener('click',fecharVisualizacaoPDF);
 
-   const largura=Math.min(420,window.innerWidth-24);
-   const altura=300;
-   const rect=botao.getBoundingClientRect();
+ cabecalho.appendChild(titulo);
+ cabecalho.appendChild(fechar);
 
-   const esquerda=Math.max(
-    12,
-    Math.min(rect.left,window.innerWidth-largura-12)
-   );
+ const iframe=document.createElement('iframe');
+ iframe.className='produto-pdf-frame';
+ iframe.src=endereco;
+ iframe.title='Documento PDF do produto';
+ iframe.setAttribute('allow','fullscreen');
 
-   let topo=rect.bottom+8;
+ conteudo.appendChild(cabecalho);
+ conteudo.appendChild(iframe);
+ modal.appendChild(conteudo);
 
-   if(topo+altura>window.innerHeight){
-    topo=Math.max(12,rect.top-altura-8);
-   }
-
-   popup.style.width=largura+'px';
-   popup.style.left=esquerda+'px';
-   popup.style.top=topo+'px';
-
-   botao._popupImagem=popup;
-
-  });
-
-  botao.addEventListener('mouseleave',()=>{
-
-   if(botao._popupImagem){
-    botao._popupImagem.remove();
-    botao._popupImagem=null;
-   }
-
-  });
-
+ // Fecha ao tocar/clicar no fundo, sem fechar ao interagir com o PDF.
+ modal.addEventListener('click',evento=>{
+  if(evento.target===modal)fecharVisualizacaoPDF();
  });
 
+ document.body.appendChild(modal);
+ document.body.classList.add('produto-pdf-aberto');
+ document.addEventListener('keydown',teclaFecharPDF);
+ fechar.focus();
+}
+
+function configurarPreviaProdutos(){
+ document.querySelectorAll('.produto-preview').forEach(botao=>{
+  // Evita registrar o mesmo evento novamente após atualização da tabela.
+  if(botao.dataset.pdfConfigurado==='1')return;
+  botao.dataset.pdfConfigurado='1';
+
+  botao.addEventListener('click',()=>{
+   abrirVisualizacaoPDF(botao.dataset.previewUrl);
+  });
+ });
 }
 
 
