@@ -600,7 +600,7 @@ body.tv-mode .metric .muted{font-size:13px;color:#d0dfeb}
  <button data-view="COSTURA">Costura</button>
  <button data-view="DOBRA">Dobra</button>
  <button data-view="PACOTE">Pacote</button>
- <button data-view="GERAL">Gestão à vista</button>
+ <button data-view="GERAL" id="btnGestaoVista" hidden>Gestão à vista</button>
 </nav>
 
 <main>
@@ -665,13 +665,17 @@ const hoje=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString
 $('data').value=hoje;$('filtroData').value=hoje;
 document.querySelectorAll('.dataPainel').forEach(x=>x.value=hoje);
 
-/* MODO TV: ?tv=costura | dobra | pacote | geral */
+/* MODO TV AUTORIZADO PELOS LINKS PUBLICADOS:
+   ?tv=costura | ?tv=dobra | ?tv=pacote
+   O parâmetro ?tv=geral não concede acesso à Gestão à vista. */
 const parametrosURL=new URLSearchParams(window.location.search);
 const modoTV=String(parametrosURL.get('tv')||'').trim().toLowerCase();
-const telasTV={costura:'COSTURA',dobra:'DOBRA',pacote:'PACOTE',geral:'GERAL'};
+const telasTV={costura:'COSTURA',dobra:'DOBRA',pacote:'PACOTE'};
 const telaTV=telasTV[modoTV]||null;
+const modoTVValido=!!telaTV;
+let podeVisualizarGestaoVista=(modoTV==='pacote');
 
-if(telaTV) document.body.classList.add('tv-mode');
+if(modoTVValido) document.body.classList.add('tv-mode');
 if(modoTV==='pacote') document.body.classList.add('tv-pacote');
 
 function marcarAtualizacao(){
@@ -725,6 +729,21 @@ async function carregarPermissaoProgramacao(){
  if(!podeEditarProgramacao){
   aviso('Acesso somente para consulta. Sua conta Google não está autorizada a editar a Programação.',true);
  }
+}
+
+async function carregarPermissaoGestaoVista(){
+ const botao=$('btnGestaoVista');
+ podeVisualizarGestaoVista=false;
+ if(botao)botao.hidden=true;
+
+ try{
+  const r=await api({action:'permissaoGestaoVista'});
+  podeVisualizarGestaoVista=!!r.podeVisualizar;
+ }catch(e){
+  podeVisualizarGestaoVista=false;
+ }
+
+ if(botao)botao.hidden=!podeVisualizarGestaoVista;
 }
 function limpar(){
  $('lote').value='';$('produto').value='';$('unPorCaixa').value='';
@@ -988,54 +1007,76 @@ function dataPainelAtiva(){
 
 async function atualizarPainel(){
  const data=dataPainelAtiva();
+ const telaAtiva=document.querySelector('.view.active')?.id||'programacao';
+
  try{
-  const r=await api({action:'painel',data});
-  ['COSTURA','DOBRA','PACOTE'].forEach(s=>{
+  // Gestão à vista: consulta separada e protegida no Apps Script.
+  if(telaAtiva==='GERAL'){
+   if(!podeVisualizarGestaoVista){
+    throw new Error('Acesso não autorizado à Gestão à vista.');
+   }
+
+   const r=await api({action:'painelGeral',data});
+   $('painelGERAL').innerHTML=`
+    <div class="gaugegrid">
+    ${['COSTURA','DOBRA','PACOTE'].map(s=>{
+     const d=r.setores[s];
+     const pct=d.metaUnidades>0?d.unidadesProduzidas/d.metaUnidades*100:0;
+     return gauge(s,pct,d.unidadesProduzidas,d.metaUnidades,cores[s],'unidades');
+    }).join('')}
+    </div>
+    <h2 style="margin-top:28px">Consolidado por setor · Unidades</h2>
+    <div class="metrics">
+    ${['COSTURA','DOBRA','PACOTE'].map(s=>{
+     const d=r.setores[s],pct=d.metaUnidades>0?d.unidadesProduzidas/d.metaUnidades*100:0;
+     return `<div class="metric">
+      <small>${s} · UNIDADES PRODUZIDAS</small><strong>${fmt(d.unidadesProduzidas)}</strong>
+      <span class="muted">Meta: ${fmt(d.metaUnidades)} · ${fmt(pct)}%</span>
+      <div class="bar"><span style="width:${Math.max(0,Math.min(100,pct))}%;background:${cores[s]}"></span></div>
+      <small style="margin-top:12px">CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong>
+      <span class="muted">Meta: ${fmt(d.metaCaixas)}</span>
+     </div>`;
+    }).join('')}
+    </div>`;
+   return;
+  }
+
+  // Nas telas de setor, o servidor devolve somente os dados daquele setor.
+  const setoresSolicitados=['COSTURA','DOBRA','PACOTE'].includes(telaAtiva)
+   ? [telaAtiva]
+   : ['COSTURA','DOBRA','PACOTE'];
+
+  for(const s of setoresSolicitados){
+   const r=await api({action:'painel',data,setor:s});
    const d=r.setores[s],c=cores[s];
    const percentualUnidades=d.metaUnidades>0?d.unidadesProduzidas/d.metaUnidades*100:0;
    $('painel'+s).innerHTML=`
-   <div class="metrics">
-    <div class="metric"><small>CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong><span class="muted">Meta: ${fmt(d.metaCaixas)}</span></div>
-    <div class="metric"><small>UNIDADES PRODUZIDAS</small><strong>${fmt(d.unidadesProduzidas)}</strong><span class="muted">Meta: ${fmt(d.metaUnidades)}</span></div>
-    <div class="metric"><small>PROGRESSO DO SETOR · UNIDADES</small><strong>${fmt(percentualUnidades)}%</strong><span class="muted">Consolidado em unidades</span></div>
-   </div>
-   ${gauge('RESULTADO GERAL · '+s,percentualUnidades,d.unidadesProduzidas,d.metaUnidades,c,'unidades')}
-   <h2 style="margin-top:28px">Progresso por item</h2>
-   <div class="list">${d.itens.length?d.itens.map(cardItem).join(''):'<div class="empty">Nenhum lote programado para este setor nesta data.</div>'}</div>`;
-  });
-
-  $('painelGERAL').innerHTML=`
-   <div class="gaugegrid">
-   ${['COSTURA','DOBRA','PACOTE'].map(s=>{
-    const d=r.setores[s];
-    const pct=d.metaUnidades>0?d.unidadesProduzidas/d.metaUnidades*100:0;
-    return gauge(s,pct,d.unidadesProduzidas,d.metaUnidades,cores[s],'unidades');
-   }).join('')}
-   </div>
-   <h2 style="margin-top:28px">Consolidado por setor · Unidades</h2>
-   <div class="metrics">
-   ${['COSTURA','DOBRA','PACOTE'].map(s=>{
-    const d=r.setores[s],pct=d.metaUnidades>0?d.unidadesProduzidas/d.metaUnidades*100:0;
-    return `<div class="metric">
-     <small>${s} · UNIDADES PRODUZIDAS</small><strong>${fmt(d.unidadesProduzidas)}</strong>
-     <span class="muted">Meta: ${fmt(d.metaUnidades)} · ${fmt(pct)}%</span>
-     <div class="bar"><span style="width:${Math.max(0,Math.min(100,pct))}%;background:${cores[s]}"></span></div>
-     <small style="margin-top:12px">CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong>
-     <span class="muted">Meta: ${fmt(d.metaCaixas)}</span>
-    </div>`;
-   }).join('')}
-   </div>`;
+    <div class="metrics">
+     <div class="metric"><small>CAIXAS PRODUZIDAS</small><strong>${fmt(d.caixasProduzidas)}</strong><span class="muted">Meta: ${fmt(d.metaCaixas)}</span></div>
+     <div class="metric"><small>UNIDADES PRODUZIDAS</small><strong>${fmt(d.unidadesProduzidas)}</strong><span class="muted">Meta: ${fmt(d.metaUnidades)}</span></div>
+     <div class="metric"><small>PROGRESSO DO SETOR · UNIDADES</small><strong>${fmt(percentualUnidades)}%</strong><span class="muted">Consolidado em unidades</span></div>
+    </div>
+    ${gauge('RESULTADO GERAL · '+s,percentualUnidades,d.unidadesProduzidas,d.metaUnidades,c,'unidades')}
+    <h2 style="margin-top:28px">Progresso por item</h2>
+    <div class="list">${d.itens.length?d.itens.map(cardItem).join(''):'<div class="empty">Nenhum lote programado para este setor nesta data.</div>'}</div>`;
+  }
  }catch(e){
-  ['COSTURA','DOBRA','PACOTE','GERAL'].forEach(s=>{
+  const telasErro=telaAtiva==='GERAL'?['GERAL']:
+   (['COSTURA','DOBRA','PACOTE'].includes(telaAtiva)?[telaAtiva]:['COSTURA','DOBRA','PACOTE']);
+  telasErro.forEach(s=>{
    const el=$('painel'+s);if(el)el.innerHTML='<div class="notice error">'+esc(e.message)+'</div>';
   });
  }
 }
 
 function abrir(v){
+ if(v==='GERAL'&&!podeVisualizarGestaoVista){
+  return false;
+ }
  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));
  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));
  if(v!=='programacao')atualizarPainel();
+ return true;
 }
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>abrir(b.dataset.view));
 document.querySelectorAll('.dataPainel').forEach(x=>x.onchange=atualizarPainel);
@@ -1056,11 +1097,14 @@ setInterval(()=>{
 },15000);
 
 /* INICIALIZAÇÃO */
-if(telaTV){
+if(modoTVValido){
+ // Os três modos de TV publicados continuam funcionando sem exibir o menu.
  abrir(telaTV);
 }else{
+ // Fora dos modos de TV, a Gestão à vista depende da conta Google.
  (async()=>{
   await carregarPermissaoProgramacao();
+  await carregarPermissaoGestaoVista();
   carregarProgramacao();
  })();
 }
