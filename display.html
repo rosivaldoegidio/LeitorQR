@@ -1010,7 +1010,8 @@ async function atualizarPainel(){
  const telaAtiva=document.querySelector('.view.active')?.id||'programacao';
 
  try{
-  // Gestão à vista: consulta separada e protegida no Apps Script.
+  // Gestão à vista: consulta pública somente para exibição nas TVs.
+  // O botão de acesso fora do modo TV continua restrito às contas autorizadas.
   if(telaAtiva==='GERAL'){
    if(!podeVisualizarGestaoVista){
     throw new Error('Acesso não autorizado à Gestão à vista.');
