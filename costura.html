@@ -1,355 +1,1516 @@
 
-// ============================================================
-// WEB APP EXCLUSIVO DO SETOR DOBRA
-// Planilha: 1xyTUfktZsK6pierlvup0ukWXOapA_veDw-tBMlh7HdA
-// Não substitui nem altera o Apps Script da Costura.
-// ============================================================
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de Produção</title>
+<style>
+:root{
+ --bg:#07182b;--panel:#102943;--panel2:#0b2137;--line:#29465f;
+ --txt:#f4f8fc;--muted:#a9bfd2;--blue:#35b9ed;
+ --green:#22b879;--gold:#e2a52e;--red:#e05252;--purple:#a78bfa;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:radial-gradient(ellipse at top,#123653 0,#07182b 58%);
+ color:var(--txt);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh
+}
+/* CABEÇALHO NO PADRÃO VISUAL DO RELATÓRIO */
+header.cabecalho-costura{
+ display:grid;grid-template-columns:minmax(210px,1.1fr) minmax(280px,1.5fr) auto;
+ align-items:center;gap:22px;padding:17px 3vw;border-bottom:1px solid #ffffff18;
+ background:#061426ee;position:sticky;top:0;z-index:20;
+ backdrop-filter:blur(12px);min-height:125px
+}
+.cabecalho-costura .logo-costura{
+ display:flex;align-items:center;justify-content:flex-start;min-width:0;min-height:90px
+}
+.cabecalho-costura .logo-costura img{
+ display:block;width:clamp(210px,17vw,270px);height:auto;max-height:90px;
+ object-fit:contain;object-position:left center;filter:brightness(0) invert(1) contrast(1.08)
+}
+.cabecalho-costura .titulo-costura{
+ grid-column:2;grid-row:1;text-align:center;min-width:0;color:#d7e6f4
+}
+.cabecalho-costura h1{
+ margin:0;font-size:clamp(21px,2.15vw,29px);font-weight:850;
+ letter-spacing:.025em;line-height:1.25
+}
+.cabecalho-costura p{
+ margin:7px 0 0;color:var(--muted);font-size:12px;line-height:1.45
+}
+.cabecalho-costura .identificacao-unidade{
+ grid-column:3;grid-row:1;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;border:1px solid #9aafc5;border-radius:10px;
+ padding:9px 18px;text-align:center;min-width:112px;background:#ffffff0b;line-height:1.15
+}
+.cabecalho-costura .identificacao-unidade span{
+ display:block;font-size:9px;letter-spacing:.13em;color:#d5e2ef;font-weight:800
+}
+.cabecalho-costura .identificacao-unidade strong{
+ display:block;font-size:17px;letter-spacing:.04em;margin-top:4px;color:#fff
+}
+/* ÁREA PRINCIPAL E PAINEL */
+main{max-width:1800px;margin:auto;padding:22px 3vw 48px}
+.painel{
+ background:linear-gradient(145deg,#14334e,#0d2339);border:1px solid #294760;
+ border-radius:18px;padding:18px;margin-bottom:16px;
+ box-shadow:0 14px 35px #0002;color:var(--txt);min-width:0
+}
+h2{font-size:16px;font-weight:800;margin:0 0 9px;color:#f4f8fc}
+label{font-size:12px;font-weight:800;display:block;margin-bottom:6px;color:#b9cde0}
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+input,select,button{font:inherit}
+input,select{
+ width:100%;min-width:0;padding:11px 12px;border:1px solid #34536d;
+ border-radius:10px;min-height:42px;background:#071a2d;color:#fff;
+ outline:none;color-scheme:dark
+}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #35b9ed20}
+button{
+ border:1px solid var(--line);border-radius:10px;padding:11px 15px;
+ font-size:12px;font-weight:800;cursor:pointer;transition:.18s ease
+}
+button:hover{border-color:var(--blue);transform:translateY(-1px)}
+button:disabled{opacity:.5;cursor:wait;transform:none}
+.azul{background:#17608b;border-color:var(--blue);color:white}
+.claro{background:#102943;border-color:var(--line);color:#c5d8e9}
+.acoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.nota{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 14px}
+.status{font-size:12px;font-weight:750;margin:12px 0;color:var(--muted);white-space:pre-wrap;line-height:1.5}
+.ok{color:#8cf0bd}
+.erro{color:#ff9eaa}
+/* TABELA DE APONTAMENTO */
+.tabela-wrap{overflow:auto;max-height:70vh;border:1px solid #29465f;border-radius:12px;background:#0b2137}
+table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%;font-size:12px;white-space:nowrap;background:#0b2137;color:#e7f0f8}
+th,td{padding:7px;border-right:1px solid #29445d;border-bottom:1px solid #29445d;text-align:center}
+thead th{position:sticky;top:0;background:#173c56;color:#d7e6f4;z-index:5;height:44px;font-size:10px;letter-spacing:.06em;font-weight:850}
+th:first-child,td:first-child{position:sticky;left:0;width:155px;min-width:155px;max-width:155px;text-align:left}
+thead th:first-child{z-index:10;background:#1b4563}
+tbody td:first-child{z-index:3;background:#102943;color:#f4f8fc;font-weight:750}
+tbody tr:nth-child(even){background:#102943}
+tbody tr:nth-child(even) td:first-child{background:#153650}
+tbody tr:hover td{background:#ffffff0a}
+tbody tr:hover td:first-child{background:#1a405b}
+.servico{width:175px;min-width:160px}
+.qtd{width:90px;text-align:center}
+.controle-qtd{display:flex;align-items:center;gap:4px;min-width:155px}
+.controle-qtd .qtd{flex:1;width:65px;min-width:55px;padding:8px 3px;text-align:center}
+.btn-qtd{
+ width:42px;min-width:42px;height:44px;padding:0;border-radius:10px;
+ font-size:23px;line-height:1;background:#173c56;border-color:#34536d;
+ color:#70d4fa;touch-action:manipulation
+}
+.btn-qtd:active{transform:scale(.96)}
+.total{min-width:65px;font-weight:850;color:#70d4fa}
+.hora{width:100px;min-width:95px;text-align:center;padding:6px 3px}
+.controle-hora{display:flex;flex-direction:column;gap:5px;min-width:96px}
+.btn-agora{
+ width:100%;min-height:38px;padding:7px 5px;background:#173c56;
+ border-color:#34536d;color:#c5eaff;font-size:12px;touch-action:manipulation
+}
+.btn-agora:active{transform:scale(.98)}
+.salvar{background:#126344;border-color:#22b879;color:#fff;padding:9px;font-size:12px}
+.limpar{background:#4a2433;border-color:#8b4056;color:#ffdbe3;padding:9px;font-size:12px}
+.btn-duplicar{background:#173c56;border-color:#35b9ed;color:#c5eaff;padding:9px;font-size:12px}
+/* RESPONSIVIDADE */
+@media(max-width:1100px){
+ header.cabecalho-costura{grid-template-columns:minmax(190px,1fr) auto;gap:12px}
+ .cabecalho-costura .logo-costura{grid-column:1;grid-row:1}
+ .cabecalho-costura .titulo-costura{grid-column:1/-1;grid-row:2}
+ .cabecalho-costura .identificacao-unidade{grid-column:2;grid-row:1}
+}
+@media(max-width:850px){
+ .painel{padding:14px 12px}
+ main{padding:16px 14px 35px}
+}
+@media(max-width:700px){
+ header.cabecalho-costura{padding:14px;grid-template-columns:1fr;min-height:auto;gap:9px}
+ .cabecalho-costura .logo-costura{grid-column:1;grid-row:1;justify-content:center;min-height:70px}
+ .cabecalho-costura .logo-costura img{width:220px;max-height:75px;object-position:center}
+ .cabecalho-costura .titulo-costura{grid-column:1;grid-row:2;text-align:center}
+ .cabecalho-costura h1{font-size:20px}
+ .cabecalho-costura p{font-size:11px}
+ .cabecalho-costura .identificacao-unidade{grid-column:1;grid-row:3;justify-self:center;padding:8px 16px}
+ main{padding:12px 10px 30px}
+ .painel{padding:12px}
+ .grade{grid-template-columns:1fr!important}
+ .grade>div button{width:100%;min-height:42px}
+ th:first-child,td:first-child{width:140px;min-width:140px;max-width:140px}
+ .servico{width:150px;min-width:140px}
+ .hora{width:100%;min-width:88px;min-height:42px;font-size:16px}
+ .controle-hora{min-width:92px;gap:5px}
+ .btn-agora{min-height:42px;font-size:13px}
+ .controle-qtd{min-width:155px;gap:4px}
+ .btn-qtd{width:42px;min-width:42px;height:44px}
+}
+@media(max-width:430px){
+ .cabecalho-costura .logo-costura img{width:205px;max-height:68px}
+ .cabecalho-costura h1{font-size:19px}
+}
+@media(max-width:380px){
+ .cabecalho-costura .logo-costura img{width:190px;max-height:62px}
+ .cabecalho-costura h1{font-size:18px}
+ .cabecalho-costura p{font-size:10px}
+}
 
-const CONFIG_DOBRA = {
-  ID_PLANILHA: '1xyTUfktZsK6pierlvup0ukWXOapA_veDw-tBMlh7HdA',
-  NOME_ABA: 'Controle',
-  ABA_CADASTRO: 'Cadastro Prod e Metas',
-  LINHA_INICIAL_CADASTRO: 3,
-  PRIMEIRA_LINHA: 5,
-  MAX_REGISTROS_EXIBIDOS: 100
-};
+/* SELEÇÃO DE SETOR E ÁREA INDEPENDENTE DA DOBRA */
+[hidden]{display:none!important}
+.seletor-setor{max-width:1800px;margin:16px auto 0;padding:0 3vw}
+.seletor-setor .painel{margin-bottom:0}
+.seletor-setor select{max-width:320px}
+#dobraApp .tabela-wrap{max-height:70vh}
+#dobraApp .nota{margin-bottom:14px}
+#dobraApp .grade-dobra{display:grid;grid-template-columns:minmax(220px,320px) minmax(160px,220px);gap:12px;align-items:end;margin:12px 0}
+#dobraApp th:first-child,#dobraApp td:first-child{min-width:155px;width:155px;max-width:155px}
+@media(max-width:700px){.seletor-setor{padding:0 10px}#dobraApp .grade-dobra{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="cabecalho-costura">
+ <div class="logo-costura">
+  <img src="logo.png" alt="PionG Plus">
+ </div>
+ <div class="titulo-costura">
+  <h1>Registro de Produção</h1>
+  <p>Selecione a data e aponte a produção por colaborador e atividade.</p>
+ </div>
+ <div class="identificacao-unidade" aria-label="Unidade Bahia">
+  <span>UNIDADE</span>
+  <strong>BAHIA</strong>
+ </div>
+</header>
+<div class="seletor-setor">
+ <section class="painel">
+  <label for="setorSelecionado">SETOR DE APONTAMENTO</label>
+  <select id="setorSelecionado" aria-label="Selecionar setor">
+   <option value="costura" selected>Costura</option>
+   <option value="dobra">Dobra</option>
+  </select>
+ </section>
+</div>
 
-function doGet(e) {
-  const p = e && e.parameter ? e.parameter : {};
-  const informado = p.callback || '';
-  const callback = /^[a-zA-Z_$][\w$]*$/.test(informado) ? informado : 'resposta';
-  try {
-    let resultado;
-    switch (p.action || 'list') {
-      case 'list': resultado = listarDadosDobras_(p); break;
-      case 'create': resultado = criarProducaoDobra_(p); break;
-      case 'updateService': resultado = atualizarServicoDobra_(p); break;
-      case 'iniciarApontamento': resultado = iniciarApontamentoDobra_(p); break;
-      case 'ajustarQuantidade': resultado = ajustarQuantidadeDobra_(p); break;
-      case 'save': resultado = salvarHorariosDobra_(p); break;
-      case 'limpar': resultado = limparProducaoDobra_(p); break;
-      default: throw new Error('Ação não reconhecida: ' + p.action);
-    }
-    return responderDobra_(callback, resultado);
-  } catch (erro) {
-    return responderDobra_(callback, { ok: false, mensagem: erro.message || String(erro) });
+<main id="costuraApp">
+<section class="painel">
+ <h2>Apontar produção por data</h2>
+ <p class="nota">
+  Selecione a data abaixo para consultar e registrar as produções daquele dia.
+  Use ＋ Nova atividade para criar uma nova linha para o mesmo colaborador.
+  A quantidade é somada à coluna E e os horários são gravados em F:K.
+  A coluna D e as colunas L:Y são preservadas.
+  Quantidades e horários são salvos automaticamente.
+ </p>
+
+ <div class="grade" style="grid-template-columns:minmax(220px,320px) minmax(160px,220px) minmax(150px,200px);align-items:end;margin:12px 0">
+  <div>
+   <label for="dataApontamento">Data da produção</label>
+   <input type="date" id="dataApontamento">
+  </div>
+  <div>
+   <button type="button" class="claro" id="atualizar">↻ Atualizar lista</button>
+  </div>
+  <div>
+   <button type="button" class="azul" id="abrirRelatorios" onclick="window.location.href='relatorio.html'">📊 Relatórios</button>
+  </div>
+ </div>
+
+ <div id="status" class="status" role="status" aria-live="polite">Carregando registros...</div>
+
+ <div class="tabela-wrap">
+  <table>
+   <thead>
+    <tr>
+     <th>COLABORADOR</th>
+     <th>SERVIÇO — C</th>
+     <th>QTD NOVA</th>
+     <th>TOTAL E</th>
+     <th>F Início</th>
+     <th>G Fim</th>
+     <th>H Início</th>
+     <th>I Fim</th>
+     <th>J Início</th>
+     <th>K Fim</th>
+     <th>Salvar</th>
+     <th>Limpar</th>
+     <th>Nova atividade</th>
+    </tr>
+   </thead>
+   <tbody id="corpoTabela"></tbody>
+  </table>
+ </div>
+</section>
+</main>
+
+<main id="dobraApp" hidden>
+<section class="painel">
+ <h2>Apontar produção — Dobra</h2>
+ <p class="nota">Os registros da Dobra são consultados na planilha própria deste setor. A quantidade é acumulada na coluna D e os dez pares de horários são gravados em F:Y. A coluna E é preservada. Quantidades e horários são salvos automaticamente.</p>
+ <div class="grade-dobra">
+  <div><label for="dobraData">Data da produção</label><input type="date" id="dobraData"></div>
+  <div><button type="button" class="claro" id="dobraAtualizar">↻ Atualizar lista</button></div>
+ </div>
+ <div id="dobraStatus" class="status" role="status" aria-live="polite">Selecione Dobra para carregar os registros.</div>
+ <div class="tabela-wrap"><table><thead><tr id="dobraCabecalho"></tr></thead><tbody id="dobraCorpo"></tbody></table></div>
+</section>
+</main>
+
+<script>
+'use strict';
+
+const API_URL='https://script.google.com/macros/s/AKfycbz9btVpTfEIbafn_SxqT2jUlTXnpthfIrnOPDooCnf1ful_hWVpV0fwUNrER3U488zPeg/exec';
+const $=id=>document.getElementById(id);
+
+let colaboradores=[],atividades=[],registros=[],ocupadas=new Set(),estados=[];
+let carregamentoEmCurso=false;
+let promessaFlushFundo=null;
+
+function hojeISO(){
+ const d=new Date();
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function normalizarData(v){
+ const s=String(v||'').trim();
+ if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+ const m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+ return m?`${m[3]}-${m[2]}-${m[1]}`:s;
+}
+
+function textoIgual(a,b){
+ return String(a||'').trim().toLocaleUpperCase('pt-BR')===
+ String(b||'').trim().toLocaleUpperCase('pt-BR');
+}
+
+function mostrarStatus(msg,tipo=''){
+ $('status').textContent=msg;
+ $('status').className='status '+tipo;
+}
+
+function api(parametros){
+ return new Promise((resolve,reject)=>{
+  const callback='retorno_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  const script=document.createElement('script');
+  let finalizado=false,temporizador;
+
+  const concluir=(erro,dados)=>{
+   if(finalizado)return;
+   finalizado=true;
+   clearTimeout(temporizador);
+   try{delete window[callback]}catch(e){}
+   script.remove();
+   erro?reject(erro):resolve(dados);
+  };
+
+  temporizador=setTimeout(
+   ()=>concluir(new Error('Tempo esgotado ao acessar o Apps Script. Verifique a implantação.')),
+   30000
+  );
+
+  window[callback]=dados=>concluir(null,dados);
+  script.onerror=()=>concluir(new Error('Falha de conexão com o Apps Script. Verifique a implantação e a URL.'));
+  script.src=API_URL+'?'+new URLSearchParams({...parametros,callback}).toString();
+  document.body.appendChild(script);
+ });
+}
+
+function numero(v){
+ if(v===''||v==null)return 0;
+ const n=Number(String(v).replace(',','.'));
+ return Number.isFinite(n)?n:0;
+}
+
+function formatarHora(v){
+ if(v==null||v==='')return '';
+ const m=String(v).trim().match(/(\d{1,2}):(\d{2})/);
+ return m?String(m[1]).padStart(2,'0')+':'+m[2]:'';
+}
+
+function temHorarioPreenchido(registro){
+ if(!registro)return false;
+ const horarios=Array.isArray(registro.horarios)?registro.horarios:[];
+ return horarios.some(h=>h!==null&&h!==undefined&&String(h).trim()!=='');
+}
+
+function valorQuantidadeAtual(e){
+ const texto=String(e.qtd.value==null?'':e.qtd.value).trim();
+
+ if(texto==='')return {ok:true,valor:0};
+
+ const valor=Number(texto.replace(',','.'));
+
+ if(!Number.isFinite(valor)||valor<0)return {ok:false,valor:0};
+
+ return {ok:true,valor:valor};
+}
+
+function horariosAtuais(e){
+ return e.horas.map(h=>h.value||'');
+}
+
+function horariosIguais(a,b){
+ return JSON.stringify(a||[])===JSON.stringify(b||[]);
+}
+
+function agendarQuantidadeAuto(e){
+ clearTimeout(e.timerQuantidade);
+ e.timerQuantidade=setTimeout(()=>{
+  e.timerQuantidade=null;
+  processarQuantidadeAuto(e);
+ },450);
+}
+
+function agendarHorariosAuto(e){
+ clearTimeout(e.timerHorarios);
+ e.timerHorarios=setTimeout(()=>{
+  e.timerHorarios=null;
+  processarHorariosAuto(e);
+ },350);
+}
+
+/* =====================================================
+   VERIFICAR SE EXISTEM ALTERAÇÕES PENDENTES
+   ===================================================== */
+
+function haAlteracoesPendentes(){
+ return estados.some(e=>{
+  if(!e.registro)return false;
+
+  if(
+   e.timerQuantidade||
+   e.timerHorarios||
+   e.processandoQuantidade||
+   e.processandoHorarios||
+   e.quantidadePendente||
+   e.horariosPendentes
+  ){
+   return true;
   }
-}
 
-function responderDobra_(callback, dados) {
-  return ContentService.createTextOutput(callback + '(' + JSON.stringify(dados) + ');')
-    .setMimeType(ContentService.MimeType.JAVASCRIPT);
-}
+  const leitura=valorQuantidadeAtual(e);
 
-function obterPlanilhaDobra_() {
-  return SpreadsheetApp.openById(CONFIG_DOBRA.ID_PLANILHA);
-}
-function obterAbaDobra_() {
-  const aba = obterPlanilhaDobra_().getSheetByName(CONFIG_DOBRA.NOME_ABA);
-  if (!aba) throw new Error('A aba "' + CONFIG_DOBRA.NOME_ABA + '" não foi encontrada.');
-  return aba;
-}
-function lerRegistroDobra_(p) {
-  if (!p.record) throw new Error('Nenhum dado foi recebido.');
-  try { return JSON.parse(p.record); }
-  catch (e) { throw new Error('Os dados enviados são inválidos.'); }
-}
-function chaveDataDobra_(v) {
-  if (v instanceof Date && !isNaN(v.getTime())) return Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  const s = String(v || '').trim();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  return m ? m[3] + '-' + m[2] + '-' + m[1] : '';
-}
-function dataDobra_(v) {
-  const s = String(v || '').trim() || Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) throw new Error('Informe uma data válida.');
-  const a = s.split('-').map(Number), d = new Date(a[0], a[1] - 1, a[2], 12);
-  if (d.getFullYear() !== a[0] || d.getMonth() !== a[1] - 1 || d.getDate() !== a[2]) throw new Error('A data informada não existe.');
-  return d;
-}
-function formatarDataDobra_(v) {
-  return v instanceof Date && !isNaN(v.getTime()) ? Utilities.formatDate(v, Session.getScriptTimeZone(), 'dd/MM/yyyy') : String(v || '').trim();
-}
-function listaUnicaDobra_(valores) {
-  const vistos = new Set();
-  return valores.map(v => String(v || '').trim()).filter(v => {
-    const k = v.toLocaleUpperCase('pt-BR');
-    if (!v || vistos.has(k)) return false;
-    vistos.add(k); return true;
-  }).sort((a, b) => a.localeCompare(b, 'pt-BR'));
-}
-function listarDadosDobras_(p) {
-  const ss = obterPlanilhaDobra_(), aba = obterAbaDobra_();
-  const cadastro = ss.getSheetByName(CONFIG_DOBRA.ABA_CADASTRO);
-  if (!cadastro) throw new Error('A aba "' + CONFIG_DOBRA.ABA_CADASTRO + '" não foi encontrada.');
-  const dataFiltro = chaveDataDobra_(dataDobra_(p.data));
-  const ultimaCad = cadastro.getLastRow();
-  const colaboradores = ultimaCad >= CONFIG_DOBRA.LINHA_INICIAL_CADASTRO
-    ? listaUnicaDobra_(cadastro.getRange(CONFIG_DOBRA.LINHA_INICIAL_CADASTRO, 1, ultimaCad - CONFIG_DOBRA.LINHA_INICIAL_CADASTRO + 1, 1).getDisplayValues().flat()) : [];
-  const ultima = aba.getLastRow(), registros = [];
-  if (ultima >= CONFIG_DOBRA.PRIMEIRA_LINHA) {
-    const n = ultima - CONFIG_DOBRA.PRIMEIRA_LINHA + 1;
-    const dados = aba.getRange(CONFIG_DOBRA.PRIMEIRA_LINHA, 1, n, 25).getValues();
-    const exib = aba.getRange(CONFIG_DOBRA.PRIMEIRA_LINHA, 1, n, 25).getDisplayValues();
-    for (let i = dados.length - 1; i >= 0; i--) {
-      const row = dados[i], nome = String(row[1] || '').trim(), atividade = String(row[2] || '').trim();
-      if (!nome && !atividade) continue;
-      if (chaveDataDobra_(row[0]) !== dataFiltro) continue;
-      registros.push({ linha: CONFIG_DOBRA.PRIMEIRA_LINHA + i, data: formatarDataDobra_(row[0]) || exib[i][0], colaborador: nome, atividade, quantidade: row[3] === '' ? '' : row[3], horarios: exib[i].slice(5, 25) });
-      if (registros.length >= CONFIG_DOBRA.MAX_REGISTROS_EXIBIDOS) break;
-    }
+  if(!leitura.ok)return true;
+
+  if(
+   Math.abs(
+    leitura.valor-Number(e.quantidadeAplicada||0)
+   )>0.000000001
+  ){
+   return true;
   }
-  // Serviços lidos exclusivamente de Cadastro Prod e Metas!B3:B.
-  const atividades = ultimaCad >= CONFIG_DOBRA.LINHA_INICIAL_CADASTRO
-    ? listaUnicaDobra_(cadastro.getRange(CONFIG_DOBRA.LINHA_INICIAL_CADASTRO, 2, ultimaCad - CONFIG_DOBRA.LINHA_INICIAL_CADASTRO + 1, 1).getDisplayValues().flat()) : [];
-  return { ok: true, dataSelecionada: dataFiltro, colaboradores, atividades, registros };
+
+  return !horariosIguais(
+   horariosAtuais(e),
+   e.horariosAplicados
+  );
+ });
 }
-function ajustarValidacaoListaDobra_(aba, linha, coluna, colunaCadastro, nome, descricao) {
-  const celula = aba.getRange(linha, coluna);
-  const regra = celula.getDataValidation();
-  if (!regra) return;
 
-  const tipo = regra.getCriteriaType();
-  const valores = regra.getCriteriaValues();
-  let novaRegra = null;
+/* =====================================================
+   SALVAR AUTOMATICAMENTE A QUANTIDADE
+   Aplica somente a diferença; não soma duas vezes.
+   ===================================================== */
 
-  if (tipo === SpreadsheetApp.DataValidationCriteria.VALUE_IN_RANGE) {
-    const origem = valores[0];
-    if (origem && origem.getSheet().getName() === CONFIG_DOBRA.ABA_CADASTRO && origem.getColumn() === colunaCadastro) {
-      const cadastro = origem.getSheet();
-      const ultimaCadastro = cadastro.getLastRow();
-      const quantidadeLinhas = Math.max(origem.getNumRows(), ultimaCadastro - origem.getRow() + 1);
-      if (quantidadeLinhas > 0) {
-        const intervaloAtualizado = cadastro.getRange(origem.getRow(), colunaCadastro, quantidadeLinhas, 1);
-        novaRegra = SpreadsheetApp.newDataValidation()
-          .requireValueInRange(intervaloAtualizado, valores.length > 1 ? valores[1] : true);
+async function processarQuantidadeAuto(e){
+ if(e.timerQuantidade){
+  clearTimeout(e.timerQuantidade);
+  e.timerQuantidade=null;
+ }
+
+ if(e.processandoQuantidade){
+  e.quantidadePendente=true;
+  return e.promessaQuantidade;
+ }
+
+ e.processandoQuantidade=true;
+
+ e.promessaQuantidade=(async()=>{
+  try{
+   do{
+    e.quantidadePendente=false;
+
+    if(!e.registro)return true;
+
+    const leitura=valorQuantidadeAtual(e);
+
+    if(!leitura.ok){
+     throw new Error('Informe uma QTD NOVA válida, igual ou maior que zero.');
+    }
+
+    const desejada=leitura.valor;
+    const aplicada=Number(e.quantidadeAplicada||0);
+    const delta=desejada-aplicada;
+
+    if(Math.abs(delta)>0.000000001){
+     const linha=Number(e.registro.linha);
+     const chave='qtd:'+linha;
+
+     if(ocupadas.has(chave)){
+      throw new Error('Já existe uma gravação de quantidade em andamento nesta linha.');
+     }
+
+     ocupadas.add(chave);
+
+     try{
+      mostrarStatus('Salvando quantidade da linha '+linha+'...');
+
+      const r=await api({
+       action:'ajustarQuantidade',
+       record:JSON.stringify({linha:linha,delta:delta})
+      });
+
+      if(!r||!r.ok){
+       throw new Error(r?.mensagem||'Não foi possível salvar a quantidade.');
       }
-    }
 
-    const intervaloPermitido = novaRegra
-      ? novaRegra.build().getCriteriaValues()[0]
-      : origem;
+      e.quantidadeAplicada=desejada;
+      e.tdTotal.textContent=String(numero(r.totalQuantidade));
+      e.registro.quantidade=r.totalQuantidade;
 
-    if (intervaloPermitido) {
-      const permitido = intervaloPermitido.getDisplayValues().flat().some(valor =>
-        String(valor || '').trim().toLocaleUpperCase('pt-BR') === String(nome || '').trim().toLocaleUpperCase('pt-BR')
+      mostrarStatus(
+       'Quantidade salva automaticamente. TOTAL E: '+r.totalQuantidade+'.',
+       'ok'
       );
-      if (!permitido) {
-        throw new Error('O ' + descricao + ' "' + nome + '" não está incluído na lista permitida pela validação. Verifique Cadastro Prod e Metas.');
-      }
+
+     }finally{
+      ocupadas.delete(chave);
+     }
     }
-  } else if (tipo === SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST) {
-    const lista = (valores[0] || []).map(String);
-    const existe = lista.some(valor =>
-      valor.trim().toLocaleUpperCase('pt-BR') === String(nome || '').trim().toLocaleUpperCase('pt-BR')
+
+    const atual=valorQuantidadeAtual(e);
+
+    if(atual.ok&&Math.abs(atual.valor-Number(e.quantidadeAplicada||0))>0.000000001){
+     e.quantidadePendente=true;
+    }
+
+   }while(e.quantidadePendente);
+
+   return true;
+
+  }catch(err){
+   mostrarStatus('Erro ao salvar quantidade automaticamente: '+err.message,'erro');
+   return false;
+
+  }finally{
+   e.processandoQuantidade=false;
+  }
+ })();
+
+ return e.promessaQuantidade;
+}
+
+/* =====================================================
+   SALVAR AUTOMATICAMENTE OS HORÁRIOS F:K
+   ===================================================== */
+
+async function processarHorariosAuto(e){
+ if(e.timerHorarios){
+  clearTimeout(e.timerHorarios);
+  e.timerHorarios=null;
+ }
+
+ if(e.processandoHorarios){
+  e.horariosPendentes=true;
+  return e.promessaHorarios;
+ }
+
+ e.processandoHorarios=true;
+
+ e.promessaHorarios=(async()=>{
+  try{
+   do{
+    e.horariosPendentes=false;
+
+    if(!e.registro)return true;
+
+    const horarios=horariosAtuais(e);
+
+    if(!horariosIguais(horarios,e.horariosAplicados)){
+     const linha=Number(e.registro.linha);
+     const chave='horarios:'+linha;
+
+     if(ocupadas.has(chave)){
+      throw new Error('Já existe uma gravação de horários em andamento nesta linha.');
+     }
+
+     ocupadas.add(chave);
+
+     try{
+      mostrarStatus('Salvando horários da linha '+linha+'...');
+
+      const r=await api({
+       action:'save',
+       record:JSON.stringify({linha:linha,horarios:horarios})
+      });
+
+      if(!r||!r.ok){
+       throw new Error(r?.mensagem||'Não foi possível salvar os horários.');
+      }
+
+      e.horariosAplicados=horarios.slice();
+
+      if(r.totalQuantidade!==undefined){
+       e.tdTotal.textContent=String(numero(r.totalQuantidade));
+       e.registro.quantidade=r.totalQuantidade;
+      }
+
+      e.registro.horarios=horarios.slice();
+
+      mostrarStatus('Horários salvos automaticamente na linha '+linha+'.','ok');
+
+     }finally{
+      ocupadas.delete(chave);
+     }
+    }
+
+    const maisRecentes=horariosAtuais(e);
+
+    if(!horariosIguais(maisRecentes,e.horariosAplicados)){
+     e.horariosPendentes=true;
+    }
+
+   }while(e.horariosPendentes);
+
+   return true;
+
+  }catch(err){
+   mostrarStatus('Erro ao salvar horários automaticamente: '+err.message,'erro');
+   return false;
+
+  }finally{
+   e.processandoHorarios=false;
+  }
+ })();
+
+ return e.promessaHorarios;
+}
+
+/* =====================================================
+   ESVAZIAR FILA DE GRAVAÇÃO
+   ===================================================== */
+
+async function salvarPendentesDaTela(){
+ const lista=estados.slice();
+
+ for(const e of lista){
+  if(e.timerQuantidade){
+   clearTimeout(e.timerQuantidade);
+   e.timerQuantidade=null;
+  }
+
+  if(e.timerHorarios){
+   clearTimeout(e.timerHorarios);
+   e.timerHorarios=null;
+  }
+
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)return false;
+
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)return false;
+ }
+
+ return !haAlteracoesPendentes();
+}
+
+/* =====================================================
+   NOVO: SALVAR QUANDO A PÁGINA FICAR OCULTA OU SAIR
+   ===================================================== */
+
+async function salvarAoOcultar(motivo){
+ if(!haAlteracoesPendentes()){
+  return true;
+ }
+
+ // Evita iniciar duas rotinas de gravação ao mesmo tempo
+ // quando visibilitychange e pagehide ocorrerem juntos.
+ if(promessaFlushFundo){
+  return promessaFlushFundo;
+ }
+
+ promessaFlushFundo=(async()=>{
+  try{
+   mostrarStatus(
+    'Detectadas alterações pendentes. Salvando automaticamente antes de '+motivo+'...'
+   );
+
+   const ok=await salvarPendentesDaTela();
+
+   if(ok){
+    mostrarStatus(
+     '✅ Alterações pendentes enviadas e confirmadas pelo servidor.',
+     'ok'
     );
-    if (!existe) lista.push(nome);
-    novaRegra = SpreadsheetApp.newDataValidation()
-      .requireValueInList(lista, valores.length > 1 ? valores[1] : true);
-  }
+   }else{
+    mostrarStatus(
+     '⚠️ Não foi possível confirmar todas as alterações. '+
+     'Mantenha a página aberta e verifique a conexão.',
+     'erro'
+    );
+   }
 
-  if (novaRegra) {
-    if (regra.getHelpText()) novaRegra.setHelpText(regra.getHelpText());
-    novaRegra.setAllowInvalid(regra.getAllowInvalid());
-    celula.setDataValidation(novaRegra.build());
+   return ok;
+
+  }catch(err){
+   mostrarStatus(
+    'Erro ao salvar antes de '+motivo+': '+err.message,
+    'erro'
+   );
+   return false;
+
+  }finally{
+   promessaFlushFundo=null;
   }
+ })();
+
+ return promessaFlushFundo;
 }
 
-function gravarIdentificacaoDobra_(aba, linha, data, nome, atividade) {
-  // A validação da coluna B é conferida antes de gravar a data,
-  // evitando deixar linhas incompletas quando o nome é rejeitado.
-  ajustarValidacaoListaDobra_(aba, linha, 2, 1, nome, 'colaborador');
-  ajustarValidacaoListaDobra_(aba, linha, 3, 2, atividade, 'serviço');
+/* Quando o usuário troca de aba, minimiza o navegador
+   ou coloca a página em segundo plano, tentamos concluir
+   as gravações pendentes. */
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='hidden'){
+  salvarAoOcultar('a página ficar em segundo plano');
+ }
+});
 
-  try {
-    aba.getRange(linha, 2).setValue(nome);
-    aba.getRange(linha, 3).setValue(atividade);
-    aba.getRange(linha, 1).setValue(data);
-    aba.getRange(linha, 1).setNumberFormat('dd/MM/yyyy');
-  } catch (erro) {
-    aba.getRange(linha, 1, 1, 3).clearContent();
-    throw erro;
+/* Última tentativa ao sair da página.
+   Os navegadores podem interromper operações assíncronas
+   durante o fechamento; portanto, esta tentativa não é
+   uma garantia absoluta de gravação. */
+window.addEventListener('pagehide',()=>{
+ salvarAoOcultar('sair da página');
+});
+
+/* Se houver alterações pendentes, pede confirmação antes
+   de permitir o fechamento ou a navegação para outro local. */
+window.addEventListener('beforeunload',e=>{
+ if(haAlteracoesPendentes()){
+  e.preventDefault();
+  e.returnValue='';
+ }
+});
+
+/* =====================================================
+   CARREGAR A LISTA
+   ===================================================== */
+
+async function carregar(){
+ if(carregamentoEmCurso)return false;
+
+ carregamentoEmCurso=true;
+
+ try{
+  if(estados.length){
+   const pendentesOk=await salvarPendentesDaTela();
+
+   if(!pendentesOk){
+    mostrarStatus(
+     'A lista não foi atualizada porque existe uma gravação pendente com erro. Corrija a conexão e tente novamente.',
+     'erro'
+    );
+    return false;
+   }
   }
+
+  mostrarStatus('Carregando colaboradores e registros...');
+
+  const data=$('dataApontamento').value||hojeISO();
+  const d=await api({action:'list',data:data});
+
+  if(!d||!d.ok)throw new Error(d?.mensagem||'Falha ao consultar os dados.');
+
+  colaboradores=Array.isArray(d.colaboradores)?d.colaboradores:[];
+  atividades=Array.isArray(d.atividades)?d.atividades:[];
+  registros=Array.isArray(d.registros)?d.registros:[];
+
+  desenharTabela();
+
+  mostrarStatus(
+   colaboradores.length+' colaborador(es) cadastrado(s). Exibindo produções de '+data+'.',
+   'ok'
+  );
+
+  return true;
+
+ }catch(e){
+  mostrarStatus('Erro ao carregar: '+e.message,'erro');
+  return false;
+
+ }finally{
+  carregamentoEmCurso=false;
+ }
 }
 
-function primeiraLinhaVaziaDobra_(aba) {
-  const inicio = CONFIG_DOBRA.PRIMEIRA_LINHA;
-  const max = aba.getMaxRows();
-  if (max < inicio) aba.insertRowsAfter(max, inicio - max);
-  const n = aba.getMaxRows() - inicio + 1;
-  const vals = aba.getRange(inicio, 1, n, 3).getDisplayValues();
+function preencherEstado(e,r){
+ e.registro=r;
+ e.atividade=r.atividade||'';
+ e.sel.value=e.atividade;
+ e.tdTotal.textContent=String(numero(r.quantidade));
 
-  for (let i = 0; i < vals.length; i++) {
-    const a = String(vals[i][0] || '').trim();
-    const b = String(vals[i][1] || '').trim();
-    const c = String(vals[i][2] || '').trim();
+ const hs=Array.isArray(r.horarios)?r.horarios:[];
 
-    // Reaproveita linhas incompletas deixadas por tentativas anteriores
-    // (data preenchida, mas colaborador e serviço vazios).
-    if (a && !b && !c) {
-      aba.getRange(inicio + i, 1, 1, 3).clearContent();
-      return inicio + i;
-    }
-    if (!a && !b && !c) return inicio + i;
-  }
+ e.horas.forEach((h,i)=>{
+  h.value=formatarHora(hs[i]||'');
+ });
 
-  aba.insertRowAfter(aba.getMaxRows());
-  return aba.getMaxRows();
+ e.horariosAplicados=e.horas.map(h=>h.value||'');
 }
-function validarHorariosDobra_(hs) {
-  if (!Array.isArray(hs) || hs.length !== 20) throw new Error('São necessários 20 campos de horário, de F a Y.');
-  return hs.map((v, i) => {
-    const s = String(v == null ? '' : v).trim(); if (!s) return '';
-    const m = /^(\d{2}):(\d{2})$/.exec(s);
-    if (!m || Number(m[1]) > 23 || Number(m[2]) > 59) throw new Error('Horário inválido na coluna ' + String.fromCharCode(70 + i) + '.');
-    return (Number(m[1]) * 60 + Number(m[2])) / 1440;
+
+function desenharTabela(){
+ const tbody=$('corpoTabela');
+ tbody.replaceChildren();
+ estados=[];
+
+ const dataSelecionada=$('dataApontamento').value||hojeISO();
+
+ const registrosData=registros.filter(r=>
+  normalizarData(r.data)===dataSelecionada &&
+  colaboradores.some(nome=>textoIgual(nome,r.colaborador))
+ );
+
+ const linhas=[];
+ const usados=new Set();
+
+ colaboradores.forEach(nome=>{
+  const doColaborador=registrosData
+   .filter(r=>textoIgual(r.colaborador,nome))
+   .sort((a,b)=>Number(b.linha)-Number(a.linha));
+
+  if(doColaborador.length){
+   linhas.push({colaborador:nome,registro:doColaborador[0]});
+   usados.add(Number(doColaborador[0].linha));
+  }else{
+   linhas.push({colaborador:nome,registro:null});
+  }
+ });
+
+ registrosData
+  .slice()
+  .sort((a,b)=>Number(a.linha)-Number(b.linha))
+  .forEach(r=>{
+   if(usados.has(Number(r.linha)))return;
+   linhas.push({colaborador:r.colaborador,registro:r});
+   usados.add(Number(r.linha));
   });
+
+ // Registros com horários primeiro; sem horários por último.
+ linhas.sort((a,b)=>{
+  const horarioA=temHorarioPreenchido(a.registro);
+  const horarioB=temHorarioPreenchido(b.registro);
+
+  if(horarioA===horarioB)return 0;
+  return horarioB?1:-1;
+ });
+
+ linhas.forEach(item=>criarLinhaTabela(item.colaborador,item.registro,tbody));
+
+ if(!colaboradores.length){
+  const tr=document.createElement('tr'),td=document.createElement('td');
+  td.colSpan=13;
+  td.textContent='Nenhum colaborador encontrado na lista suspensa.';
+  tr.appendChild(td);
+  tbody.appendChild(tr);
+ }
 }
-function validarLinhaDobra_(v) {
-  const linha = Number(v);
-  if (!Number.isInteger(linha) || linha < CONFIG_DOBRA.PRIMEIRA_LINHA) throw new Error('Número de linha inválido.');
-  const aba = obterAbaDobra_();
-  if (linha > aba.getLastRow()) throw new Error('A linha informada não existe na planilha.');
-  const id = aba.getRange(linha, 1, 1, 3).getValues()[0];
-  if (!id[0] || !String(id[1] || '').trim() || !String(id[2] || '').trim()) throw new Error('A identificação da produção está incompleta. Atualize a página e tente novamente.');
-  return { aba, linha };
+
+function criarLinhaTabela(nome,registro,tbody){
+ const tr=document.createElement('tr');
+
+ if(registro)tr.dataset.linha=registro.linha;
+
+ const tdNome=document.createElement('td');
+ tdNome.textContent=nome;
+ tr.appendChild(tdNome);
+
+ const tdServico=document.createElement('td');
+ const sel=document.createElement('select');
+ sel.className='servico';
+ sel.setAttribute('aria-label','Serviço de '+nome);
+
+ const vazio=document.createElement('option');
+ vazio.value='';
+ vazio.textContent='Selecione o serviço';
+ sel.appendChild(vazio);
+
+ atividades.forEach(a=>{
+  const op=document.createElement('option');
+  op.value=a;
+  op.textContent=a;
+  sel.appendChild(op);
+ });
+
+ tdServico.appendChild(sel);
+ tr.appendChild(tdServico);
+
+ const tdNova=document.createElement('td');
+ const controle=document.createElement('div');
+ controle.className='controle-qtd';
+
+ const menos=document.createElement('button');
+ menos.type='button';
+ menos.className='btn-qtd';
+ menos.textContent='−';
+ menos.title='Diminuir 1';
+
+ const qtd=document.createElement('input');
+ qtd.type='number';
+ qtd.min='0';
+ qtd.step='any';
+ qtd.placeholder='Qtd';
+ qtd.className='qtd';
+ qtd.inputMode='decimal';
+
+ const mais=document.createElement('button');
+ mais.type='button';
+ mais.className='btn-qtd';
+ mais.textContent='+';
+ mais.title='Adicionar 1';
+
+ controle.append(menos,qtd,mais);
+ tdNova.appendChild(controle);
+ tr.appendChild(tdNova);
+
+ const tdTotal=document.createElement('td');
+ tdTotal.className='total';
+ tdTotal.textContent=registro?String(numero(registro.quantidade)):'—';
+ tr.appendChild(tdTotal);
+
+ const horas=[];
+
+ for(let i=0;i<6;i++){
+  const td=document.createElement('td');
+  const grupo=document.createElement('div');
+  grupo.className='controle-hora';
+
+  const inp=document.createElement('input');
+  inp.type='time';
+  inp.step='60';
+  inp.className='hora';
+  inp.setAttribute('aria-label','Horário '+String.fromCharCode(70+i)+' de '+nome);
+
+  const agora=document.createElement('button');
+  agora.type='button';
+  agora.className='btn-agora';
+  agora.textContent='Registrar agora';
+
+  agora.addEventListener('click',()=>{
+   const d=new Date();
+
+   inp.value=
+    String(d.getHours()).padStart(2,'0')+':' +
+    String(d.getMinutes()).padStart(2,'0');
+
+   inp.dispatchEvent(new Event('change',{bubbles:true}));
+
+   mostrarStatus(
+    'Horário registrado no campo '+String.fromCharCode(70+i)+
+    ' de '+nome+'. Salvando automaticamente...',
+    'ok'
+   );
+  });
+
+  grupo.append(inp,agora);
+  td.appendChild(grupo);
+  tr.appendChild(td);
+  horas.push(inp);
+ }
+
+ const tdSalvar=document.createElement('td');
+ const btnSalvar=document.createElement('button');
+ btnSalvar.type='button';
+ btnSalvar.className='salvar';
+ btnSalvar.textContent='💾 Salvar';
+ btnSalvar.title='Confirmar e garantir a gravação da quantidade e dos horários';
+ tdSalvar.appendChild(btnSalvar);
+ tr.appendChild(tdSalvar);
+
+ const tdLimpar=document.createElement('td');
+ const btnLimpar=document.createElement('button');
+ btnLimpar.type='button';
+ btnLimpar.className='limpar';
+ btnLimpar.textContent='Limpar registro';
+ tdLimpar.appendChild(btnLimpar);
+ tr.appendChild(tdLimpar);
+
+ const tdNovaAtividade=document.createElement('td');
+ const btnNova=document.createElement('button');
+ btnNova.type='button';
+ btnNova.className='btn-duplicar';
+ btnNova.textContent='＋ Nova atividade';
+ btnNova.title='Criar uma nova linha de produção para este colaborador';
+ tdNovaAtividade.appendChild(btnNova);
+ tr.appendChild(tdNovaAtividade);
+
+ const e={
+  colaborador:nome,
+  atividade:'',
+  registro:null,
+  sel,
+  qtd,
+  tdTotal,
+  horas,
+  btnSalvar,
+  btnLimpar,
+  btnNova,
+  quantidadeAplicada:0,
+  timerQuantidade:null,
+  timerHorarios:null,
+  processandoQuantidade:false,
+  processandoHorarios:false,
+  quantidadePendente:false,
+  horariosPendentes:false,
+  promessaQuantidade:null,
+  promessaHorarios:null,
+  horariosAplicados:['','','','','','']
+ };
+
+ estados.push(e);
+
+ if(registro){
+  preencherEstado(e,registro);
+ }
+
+ qtd.addEventListener('input',()=>agendarQuantidadeAuto(e));
+ qtd.addEventListener('change',()=>agendarQuantidadeAuto(e));
+
+ horas.forEach(h=>{
+  h.addEventListener('input',()=>agendarHorariosAuto(e));
+  h.addEventListener('change',()=>agendarHorariosAuto(e));
+ });
+
+ menos.addEventListener('click',()=>{
+  const atual=qtd.value.trim()===''?0:numero(qtd.value);
+  const novo=Math.max(0,atual-1);
+  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+  agendarQuantidadeAuto(e);
+ });
+
+ mais.addEventListener('click',()=>{
+  const atual=qtd.value.trim()===''?0:numero(qtd.value);
+  const novo=atual+1;
+  qtd.value=Number.isInteger(novo)?String(novo):String(Number(novo.toFixed(3)));
+  agendarQuantidadeAuto(e);
+ });
+
+ sel.addEventListener('change',()=>alterarServico(e));
+ btnSalvar.addEventListener('click',()=>salvar(e));
+ btnLimpar.addEventListener('click',()=>limpar(e));
+ btnNova.addEventListener('click',()=>novaAtividade(e));
+
+ tbody.appendChild(tr);
 }
-function criarProducaoDobra_(p) {
-  const r = lerRegistroDobra_(p), data = dataDobra_(r.data || p.data), nome = String(r.colaborador || '').trim(), atividade = String(r.atividade || '').trim();
-  if (!nome) throw new Error('Selecione o colaborador.'); if (!atividade) throw new Error('Selecione o serviço.');
-  const lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
-  try {
-    const aba = obterAbaDobra_(), linha = primeiraLinhaVaziaDobra_(aba);
-    gravarIdentificacaoDobra_(aba, linha, data, nome, atividade);
-    aba.getRange(linha, 4).clearContent(); // D: quantidade da Dobra
-    aba.getRange(linha, 6, 1, 20).clearContent(); // F:Y: horários; E é preservada
-    aba.getRange(linha, 6, 1, 20).setNumberFormat('HH:mm'); SpreadsheetApp.flush();
-    return { ok: true, mensagem: 'Nova atividade criada na linha ' + linha + '.', registro: { linha, data: formatarDataDobra_(data), colaborador: nome, atividade, quantidade: 0, horarios: Array(20).fill('') } };
-  } finally { lock.releaseLock(); }
-}
-function iniciarApontamentoDobra_(p) {
-  const r = lerRegistroDobra_(p), nome = String(r.colaborador || '').trim(), atividade = String(r.atividade || '').trim(), data = dataDobra_(r.data || p.data), chave = chaveDataDobra_(data);
-  if (!nome) throw new Error('Selecione o colaborador.'); if (!atividade) throw new Error('Selecione o serviço.');
-  const lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
-  try {
-    const aba = obterAbaDobra_(), ultima = aba.getLastRow(); let linha = 0;
-    if (ultima >= CONFIG_DOBRA.PRIMEIRA_LINHA) {
-      const dados = aba.getRange(CONFIG_DOBRA.PRIMEIRA_LINHA, 1, ultima - CONFIG_DOBRA.PRIMEIRA_LINHA + 1, 3).getValues();
-      for (let i = dados.length - 1; i >= 0; i--) if (String(dados[i][1] || '').trim().toLocaleUpperCase('pt-BR') === nome.toLocaleUpperCase('pt-BR') && chaveDataDobra_(dados[i][0]) === chave) { linha = CONFIG_DOBRA.PRIMEIRA_LINHA + i; break; }
-    }
-    let criada = false;
-    if (!linha) {
-      linha = primeiraLinhaVaziaDobra_(aba);
-      gravarIdentificacaoDobra_(aba, linha, data, nome, atividade);
-      aba.getRange(linha, 4).clearContent();
-      aba.getRange(linha, 6, 1, 20).clearContent();
-      aba.getRange(linha, 6, 1, 20).setNumberFormat('HH:mm');
-      criada = true;
-    } else {
-      aba.getRange(linha, 3).setValue(atividade);
-    }
-    SpreadsheetApp.flush();
-    const v = aba.getRange(linha, 1, 1, 25).getDisplayValues()[0];
-    return { ok: true, criada, mensagem: criada ? 'Apontamento criado.' : 'Apontamento localizado; serviço atualizado.', registro: { linha, data: formatarDataDobra_(aba.getRange(linha, 1).getValue()), colaborador: v[1], atividade: v[2], quantidade: v[3] === '' ? '' : v[3], horarios: v.slice(5, 25) } };
-  } finally { lock.releaseLock(); }
-}
-function atualizarServicoDobra_(p) {
-  const r = lerRegistroDobra_(p), linha = Number(r.linha), atividade = String(r.atividade || '').trim(); if (!atividade) throw new Error('Selecione um serviço válido.');
-  const lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
-  try { const d = validarLinhaDobra_(linha); d.aba.getRange(linha, 3).setValue(atividade); SpreadsheetApp.flush(); return { ok: true, mensagem: 'Serviço atualizado na linha ' + linha + '.', linha, atividade }; }
-  finally { lock.releaseLock(); }
-}
-function ajustarQuantidadeDobra_(p) {
-  const r = lerRegistroDobra_(p), linha = Number(r.linha), delta = Number(String(r.delta == null ? '' : r.delta).replace(',', '.'));
-  if (!Number.isInteger(linha) || linha < CONFIG_DOBRA.PRIMEIRA_LINHA) throw new Error('Número de linha inválido.');
-  if (!Number.isFinite(delta)) throw new Error('A diferença da quantidade é inválida.');
-  if (Math.abs(delta) < 1e-9) throw new Error('Não existe alteração de quantidade para gravar.');
 
-  const lock = LockService.getScriptLock();
-  if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
+/* =====================================================
+   NOVA ATIVIDADE
+   ===================================================== */
 
-  try {
-    const d = validarLinhaDobra_(linha);
-    let deltaAplicado = delta;
+async function novaAtividade(e){
+ const servico=String(e.sel.value||'').trim();
+ const colaborador=String(e.colaborador||'').trim();
+ const data=$('dataApontamento').value||hojeISO();
 
-    // REGRA EXCLUSIVA DA DOBRA:
-    // EMBALAR PKT e EMBALAR GRAU usam o multiplicador de
-    // Cadastro Prod e Metas!E, localizado pela descrição EMBALAR PKT em B.
-    const atividade = String(d.aba.getRange(linha, 3).getDisplayValue() || '')
-      .trim().toLocaleUpperCase('pt-BR');
+ if(!colaborador){
+  alert('Não foi possível identificar o colaborador desta linha.');
+  return;
+ }
 
-    if (atividade === 'EMBALAR PKT' || atividade === 'EMBALAR GRAU') {
-      const cadastro = obterPlanilhaDobra_().getSheetByName(CONFIG_DOBRA.ABA_CADASTRO);
-      if (!cadastro) throw new Error('A aba "' + CONFIG_DOBRA.ABA_CADASTRO + '" não foi encontrada.');
+ if(!servico){
+  alert('Selecione primeiro o serviço que deseja registrar nesta nova atividade.');
+  e.sel.focus();
+  return;
+ }
 
-      const ultimaCad = cadastro.getLastRow();
-      if (ultimaCad < CONFIG_DOBRA.LINHA_INICIAL_CADASTRO) {
-        throw new Error('Não foi encontrado o cadastro de EMBALAR PKT em Cadastro Prod e Metas!B:B.');
-      }
+ const chave='nova:'+colaborador;
+ if(ocupadas.has(chave))return;
 
-      const dadosCadastro = cadastro.getRange(
-        CONFIG_DOBRA.LINHA_INICIAL_CADASTRO,
-        2,
-        ultimaCad - CONFIG_DOBRA.LINHA_INICIAL_CADASTRO + 1,
-        4
-      ).getValues();
+ if(!confirm(
+  'Criar uma nova linha para '+colaborador+
+  ' com o serviço "'+servico+'" na data '+data+'? A linha atual será mantida.'
+ ))return;
 
-      const cadastroEmbalagem = dadosCadastro.find(row =>
-        String(row[0] || '').trim().toLocaleUpperCase('pt-BR') === 'EMBALAR PKT'
-      );
+ ocupadas.add(chave);
+ e.btnNova.disabled=true;
 
-      if (!cadastroEmbalagem) {
-        throw new Error('Não foi encontrado "EMBALAR PKT" na coluna B da aba Cadastro Prod e Metas.');
-      }
+ try{
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
 
-      const valorMultiplicador = cadastroEmbalagem[3];
-      const multiplicador = typeof valorMultiplicador === 'number'
-        ? valorMultiplicador
-        : Number(String(valorMultiplicador == null ? '' : valorMultiplicador).trim().replace(',', '.'));
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários pendentes.');
 
-      if (!Number.isFinite(multiplicador)) {
-        throw new Error('O valor correspondente a "EMBALAR PKT" na coluna E de Cadastro Prod e Metas não é numérico.');
-      }
+  mostrarStatus('Criando uma nova atividade para '+colaborador+'...');
 
-      deltaAplicado = delta * multiplicador;
-    }
+  const novoRegistro={
+   data:data,
+   colaborador:colaborador,
+   atividade:servico
+  };
 
-    const cel = d.aba.getRange(linha, 4);
-    const atual = cel.getValue();
-    const n = atual === '' || atual == null ? 0 : Number(atual);
-    if (!Number.isFinite(n)) throw new Error('O valor atual da coluna D não é numérico.');
+  const r=await api({
+   action:'create',
+   data:data,
+   colaborador:colaborador,
+   atividade:servico,
+   record:JSON.stringify(novoRegistro)
+  });
 
-    const total = n + deltaAplicado;
-    if (total < -1e-9) throw new Error('Essa correção deixaria o TOTAL D negativo.');
-
-    const final = Math.max(0, total);
-    cel.setValue(final);
-    SpreadsheetApp.flush();
-
-    return {
-      ok: true,
-      mensagem: 'Quantidade atualizada na coluna D, linha ' + linha + '.',
-      linha,
-      deltaAplicado,
-      totalQuantidade: final
-    };
-  } finally {
-    lock.releaseLock();
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'Não foi possível criar a nova atividade.');
   }
+
+  mostrarStatus(r.mensagem||'Nova atividade criada.','ok');
+  await carregar();
+
+ }catch(err){
+  mostrarStatus('Erro ao criar nova atividade: '+err.message,'erro');
+
+ }finally{
+  ocupadas.delete(chave);
+  e.btnNova.disabled=false;
+ }
 }
-function salvarHorariosDobra_(p) {
-  const r = lerRegistroDobra_(p), hs = validarHorariosDobra_(r.horarios), lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
-  try { const d = validarLinhaDobra_(r.linha); d.aba.getRange(d.linha, 6, 1, 20).setValues([hs]); d.aba.getRange(d.linha, 6, 1, 20).setNumberFormat('HH:mm'); const total = d.aba.getRange(d.linha, 4).getValue(); SpreadsheetApp.flush(); return { ok: true, mensagem: 'Horários F:Y salvos na linha ' + d.linha + '.', linha: d.linha, totalQuantidade: total }; }
-  finally { lock.releaseLock(); }
+
+/* =====================================================
+   ALTERAR SERVIÇO
+   ===================================================== */
+
+async function alterarServico(e){
+ const servico=String(e.sel.value||'').trim();
+
+ if(!servico){
+  e.atividade='';
+  mostrarStatus('Selecione um serviço para '+e.colaborador+'.');
+  return;
+ }
+
+ const chave='servico:'+(e.registro?e.registro.linha:e.colaborador);
+ if(ocupadas.has(chave))return;
+
+ ocupadas.add(chave);
+ e.sel.disabled=true;
+
+ try{
+  const qtdOk=await processarQuantidadeAuto(e);
+  if(!qtdOk)throw new Error('Não foi possível salvar a quantidade pendente.');
+
+  const horariosOk=await processarHorariosAuto(e);
+  if(!horariosOk)throw new Error('Não foi possível salvar os horários pendentes.');
+
+  let r;
+
+  if(e.registro){
+   r=await api({
+    action:'updateService',
+    record:JSON.stringify({
+     linha:Number(e.registro.linha),
+     atividade:servico
+    })
+   });
+
+  }else{
+   const data=$('dataApontamento').value||hojeISO();
+
+   r=await api({
+    action:'iniciarApontamento',
+    data:data,
+    record:JSON.stringify({
+     data:data,
+     colaborador:e.colaborador,
+     atividade:servico
+    })
+   });
+  }
+
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'Não foi possível atualizar o serviço.');
+  }
+
+  if(r.registro){
+   preencherEstado(e,r.registro);
+  }else{
+   e.atividade=servico;
+   if(e.registro)e.registro.atividade=servico;
+  }
+
+  mostrarStatus(r.mensagem||'Serviço atualizado.','ok');
+  await carregar();
+
+ }catch(err){
+  mostrarStatus('Erro ao alterar serviço: '+err.message,'erro');
+
+ }finally{
+  ocupadas.delete(chave);
+  e.sel.disabled=false;
+ }
 }
-function limparProducaoDobra_(p) {
-  const r = lerRegistroDobra_(p), lock = LockService.getScriptLock(); if (!lock.tryLock(15000)) throw new Error('A planilha está ocupada. Tente novamente.');
-  try { const d = validarLinhaDobra_(r.linha); d.aba.getRange(d.linha, 4).clearContent(); d.aba.getRange(d.linha, 6, 1, 20).clearContent(); SpreadsheetApp.flush(); return { ok: true, mensagem: 'Quantidade D e horários F:Y apagados. A identificação A:C e a coluna E foram preservadas.', linha: d.linha, totalQuantidade: 0 }; }
-  finally { lock.releaseLock(); }
+
+/* =====================================================
+   SALVAR / CONFIRMAR
+   ===================================================== */
+
+async function salvar(e){
+ if(!e.atividade&&!e.sel.value){
+  alert('Selecione um serviço antes de salvar.');
+  return;
+ }
+
+ if(!e.registro){
+  await alterarServico(e);
+
+  if(!e.registro){
+   mostrarStatus('Não foi possível obter a linha da produção.','erro');
+   return;
+  }
+ }
+
+ const leitura=valorQuantidadeAtual(e);
+
+ if(!leitura.ok){
+  alert('Informe uma quantidade válida, igual ou maior que zero.');
+  return;
+ }
+
+ const horarios=horariosAtuais(e);
+ const totalExistente=numero(e.registro.quantidade);
+
+ if(leitura.valor===0&&!horarios.some(Boolean)&&totalExistente===0){
+  alert('Informe uma quantidade maior que zero ou preencha algum horário.');
+  return;
+ }
+
+ const linha=Number(e.registro.linha);
+ const chave='salvar:'+linha;
+
+ if(ocupadas.has(chave))return;
+
+ ocupadas.add(chave);
+
+ const linhaTabela=e.sel.closest('tr');
+ const controles=linhaTabela
+  ?Array.from(linhaTabela.querySelectorAll('input,select,button'))
+  :[];
+
+ const estadosDesabilitados=controles.map(c=>c.disabled);
+ controles.forEach(c=>c.disabled=true);
+
+ try{
+  mostrarStatus('Conferindo e salvando os dados da linha '+linha+'...');
+
+  if(e.timerQuantidade){
+   clearTimeout(e.timerQuantidade);
+   e.timerQuantidade=null;
+  }
+
+  if(e.timerHorarios){
+   clearTimeout(e.timerHorarios);
+   e.timerHorarios=null;
+  }
+
+  const qtdOk=await processarQuantidadeAuto(e);
+
+  if(!qtdOk){
+   throw new Error('Não foi possível concluir a gravação automática da quantidade.');
+  }
+
+  const horariosOk=await processarHorariosAuto(e);
+
+  if(!horariosOk){
+   throw new Error('Não foi possível concluir a gravação automática dos horários.');
+  }
+
+  const horariosFinais=horariosAtuais(e);
+
+  // Confirma F:K sem somar QTD NOVA novamente.
+  const r=await api({
+   action:'save',
+   record:JSON.stringify({
+    linha:linha,
+    horarios:horariosFinais
+   })
+  });
+
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'O salvamento não foi confirmado pelo servidor.');
+  }
+
+  e.horariosAplicados=horariosFinais.slice();
+  e.registro.horarios=horariosFinais.slice();
+
+  if(r.totalQuantidade!==undefined){
+   e.tdTotal.textContent=String(numero(r.totalQuantidade));
+   e.registro.quantidade=r.totalQuantidade;
+  }
+
+  // A quantidade já foi aplicada ao TOTAL E.
+  // Limpa o campo de novo lançamento sem alterar o total.
+  e.qtd.value='';
+  e.quantidadeAplicada=0;
+
+  const listaAtualizada=await carregar();
+
+  if(listaAtualizada){
+   mostrarStatus(
+    '✅ CONFIRMADO! Quantidade e horários da linha '+linha+
+    ' foram salvos na planilha. TOTAL E: '+
+    numero(r.totalQuantidade!==undefined?r.totalQuantidade:e.registro.quantidade)+
+    '. A QTD NOVA está pronta para um novo lançamento.',
+    'ok'
+   );
+  }else{
+   mostrarStatus(
+    '✅ O servidor confirmou a gravação da linha '+linha+
+    ', mas não foi possível atualizar a lista. Clique em Atualizar lista.',
+    'erro'
+   );
+  }
+
+ }catch(err){
+  mostrarStatus(
+   'Erro ao confirmar a gravação da linha '+linha+': '+err.message,
+   'erro'
+  );
+
+ }finally{
+  ocupadas.delete(chave);
+  controles.forEach((c,i)=>c.disabled=estadosDesabilitados[i]);
+ }
 }
-function testarConexaoDobra() {
-  const ss = obterPlanilhaDobra_(), aba = obterAbaDobra_();
-  const r = { planilha: ss.getName(), aba: aba.getName(), primeiraLinha: CONFIG_DOBRA.PRIMEIRA_LINHA, limiteExibicao: CONFIG_DOBRA.MAX_REGISTROS_EXIBIDOS, ultimaLinha: aba.getLastRow() };
-  Logger.log(JSON.stringify(r, null, 2)); return r;
+
+/* =====================================================
+   LIMPAR REGISTRO
+   ===================================================== */
+
+async function limpar(e){
+ if(!e.registro){
+  e.qtd.value='';
+  e.horas.forEach(h=>h.value='');
+  alert('Esta linha ainda não está vinculada a uma produção. Selecione um serviço primeiro.');
+  return;
+ }
+
+ if(!confirm(
+  'Apagar somente a quantidade em E e os horários F:K da linha '+
+  e.registro.linha+'? As colunas A:D e L:Y serão preservadas.'
+ ))return;
+
+ const linha=Number(e.registro.linha);
+ const chave='limpar:'+linha;
+
+ if(ocupadas.has(chave))return;
+
+ ocupadas.add(chave);
+ e.btnLimpar.disabled=true;
+
+ try{
+  const qtdOk=await processarQuantidadeAuto(e);
+
+  if(!qtdOk){
+   throw new Error('Não foi possível concluir a gravação pendente da quantidade.');
+  }
+
+  const horariosOk=await processarHorariosAuto(e);
+
+  if(!horariosOk){
+   throw new Error('Não foi possível concluir a gravação pendente dos horários.');
+  }
+
+  const r=await api({
+   action:'limpar',
+   record:JSON.stringify({linha:linha})
+  });
+
+  if(!r||!r.ok){
+   throw new Error(r?.mensagem||'Não foi possível limpar.');
+  }
+
+  mostrarStatus(r.mensagem||'Quantidade e horários limpos.','ok');
+  await carregar();
+
+ }catch(err){
+  mostrarStatus('Erro ao limpar: '+err.message,'erro');
+
+ }finally{
+  ocupadas.delete(chave);
+  e.btnLimpar.disabled=false;
+ }
 }
+
+$('atualizar').addEventListener('click',carregar);
+$('dataApontamento').value=hojeISO();
+$('dataApontamento').addEventListener('change',carregar);
+if($('setorSelecionado').value==='costura')carregar();
+</script>
+
+<script>
+/* =========================================================
+   MÓDULO EXCLUSIVO DA DOBRA
+   Não altera as funções nem a API utilizada pela Costura.
+   ========================================================= */
+'use strict';
+const DOBRA_API_URL='https://script.google.com/macros/s/AKfycbwshnHxd413V5IxEO7xln2ZN8eKlSegK8sWIfxRt_nGsEYhQ48ZOUVdyG3l3yt-WPnTzQ/exec';
+const $d=id=>document.getElementById(id);
+let dobraColaboradores=[],dobraAtividades=[],dobraRegistros=[],dobraEstados=[];
+let dobraCarregando=false;
+function dobraHojeISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dobraNormalizarData(v){const s=String(v||'').trim();if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;const m=s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);return m?`${m[3]}-${m[2]}-${m[1]}`:s;}
+function dobraIgual(a,b){return String(a||'').trim().toLocaleUpperCase('pt-BR')===String(b||'').trim().toLocaleUpperCase('pt-BR');}
+function dobraStatus(msg,tipo=''){$d('dobraStatus').textContent=msg;$d('dobraStatus').className='status '+tipo;}
+function dobraApi(params){return new Promise((resolve,reject)=>{if(!DOBRA_API_URL||DOBRA_API_URL.includes('COLE_AQUI')){reject(new Error('A URL do Web App da Dobra não está configurada.'));return;}const cb='dobraRetorno_'+Date.now()+'_'+Math.random().toString(36).slice(2),s=document.createElement('script');let done=false,timer;const finish=(err,data)=>{if(done)return;done=true;clearTimeout(timer);try{delete window[cb]}catch(e){}s.remove();err?reject(err):resolve(data)};timer=setTimeout(()=>finish(new Error('Tempo esgotado ao acessar o Apps Script da Dobra.')),30000);window[cb]=data=>finish(null,data);s.onerror=()=>finish(new Error('Falha de conexão com o Apps Script da Dobra.'));s.src=DOBRA_API_URL+'?'+new URLSearchParams({...params,callback:cb}).toString();document.body.appendChild(s);});}
+function dobraNumero(v){if(v===''||v==null)return 0;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:0;}
+function dobraHora(v){if(v==null||v==='')return '';const m=String(v).trim().match(/(\d{1,2}):(\d{2})/);return m?String(m[1]).padStart(2,'0')+':'+m[2]:'';}
+function dobraHorarios(e){return e.horas.map(x=>x.value||'');}
+function dobraHorasIguais(a,b){return JSON.stringify(a||[])===JSON.stringify(b||[]);}
+function dobraValorQtd(e){const s=String(e.qtd.value??'').trim();if(!s)return {ok:true,valor:0};const n=Number(s.replace(',','.'));return {ok:Number.isFinite(n)&&n>=0,valor:n};}
+
+/* Uma fila única por colaborador/linha impede que gravações de quantidade
+   e horários concorram entre si. Os campos da tela nunca são reconstruídos
+   durante o salvamento automático. */
+function dobraEnfileirar(e, tarefa){
+  e.fila=(e.fila||Promise.resolve()).then(tarefa);
+  e.fila=e.fila.catch(err=>{dobraStatus('Erro ao salvar Dobra: '+err.message,'erro');return false;});
+  return e.fila;
+}
+function dobraTemPendencia(e){
+  const q=dobraValorQtd(e);
+  return !!(e.timerQ||e.timerH) || !q.ok || Math.abs(q.valor-(e.quantidadeAplicada||0))>1e-9 || !dobraHorasIguais(dobraHorarios(e),e.horariosAplicados);
+}
+function dobraHaPendencias(){return dobraEstados.some(dobraTemPendencia);}
+function dobraAgendarQtd(e){clearTimeout(e.timerQ);e.timerQ=setTimeout(()=>{e.timerQ=null;dobraEnfileirar(e,()=>dobraSalvarQtdAgora(e));},500);}
+function dobraAgendarHoras(e){clearTimeout(e.timerH);e.timerH=setTimeout(()=>{e.timerH=null;dobraEnfileirar(e,()=>dobraSalvarHorasAgora(e));},500);}
+async function dobraGarantirRegistro(e){
+ if(e.registro)return true;
+ const atividade=String(e.sel.value||'').trim();
+ if(!atividade)throw new Error('Selecione um serviço antes de lançar quantidade ou horários.');
+ const data=$d('dobraData').value||dobraHojeISO();
+ const r=await dobraApi({action:'iniciarApontamento',data,record:JSON.stringify({data,colaborador:e.nome,atividade})});
+ if(!r?.ok)throw new Error(r?.mensagem||'Não foi possível iniciar o apontamento.');
+ e.registro=r.registro;e.tr.dataset.linha=r.registro.linha;
+ e.tdT.textContent=String(dobraNumero(r.registro.quantidade));
+ return true;
+}
+async function dobraSalvarQtdAgora(e){
+ const leitura=dobraValorQtd(e);
+ if(!leitura.ok)throw new Error('Informe uma quantidade válida, igual ou maior que zero.');
+ if(!e.registro&&leitura.valor===0)return true;
+ await dobraGarantirRegistro(e);
+ const desejada=leitura.valor, delta=desejada-Number(e.quantidadeAplicada||0);
+ if(Math.abs(delta)>1e-9){
+  const r=await dobraApi({action:'ajustarQuantidade',record:JSON.stringify({linha:e.registro.linha,delta})});
+  if(!r?.ok)throw new Error(r?.mensagem||'Falha ao atualizar quantidade.');
+  e.quantidadeAplicada=desejada;e.tdT.textContent=String(dobraNumero(r.totalQuantidade));e.registro.quantidade=r.totalQuantidade;
+  dobraStatus('Quantidade salva automaticamente na coluna D. Total: '+r.totalQuantidade+'.','ok');
+ }
+ // Se o usuário digitou enquanto a requisição estava em andamento, salva
+ // a versão mais recente sem apagar nem reescrever o campo visível.
+ if(Math.abs(dobraValorQtd(e).valor-e.quantidadeAplicada)>1e-9){
+  return dobraSalvarQtdAgora(e);
+ }
+ return true;
+}
+async function dobraSalvarHorasAgora(e){
+ const hs=dobraHorarios(e);
+ if(dobraHorasIguais(hs,e.horariosAplicados))return true;
+ if(!e.registro&&!hs.some(Boolean))return true;
+ await dobraGarantirRegistro(e);
+ const enviada=hs.slice();
+ const r=await dobraApi({action:'save',record:JSON.stringify({linha:e.registro.linha,horarios:enviada})});
+ if(!r?.ok)throw new Error(r?.mensagem||'Falha ao salvar horários.');
+ e.horariosAplicados=enviada;e.registro.horarios=enviada.slice();
+ if(r.totalQuantidade!==undefined){e.tdT.textContent=String(dobraNumero(r.totalQuantidade));e.registro.quantidade=r.totalQuantidade;}
+ dobraStatus('Horários F:Y salvos automaticamente.','ok');
+ if(!dobraHorasIguais(dobraHorarios(e),e.horariosAplicados))return dobraSalvarHorasAgora(e);
+ return true;
+}
+async function dobraFlushLinha(e){
+ clearTimeout(e.timerQ);e.timerQ=null;clearTimeout(e.timerH);e.timerH=null;
+ await dobraEnfileirar(e,async()=>{e.salvando=true;try{await dobraSalvarQtdAgora(e);await dobraSalvarHorasAgora(e);if(dobraTemPendencia(e))throw new Error('Ainda existem alterações pendentes nesta linha.');return true;}finally{e.salvando=false;}});
+ if(dobraTemPendencia(e))throw new Error('Não foi possível confirmar todas as alterações desta linha.');
+}
+async function dobraFlushTela(){for(const e of dobraEstados.slice())await dobraFlushLinha(e);return !dobraHaPendencias();}
+async function carregarDobra(opcoes={}){
+ if(dobraCarregando)return false;
+ if(dobraHaPendencias()){dobraStatus('A atualização foi pausada para preservar os dados que ainda estão sendo digitados.','');return false;}
+ dobraCarregando=true;
+ try{
+  if(!opcoes.silencioso)dobraStatus('Carregando colaboradores e registros da Dobra...');
+  const data=$d('dobraData').value||dobraHojeISO(),r=await dobraApi({action:'list',data});
+  if(!r||!r.ok)throw new Error(r?.mensagem||'Falha ao consultar Dobra.');
+  dobraColaboradores=r.colaboradores||[];dobraAtividades=r.atividades||[];dobraRegistros=r.registros||[];
+  desenharDobra();
+  if(!opcoes.silencioso)dobraStatus(dobraColaboradores.length+' colaborador(es) cadastrado(s). Exibindo produções de '+data+'.','ok');
+  return true;
+ }catch(e){dobraStatus('Erro ao carregar Dobra: '+e.message,'erro');return false;}
+ finally{dobraCarregando=false;}
+}
+function desenharDobra(){
+ const head=$d('dobraCabecalho'),body=$d('dobraCorpo');head.replaceChildren();body.replaceChildren();dobraEstados=[];
+ ['COLABORADOR','SERVIÇO — C','QTD NOVA','TOTAL D'].forEach(t=>{const th=document.createElement('th');th.textContent=t;head.appendChild(th);});
+ for(let i=0;i<20;i++){const th=document.createElement('th');th.textContent=String.fromCharCode(70+i)+(i%2===0?' Início':' Fim');head.appendChild(th);}
+ ['Salvar','Limpar','Nova atividade'].forEach(t=>{const th=document.createElement('th');th.textContent=t;head.appendChild(th);});
+ const data=$d('dobraData').value||dobraHojeISO(),lista=dobraRegistros.filter(r=>dobraNormalizarData(r.data)===data),linhas=[],usados=new Set();
+ dobraColaboradores.forEach(nome=>{const achados=lista.filter(r=>dobraIgual(r.colaborador,nome)).sort((a,b)=>Number(b.linha)-Number(a.linha));if(achados.length){linhas.push({nome,registro:achados[0]});usados.add(Number(achados[0].linha));}else linhas.push({nome,registro:null});});
+ lista.sort((a,b)=>Number(a.linha)-Number(b.linha)).forEach(r=>{if(!usados.has(Number(r.linha))){linhas.push({nome:r.colaborador,registro:r});usados.add(Number(r.linha));}});
+ linhas.sort((a,b)=>{const ah=!!(a.registro?.horarios||[]).some(x=>String(x||'').trim()),bh=!!(b.registro?.horarios||[]).some(x=>String(x||'').trim());return Number(bh)-Number(ah);});
+ linhas.forEach(x=>criarLinhaDobra(x.nome,x.registro,body));
+ if(!dobraColaboradores.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=27;td.textContent='Nenhum colaborador encontrado em Cadastro Prod e Metas!A3:A.';tr.appendChild(td);body.appendChild(tr);}
+}
+function criarLinhaDobra(nome,registro,tbody){
+ const tr=document.createElement('tr');if(registro)tr.dataset.linha=registro.linha;
+ const tdN=document.createElement('td');tdN.textContent=nome;tr.appendChild(tdN);
+ const tdS=document.createElement('td'),sel=document.createElement('select');sel.className='servico';const vazio=document.createElement('option');vazio.value='';vazio.textContent='Selecione o serviço';sel.appendChild(vazio);
+ dobraAtividades.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});tdS.appendChild(sel);tr.appendChild(tdS);
+ const tdQ=document.createElement('td'),wrap=document.createElement('div');wrap.className='controle-qtd';const menos=document.createElement('button');menos.type='button';menos.className='btn-qtd';menos.textContent='−';const qtd=document.createElement('input');qtd.type='number';qtd.min='0';qtd.step='any';qtd.placeholder='Qtd';qtd.className='qtd';const mais=document.createElement('button');mais.type='button';mais.className='btn-qtd';mais.textContent='+';wrap.append(menos,qtd,mais);tdQ.appendChild(wrap);tr.appendChild(tdQ);
+ const tdT=document.createElement('td');tdT.className='total';tdT.textContent=registro?String(dobraNumero(registro.quantidade)):'—';tr.appendChild(tdT);
+ const horas=[];
+ for(let i=0;i<20;i++){const td=document.createElement('td'),g=document.createElement('div');g.className='controle-hora';const inp=document.createElement('input');inp.type='time';inp.step='60';inp.className='hora';inp.setAttribute('aria-label','Horário '+String.fromCharCode(70+i)+' de '+nome);const agora=document.createElement('button');agora.type='button';agora.className='btn-agora';agora.textContent='Registrar agora';agora.addEventListener('click',()=>{const d=new Date();inp.value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');inp.dispatchEvent(new Event('change',{bubbles:true}));});g.append(inp,agora);td.appendChild(g);tr.appendChild(td);horas.push(inp);}
+ const tdA=document.createElement('td'),salvar=document.createElement('button');salvar.type='button';salvar.className='salvar';salvar.textContent='💾 Salvar';tdA.appendChild(salvar);tr.appendChild(tdA);
+ const tdL=document.createElement('td'),limpar=document.createElement('button');limpar.type='button';limpar.className='limpar';limpar.textContent='Limpar registro';tdL.appendChild(limpar);tr.appendChild(tdL);
+ const tdNv=document.createElement('td'),nova=document.createElement('button');nova.type='button';nova.className='btn-duplicar';nova.textContent='＋ Nova atividade';tdNv.appendChild(nova);tr.appendChild(tdNv);
+ const e={nome,registro,sel,qtd,tdT,horas,tr,quantidadeAplicada:0,horariosAplicados:Array(20).fill(''),timerQ:null,timerH:null,fila:Promise.resolve(),salvando:false};
+ if(registro){sel.value=registro.atividade||'';(registro.horarios||[]).forEach((h,i)=>{if(horas[i])horas[i].value=dobraHora(h);});e.horariosAplicados=dobraHorarios(e);}
+ qtd.addEventListener('input',()=>dobraAgendarQtd(e));qtd.addEventListener('change',()=>dobraAgendarQtd(e));
+ horas.forEach(h=>{h.addEventListener('input',()=>dobraAgendarHoras(e));h.addEventListener('change',()=>dobraAgendarHoras(e));});
+ menos.addEventListener('click',()=>{qtd.value=Math.max(0,dobraNumero(qtd.value)-1);dobraAgendarQtd(e);});mais.addEventListener('click',()=>{qtd.value=dobraNumero(qtd.value)+1;dobraAgendarQtd(e);});
+ sel.addEventListener('change',()=>dobraAlterarServico(e));salvar.addEventListener('click',()=>dobraSalvar(e));limpar.addEventListener('click',()=>dobraLimpar(e));nova.addEventListener('click',()=>dobraNovaAtividade(e));
+ dobraEstados.push(e);tbody.appendChild(tr);
+}
+async function dobraAlterarServico(e){
+ const atividade=String(e.sel.value||'').trim();if(!atividade)return;
+ try{await dobraFlushLinha(e);const data=$d('dobraData').value||dobraHojeISO();let r;
+  if(e.registro)r=await dobraApi({action:'updateService',record:JSON.stringify({linha:e.registro.linha,atividade})});
+  else r=await dobraApi({action:'iniciarApontamento',data,record:JSON.stringify({data,colaborador:e.nome,atividade})});
+  if(!r?.ok)throw new Error(r?.mensagem||'Não foi possível atualizar o serviço.');
+  if(r.registro)e.registro=r.registro;else if(e.registro)e.registro.atividade=atividade;
+  dobraStatus(r.mensagem||'Serviço atualizado.','ok');
+ }catch(err){dobraStatus('Erro ao alterar serviço: '+err.message,'erro');}
+}
+async function dobraSalvar(e){
+ try{
+  if(!e.sel.value)throw new Error('Selecione um serviço antes de salvar.');
+  const q=dobraValorQtd(e);if(!q.ok)throw new Error('Informe uma quantidade válida, igual ou maior que zero.');
+  if(q.valor===0&&!dobraHorarios(e).some(Boolean)&&(!e.registro||dobraNumero(e.registro.quantidade)===0))throw new Error('Informe uma quantidade maior que zero ou preencha algum horário.');
+  await dobraFlushLinha(e);
+  dobraStatus('✅ Quantidade e horários confirmados na planilha da Dobra.','ok');
+ }catch(err){dobraStatus('Erro ao confirmar Dobra: '+err.message,'erro');}
+}
+async function dobraLimpar(e){
+ if(!e.registro){e.qtd.value='';e.quantidadeAplicada=0;e.horas.forEach(h=>h.value='');e.horariosAplicados=dobraHorarios(e);return;}
+ if(!confirm('Apagar somente a quantidade da coluna D e os horários F:Y da linha '+e.registro.linha+'? A identificação A:C e a coluna E serão preservadas.'))return;
+ try{await dobraFlushLinha(e);const r=await dobraApi({action:'limpar',record:JSON.stringify({linha:e.registro.linha})});if(!r?.ok)throw new Error(r?.mensagem||'Não foi possível limpar.');e.qtd.value='';e.quantidadeAplicada=0;e.horas.forEach(h=>h.value='');e.horariosAplicados=dobraHorarios(e);e.tdT.textContent='0';e.registro.quantidade=0;e.registro.horarios=e.horariosAplicados.slice();dobraStatus(r.mensagem||'Quantidade e horários limpos.','ok');}catch(err){dobraStatus('Erro ao limpar Dobra: '+err.message,'erro');}
+}
+async function dobraNovaAtividade(e){
+ const atividade=String(e.sel.value||'').trim();if(!atividade){dobraStatus('Selecione primeiro o serviço para a nova atividade.','erro');return;}
+ if(!confirm('Criar uma nova linha para '+e.nome+' com o serviço "'+atividade+'"? A linha atual será mantida.'))return;
+ try{await dobraFlushLinha(e);const data=$d('dobraData').value||dobraHojeISO();const r=await dobraApi({action:'create',data,record:JSON.stringify({data,colaborador:e.nome,atividade})});if(!r?.ok)throw new Error(r?.mensagem||'Não foi possível criar a nova atividade.');dobraStatus(r.mensagem||'Nova atividade criada.','ok');await carregarDobra();}catch(err){dobraStatus('Erro ao criar atividade: '+err.message,'erro');}
+}
+$d('dobraAtualizar').addEventListener('click',async()=>{try{await dobraFlushTela();await carregarDobra();}catch(e){dobraStatus('Atualização cancelada: '+e.message,'erro');}});
+$d('dobraData').value=dobraHojeISO();
+$d('dobraData').addEventListener('change',async()=>{try{await dobraFlushTela();await carregarDobra();}catch(e){dobraStatus('Não foi possível trocar a data: '+e.message,'erro');}});
+const seletorSetor=document.getElementById('setorSelecionado');
+seletorSetor.addEventListener('change',()=>{const dobra=seletorSetor.value==='dobra';document.getElementById('costuraApp').hidden=dobra;document.getElementById('dobraApp').hidden=!dobra;if(dobra)carregarDobra();else carregar();});
+</script>
+
+</body>
+</html>
