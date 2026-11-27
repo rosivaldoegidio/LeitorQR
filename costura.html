@@ -1373,11 +1373,9 @@ function dobraEnfileirar(e, tarefa){
   return e.fila;
 }
 function dobraTemPendencia(e){
-  const q=dobraValorQtd(e);
-  return !!(e.timerQ||e.timerH) || !q.ok || Math.abs(q.valor-(e.quantidadeAplicada||0))>1e-9 || !dobraHorasIguais(dobraHorarios(e),e.horariosAplicados);
+  return !!e.timerH || !dobraHorasIguais(dobraHorarios(e),e.horariosAplicados);
 }
 function dobraHaPendencias(){return dobraEstados.some(dobraTemPendencia);}
-function dobraAgendarQtd(e){clearTimeout(e.timerQ);e.timerQ=setTimeout(()=>{e.timerQ=null;dobraEnfileirar(e,()=>dobraSalvarQtdAgora(e));},500);}
 function dobraAgendarHoras(e){clearTimeout(e.timerH);e.timerH=setTimeout(()=>{e.timerH=null;dobraEnfileirar(e,()=>dobraSalvarHorasAgora(e));},500);}
 async function dobraGarantirRegistro(e){
  if(e.registro)return true;
@@ -1390,23 +1388,17 @@ async function dobraGarantirRegistro(e){
  e.tdT.textContent=String(dobraNumero(r.registro.quantidade));
  return true;
 }
-async function dobraSalvarQtdAgora(e){
- const leitura=dobraValorQtd(e);
- if(!leitura.ok)throw new Error('Informe uma quantidade válida, igual ou maior que zero.');
- if(!e.registro&&leitura.valor===0)return true;
+async function dobraSalvarQtdAgora(e){return true;}
+async function dobraAplicarDeltaQtd(e,delta){
+ const valor=Number(delta);
+ if(!Number.isFinite(valor)||Math.abs(valor)<1e-9)throw new Error('Digite uma quantidade maior que zero.');
  await dobraGarantirRegistro(e);
- const desejada=leitura.valor, delta=desejada-Number(e.quantidadeAplicada||0);
- if(Math.abs(delta)>1e-9){
-  const r=await dobraApi({action:'ajustarQuantidade',record:JSON.stringify({linha:e.registro.linha,delta})});
-  if(!r?.ok)throw new Error(r?.mensagem||'Falha ao atualizar quantidade.');
-  e.quantidadeAplicada=desejada;e.tdT.textContent=String(dobraNumero(r.totalQuantidade));e.registro.quantidade=r.totalQuantidade;
-  dobraStatus('Quantidade salva automaticamente na coluna D. Total: '+r.totalQuantidade+'.','ok');
- }
- // Se o usuário digitou enquanto a requisição estava em andamento, salva
- // a versão mais recente sem apagar nem reescrever o campo visível.
- if(Math.abs(dobraValorQtd(e).valor-e.quantidadeAplicada)>1e-9){
-  return dobraSalvarQtdAgora(e);
- }
+ const r=await dobraApi({action:'ajustarQuantidade',record:JSON.stringify({linha:e.registro.linha,delta:valor})});
+ if(!r?.ok)throw new Error(r?.mensagem||'Falha ao atualizar quantidade.');
+ e.tdT.textContent=String(dobraNumero(r.totalQuantidade));
+ e.registro.quantidade=r.totalQuantidade;
+ e.qtd.value='';
+ dobraStatus('Quantidade atualizada na coluna D. Total: '+r.totalQuantidade+'.','ok');
  return true;
 }
 async function dobraSalvarHorasAgora(e){
@@ -1424,8 +1416,8 @@ async function dobraSalvarHorasAgora(e){
  return true;
 }
 async function dobraFlushLinha(e){
- clearTimeout(e.timerQ);e.timerQ=null;clearTimeout(e.timerH);e.timerH=null;
- await dobraEnfileirar(e,async()=>{e.salvando=true;try{await dobraSalvarQtdAgora(e);await dobraSalvarHorasAgora(e);if(dobraTemPendencia(e))throw new Error('Ainda existem alterações pendentes nesta linha.');return true;}finally{e.salvando=false;}});
+ clearTimeout(e.timerH);e.timerH=null;
+ await dobraEnfileirar(e,async()=>{e.salvando=true;try{await dobraSalvarHorasAgora(e);if(dobraTemPendencia(e))throw new Error('Ainda existem alterações pendentes nesta linha.');return true;}finally{e.salvando=false;}});
  if(dobraTemPendencia(e))throw new Error('Não foi possível confirmar todas as alterações desta linha.');
 }
 async function dobraFlushTela(){for(const e of dobraEstados.slice())await dobraFlushLinha(e);return !dobraHaPendencias();}
@@ -1470,12 +1462,13 @@ function criarLinhaDobra(nome,registro,tbody){
  const tdNv=document.createElement('td'),nova=document.createElement('button');nova.type='button';nova.className='btn-duplicar';nova.textContent='＋ Nova atividade';tdNv.appendChild(nova);tr.appendChild(tdNv);
  const e={nome,registro,sel,qtd,tdT,horas,tr,quantidadeAplicada:0,horariosAplicados:Array(20).fill(''),timerQ:null,timerH:null,fila:Promise.resolve(),salvando:false};
  if(registro){sel.value=registro.atividade||'';(registro.horarios||[]).forEach((h,i)=>{if(horas[i])horas[i].value=dobraHora(h);});e.horariosAplicados=dobraHorarios(e);}
- qtd.addEventListener('input',()=>dobraAgendarQtd(e));qtd.addEventListener('change',()=>dobraAgendarQtd(e));
  horas.forEach(h=>{h.addEventListener('input',()=>dobraAgendarHoras(e));h.addEventListener('change',()=>dobraAgendarHoras(e));});
- menos.addEventListener('click',()=>{qtd.value=Math.max(0,dobraNumero(qtd.value)-1);dobraAgendarQtd(e);});mais.addEventListener('click',()=>{qtd.value=dobraNumero(qtd.value)+1;dobraAgendarQtd(e);});
- sel.addEventListener('change',()=>dobraAlterarServico(e));salvar.addEventListener('click',()=>dobraSalvar(e));limpar.addEventListener('click',()=>dobraLimpar(e));nova.addEventListener('click',()=>dobraNovaAtividade(e));
+ menos.addEventListener('click',async()=>{try{await dobraEsperarServico(e);await dobraAplicarDeltaQtd(e,-1);}catch(err){dobraStatus('Erro ao ajustar quantidade: '+err.message,'erro');}});
+ mais.addEventListener('click',async()=>{try{await dobraEsperarServico(e);const v=dobraNumero(qtd.value);if(v<=0)throw new Error('Digite em QTD NOVA o valor que deseja acrescentar.');await dobraAplicarDeltaQtd(e,v);}catch(err){dobraStatus('Erro ao acrescentar quantidade: '+err.message,'erro');}});
+ sel.addEventListener('change',()=>{e.operacaoServico=dobraAlterarServico(e);});salvar.addEventListener('click',()=>dobraSalvar(e));limpar.addEventListener('click',()=>dobraLimpar(e));nova.addEventListener('click',()=>dobraNovaAtividade(e));
  dobraEstados.push(e);tbody.appendChild(tr);
 }
+async function dobraEsperarServico(e){if(e.operacaoServico)await e.operacaoServico;}
 async function dobraAlterarServico(e){
  const atividade=String(e.sel.value||'').trim();if(!atividade)return;
  try{await dobraFlushLinha(e);const data=$d('dobraData').value||dobraHojeISO();let r;
@@ -1508,6 +1501,14 @@ async function dobraNovaAtividade(e){
 $d('dobraAtualizar').addEventListener('click',async()=>{try{await dobraFlushTela();await carregarDobra();}catch(e){dobraStatus('Atualização cancelada: '+e.message,'erro');}});
 $d('dobraData').value=dobraHojeISO();
 $d('dobraData').addEventListener('change',async()=>{try{await dobraFlushTela();await carregarDobra();}catch(e){dobraStatus('Não foi possível trocar a data: '+e.message,'erro');}});
+// Atualiza dados alterados diretamente na planilha, sem interromper digitação/quantidade pendente.
+setInterval(()=>{
+ const app=$d('dobraApp');if(!app||app.hidden||dobraCarregando||dobraHaPendencias())return;
+ const ativo=document.activeElement;if(ativo&&app.contains(ativo)&&/^(INPUT|SELECT|TEXTAREA)$/.test(ativo.tagName))return;
+ if(dobraEstados.some(e=>String(e.qtd.value||'').trim()!==''))return;
+ carregarDobra({silencioso:true});
+},5000);
+
 const seletorSetor=document.getElementById('setorSelecionado');
 seletorSetor.addEventListener('change',()=>{const dobra=seletorSetor.value==='dobra';document.getElementById('costuraApp').hidden=dobra;document.getElementById('dobraApp').hidden=!dobra;if(dobra)carregarDobra();else carregar();});
 </script>
