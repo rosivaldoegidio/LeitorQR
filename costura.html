@@ -1456,12 +1456,12 @@ function criarLinhaDobra(nome,registro,tbody){
  const tdA=document.createElement('td'),salvar=document.createElement('button');salvar.type='button';salvar.className='salvar';salvar.textContent='💾 Salvar';tdA.appendChild(salvar);tr.appendChild(tdA);
  const tdL=document.createElement('td'),limpar=document.createElement('button');limpar.type='button';limpar.className='limpar';limpar.textContent='Limpar registro';tdL.appendChild(limpar);tr.appendChild(tdL);
  const tdNv=document.createElement('td'),nova=document.createElement('button');nova.type='button';nova.className='btn-duplicar';nova.textContent='＋ Nova atividade';tdNv.appendChild(nova);tr.appendChild(tdNv);
- const e={nome,registro,sel,qtd,tdT,horas,tr,quantidadeAplicada:0,horariosAplicados:Array(20).fill(''),timerQ:null,timerH:null,fila:Promise.resolve(),salvando:false};
+ const e={nome,registro,sel,qtd,tdT,horas,tr,quantidadeAplicada:0,horariosAplicados:Array(20).fill(''),timerQ:null,timerH:null,fila:Promise.resolve(),salvando:false,qtdEmProcesso:false,operacaoServico:null};
  if(registro){sel.value=registro.atividade||'';(registro.horarios||[]).forEach((h,i)=>{if(horas[i])horas[i].value=dobraHora(h);});e.horariosAplicados=dobraHorarios(e);}
  horas.forEach(h=>{h.addEventListener('input',()=>dobraAgendarHoras(e));h.addEventListener('change',()=>dobraAgendarHoras(e));});
- menos.addEventListener('click',async()=>{try{const v=dobraNumero(qtd.value);await dobraAplicarDeltaQtd(e,v>0?-v:-1);}catch(err){dobraStatus('Erro ao ajustar quantidade: '+err.message,'erro');}});
- mais.addEventListener('click',async()=>{try{const v=dobraNumero(qtd.value);if(v<=0)throw new Error('Digite a quantidade que deseja acrescentar no campo QTD NOVA.');await dobraAplicarDeltaQtd(e,v);}catch(err){dobraStatus('Erro ao acrescentar quantidade: '+err.message,'erro');}});
- sel.addEventListener('change',()=>dobraAlterarServico(e));salvar.addEventListener('click',()=>dobraSalvar(e));limpar.addEventListener('click',()=>dobraLimpar(e));nova.addEventListener('click',()=>dobraNovaAtividade(e));
+ menos.addEventListener('click',async()=>{if(e.qtdEmProcesso)return;e.qtdEmProcesso=true;try{if(e.operacaoServico)await e.operacaoServico;const v=dobraNumero(qtd.value);await dobraAplicarDeltaQtd(e,v>0?-v:-1);}catch(err){dobraStatus('Erro ao ajustar quantidade: '+err.message,'erro');}finally{e.qtdEmProcesso=false;}});
+ mais.addEventListener('click',async()=>{if(e.qtdEmProcesso)return;e.qtdEmProcesso=true;try{if(e.operacaoServico)await e.operacaoServico;const v=dobraNumero(qtd.value);if(v<=0)throw new Error('Digite a quantidade que deseja acrescentar no campo QTD NOVA.');await dobraAplicarDeltaQtd(e,v);}catch(err){dobraStatus('Erro ao acrescentar quantidade: '+err.message,'erro');}finally{e.qtdEmProcesso=false;}});
+ sel.addEventListener('change',()=>{const operacao=dobraAlterarServico(e);e.operacaoServico=operacao;operacao.finally(()=>{if(e.operacaoServico===operacao)e.operacaoServico=null;});});salvar.addEventListener('click',()=>dobraSalvar(e));limpar.addEventListener('click',()=>dobraLimpar(e));nova.addEventListener('click',()=>dobraNovaAtividade(e));
  dobraEstados.push(e);tbody.appendChild(tr);
 }
 async function dobraAlterarServico(e){
